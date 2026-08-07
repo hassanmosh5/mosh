@@ -35,6 +35,12 @@ export default async function DashboardPage() {
     include: { quiz: { include: { lesson: true } } },
   });
 
+  const bookmarks = await prisma.bookmark.findMany({
+    where: { userId: session.user.id },
+    orderBy: { createdAt: "desc" },
+    include: { lesson: true },
+  });
+
   return (
     <div className="mx-auto max-w-5xl px-6 py-16">
       <h1 className="text-3xl font-semibold">
@@ -115,6 +121,24 @@ export default async function DashboardPage() {
           </ul>
         )}
       </div>
+
+      {bookmarks.length > 0 && (
+        <div className="mt-12">
+          <h2 className="text-lg font-medium">Bookmarked lessons</h2>
+          <ul className="mt-4 flex flex-col divide-y divide-black/10 rounded-xl border border-black/10 dark:divide-white/10 dark:border-white/10">
+            {bookmarks.map((b) => (
+              <li key={b.id}>
+                <Link
+                  href={`/learn/${b.lesson.slug}`}
+                  className="block px-4 py-3 text-sm hover:bg-black/5 hover:underline dark:hover:bg-white/5"
+                >
+                  ★ {b.lesson.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="mt-12 rounded-xl border border-black/10 p-6 dark:border-white/10">
         <h2 className="font-medium">Need help with a concept?</h2>

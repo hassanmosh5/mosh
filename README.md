@@ -59,6 +59,12 @@ build each one on top of this foundation.
   a clear, actionable error instead of crashing when `OPENAI_API_KEY` isn't set.
 - **Progress tracking & quizzes** are backed by real Prisma models
   (`LessonProgress`, `Quiz`, `Question`, `QuizAttempt`), not mocked data.
+- **Notes & bookmarks** — a "★ Bookmark this lesson" toggle
+  (`POST /api/bookmarks`) and a per-lesson notes panel (add/edit/delete,
+  `POST`/`PATCH`/`DELETE /api/notes*`) on every lesson page. Bookmarked
+  lessons surface as a quick-access list on the dashboard. Both are gated by
+  the same lesson entitlement check as progress/quizzes, so they can't be
+  used to probe locked content on paid courses.
 
 ## Curriculum source
 
@@ -127,8 +133,9 @@ usable out of the box. To sell it:
   auth; `Course` → `Module` → `Lesson` for curriculum; `Quiz` → `Question` →
   `QuizAttempt` for knowledge checks; `LessonProgress` for completion state;
   `Enrollment` for course purchases (`PENDING`/`COMPLETED`/`REFUNDED`,
-  linked to a Stripe Checkout Session); `Note` and `Bookmark` models exist in
-  the schema for a future notes/bookmarks feature but have no UI yet.
+  linked to a Stripe Checkout Session); `Note` (many per user per lesson,
+  a running journal) and `Bookmark` (one toggle per user per lesson) for
+  personal annotations.
 - **Payment fulfillment is belt-and-suspenders**: Stripe recommends not
   relying solely on the success-page redirect (a closed tab loses it) or
   solely on webhooks (delivery can lag or be missed in dev without
@@ -166,5 +173,3 @@ concrete starting point in the existing schema/architecture:
   `UserAchievement` models, and award logic in the `/api/progress` and
   `/api/quiz/[quizId]/attempt` handlers where progress/attempts are already
   recorded.
-- **Notes & bookmarks**: the `Note` and `Bookmark` Prisma models already
-  exist — only UI and API routes (mirroring `/api/progress`) are missing.

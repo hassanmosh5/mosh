@@ -6,6 +6,8 @@ import { auth } from "@/lib/auth";
 import { isLessonAccessible } from "@/lib/entitlement";
 import { MarkCompleteButton } from "./mark-complete-button";
 import { LessonQuiz } from "./lesson-quiz";
+import { BookmarkButton } from "./bookmark-button";
+import { NotesSection } from "./notes-section";
 
 export default async function LessonPage({
   params,
@@ -96,6 +98,20 @@ export default async function LessonPage({
         })
       : null;
 
+  const [bookmark, notes] = session?.user
+    ? await Promise.all([
+        prisma.bookmark.findUnique({
+          where: {
+            userId_lessonId: { userId: session.user.id, lessonId: lesson.id },
+          },
+        }),
+        prisma.note.findMany({
+          where: { userId: session.user.id, lessonId: lesson.id },
+          orderBy: { createdAt: "desc" },
+        }),
+      ])
+    : [null, []];
+
   return (
     <div className="mx-auto max-w-3xl px-6 py-16">
       <div className="text-xs text-black/40 dark:text-white/40">
@@ -114,12 +130,20 @@ export default async function LessonPage({
         <p className="text-xs text-black/40 dark:text-white/40">
           {lesson.estMinutes} min read
         </p>
-        <Link
-          href={`/tutor?lesson=${lesson.slug}`}
-          className="text-xs font-medium underline"
-        >
-          Ask the AI tutor about this lesson
-        </Link>
+        <div className="flex items-center gap-4">
+          {session?.user && (
+            <BookmarkButton
+              lessonId={lesson.id}
+              bookmarked={Boolean(bookmark)}
+            />
+          )}
+          <Link
+            href={`/tutor?lesson=${lesson.slug}`}
+            className="text-xs font-medium underline"
+          >
+            Ask the AI tutor about this lesson
+          </Link>
+        </div>
       </div>
 
       <article className="prose prose-neutral dark:prose-invert mt-8 max-w-none">
@@ -164,6 +188,17 @@ export default async function LessonPage({
             choices: q.choices,
           }))}
           lastScore={lastAttempt?.score ?? null}
+        />
+      )}
+
+      {session?.user && (
+        <NotesSection
+          lessonId={lesson.id}
+          initialNotes={notes.map((n) => ({
+            id: n.id,
+            body: n.body,
+            createdAt: n.createdAt.toISOString(),
+          }))}
         />
       )}
 
