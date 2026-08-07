@@ -1,0 +1,2429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Income Launch Kit — The AI Income Blueprint</title>
+<meta name="description" content="An offline, single-file companion app for The AI Income Blueprint: the Fit Matrix stream selector, the 7-Day Validation Sprint, the Commitment Statement, the 30-Day Launch Plan tracker, the CLEAR prompt builder and the pricing cheat sheet.">
+<style>
+/* ============================= tokens ============================= */
+:root{
+  --paper:#f4f5f8;
+  --card:#ffffff;
+  --card-2:#fbfbfd;
+  --ink:#141a2e;
+  --ink-2:#4a5270;
+  --ink-3:#767e9b;
+  --line:#e2e5ee;
+  --line-2:#ccd2e0;
+
+  --brand:#4338ca;
+  --brand-2:#6366f1;
+  --brand-soft:#eef0ff;
+  --brand-ink:#312e9e;
+
+  --gold:#b45309;
+  --gold-soft:#fdf3e3;
+  --good:#047857;
+  --good-soft:#e6f5ef;
+  --warn:#b91c1c;
+  --warn-soft:#fdeded;
+
+  --shadow-sm:0 1px 2px rgba(20,26,46,.06),0 1px 3px rgba(20,26,46,.05);
+  --shadow:0 2px 4px rgba(20,26,46,.04),0 8px 24px rgba(20,26,46,.07);
+  --shadow-lg:0 12px 40px rgba(20,26,46,.13);
+
+  --r-lg:18px;
+  --r:12px;
+  --r-sm:8px;
+
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --serif:ui-serif,Georgia,"Times New Roman",serif;
+}
+html[data-theme="dark"]{
+  --paper:#0d1020;
+  --card:#161b30;
+  --card-2:#1b2138;
+  --ink:#eef1f9;
+  --ink-2:#a7b0cc;
+  --ink-3:#7a839f;
+  --line:#28304c;
+  --line-2:#3a4468;
+
+  --brand:#8b8cf7;
+  --brand-2:#a5a6fb;
+  --brand-soft:#232748;
+  --brand-ink:#c9caff;
+
+  --gold:#e0a44a;
+  --gold-soft:#2e2417;
+  --good:#43c99a;
+  --good-soft:#12291f;
+  --warn:#f68b8b;
+  --warn-soft:#2d1a1a;
+
+  --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+  --shadow:0 2px 4px rgba(0,0,0,.25),0 8px 24px rgba(0,0,0,.35);
+  --shadow-lg:0 12px 40px rgba(0,0,0,.5);
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.6;
+  color:var(--ink);
+  background:var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{line-height:1.25;margin:0;font-weight:700;letter-spacing:-.015em}
+p{margin:0 0 .85em}
+p:last-child{margin-bottom:0}
+a{color:var(--brand);text-decoration-thickness:1px;text-underline-offset:2px}
+:focus-visible{outline:2.5px solid var(--brand-2);outline-offset:2px;border-radius:4px}
+button{font:inherit;color:inherit}
+input,textarea,select{font:inherit;color:inherit}
+
+/* ============================= layout ============================= */
+.wrap{max-width:940px;margin:0 auto;padding:0 20px}
+
+header.top{
+  position:sticky;top:0;z-index:40;
+  background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:saturate(180%) blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.top-in{display:flex;align-items:center;gap:14px;height:60px}
+.brandmark{display:flex;align-items:center;gap:10px;font-weight:750;letter-spacing:-.02em;font-size:15px;white-space:nowrap}
+.brandmark .glyph{
+  width:30px;height:30px;border-radius:9px;flex:none;
+  background:linear-gradient(140deg,var(--brand-2),var(--brand));
+  color:#fff;display:grid;place-items:center;font-size:14px;font-weight:800;
+  box-shadow:var(--shadow-sm);
+}
+.top-spacer{flex:1}
+.icon-btn{
+  width:36px;height:36px;flex:none;display:grid;place-items:center;
+  border:1px solid var(--line);background:var(--card);border-radius:10px;
+  cursor:pointer;color:var(--ink-2);transition:.15s;
+}
+.icon-btn:hover{border-color:var(--line-2);color:var(--ink)}
+.icon-btn svg{width:17px;height:17px}
+
+nav.tabs{border-bottom:1px solid var(--line);background:var(--card)}
+.tabs-in{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs-in::-webkit-scrollbar{display:none}
+.tab{
+  appearance:none;border:0;background:none;cursor:pointer;
+  padding:13px 13px 11px;font-size:13.5px;font-weight:600;color:var(--ink-3);
+  border-bottom:2.5px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:7px;
+  transition:.15s;
+}
+.tab:hover{color:var(--ink-2)}
+.tab[aria-current="page"]{color:var(--brand);border-bottom-color:var(--brand)}
+.tab .dot{width:6px;height:6px;border-radius:50%;background:var(--good);flex:none}
+
+main{padding:30px 0 90px}
+
+/* ============================= primitives ============================= */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:26px;box-shadow:var(--shadow-sm);margin-bottom:20px;
+}
+.card.tight{padding:20px}
+.card h2{font-size:21px;margin-bottom:6px}
+.card h3{font-size:16px;margin-bottom:8px}
+.lede{color:var(--ink-2);font-size:15px}
+
+.eyebrow{
+  font-size:11px;font-weight:750;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--brand);margin-bottom:9px;
+}
+.eyebrow.muted{color:var(--ink-3)}
+
+.btn{
+  appearance:none;border:1px solid transparent;border-radius:10px;cursor:pointer;
+  padding:10px 17px;font-size:14.5px;font-weight:650;line-height:1.3;
+  display:inline-flex;align-items:center;gap:8px;transition:.15s;
+  background:var(--brand);color:#fff;box-shadow:var(--shadow-sm);
+}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;filter:none}
+.btn.ghost{background:var(--card);color:var(--ink);border-color:var(--line-2);box-shadow:none}
+.btn.ghost:hover{background:var(--card-2);filter:none}
+.btn.sm{padding:7px 13px;font-size:13px;border-radius:9px}
+.btn svg{width:15px;height:15px}
+.btn-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+label.fld{display:block;margin-bottom:16px}
+label.fld > .lbl{display:block;font-size:13.5px;font-weight:650;margin-bottom:5px}
+label.fld > .hint{display:block;font-size:12.5px;color:var(--ink-3);margin-bottom:6px;line-height:1.5}
+input[type=text],input[type=date],input[type=number],textarea,select{
+  width:100%;padding:10px 12px;border:1px solid var(--line-2);border-radius:var(--r-sm);
+  background:var(--card-2);transition:.15s;font-size:14.5px;
+}
+input[type=text]:focus,input[type=date]:focus,input[type=number]:focus,textarea:focus,select:focus{
+  border-color:var(--brand-2);background:var(--card);outline:none;box-shadow:0 0 0 3px var(--brand-soft);
+}
+textarea{resize:vertical;min-height:72px;line-height:1.55}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+@media(max-width:640px){.grid-2{grid-template-columns:1fr}}
+
+.note{
+  border-left:3px solid var(--brand);background:var(--brand-soft);
+  padding:13px 16px;border-radius:0 var(--r) var(--r) 0;font-size:14px;color:var(--ink-2);
+}
+.note.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+.note.good{border-left-color:var(--good);background:var(--good-soft)}
+.note.gold{border-left-color:var(--gold);background:var(--gold-soft)}
+.note strong{color:var(--ink)}
+
+blockquote.pull{
+  margin:0 0 20px;padding:18px 22px;border-radius:var(--r);
+  background:var(--card-2);border:1px solid var(--line);
+  font-family:var(--serif);font-size:16.5px;line-height:1.55;color:var(--ink-2);font-style:italic;
+}
+blockquote.pull cite{display:block;margin-top:9px;font-style:normal;font-family:var(--sans);font-size:12.5px;color:var(--ink-3)}
+
+.chip{
+  display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;
+  font-size:11.5px;font-weight:700;background:var(--brand-soft);color:var(--brand-ink);
+  letter-spacing:.01em;
+}
+.chip.gray{background:var(--card-2);color:var(--ink-3);border:1px solid var(--line)}
+.chip.good{background:var(--good-soft);color:var(--good)}
+.chip.gold{background:var(--gold-soft);color:var(--gold)}
+
+.src{font-size:12px;color:var(--ink-3);margin-top:14px;font-style:italic}
+
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:540px}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);font-weight:700;white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+td.num{white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* ============================= home ============================= */
+.hero{
+  background:linear-gradient(150deg,var(--brand) 0%,#3730a3 55%,#1e1b4b 100%);
+  color:#fff;border-radius:22px;padding:38px 34px;margin-bottom:22px;
+  box-shadow:var(--shadow-lg);position:relative;overflow:hidden;
+}
+.hero::after{
+  content:"";position:absolute;inset:auto -60px -120px auto;width:320px;height:320px;
+  background:radial-gradient(circle,rgba(255,255,255,.16),transparent 66%);pointer-events:none;
+}
+.hero .kicker{font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;opacity:.72;margin-bottom:12px}
+.hero h1{font-size:clamp(27px,5.2vw,38px);margin-bottom:12px;letter-spacing:-.03em}
+.hero p{max-width:56ch;opacity:.9;font-size:15.5px;margin-bottom:0}
+.hero .byline{margin-top:18px;font-size:13px;opacity:.7}
+
+.steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:14px;margin-bottom:20px}
+.step{
+  display:block;width:100%;text-align:left;cursor:pointer;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:20px;transition:.16s;box-shadow:var(--shadow-sm);position:relative;
+}
+.step:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--line-2)}
+.step .n{
+  width:26px;height:26px;border-radius:8px;display:grid;place-items:center;
+  background:var(--brand-soft);color:var(--brand-ink);font-size:12.5px;font-weight:800;margin-bottom:11px;
+}
+.step.done .n{background:var(--good);color:#fff}
+.step h3{font-size:15.5px;margin-bottom:5px}
+.step p{font-size:13.5px;color:var(--ink-3);line-height:1.5;margin:0}
+.step .state{margin-top:11px;font-size:12px;font-weight:700;color:var(--good)}
+.step .state.todo{color:var(--ink-3);font-weight:600}
+
+/* ============================= scoring ============================= */
+.dim{padding:18px 0;border-bottom:1px solid var(--line)}
+.dim:last-of-type{border-bottom:0;padding-bottom:4px}
+.dim h3{font-size:15px;margin-bottom:3px}
+.dim .sub{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.opts{display:grid;gap:8px}
+.opt{
+  display:flex;gap:11px;align-items:flex-start;cursor:pointer;
+  border:1.5px solid var(--line);border-radius:var(--r);padding:11px 13px;
+  background:var(--card-2);transition:.14s;font-size:14px;line-height:1.45;
+}
+.opt:hover{border-color:var(--line-2)}
+.opt input{margin:0;flex:none;accent-color:var(--brand);width:17px;height:17px;margin-top:1px}
+.opt:has(input:checked){border-color:var(--brand);background:var(--brand-soft)}
+.opt .score{
+  flex:none;font-size:11px;font-weight:800;color:var(--ink-3);
+  border:1px solid var(--line-2);border-radius:5px;padding:0 5px;margin-top:2px;
+}
+.opt:has(input:checked) .score{color:var(--brand-ink);border-color:var(--brand)}
+
+.skill-row{
+  display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);
+  flex-wrap:wrap;
+}
+.skill-row:last-child{border-bottom:0}
+.skill-row .nm{flex:1;min-width:190px;font-size:14px;font-weight:600}
+.skill-row .nm small{display:block;font-weight:400;color:var(--ink-3);font-size:12.5px}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:9px;overflow:hidden;flex:none}
+.seg label{
+  cursor:pointer;padding:6px 12px;font-size:12.5px;font-weight:650;color:var(--ink-2);
+  border-right:1px solid var(--line-2);transition:.13s;background:var(--card-2);
+}
+.seg label:last-child{border-right:0}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){background:var(--brand);color:#fff}
+.seg label:hover:not(:has(input:checked)){background:var(--card)}
+
+/* ============================= results ============================= */
+.result{
+  border:2px solid var(--brand);border-radius:var(--r-lg);padding:22px;
+  background:linear-gradient(180deg,var(--brand-soft),var(--card));margin-bottom:16px;
+}
+.result.secondary{border-color:var(--line-2);background:var(--card-2)}
+.result h3{font-size:19px;margin-bottom:4px}
+.rank{display:flex;align-items:center;gap:9px;margin-bottom:14px;flex-wrap:wrap}
+.pct{
+  font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums;
+  background:var(--brand);color:#fff;border-radius:999px;padding:3px 11px;
+}
+.result.secondary .pct{background:var(--ink-3)}
+
+.bars{display:grid;gap:7px;margin:14px 0 0}
+.bar-row{display:grid;grid-template-columns:118px 1fr auto;gap:11px;align-items:center;font-size:12.5px}
+.bar-row .bl{color:var(--ink-2);font-weight:600}
+.bar-track{display:block;height:7px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar-fill{display:block;height:100%;border-radius:99px;background:var(--brand);transition:width .4s ease}
+.bar-fill.m1{background:var(--gold)}
+.bar-fill.m0{background:var(--warn)}
+.bar-row .bv{color:var(--ink-3);font-size:11.5px;font-weight:650;white-space:nowrap}
+
+.stack{display:grid;gap:9px;margin-top:16px}
+.stack .kv{display:flex;gap:10px;font-size:13.5px;align-items:baseline}
+.stack .kv dt{flex:none;width:118px;color:var(--ink-3);font-weight:650;font-size:12.5px}
+.stack .kv dd{margin:0;color:var(--ink-2)}
+
+.ranklist{display:grid;gap:7px}
+.rankitem{
+  display:grid;grid-template-columns:22px 1fr 92px 46px;gap:11px;align-items:center;
+  padding:9px 12px;border:1px solid var(--line);border-radius:var(--r);background:var(--card-2);font-size:13.5px;
+}
+.rankitem .pos{color:var(--ink-3);font-weight:800;font-size:12px}
+.rankitem .nm{font-weight:600}
+.rankitem .mini-track{display:block;height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+.rankitem .mini-fill{display:block;height:100%;background:var(--brand-2);border-radius:99px}
+.rankitem .val{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;font-size:12.5px;color:var(--ink-2)}
+
+/* ============================= progress ============================= */
+.prog{display:flex;align-items:center;gap:13px;margin-bottom:18px;flex-wrap:wrap}
+.prog-track{display:block;flex:1;min-width:150px;height:9px;background:var(--line);border-radius:99px;overflow:hidden}
+.prog-fill{display:block;height:100%;background:linear-gradient(90deg,var(--brand-2),var(--brand));border-radius:99px;transition:width .35s ease}
+.prog-label{font-size:13px;font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
+/* On narrow screens put both labels on one line and the track beneath them. */
+@media(max-width:520px){
+  .prog{justify-content:space-between;gap:8px}
+  .prog-track{order:3;flex:0 0 100%;min-width:0}
+}
+
+.week{border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-bottom:16px;background:var(--card)}
+.week-head{
+  padding:15px 20px;background:var(--card-2);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.week-head .wk{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--brand)}
+.week-head h3{font-size:16px;flex:1;min-width:170px}
+.week-head .goal{width:100%;font-size:13.5px;color:var(--ink-3);margin-top:-4px}
+.week-body{padding:6px 20px 16px}
+
+.day{padding:15px 0;border-bottom:1px solid var(--line)}
+.day:last-child{border-bottom:0}
+.day-top{display:flex;gap:11px;align-items:flex-start}
+.day-top .chk{flex:none;margin-top:2px}
+.day-top .hd{flex:1;min-width:0}
+.day-top h4{font-size:14.5px;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}
+.day-top h4 .dn{color:var(--brand);font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.day-top h4 .t{color:var(--ink-3);font-weight:600;font-size:12px}
+.day.checked .hd h4 .ttl{text-decoration:line-through;text-decoration-color:var(--ink-3);opacity:.6}
+.day ul{margin:9px 0 0;padding-left:19px;color:var(--ink-2);font-size:13.5px;line-height:1.55}
+.day ul li{margin-bottom:4px}
+.day ul li:last-child{margin-bottom:0}
+.day .mcheck{margin-top:9px;font-size:12.5px;color:var(--good);font-weight:650}
+
+input[type=checkbox].big{
+  width:19px;height:19px;accent-color:var(--brand);cursor:pointer;
+}
+
+.milestone{
+  margin-top:6px;border:1px dashed var(--good);background:var(--good-soft);
+  border-radius:var(--r);padding:14px 17px;
+}
+.milestone h4{font-size:13.5px;color:var(--good);margin-bottom:7px}
+.milestone ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink-2);line-height:1.6}
+
+.trackswitch{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.trackswitch label{
+  cursor:pointer;border:1.5px solid var(--line);border-radius:10px;padding:9px 14px;
+  font-size:13px;font-weight:650;background:var(--card-2);transition:.14s;
+}
+.trackswitch label:has(input:checked){border-color:var(--brand);background:var(--brand-soft);color:var(--brand-ink)}
+.trackswitch input{position:absolute;opacity:0;pointer-events:none}
+
+/* ============================= sprint ============================= */
+.sday{border:1px solid var(--line);border-radius:var(--r);padding:15px 17px;margin-bottom:11px;background:var(--card-2)}
+.sday.checked{border-color:var(--good);background:var(--good-soft)}
+.sday-top{display:flex;gap:11px;align-items:flex-start}
+.sday-top .hd{flex:1;min-width:0}
+.sday h4{font-size:14.5px;margin-bottom:3px}
+.sday h4 .dn{color:var(--brand);font-weight:800;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;margin-right:8px}
+.sday .q{font-size:13.5px;color:var(--ink-2);margin-bottom:3px}
+.sday .out{font-size:12.5px;color:var(--ink-3)}
+.sday textarea{margin-top:10px;min-height:56px;font-size:13.5px}
+
+.decide{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px;margin-top:6px}
+.decide label{
+  cursor:pointer;border:1.5px solid var(--line);border-radius:var(--r);padding:14px;
+  background:var(--card-2);transition:.14s;
+}
+.decide label:has(input:checked){border-color:var(--brand);background:var(--brand-soft)}
+.decide strong{display:block;font-size:14px;margin-bottom:4px}
+.decide span{font-size:12.5px;color:var(--ink-3);line-height:1.5;display:block}
+.decide input{position:absolute;opacity:0;pointer-events:none}
+
+/* ============================= statement ============================= */
+.statement{
+  font-family:var(--serif);background:var(--card-2);border:1px solid var(--line);
+  border-radius:var(--r);padding:26px 28px;font-size:15.5px;line-height:1.75;color:var(--ink);
+}
+.statement .sig{
+  margin-top:22px;padding-top:16px;border-top:1px solid var(--line-2);
+  display:flex;justify-content:space-between;gap:20px;font-size:13.5px;color:var(--ink-3);flex-wrap:wrap;
+}
+.statement em.blank{color:var(--ink-3);font-style:italic;opacity:.75}
+.statement .oath{margin-top:18px;font-style:italic;color:var(--ink-2)}
+
+/* ============================= prompt builder ============================= */
+.clear-key{display:grid;gap:2px;margin-bottom:18px}
+.clear-key .row{display:grid;grid-template-columns:26px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.clear-key .row:last-child{border-bottom:0}
+.clear-key .ltr{font-weight:900;color:var(--brand);font-size:16px;line-height:1.3}
+.clear-key b{display:block;font-size:13.5px}
+.clear-key span{color:var(--ink-3);font-size:12.5px;line-height:1.5}
+
+pre.out{
+  background:var(--card-2);border:1px solid var(--line);border-radius:var(--r);
+  padding:18px;font-family:var(--mono);font-size:12.5px;line-height:1.65;
+  white-space:pre-wrap;word-wrap:break-word;overflow-x:auto;margin:0;color:var(--ink-2);
+}
+pre.out .k{color:var(--brand);font-weight:700}
+
+.pass{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px}
+.pass .p{border:1px solid var(--line);border-radius:var(--r);padding:15px;background:var(--card-2)}
+.pass .p .n{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--brand);margin-bottom:6px}
+.pass .p h4{font-size:14px;margin-bottom:5px}
+.pass .p p{font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:0}
+
+/* ============================= misc ============================= */
+.empty{
+  text-align:center;padding:34px 22px;color:var(--ink-3);font-size:14.5px;
+  border:1.5px dashed var(--line-2);border-radius:var(--r-lg);background:var(--card-2);
+}
+.empty .btn{margin-top:14px}
+
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(90px);
+  background:var(--ink);color:var(--paper);padding:11px 20px;border-radius:999px;
+  font-size:13.5px;font-weight:650;box-shadow:var(--shadow-lg);z-index:90;
+  opacity:0;transition:.28s cubic-bezier(.2,.9,.3,1);pointer-events:none;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+footer.foot{
+  border-top:1px solid var(--line);margin-top:44px;padding:24px 0 40px;
+  font-size:12.5px;color:var(--ink-3);line-height:1.6;
+}
+footer.foot p{margin-bottom:.6em}
+
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+
+/* Segmented controls hide their radio and show selection via :has(). Where
+   :has() is unsupported, show the radios so the choice stays visible. */
+@supports not selector(:has(*)){
+  .seg label,.trackswitch label,.decide label{display:flex;gap:8px;align-items:flex-start}
+  .seg input,.trackswitch input,.decide input{
+    position:static;opacity:1;pointer-events:auto;accent-color:var(--brand);margin:0;flex:none;
+  }
+  .decide input{margin-top:3px}
+}
+
+/* ============================= print ============================= */
+@media print{
+  header.top,nav.tabs,.btn,.btn-row,footer.foot,.toast,.no-print{display:none !important}
+  body{background:#fff;color:#000;font-size:11.5pt}
+  .card{border:0;box-shadow:none;padding:0;margin-bottom:18pt;break-inside:avoid}
+  .statement{border:1px solid #999;background:#fff;padding:20pt}
+  .week,.sday,.result{break-inside:avoid;border-color:#bbb}
+  main{padding:0}
+  a{color:#000;text-decoration:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-in">
+    <div class="brandmark"><span class="glyph" aria-hidden="true">AI</span><span>Launch Kit</span></div>
+    <div class="top-spacer"></div>
+    <button class="icon-btn" id="themeBtn" type="button" title="Switch light / dark" aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+    <button class="icon-btn" id="exportBtn" type="button" title="Download your data as a text file" aria-label="Download your data as a text file">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>
+    </button>
+    <button class="icon-btn" id="resetBtn" type="button" title="Clear all saved answers" aria-label="Clear all saved answers">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6v14H5V6"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="wrap tabs-in" id="tabs"></div>
+</nav>
+
+<main>
+  <div class="wrap" id="view" tabindex="-1"></div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p><strong>AI Income Launch Kit</strong> — a companion app for <em>The AI Income Blueprint: How Non-Tech Professionals Are Earning $1,000–$5,000 Per Month With Simple AI Tools</em> by Hassan Mohammed (First Edition, 2025). Every framework, table, day plan, rate and script in this app is taken from the book; chapter references are shown throughout.</p>
+    <p>Everything you type stays in this browser's local storage. Nothing is uploaded, and the app makes no network requests — it works fully offline.</p>
+    <p>The income figures reproduced here are the book's, drawn from the experiences of real practitioners. They are not guarantees of results. Nothing here is legal, financial or professional advice.</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* =====================================================================
+   BOOK DATA — all content below is transcribed from
+   "The AI Income Blueprint" (Hassan Mohammed, 2025).
+   ===================================================================== */
+
+/* The AI Income Fit Matrix — Chapter 13, p.190.
+   Ratings: 3 = very favourable (***), 2 = moderate (**), 1 = challenging (*). */
+var STREAMS = [
+  {
+    id:1, name:"Freelance Writing & Content Creation", short:"Freelance Writing",
+    chapter:6, kind:"service",
+    m:{ time:3, risk:3, cost:3, social:2 }, writing:3, tech:1,
+    fit:"Fast income, flexible hours, leverages writing/domain expertise",
+    type:"Service-based (per-project and monthly retainer)",
+    startup:"Not separately stated in Chapter 6",
+    ttfi:"Not separately stated in Chapter 6",
+    range:"$800–$4,000/month (part-time to full-time)",
+    trajectory:"$120–$360/month in Month 1 rising to $1,600–$4,800/month by Month 6–12 on a retainer model with 3–6 clients.",
+    bestFor:"Some writing competency plus domain knowledge in a specific industry — the combination almost every reader already has in some form.",
+    tools:"ChatGPT/Claude, plus your own editing judgement",
+    platforms:"LinkedIn, Upwork, cold email, referrals"
+  },
+  {
+    id:2, name:"Selling AI-Generated Digital Products", short:"Digital Products",
+    chapter:7, kind:"product",
+    m:{ time:2, risk:2, cost:3, social:1 }, writing:2, tech:2,
+    fit:"Best for low social comfort; highest passivity once built",
+    type:"Product-based (passive income — create once, sell repeatedly)",
+    startup:"$0–$29/month (Canva free + Gumroad free to start)",
+    ttfi:"3–10 days with a validation-first approach",
+    range:"$300–$6,000+/month (scales with catalogue size and SEO)",
+    trajectory:"The income starts at product 15–25. The first 10 products are infrastructure.",
+    bestFor:"Anyone with domain expertise, design sense, or niche knowledge",
+    tools:"ChatGPT/Claude, Canva AI, Midjourney/Firefly",
+    platforms:"Etsy, Gumroad, Payhip, Stan Store, Creative Market"
+  },
+  {
+    id:3, name:"AI-Powered Social Media Management", short:"Social Media Mgmt",
+    chapter:8, kind:"service",
+    m:{ time:3, risk:3, cost:3, social:2 }, writing:2, tech:2,
+    fit:"Retainer model; suits marketing/creative backgrounds",
+    type:"Service-based (monthly retainer)",
+    startup:"$0–$15/month (Canva Pro is the primary investment)",
+    ttfi:"1–2 weeks with targeted local business outreach",
+    range:"$1,500–$6,000/month (3–8 clients at $300–$800/month each)",
+    trajectory:"Client retention beats client acquisition — deliver results in the first 60 days and the retainer compounds.",
+    bestFor:"People with marketing, communication, or creative backgrounds",
+    tools:"ChatGPT/Claude, Canva AI, Buffer/Later (scheduling)",
+    platforms:"LinkedIn outreach, local business directories, cold email"
+  },
+  {
+    id:4, name:"AI Automation Services for Local Businesses", short:"AI Automation",
+    chapter:9, kind:"service",
+    m:{ time:2, risk:2, cost:2, social:1 }, writing:1, tech:3,
+    fit:"Highest income ceiling; suits operational/process thinkers",
+    type:"Service-based (project fee + optional monthly retainer)",
+    startup:"$0–$20/month (Zapier free tier sufficient to start)",
+    ttfi:"2–4 weeks (audit → proposal → build → payment)",
+    range:"$2,000–$8,000/month (higher skill ceiling than most streams)",
+    trajectory:"Project fees ($300–$4,000) plus maintenance retainers ($100–$500/month). Convert 60–80% of builds to retainers.",
+    bestFor:"Operational, administrative, or process-oriented backgrounds",
+    tools:"Zapier AI, Make (Integromat), ChatGPT, Notion AI",
+    platforms:"Direct outreach, LinkedIn, local business networks"
+  },
+  {
+    id:5, name:"Creating and Selling AI Prompt Packs", short:"Prompt Packs",
+    chapter:10, kind:"product",
+    m:{ time:2, risk:3, cost:3, social:1 }, writing:2, tech:2,
+    fit:"Quickest to build; complements any other stream",
+    type:"Digital product (passive income — create once, sell repeatedly)",
+    startup:"$0 (ChatGPT free tier + Gumroad free account)",
+    ttfi:"3–7 days with active marketing",
+    range:"$200–$2,500/month (scales with catalogue and marketing)",
+    trajectory:"Upsell ladder: entry pack → standard pack → bundle → premium collection → service upsell.",
+    bestFor:"Anyone with domain expertise in any professional field",
+    tools:"ChatGPT/Claude (prompts + pack content), Canva (design)",
+    platforms:"Gumroad, Payhip, Etsy, your own website"
+  },
+  {
+    id:6, name:"AI-Enhanced Coaching & Consulting Services", short:"Coaching/Consulting",
+    chapter:11, kind:"service",
+    m:{ time:2, risk:1, cost:3, social:2 }, writing:2, tech:1,
+    fit:"Highest per-hour rate; suits experienced professionals",
+    type:"Service-based (programme packages + retainers)",
+    startup:"$0–$20/month (AI tools on free tier to start)",
+    ttfi:"1–3 weeks with active outreach and a clear offer",
+    range:"$2,000–$10,000+/month (highest income ceiling in the book)",
+    trajectory:"Group programmes and monthly advisory retainers extend income without a proportional increase in hours.",
+    bestFor:"Anyone with professional expertise, lived experience, or a track record of results",
+    tools:"ChatGPT/Claude (session prep, materials, frameworks), Canva",
+    platforms:"LinkedIn, warm network, referrals, discovery calls"
+  },
+  {
+    id:7, name:"Content Creation at Scale (YouTube, Newsletters, Blogs)", short:"Content Creation",
+    chapter:12, kind:"content",
+    m:{ time:1, risk:2, cost:3, social:2 }, writing:2, tech:2,
+    fit:"Longest runway; best long-term passive income",
+    type:"Content asset-based (advertising, affiliate, sponsorship, digital products)",
+    startup:"$0–$30/month (YouTube and blogging free; newsletter free to start)",
+    ttfi:"3–6 months (patience is the primary requirement)",
+    range:"$500–$10,000+/month (wide range based on niche and consistency)",
+    trajectory:"Will not generate meaningful income in 30 days. The 30-day goal is a functioning production system and early audience signals.",
+    bestFor:"People with a specific knowledge niche and patience for a long-game strategy",
+    tools:"ChatGPT/Claude (scripts, outlines, drafts), ElevenLabs (voiceover), Descript (editing)",
+    platforms:"YouTube, Beehiiv/Substack, WordPress"
+  }
+];
+
+var DIMENSIONS = [
+  {
+    key:"time", label:"Time available", matrixLabel:"Time Available",
+    q:"Time available for this income stream",
+    opts:[
+      "Less than 5 hours per week available consistently",
+      "5–15 hours per week available most weeks",
+      "15+ hours per week available and sustainable"
+    ]
+  },
+  {
+    key:"risk", label:"Risk tolerance", matrixLabel:"Risk Tolerance",
+    q:"Risk tolerance (comfort starting before feeling fully ready)",
+    opts:[
+      "I need to feel very confident before taking action",
+      "I can act with moderate uncertainty if the downside is limited",
+      "I am comfortable with trial, error, and visible imperfection"
+    ]
+  },
+  {
+    key:"cost", label:"Upfront investment", matrixLabel:"Low Upfront Cost",
+    q:"Upfront investment capacity (tools, courses, infrastructure)",
+    opts:[
+      "I need to start with zero or near-zero investment",
+      "I can invest $20–$65/month if income follows within 60–90 days",
+      "I can invest $100–$200 upfront and $65/month ongoing comfortably"
+    ]
+  },
+  {
+    key:"social", label:"Social comfort", matrixLabel:"Social Comfort",
+    q:"Social comfort (client calls, outreach, public visibility)",
+    opts:[
+      "I strongly prefer to avoid direct client interaction or public visibility",
+      "I can manage client interaction with structure and scripts",
+      "I am comfortable or energised by direct client interaction and visibility"
+    ]
+  }
+];
+
+/* Proven stream combinations — Chapter 13, p.194–196 */
+var PROFILES = [
+  { n:1, name:"The Expert Writer", primary:1, secondary:5,
+    who:"Professional with strong writing skills and domain expertise in any field. Comfortable with client communication. Needs income within 30–60 days.",
+    why:"The writing workflow and domain knowledge used for client work directly creates the raw material for prompt packs. Prompt packs build passive income while freelance work generates immediate cash. Many writing clients become prompt pack buyers.",
+    watch:"Taking on too many clients at commodity rates before raising prices. Establish premium positioning from day one." },
+  { n:2, name:"The Domain Expert", primary:6, secondary:2,
+    who:"Experienced professional with deep niche knowledge, strong credibility, and a track record of results. Comfortable with direct conversation. Needs sustainable income at premium rates.",
+    why:"Coaching clients frequently want to continue the learning after programmes end — digital products serve this need passively. The expertise used in coaching sessions becomes the content for products. Each product sale creates a warm coaching prospect.",
+    watch:"Underpricing early programmes. Set premium rates from the first client — they are easier to maintain than they are to raise later." },
+  { n:3, name:"The Creative Operator", primary:3, secondary:2,
+    who:"Marketing, communications, or creative background. Enjoys variety, visual work, and client relationships. Comfortable managing multiple projects simultaneously.",
+    why:"The Canva skills used for client social media directly translate into template products. Client work teaches what businesses actually need — making product ideas better validated and more commercially targeted. Template products become a portfolio for attracting higher-quality clients.",
+    watch:"Spreading across too many platforms per client. Two platforms done excellently will always outperform four done adequately." },
+  { n:4, name:"The Systems Thinker", primary:4, secondary:5,
+    who:"Operational, administrative, or process-oriented background. Finds satisfaction in solving structural problems. Less comfortable with social visibility; prefers deliverables over relationships.",
+    why:"Automation work builds deep knowledge of the tools and platforms local businesses use. That knowledge converts directly into prompt packs for those same business types, or Notion/spreadsheet templates. The passive products require no client interaction — complementing the preference profile perfectly.",
+    watch:"Underestimating the discovery call. Automation services require a sales conversation. Invest time in the audit-to-proposal process — it is the highest-ROI skill in this stream.",
+    altSecondary:2 },
+  { n:5, name:"The Passive Builder", primary:2, secondary:7,
+    who:"Consistent, patient, detail-oriented. Prefers building systems over managing client relationships. Has time to invest but limited immediate income need. Comfortable with a 6–12 month ramp.",
+    why:"A newsletter or blog builds an audience that becomes the distribution channel for digital products. Every subscriber is a potential buyer. Content creation validates product ideas before building them — the questions readers ask become the products that answer them.",
+    watch:"Impatience in months 2–4 when income is still minimal. This combination has the longest ramp time but the strongest long-term passive income ceiling of any pair in the book." },
+  { n:6, name:"The Knowledge Publisher", primary:7, secondary:6,
+    who:"Strong niche expertise, enjoys researching and writing, comfortable with gradual audience building. Has a clear point of view and the patience for a long-game strategy.",
+    why:"Content creation builds an audience of people who already believe in your expertise. Converting a fraction of that audience to coaching or consulting clients requires no cold outreach — they arrive pre-sold. The coaching experience generates content ideas. The content attracts more coaching clients. The flywheel accelerates.",
+    watch:"Starting coaching before the content base is established. The combination works best when the content has built at least 3–6 months of credibility." }
+];
+
+/* Three gut-check questions — Chapter 13, p.193 */
+var GUTCHECKS = [
+  { key:"q1", q:"If this stream produced no income for 60 days but was otherwise going well, would I continue?",
+    yes:"Genuine fit.", no:"Reconsider." },
+  { key:"q2", q:"Does thinking about this stream produce energy rather than dread?",
+    yes:"Energy — proceed.", no:"Dread. The stream may be analytically correct but wrong for you." },
+  { key:"q3", q:"Am I choosing this stream because it fits me — rather than because it sounds most impressive or most profitable?",
+    yes:"Choosing for fit.", no:"Choosing for impression rather than fit is the most common mistake in stream selection." }
+];
+
+/* 7-Day Validation Sprint — Chapter 13, p.197 */
+var SPRINT = [
+  { d:1, focus:"Define the offer", q:"Can I describe exactly what I deliver, to whom, at what price, in one sentence?", out:"Written offer statement" },
+  { d:2, focus:"Research the market", q:"Do people already pay for this? What do competitors offer? What gap exists?", out:"Market research notes" },
+  { d:3, focus:"Create a minimum sample", q:"Can I produce a meaningful sample of my deliverable in under 3 hours?", out:"One piece of sample work" },
+  { d:4, focus:"Share with 3 people", q:"Would someone in my target audience find genuine value in this? What feedback do they give?", out:"Feedback notes + refinement" },
+  { d:5, focus:"Research the acquisition channel", q:"Where do my ideal clients or buyers search for this? How do I reach them?", out:"Channel research notes" },
+  { d:6, focus:"Test the pitch", q:"Can I describe my offer to a stranger in 60 seconds and have them understand its value?", out:"Refined 60-second pitch" },
+  { d:7, focus:"Decide: proceed or pivot", q:"Do I have enough evidence of demand and fit to invest 30 days in this stream?", out:"Go / Refine / Pivot decision" }
+];
+
+var SPRINT_OUTCOMES = [
+  { key:"proceed", name:"Proceed", desc:"The seven days produced no significant blockers, the sample work felt natural and achievable, and the pitch resonated with at least one person in your target audience. Move immediately to the 30-Day Launch Plan." },
+  { key:"refine", name:"Refine", desc:"One or two elements need adjustment — the pricing, the niche, the delivery format — but the core stream is right. Make the adjustments and begin the 30-Day Launch Plan with the refined version." },
+  { key:"pivot", name:"Pivot", desc:"The stream revealed a genuine mismatch. Return to the matrix, choose your second-highest-scoring stream, and run the sprint again." }
+];
+
+/* 12-Month Income Stack Roadmap — Chapter 13, p.200 */
+var ROADMAP = [
+  { phase:"Foundation", months:"1–2", primary:"Primary stream only: establish offer, workflow, first 1–3 clients or sales", secondary:"None — full focus on primary", target:"$300–$1,500/month" },
+  { phase:"Stabilise", months:"3–4", primary:"Refine primary: improve workflow, raise rates, build first referrals or reviews", secondary:"Introduce secondary stream at low effort level", target:"$800–$3,000/month" },
+  { phase:"Expand", months:"5–6", primary:"Primary generating consistent income; begin optimising for scale or rate increase", secondary:"Secondary generating first income; beginning to compound", target:"$1,500–$5,000/month" },
+  { phase:"Compound", months:"7–9", primary:"Both streams established; primary on near-autopilot with systems in place", secondary:"Secondary scaling; consider third stream or passive product layer", target:"$2,500–$7,000/month" },
+  { phase:"Scale", months:"10–12", primary:"Review total income mix; decide: scale existing, add third stream, or specialise further", secondary:"Both streams compounding; referral network active", target:"$4,000–$10,000+/month" }
+];
+
+/* 30-Day AI Income Launch Plan — Chapter 14, p.203–212 */
+var PLAN_WEEKS = [
+  {
+    n:1, title:"Foundation", goal:"Build the infrastructure that makes everything else possible.",
+    intro:"Week 1 is infrastructure week. No outreach. No pitching. No clients. Rushing past this week is the single most common cause of stumbling in Week 2.",
+    days:[
+      { d:1, title:"Tool Setup and Account Creation", time:"45–60 min",
+        items:[
+          "Complete the AI Income Stack Setup Checklist from Chapter 4 (if not already done).",
+          "Create or confirm accounts: ChatGPT or Claude, Canva, Notion, and your delivery platform (Gumroad, Upwork, LinkedIn, or your scheduling tool).",
+          "Set up your Notion workspace with three pages: Income Tracker, Client/Customer Notes, Prompt Library.",
+          "Write your first Prompt Library entry: your core positioning CLEAR prompt from Chapter 5."
+        ], check:"All accounts live, workspace functional." },
+      { d:2, title:"Offer Crystallisation", time:"30–45 min",
+        items:[
+          "Using your Income Stream Commitment Statement, refine your offer to one specific, named package.",
+          "Define what is delivered, who it serves, over what timeframe, at what price.",
+          "Write it in the format: “[Offer Name] — I help [specific client type] achieve [specific outcome] through [your deliverable] in [timeframe]. Investment: $[price].”",
+          "Read the offer aloud. If you cannot explain it clearly in under 60 seconds, it is not specific enough. Rewrite."
+        ], check:"One clear, priced offer written and spoken confidently." },
+      { d:3, title:"Positioning Statement and Profile", time:"60–90 min",
+        items:[
+          "Write your positioning statement (from the template in Chapter 6 or 11, depending on your stream).",
+          "Update your LinkedIn profile headline and About section to reflect your new positioning.",
+          "If using Upwork or Fiverr: create or update your profile with your positioning statement as the headline.",
+          "If selling digital products: create your Gumroad or Etsy shop profile with a clear, niche-specific description."
+        ], check:"One professional public-facing profile updated." },
+      { d:4, title:"Sample Work Creation", time:"90–120 min",
+        items:[
+          "Create one piece of sample work that demonstrates your offer at its best quality.",
+          "Use the full CLEAR prompt + 3-Pass workflow. Apply all domain expertise.",
+          "This sample is your proof of capability — it will be referenced in every outreach message this week.",
+          "For coaching/consulting: create a sample session framework or one-page programme overview. For automation: build one demonstration workflow in Zapier. For digital products: create your first complete product."
+        ], check:"One professional sample work completed." },
+      { d:5, title:"Target List Building", time:"60 min",
+        items:[
+          "Build a list of 30 potential first clients or buyers specific to your niche.",
+          "For service streams: businesses or professionals who match your ideal client profile. Use LinkedIn, Google Maps, or industry directories.",
+          "For product streams: communities, platforms, or publications where your target buyer gathers.",
+          "For each target, note one specific, personalised observation about their situation. This will be used in your outreach."
+        ], check:"30 named, researched targets in your tracker." },
+      { d:6, title:"Outreach Message Preparation", time:"45–60 min",
+        items:[
+          "Using the outreach scripts from your income stream chapter, write three personalised versions.",
+          "Each version targets a different sub-segment of your target list (different business types, different pain points).",
+          "Test each message with this question: “Would I respond to this if I received it?” If no, rewrite.",
+          "Use ChatGPT to generate variations and identify the strongest elements of each version."
+        ], check:"Three personalised, tested outreach message templates ready." },
+      { d:7, title:"Week 1 Review and Preparation", time:"30 min",
+        items:[
+          "Review everything built this week: tools, offer, profile, sample, target list, outreach templates.",
+          "Identify any gaps. Fill them before beginning Week 2.",
+          "Write in your tracker: “My offer is [offer]. My target is [target]. My first outreach message goes out tomorrow.”",
+          "Set a specific daily outreach target for Week 2 (recommended: 10 outreach messages per day for service streams)."
+        ], check:"Full readiness confirmed. Week 2 starts tomorrow." }
+    ],
+    milestone:[
+      "All AI tools set up and functional",
+      "One clear, priced offer written and explainable in 60 seconds",
+      "At least one professional profile updated with your positioning",
+      "One strong piece of sample work completed",
+      "30 researched, named targets on your outreach list",
+      "Three tested outreach message templates ready to send"
+    ],
+    milestoneNote:"If any of these are not complete, finish them before starting Week 2. Week 2 is built on Week 1."
+  },
+  {
+    n:2, title:"Outreach", goal:"Put your offer in front of 50 targeted people this week.",
+    intro:"Week 2 is the week most people want to skip, because outreach risks rejection. That avoidance is the single most expensive habit in AI income generation. The antidote is preparation (Week 1) and volume (this week).",
+    days:[
+      { d:8, title:"First Outreach Batch", time:"60–90 min",
+        items:[
+          "Send your first 10 personalised outreach messages using your Day 6 templates.",
+          "Every message must include one specific, researched observation about the recipient.",
+          "Generic outreach gets ignored. Specific, researched outreach gets responses.",
+          "Log every message sent in your tracker with date and recipient.",
+          "Do not check for responses today. Send and move on."
+        ] },
+      { d:9, title:"Second Outreach Batch + Profile Optimisation", time:"75 min",
+        items:[
+          "Send 10 more personalised outreach messages. Vary the entry angle slightly from yesterday.",
+          "Review your LinkedIn or platform profile with fresh eyes. Tighten any sections that feel generic.",
+          "If you received any responses from Day 8: respond within two hours, warm and specific."
+        ] },
+      { d:10, title:"Community Seeding", time:"45–60 min",
+        items:[
+          "Identify two to three online communities where your target client or buyer is active.",
+          "Share one piece of genuine value in each — a tip, a framework, a free sample prompt, an observation.",
+          "Do not pitch your service or product directly. Provide value. Mention your offer only if asked.",
+          "This plants seeds that often yield responses or direct messages over the following days."
+        ] },
+      { d:11, title:"Third Outreach Batch + Follow-Ups", time:"75 min",
+        items:[
+          "Send 10 more outreach messages.",
+          "Follow up on Day 8 messages that have not received a response.",
+          "Follow-up formula: brief (3 sentences), add one new piece of value or observation, low-pressure call to action.",
+          "Log all follow-ups in your tracker."
+        ] },
+      { d:12, title:"Discovery Call Preparation", time:"45–60 min",
+        items:[
+          "If you have booked a discovery call (or when you do): prepare using the discovery call framework from your stream chapter.",
+          "Write out your five key questions specific to your niche.",
+          "Practise the full call structure out loud — once is sufficient to dramatically reduce anxiety.",
+          "If no call booked yet: use this time to send 10 more outreach messages and refine your approach based on any responses received."
+        ] },
+      { d:13, title:"Warm Network Activation", time:"45 min",
+        items:[
+          "Contact every relevant person in your immediate professional network.",
+          "Message: “I have just launched [brief offer description]. I am looking for [number] clients or early buyers. Do you know anyone who might benefit from this? Even one name would help enormously.”",
+          "This is not a sales pitch — it is a referral request to people who already know and trust you.",
+          "Most people have 2–4 relevant connections. Most people never ask."
+        ] },
+      { d:14, title:"Week 2 Review and Momentum Assessment", time:"30 min",
+        items:[
+          "Review: how many messages sent, how many responses received, how many conversations in progress.",
+          "Identify which outreach angle produced the most responses. Use this insight to refine Week 3 outreach.",
+          "Celebrate any response — not just a booking. A response means your positioning is working.",
+          "Set the Week 3 outreach target: 50 total messages sent by end of Week 3 (cumulative).",
+          "If a discovery call is booked: confirm it and prepare thoroughly using your Day 12 notes."
+        ] }
+    ],
+    milestone:[
+      "30+ personalised outreach messages sent",
+      "At least 3–5 responses (at a 10–15% response rate from researched outreach)",
+      "At least 1 discovery call booked, or 1 active buying conversation in progress",
+      "Community seeding completed in 2–3 relevant communities",
+      "Warm network activation completed"
+    ],
+    troubleshoot:{
+      title:"If you have zero responses after 30 outreach messages",
+      items:[
+        "Your message may be too generic. Re-read the outreach scripts in your stream chapter.",
+        "Your target may be too broad. Narrow your niche one level.",
+        "Your offer may not be solving a felt problem. Revisit the pain point research from Chapter 3."
+      ]
+    }
+  },
+  {
+    n:3, title:"Convert", goal:"Close your first client or make your first sale.",
+    intro:"The gap between “interested” and “committed” is where most early income earners stall — overthinking pricing, second-guessing the offer, or delaying the close out of fear.",
+    days:[
+      { d:15, title:"Proposal or Listing Creation", time:"45–60 min",
+        items:[
+          "For service streams: write a tailored proposal for your most promising prospect using the proposal framework from your stream chapter. Use AI to draft in 15 minutes, then personalise.",
+          "For product streams: if not already live, publish your first product or listing today. Apply all SEO guidance from Chapter 7 or 10.",
+          "The proposal or listing is your conversion asset. It must be specific, outcome-focused, and clearly priced."
+        ] },
+      { d:16, title:"Discovery Call (or Outreach Intensification)", time:"60–90 min",
+        items:[
+          "If you have a discovery call today: conduct it using your prepared framework. Close with clarity.",
+          "After the call: send your proposal within two hours. Waiting reduces conversion rate significantly.",
+          "If no call yet: send 15 outreach messages today — more volume, adapted angle.",
+          "Also follow up on all Week 2 conversations that have not progressed."
+        ] },
+      { d:17, title:"Follow-Up and Objection Handling", time:"45 min",
+        items:[
+          "Follow up on any proposals sent. Use the follow-up scripts from your stream chapter.",
+          "If a prospect has raised an objection: respond using the objection handling frameworks from your chapter.",
+          "Most first clients require two to three touchpoints before committing. Persistent follow-up is professional, not pushy."
+        ] },
+      { d:18, title:"Parallel Outreach Continuation", time:"60 min",
+        items:[
+          "While conversion conversations are progressing, maintain outreach momentum.",
+          "Send 10 new outreach messages to fresh targets from your Day 5 list.",
+          "Never stop outreach while waiting for a conversion. The pipeline must stay full."
+        ] },
+      { d:19, title:"Pilot Delivery Preparation", time:"60 min",
+        items:[
+          "Whether or not you have closed a client yet, prepare your delivery infrastructure.",
+          "For service streams: draft your onboarding questionnaire, welcome email, and first deliverable template.",
+          "For product streams: ensure your delivery is fully automated and buyers receive their product instantly.",
+          "Being prepared to deliver immediately upon signing creates momentum and professionalism."
+        ] },
+      { d:20, title:"First Pilot or Sale", time:"variable",
+        items:[
+          "If not yet closed: offer one prospect a single session or sample deliverable at a discounted pilot rate in exchange for feedback and a testimonial.",
+          "Script: “I would like to do a paid pilot with you — one [session/deliverable] at [reduced rate] so you can experience the service before committing to the full programme. Interested?”",
+          "The pilot removes the commitment barrier for hesitant prospects and generates your first testimonial.",
+          "If already closed: begin delivery. Deliver the first deliverable within 24 hours of signing."
+        ] },
+      { d:21, title:"Week 3 Review and First Income Milestone", time:"30 min",
+        items:[
+          "Review your conversion rate on proposals and calls. What worked? What would you change?",
+          "If you have received your first payment: celebrate the milestone and record it in your tracker.",
+          "If not yet: you are close. Identify the single most promising conversation and send a personal, warm follow-up today.",
+          "Set the Week 4 goal: deliver excellently, collect feedback, begin building toward a second client or sale."
+        ] }
+    ],
+    milestone:[
+      "At least one first payment received, OR a signed client pending payment, OR a completed pilot that produced a testimonial and a pending full engagement",
+      "Delivery infrastructure prepared and ready",
+      "Outreach pipeline still active with 10+ conversations in progress"
+    ],
+    milestoneNote:"If Week 3 ends without a first payment, do not interpret this as failure. The typical service income timeline is 3–6 weeks from first outreach to first payment. Continue the plan. The momentum built in Weeks 1–3 is real, even when income is not yet visible."
+  },
+  {
+    n:4, title:"Deliver and Systematise", goal:"Deliver excellently. Build systems for Month 2.",
+    intro:"Most new AI income earners focus entirely on the client and neglect the systems. That creates a business perpetually starting from scratch. The systems built this week eliminate the repetition and make scaling genuinely possible.",
+    days:[
+      { d:22, title:"First Deliverable", time:"90–120 min",
+        items:[
+          "Deliver your first piece of client work or fulfil your first product order with maximum quality and care.",
+          "Apply the 3-Pass Method to every piece of AI-assisted work. No unedited AI output reaches a client.",
+          "Deliver with a brief personal note: what you focused on and why, and one question to check it landed as intended.",
+          "First impressions compound. An excellent first deliverable is worth ten outreach messages in future referral value."
+        ] },
+      { d:23, title:"SOP Creation", time:"45–60 min",
+        items:[
+          "Write a Standard Operating Procedure for your most repeated task.",
+          "Use the AI SOP prompt from Chapter 15 to generate a draft, then refine.",
+          "An SOP is a step-by-step document that allows the task to be executed consistently without thinking.",
+          "First SOP to build: your core delivery workflow, from client brief to final deliverable."
+        ] },
+      { d:24, title:"Template Library Expansion", time:"30–45 min",
+        items:[
+          "Add at least five new prompts to your Prompt Library from the work you have done this month.",
+          "Review the outreach messages that got responses. Save the most effective versions as templates.",
+          "Review the delivery prompts that produced excellent output. Save and categorise.",
+          "Your Prompt Library after 30 days should have 15–25 entries. This is a compounding asset."
+        ] },
+      { d:25, title:"Client Feedback and Testimonial Request", time:"15 min",
+        items:[
+          "Send a brief, warm feedback request to your first client or product buyer.",
+          "For service clients: “I wanted to check in — is the work landing as you hoped? I would welcome any feedback.”",
+          "After receiving positive feedback: “I am so glad it is working well. If you felt comfortable sharing a brief testimonial, it would mean a great deal to me.”",
+          "Testimonials are the most powerful acquisition asset you will ever own. Request them early and systematically."
+        ] },
+      { d:26, title:"Second Client Outreach Sprint", time:"60 min",
+        items:[
+          "With your first client delivering and your system beginning to take shape, return to outreach.",
+          "Send 10 new outreach messages informed by everything learned in the past three weeks.",
+          "Your outreach should now be noticeably sharper — more specific, more confident, more outcome-focused.",
+          "If relevant: mention your first client result (without identifying details) as social proof."
+        ] },
+      { d:27, title:"Month 2 Planning", time:"45 min",
+        items:[
+          "Set your Month 2 income goal: specific dollar amount, specific number of clients or sales, specific date.",
+          "Identify your three highest-priority actions for Month 2 (client acquisition, delivery system, rate increase, or secondary stream introduction).",
+          "Review your positioning. Has anything become clearer or more refined in the past 30 days?",
+          "Update your AI Income Declaration with Month 2 goals."
+        ] },
+      { d:28, title:"Buffer", time:"as needed",
+        items:["Complete any outstanding deliverables or outreach from the plan. Fill any gaps."] },
+      { d:29, title:"Full 30-Day Review", time:"as needed",
+        items:["What worked? What surprised you? What would you do differently?"] },
+      { d:30, title:"Celebrate", time:"as needed",
+        items:[
+          "Document your first month's income, your first testimonial, and your most important learning in your tracker.",
+          "Review your original AI Income Declaration from Chapter 1. Note the distance you have covered.",
+          "This is not the end of the plan. This is the end of Month 1 and the beginning of everything that follows."
+        ] }
+    ],
+    milestone:[
+      "First delivery completed at professional quality",
+      "First client feedback received (ideally positive)",
+      "At least one testimonial requested (ideally received)",
+      "One SOP written for your core delivery workflow",
+      "Prompt Library expanded to 15+ entries",
+      "Month 2 income goal set with specific targets",
+      "Second client outreach sprint underway"
+    ],
+    milestoneNote:"The 30-day milestone most worth celebrating is not the income number. It is the fact that you have built a functional, tested income operation from scratch."
+  }
+];
+
+/* Adaptations for product- and content-based streams — Chapter 14, p.213 */
+var ADAPTATIONS = {
+  product:{
+    label:"Digital Products & Prompt Packs (#2, #5)",
+    note:"The principle of each week stays the same; the specific actions change.",
+    weeks:[
+      { n:1, title:"Foundation", mode:"add", goal:"Same as the service plan, plus product validation.",
+        items:[
+          "Validate your product idea using the 30-minute validation method (Chapter 7).",
+          "Create your first complete product."
+        ] },
+      { n:2, title:"Outreach", mode:"replace", goal:"Replace client outreach with community seeding.",
+        items:[
+          "Share 3–5 free sample prompts or a free mini-template in 3 relevant communities.",
+          "Publish your product on Gumroad or Etsy with full SEO optimisation.",
+          "Create 3 Pinterest pins linking to your listing."
+        ] },
+      { n:3, title:"Convert", mode:"replace", goal:"Your “conversion” is your first sale.",
+        items:[
+          "Review listing analytics. Refine title, description, or mockup images if needed.",
+          "Share your product in one additional community with a direct value-first post.",
+          "Consider a launch discount (10–15%) for the first week to accelerate first reviews."
+        ] },
+      { n:4, title:"Build and Expand", mode:"replace", goal:"By Day 30: 2 products live, first reviews received, second product in progress.",
+        items:[
+          "Create your second product using lessons from the first.",
+          "Request reviews from first buyers via a follow-up message.",
+          "Begin building your Pinterest and LinkedIn marketing presence."
+        ] }
+    ]
+  },
+  content:{
+    label:"Content Creation (#7 — YouTube, Newsletter, Blog)",
+    note:"Content creation will not generate meaningful income in 30 days. The 30-day goal is a functioning production system and early audience signals. Combine with a service or product stream for income in the first 90 days.",
+    weeks:[
+      { n:1, title:"Foundation", mode:"replace", goal:"Set up the platform and publish piece one.",
+        items:[
+          "Set up your platform (YouTube channel, Beehiiv/Substack, or WordPress).",
+          "Write your About or channel description.",
+          "Produce your first piece of content.",
+          "Publish it on Day 7."
+        ] },
+      { n:2, title:"Outreach", mode:"replace", goal:"“Outreach” for content creators is distribution.",
+        items:[
+          "Share your first piece in 3 relevant communities.",
+          "Send it to your personal network.",
+          "Begin producing your second piece of content.",
+          "Publish the second piece by Day 14."
+        ] },
+      { n:3, title:"Convert", mode:"replace", goal:"Your early “conversion” is subscriber, follower, or engagement growth.",
+        items:[
+          "Produce and publish a third piece of content.",
+          "Engage with every comment or reply received on pieces 1 and 2.",
+          "Begin building an email list or subscriber base if not already started."
+        ] },
+      { n:4, title:"Systematise", mode:"replace", goal:"By Day 30: 4 pieces published, production system established, early audience signals visible.",
+        items:[
+          "Establish your weekly production schedule (the 5-day system from Chapter 12).",
+          "Produce and publish a fourth piece of content.",
+          "Set a 24-week consistency commitment: one piece per week, no exceptions."
+        ] }
+    ]
+  }
+};
+
+/* The CLEAR Formula — Chapter 5, p.45–49 */
+var CLEAR = [
+  { key:"role", ltr:"R", name:"Role", sub:"Assign the AI a specific expert identity or persona to inhabit for the task.",
+    why:"When you tell an AI to act as a specialist with years of experience, it draws on the statistical patterns associated with that expertise — producing output that is more credible, more contextually appropriate, and more stylistically consistent.",
+    ph:"You are a social media strategist specialising in local food and hospitality businesses in the United States. You have grown multiple family restaurant Instagram accounts from under 1,000 to over 5,000 followers using organic content strategies." },
+  { key:"context", ltr:"C", name:"Context", sub:"Give the AI the situation, background, and relevant details that frame the task.",
+    why:"AI has no memory between sessions and no knowledge of your specific situation unless you provide it. Without context it produces output for a hypothetical, generic version of your request rather than your actual one.",
+    ph:"I manage social media for a family-owned Italian restaurant in suburban Chicago. They have 847 Instagram followers, post inconsistently, and their main audience is local families aged 28–50. They want to grow to 2,000 followers in six months and increase table bookings from social media." },
+  { key:"audience", ltr:"A", name:"Audience", sub:"Tell the AI exactly who the output is for — demographics, knowledge level, and what they care about.",
+    why:"Output perfectly calibrated for one audience is often completely wrong for another. Specifying the audience lets AI calibrate vocabulary, tone, assumed knowledge, and persuasive approach.",
+    ph:"Local Chicago families, primarily mothers aged 30–45 who have eaten there before. They care about relaxed atmosphere, portion sizes, and value. They respond to warmth and community rather than culinary sophistication." },
+  { key:"example", ltr:"E", name:"Examples", sub:"Show the AI what good looks like with one or more examples of the style or format you want.",
+    why:"Examples are the fastest way to communicate style, tone, and quality standards that are difficult to describe in words. It is the difference between describing a colour and showing a paint chip.",
+    ph:"Match the tone of this caption: “Sunday is for family tables and homemade pasta. Come as you are. What's your go-to comfort food? Tell us below.”" },
+  { key:"length", ltr:"L", name:"Length", sub:"Specify the exact format, structure, word count, and output type you need.",
+    why:"Without a length instruction AI produces a default output — typically medium-length prose with a generic structure. That default is almost never exactly what you need.",
+    ph:"Write a 150-word Instagram caption with one line break after the first sentence. End with an engagement question. Follow with 10 relevant hashtags." }
+];
+
+/* The 3-Pass Method — Chapter 5, p.51 */
+var PASSES = [
+  { n:"Pass 1", purpose:"Draft & structure", what:"Generate the full output — do not edit yet.", focus:"Focus on speed and coverage; accept imperfection." },
+  { n:"Pass 2", purpose:"Accuracy & depth", what:"Fact-check, add domain knowledge, fix errors.", focus:"This is where your expertise earns its premium." },
+  { n:"Pass 3", purpose:"Voice & polish", what:"Refine tone, tighten language, personalise.", focus:"The client should hear your voice, not a machine." }
+];
+
+/* Pricing Cheat Sheet — Appendix D, p.286–287 */
+var PRICING = [
+  { s:1, offer:"Blog retainer (4 posts/month)", a:"$300–$400/mo", b:"$600–$900/mo", c:"$1,200–$2,000/mo", note:"Niche expertise justifies 3× premium" },
+  { s:1, offer:"Newsletter management (monthly)", a:"$400–$600/mo", b:"$700–$1,000/mo", c:"$1,200–$2,000/mo", note:"Strong retention; raise after first renewal" },
+  { s:1, offer:"LinkedIn content (12 posts/mo)", a:"$400–$600/mo", b:"$700–$1,000/mo", c:"$1,200–$2,000/mo", note:"B2B niche commands highest rates" },
+  { s:1, offer:"Website copy (5–7 pages, flat)", a:"$600–$900", b:"$1,200–$2,000", c:"$2,500–$5,000", note:"Project-based; niche expertise crucial" },
+  { s:1, offer:"Per blog post (standalone)", a:"$75–$120", b:"$150–$250", c:"$300–$600", note:"Only for ad hoc; retainer always preferred" },
+  { s:2, offer:"Notion template (single)", a:"$7–$12", b:"$17–$27", c:"$37–$67 (bundle)", note:"Price by niche specificity and design quality" },
+  { s:2, offer:"Canva template pack (10 items)", a:"$9–$17", b:"$22–$37", c:"$47–$97 (brand kit)", note:"Bundles with usage guide convert better" },
+  { s:2, offer:"Printable planner (single)", a:"$5–$9", b:"$12–$19", c:"$27 (bundle)", note:"Volume model — catalogue essential" },
+  { s:2, offer:"Workbook / guide", a:"$17–$27", b:"$37–$57", c:"$67–$97", note:"Outcome promise drives conversion" },
+  { s:3, offer:"1 platform (starter)", a:"$300–$400/mo", b:"$450–$600/mo", c:"$700–$900/mo", note:"Avoid below $300 — unsustainable" },
+  { s:3, offer:"2 platforms (standard)", a:"$500–$700/mo", b:"$700–$1,000/mo", c:"$1,200–$1,500/mo", note:"Most common retainer size" },
+  { s:3, offer:"LinkedIn personal brand", a:"$500–$700/mo", b:"$800–$1,200/mo", c:"$1,500–$2,500/mo", note:"Highest per-platform rate available" },
+  { s:4, offer:"Single automation build", a:"$300–$500", b:"$500–$800", c:"$800–$1,500", note:"Anchor to value delivered, not hours" },
+  { s:4, offer:"Starter package (3 automations)", a:"$800–$1,200", b:"$1,200–$2,000", c:"$2,000–$3,500", note:"Most common first engagement" },
+  { s:4, offer:"Full system (6–10 automations)", a:"$1,500–$2,500", b:"$2,500–$4,000", c:"$4,000–$7,000", note:"Annual contracts available at scale" },
+  { s:4, offer:"Monthly maintenance retainer", a:"$100–$200/mo", b:"$200–$350/mo", c:"$350–$500/mo", note:"Convert 60–80% of builds to retainers" },
+  { s:5, offer:"Starter pack (20–25 prompts)", a:"$9–$14", b:"$17–$24", c:"—", note:"Entry product; drives full pack sales" },
+  { s:5, offer:"Standard pack (40–60 prompts)", a:"$17–$27", b:"$27–$47", c:"$57–$97", note:"Core product tier; best margins" },
+  { s:5, offer:"Professional bundle (60+ prompts)", a:"$37–$57", b:"$57–$97", c:"$97–$147", note:"Professional audiences; highest willingness to pay" },
+  { s:6, offer:"4-week sprint programme", a:"$300–$400", b:"$500–$700", c:"$800–$1,200", note:"Starting offer; graduate clients to longer" },
+  { s:6, offer:"3-month programme", a:"$1,200–$1,800", b:"$2,000–$3,000", c:"$3,500–$5,000", note:"Primary revenue driver once established" },
+  { s:6, offer:"6-month consulting partnership", a:"$2,500–$4,000", b:"$4,000–$6,000", c:"$6,000–$10,000+", note:"Executive and senior professional market" },
+  { s:6, offer:"Monthly advisory retainer", a:"$300–$500/mo", b:"$500–$700/mo", c:"$700–$1,200/mo", note:"Post-programme conversion; high retention" },
+  { s:7, offer:"Newsletter sponsorship (per issue)", a:"$30–$50 CPM", b:"$40–$70 CPM", c:"$70–$120 CPM", note:"CPM = per 1,000 subscribers" },
+  { s:7, offer:"YouTube sponsorship (per video)", a:"$500–$1,000", b:"$1,000–$3,000", c:"$3,000–$10,000+", note:"Rate scales with views and niche RPM" },
+  { s:7, offer:"Paid newsletter subscription", a:"$5–$7/month", b:"$9–$12/month", c:"$15–$25/month", note:"Tier by content depth and exclusivity" }
+];
+
+/* =====================================================================
+   STATE
+   ===================================================================== */
+
+var KEY = "ai-income-launch-kit.v1";
+
+function blankState(){
+  return {
+    v:1,
+    theme:null,
+    scores:{ time:0, risk:0, cost:0, social:0 },
+    skills:{ "1":0,"2":0,"3":0,"4":0,"5":0,"6":0,"7":0 },
+    gut:{ q1:null, q2:null, q3:null },
+    chosen:{ primary:null, secondary:null },
+    sprint:{ notes:{}, done:{}, decision:"" },
+    commit:{ name:"", client:"", outcome:"", vehicle:"", expertise:"",
+             offerName:"", price:"", buyer:"", channel:"", firstAction:"",
+             goalAmount:"", goalCount:"", goalDate:"", signedDate:"" },
+    track:"service",
+    plan:{},
+    prompt:{ role:"", context:"", audience:"", example:"", length:"", task:"" }
+  };
+}
+
+var S = blankState();
+
+function load(){
+  try{
+    var raw = localStorage.getItem(KEY);
+    if(!raw) return;
+    var o = JSON.parse(raw);
+    if(!o || typeof o !== "object") return;
+    var base = blankState();
+    Object.keys(base).forEach(function(k){
+      if(o[k] === undefined) return;
+      if(base[k] && typeof base[k] === "object" && !Array.isArray(base[k])){
+        S[k] = Object.assign({}, base[k], o[k]);
+      } else {
+        S[k] = o[k];
+      }
+    });
+  }catch(e){ /* corrupt or unavailable storage — carry on with defaults */ }
+}
+
+var saveTimer = null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  }, 180);
+}
+
+/* =====================================================================
+   HELPERS
+   ===================================================================== */
+
+function esc(s){
+  return String(s == null ? "" : s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+function el(id){ return document.getElementById(id); }
+function stream(id){
+  for(var i=0;i<STREAMS.length;i++){ if(STREAMS[i].id === Number(id)) return STREAMS[i]; }
+  return null;
+}
+function stars(n){ return "★".repeat(n) + "☆".repeat(3-n); }
+
+var toastTimer = null;
+function toast(msg){
+  var t = el("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove("show"); }, 2200);
+}
+
+function copyText(text, okMsg){
+  var done = function(){ toast(okMsg || "Copied to clipboard"); };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done, function(){ fallbackCopy(text, done); });
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+function fallbackCopy(text, done){
+  var ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly","");
+  ta.style.cssText = "position:fixed;top:-1000px;left:-1000px";
+  document.body.appendChild(ta);
+  ta.select();
+  var ok = false;
+  try{ ok = document.execCommand("copy"); }catch(e){}
+  document.body.removeChild(ta);
+  if(ok){ done(); } else { toast("Copy failed — select the text manually"); }
+}
+
+/* =====================================================================
+   SCORING — the AI Income Fit Matrix (Chapter 13)
+
+   The book's instruction (Step 2, p.192) is to MATCH your personal score
+   to each stream's matrix rating on every dimension, and to pick the
+   stream with the most matches. This implements exactly that:
+     exact match  = 2 points
+     off by one   = 1 point
+     off by two   = 0 points  (a "weakest link" — flagged, per p.191)
+   Skill match carries double weight because the book asks you to score it
+   per stream and says it "should be highest for streams that most match
+   your background".
+   ===================================================================== */
+
+function scoresComplete(){
+  return DIMENSIONS.every(function(d){ return S.scores[d.key] > 0; });
+}
+function skillsComplete(){
+  return STREAMS.every(function(st){ return S.skills[String(st.id)] > 0; });
+}
+function assessmentComplete(){ return scoresComplete() && skillsComplete(); }
+
+function matchPoints(mine, theirs){ return Math.max(0, 2 - Math.abs(mine - theirs)); }
+
+function rankStreams(){
+  if(!assessmentComplete()) return [];
+  var rows = STREAMS.map(function(st){
+    var dims = DIMENSIONS.map(function(d){
+      var mine = S.scores[d.key], theirs = st.m[d.key];
+      return { key:d.key, label:d.label, mine:mine, theirs:theirs, pts:matchPoints(mine, theirs) };
+    });
+    var skill = S.skills[String(st.id)];
+    var skillPts = (skill - 1) * 2;             /* 0, 2 or 4 */
+    var total = dims.reduce(function(a,x){ return a + x.pts; }, 0) + skillPts;
+    var exact = dims.filter(function(x){ return x.pts === 2; }).length;
+    var weak  = dims.filter(function(x){ return x.pts === 0; });
+    return {
+      st:st, dims:dims, skill:skill, skillPts:skillPts,
+      total:total, max:12, pct:Math.round(total / 12 * 100),
+      exact:exact, weak:weak
+    };
+  });
+  rows.sort(function(a,b){
+    if(b.total !== a.total) return b.total - a.total;
+    if(b.exact !== a.exact) return b.exact - a.exact;
+    return b.skill - a.skill;
+  });
+  return rows;
+}
+
+function recommendation(){
+  var r = rankStreams();
+  if(!r.length) return null;
+  return { primary:r[0], secondary:r[1], all:r };
+}
+
+function profileFor(primaryId){
+  for(var i=0;i<PROFILES.length;i++){ if(PROFILES[i].primary === primaryId) return PROFILES[i]; }
+  return null;
+}
+function profilesWithSecondary(id){
+  return PROFILES.filter(function(p){ return p.secondary === id || p.altSecondary === id; });
+}
+
+/* Which stream the rest of the app works from: an explicit choice wins,
+   otherwise the matrix recommendation. */
+function activePrimary(){
+  if(S.chosen.primary) return stream(S.chosen.primary);
+  var rec = recommendation();
+  return rec ? rec.primary.st : null;
+}
+function activeSecondary(){
+  if(S.chosen.secondary) return stream(S.chosen.secondary);
+  var rec = recommendation();
+  return rec ? rec.secondary.st : null;
+}
+
+/* =====================================================================
+   PLAN — items for the active track
+   ===================================================================== */
+
+function planTrack(){
+  var t = S.track;
+  return (t === "product" || t === "content") ? t : "service";
+}
+
+/* Returns [{week, id, label, sub}] for every checkable item in the track. */
+function planItems(){
+  var track = planTrack();
+  var out = [];
+  PLAN_WEEKS.forEach(function(w){
+    var adapt = null;
+    if(track !== "service"){
+      adapt = ADAPTATIONS[track].weeks.filter(function(a){ return a.n === w.n; })[0] || null;
+    }
+    var replaced = adapt && adapt.mode === "replace";
+    if(!replaced){
+      w.days.forEach(function(d){
+        out.push({ week:w.n, id:"d"+d.d, label:"Day "+d.d+" — "+d.title });
+      });
+    }
+    if(adapt){
+      adapt.items.forEach(function(txt, i){
+        out.push({ week:w.n, id:track+"-w"+w.n+"-"+i, label:txt });
+      });
+    }
+  });
+  return out;
+}
+
+/* Day ids ("d1") are shared across tracks — Day 1 is the same action whichever
+   track you are on, so ticking it once should stick. Adaptation ids already
+   carry their track name, so they stay distinct. */
+function planDone(id){ return !!S.plan[id]; }
+function setPlanDone(id, v){
+  if(v){ S.plan[id] = true; } else { delete S.plan[id]; }
+  save();
+}
+function planProgress(){
+  var items = planItems();
+  var done = items.filter(function(i){ return planDone(i.id); }).length;
+  return { done:done, total:items.length, pct: items.length ? Math.round(done/items.length*100) : 0 };
+}
+
+function sprintProgress(){
+  var done = SPRINT.filter(function(d){ return S.sprint.done[d.d]; }).length;
+  return { done:done, total:SPRINT.length, pct:Math.round(done/SPRINT.length*100) };
+}
+
+function commitComplete(){
+  var c = S.commit;
+  return !!(c.name && c.client && c.outcome && c.vehicle && c.offerName && c.price && c.firstAction);
+}
+
+/* =====================================================================
+   VIEWS
+   ===================================================================== */
+
+var VIEWS = [
+  { id:"home",     label:"Start",        icon:"M3 11 12 3l9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" },
+  { id:"selector", label:"Fit Matrix",   icon:"M4 20V10M10 20V4M16 20v-7M22 20H2" },
+  { id:"sprint",   label:"7-Day Sprint", icon:"M13 2 4 14h6l-1 8 9-12h-6z" },
+  { id:"commit",   label:"Commitment",   icon:"M9 12l2 2 4-4M12 3l7 3v6c0 4-3 7.5-7 9-4-1.5-7-5-7-9V6z" },
+  { id:"plan",     label:"30-Day Plan",  icon:"M8 2v4M16 2v4M3 10h18M5 6h14a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" },
+  { id:"prompt",   label:"CLEAR Prompt", icon:"M12 3l2.1 6.3H21l-5.4 3.9 2 6.3L12 15.6 6.4 19.5l2-6.3L3 9.3h6.9z" },
+  { id:"pricing",  label:"Pricing",      icon:"M12 2v20M17 6.5C17 4.6 14.8 3.5 12 3.5S7 4.6 7 6.5 9.2 10 12 10s5 1.5 5 3.5-2.2 3-5 3-5-1.1-5-3" }
+];
+
+var current = "home";
+
+function viewDone(id){
+  if(id === "selector") return assessmentComplete();
+  if(id === "sprint")   return sprintProgress().done === SPRINT.length && !!S.sprint.decision;
+  if(id === "commit")   return commitComplete();
+  if(id === "plan")     { var p = planProgress(); return p.total > 0 && p.done === p.total; }
+  return false;
+}
+
+function renderTabs(){
+  el("tabs").innerHTML = VIEWS.map(function(v){
+    return '<button class="tab" type="button" data-go="'+v.id+'"'+
+      (current === v.id ? ' aria-current="page"' : '')+'>'+
+      '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+v.icon+'"/></svg>'+
+      esc(v.label)+
+      (viewDone(v.id) ? '<span class="dot" aria-hidden="true"></span>' : '')+
+    '</button>';
+  }).join("");
+}
+
+function go(id, keepScroll){
+  if(!VIEWS.some(function(v){ return v.id === id; })) id = "home";
+  current = id;
+  render();
+  if(!keepScroll) window.scrollTo({ top:0, behavior:"auto" });
+}
+
+function render(){
+  renderTabs();
+  var v = el("view");
+  var fn = {
+    home:viewHome, selector:viewSelector, sprint:viewSprint,
+    commit:viewCommit, plan:viewPlan, prompt:viewPrompt, pricing:viewPricing
+  }[current];
+  v.innerHTML = fn();
+}
+
+/* --------------------------------- home --------------------------------- */
+
+function viewHome(){
+  var rec = recommendation();
+  var p = planProgress(), sp = sprintProgress();
+  var prim = activePrimary();
+
+  var cards = [
+    { id:"selector", n:1, t:"Find your stream",
+      d:"Score yourself on the five dimensions of the AI Income Fit Matrix and get a primary and secondary stream.",
+      state: rec ? ("Primary: " + (prim ? prim.short : "—")) : null },
+    { id:"sprint", n:2, t:"Validate it in 7 days",
+      d:"Seven specific actions that test your chosen stream before you invest thirty days in it.",
+      state: sp.done ? (sp.done + " of 7 days" + (S.sprint.decision ? " — " + S.sprint.decision.toUpperCase() : "")) : null },
+    { id:"commit", n:3, t:"Write the commitment",
+      d:"The Income Stream Commitment Statement — the document everything in Chapter 14 is built on.",
+      state: commitComplete() ? "Written" : null },
+    { id:"plan", n:4, t:"Run the 30 days",
+      d:"Every day of the 30-Day AI Income Launch Plan, with weekly milestones and the product and content adaptations.",
+      state: p.done ? (p.done + " of " + p.total + " actions") : null }
+  ];
+
+  var h = '';
+  h += '<section class="hero">'+
+    '<div class="kicker">The AI Income Series</div>'+
+    '<h1>Your AI Income Launch Kit</h1>'+
+    '<p>Part Four of <em>The AI Income Blueprint</em> is a set of decision tools written on paper. This is those tools, working: the Fit Matrix, the validation sprint, the commitment statement and the day-by-day launch plan, all in one place and all saved as you go.</p>'+
+    '<div class="byline">From <em>The AI Income Blueprint</em> by Hassan Mohammed · Chapters 5, 13 and 14, and Appendix D</div>'+
+  '</section>';
+
+  h += '<div class="steps">' + cards.map(function(c){
+    return '<button class="step'+(viewDone(c.id) ? ' done' : '')+'" type="button" data-go="'+c.id+'">'+
+      '<div class="n">'+(viewDone(c.id) ? "✓" : c.n)+'</div>'+
+      '<h3>'+esc(c.t)+'</h3>'+
+      '<p>'+esc(c.d)+'</p>'+
+      '<div class="state'+(c.state ? '' : ' todo')+'">'+esc(c.state || "Not started")+'</div>'+
+    '</button>';
+  }).join("") + '</div>';
+
+  h += '<blockquote class="pull">'+
+    '“The person who commits fully to one stream and executes it imperfectly for ninety days will always outperform the person who researches all seven perfectly and starts none of them. Commitment is the variable that separates earners from eternal researchers.”'+
+    '<cite>The AI Income Blueprint, Chapter 13</cite>'+
+  '</blockquote>';
+
+  h += '<div class="card">'+
+    '<div class="eyebrow">Chapter 13 · p.200</div>'+
+    '<h2>The 12-Month Income Stack Roadmap</h2>'+
+    '<p class="lede">Where the primary and secondary streams go once you have chosen them. Your pace depends on your available time and income trajectory, but this is the sequence that most consistently produces stable, growing income.</p>'+
+    '<div class="tbl-scroll" style="margin-top:16px"><table>'+
+      '<thead><tr><th>Phase</th><th>Months</th><th>Primary focus</th><th>Secondary focus</th><th>Income target</th></tr></thead><tbody>'+
+      ROADMAP.map(function(r){
+        return '<tr><td><strong>'+esc(r.phase)+'</strong></td><td class="num">'+esc(r.months)+'</td>'+
+          '<td>'+esc(r.primary)+'</td><td>'+esc(r.secondary)+'</td><td class="num">'+esc(r.target)+'</td></tr>';
+      }).join("")+
+    '</tbody></table></div>'+
+    '<div class="note gold" style="margin-top:16px"><strong>Phase 1 purity is critical:</strong> primary stream only for the first 60 days. Splitting attention in the foundation phase produces mediocre results in both streams rather than excellent results in one.</div>'+
+  '</div>';
+
+  h += '<div class="card">'+
+    '<h2>Two more tools</h2>'+
+    '<p class="lede">Used throughout the plan, and useful on their own.</p>'+
+    '<div class="btn-row" style="margin-top:14px">'+
+      '<button class="btn ghost" type="button" data-go="prompt">CLEAR prompt builder</button>'+
+      '<button class="btn ghost" type="button" data-go="pricing">Pricing cheat sheet</button>'+
+    '</div>'+
+  '</div>';
+
+  return h;
+}
+
+/* ------------------------------- selector ------------------------------- */
+
+function viewSelector(){
+  var h = '';
+  h += '<div class="card">'+
+    '<div class="eyebrow">Chapter 13 · The Income Stream Selector</div>'+
+    '<h2>The AI Income Fit Matrix</h2>'+
+    '<p class="lede">The matrix scores all seven income streams against five dimensions of your actual situation. Score yourself honestly — there are no right answers, only honest ones. It takes about fifteen minutes.</p>'+
+    '<div class="note" style="margin-top:16px">Look for the stream where your <strong>lowest-scoring</strong> dimension is still manageable. It is the weakest link, not the strongest, that determines whether you persist.</div>'+
+  '</div>';
+
+  /* Step 1 — four personal dimensions */
+  h += '<div class="card">'+
+    '<div class="eyebrow muted">Step 1 · about 5 minutes</div>'+
+    '<h2>Score yourself on each dimension</h2>'+
+    DIMENSIONS.map(function(d){
+      return '<div class="dim">'+
+        '<h3>'+esc(d.q)+'</h3>'+
+        '<fieldset style="border:0;padding:0;margin:0"><legend class="sr">'+esc(d.q)+'</legend><div class="opts">'+
+        d.opts.map(function(o,i){
+          var val = i+1;
+          return '<label class="opt">'+
+            '<input type="radio" name="dim-'+d.key+'" value="'+val+'" data-dim="'+d.key+'"'+
+              (S.scores[d.key] === val ? ' checked' : '')+'>'+
+            '<span class="score">'+val+'</span>'+
+            '<span>'+esc(o)+'</span>'+
+          '</label>';
+        }).join("")+
+        '</div></fieldset>'+
+      '</div>';
+    }).join("")+
+  '</div>';
+
+  /* Step 1b — per-stream skill match */
+  h += '<div class="card">'+
+    '<div class="eyebrow muted">Step 1b · existing skill match</div>'+
+    '<h2>How well does your background fit each stream?</h2>'+
+    '<p class="lede">Rate 1–3 for each stream: <strong>1</strong> = little overlap with what you already know, <strong>2</strong> = partial overlap, <strong>3</strong> = my background maps directly onto this. Refer to your completed Skills Amplifier from Chapter 3.</p>'+
+    '<div style="margin-top:14px">'+
+    STREAMS.map(function(st){
+      return '<div class="skill-row">'+
+        '<div class="nm">#'+st.id+' '+esc(st.short)+'<small>'+esc(st.bestFor)+'</small></div>'+
+        '<fieldset class="seg" style="border-width:1px;padding:0;margin:0">'+
+          '<legend class="sr">Skill match for '+esc(st.short)+'</legend>'+
+          [1,2,3].map(function(v){
+            return '<label><input type="radio" name="skill-'+st.id+'" value="'+v+'" data-skill="'+st.id+'"'+
+              (S.skills[String(st.id)] === v ? ' checked' : '')+'>'+v+'</label>';
+          }).join("")+
+        '</fieldset>'+
+      '</div>';
+    }).join("")+
+    '</div>'+
+  '</div>';
+
+  /* Step 2 — results */
+  var rec = recommendation();
+  if(!rec){
+    var missing = [];
+    DIMENSIONS.forEach(function(d){ if(!S.scores[d.key]) missing.push(d.label); });
+    var sm = STREAMS.filter(function(s){ return !S.skills[String(s.id)]; }).length;
+    if(sm) missing.push(sm + " skill rating" + (sm > 1 ? "s" : ""));
+    h += '<div class="card"><div class="empty">'+
+      'Your recommendation appears here once every dimension is scored.'+
+      '<div style="margin-top:9px;font-size:13px">Still to answer: '+esc(missing.join(", "))+'</div>'+
+    '</div></div>';
+  } else {
+    h += renderResults(rec);
+  }
+
+  /* The matrix itself, for reference */
+  h += '<div class="card">'+
+    '<div class="eyebrow muted">Chapter 13 · p.190</div>'+
+    '<h2>The matrix in full</h2>'+
+    '<p class="lede">★★★ = very favourable · ★★ = moderate · ★ = challenging for this dimension.</p>'+
+    '<div class="tbl-scroll" style="margin-top:14px"><table>'+
+      '<thead><tr><th>Income stream</th><th>Time</th><th>Risk</th><th>Low cost</th><th>Social</th><th>Writing</th><th>Tech</th><th>Best fit profile</th></tr></thead><tbody>'+
+      STREAMS.map(function(st){
+        return '<tr>'+
+          '<td><strong>#'+st.id+'</strong> '+esc(st.short)+'</td>'+
+          '<td>'+stars(st.m.time)+'</td><td>'+stars(st.m.risk)+'</td><td>'+stars(st.m.cost)+'</td>'+
+          '<td>'+stars(st.m.social)+'</td><td>'+stars(st.writing)+'</td><td>'+stars(st.tech)+'</td>'+
+          '<td>'+esc(st.fit)+'</td>'+
+        '</tr>';
+      }).join("")+
+    '</tbody></table></div>'+
+    '<p class="src">Transcribed from the AI Income Fit Matrix, Chapter 13.</p>'+
+  '</div>';
+
+  /* Fear patterns */
+  h += '<div class="card">'+
+    '<div class="eyebrow muted">Chapter 13 · p.196</div>'+
+    '<h2>Choosing from fear vs. choosing from fit</h2>'+
+    '<div class="note warn" style="margin-bottom:12px">'+
+      '<strong>Fear pattern 1 — choosing the stream that requires the least visibility.</strong> Visibility-avoidant streams also have the longest time-to-income curves. The honest question: “Am I avoiding client interaction because my skills genuinely suit passive streams — or because client interaction makes me uncomfortable?” Discomfort diminishes with repetition. Income deferral does not.'+
+    '</div>'+
+    '<div class="note warn">'+
+      '<strong>Fear pattern 2 — choosing the stream that sounds most impressive.</strong> Streams chosen for prestige rather than fit require skills the person does not naturally possess. The honest question: “Am I choosing this because I genuinely believe I can deliver excellent results in this format — or because I want to be the kind of person who does this kind of work?”'+
+    '</div>'+
+  '</div>';
+
+  return h;
+}
+
+function renderResults(rec){
+  var P = rec.primary, Sec = rec.secondary;
+  var prof = profileFor(P.st.id);
+  var h = '';
+
+  h += '<div class="card">'+
+    '<div class="eyebrow">Step 2 · your recommendation</div>'+
+    '<h2>Primary and secondary stream</h2>'+
+    '<p class="lede">The stream with the closest match across all five dimensions is your primary — the one you commit to for the next 90 days. The second-highest is your secondary, to be added in Month 3 or 4 once the primary is established.</p>'+
+
+    '<div class="result" style="margin-top:18px">'+
+      '<div class="rank"><span class="chip">Primary stream</span><span class="pct">'+P.pct+'% fit</span>'+
+        '<span class="chip gray">'+P.exact+' of 4 dimensions matched exactly</span></div>'+
+      '<h3>#'+P.st.id+' — '+esc(P.st.name)+'</h3>'+
+      '<p class="lede">'+esc(P.st.fit)+'</p>'+
+      renderBars(P)+
+      renderStreamFacts(P.st)+
+      (P.weak.length ? '<div class="note warn" style="margin-top:14px"><strong>Weakest link:</strong> your '+
+        esc(P.weak.map(function(w){ return w.label.toLowerCase(); }).join(" and "))+
+        ' sits two steps away from what this stream asks for. The book’s rule is that the weakest dimension, not the strongest, decides whether you persist — check that you can genuinely manage this one before committing.</div>' : '')+
+    '</div>'+
+
+    '<div class="result secondary">'+
+      '<div class="rank"><span class="chip gray">Secondary stream</span><span class="pct">'+Sec.pct+'% fit</span></div>'+
+      '<h3>#'+Sec.st.id+' — '+esc(Sec.st.name)+'</h3>'+
+      '<p class="lede">'+esc(Sec.st.fit)+'</p>'+
+      '<div class="note gold" style="margin-top:12px">Do not start this one yet. Phase 1 purity: primary stream only for the first 60 days.</div>'+
+    '</div>'+
+
+    '<h3 style="margin-top:22px;margin-bottom:10px">All seven, ranked</h3>'+
+    '<div class="ranklist">'+
+      rec.all.map(function(r,i){
+        return '<div class="rankitem">'+
+          '<span class="pos">'+(i+1)+'</span>'+
+          '<span class="nm">#'+r.st.id+' '+esc(r.st.short)+'</span>'+
+          '<span class="mini-track"><span class="mini-fill" style="width:'+r.pct+'%"></span></span>'+
+          '<span class="val">'+r.pct+'%</span>'+
+        '</div>';
+      }).join("")+
+    '</div>'+
+    '<p class="src">Scoring follows the book’s Step 2 instruction: match each personal score to the stream’s matrix rating, and take the stream with the most matches. Skill match carries double weight.</p>'+
+  '</div>';
+
+  /* Book profile */
+  if(prof){
+    var sec = stream(prof.secondary);
+    h += '<div class="card">'+
+      '<div class="eyebrow">Chapter 13 · proven stream combinations</div>'+
+      '<h2>Profile '+prof.n+': '+esc(prof.name)+'</h2>'+
+      '<p class="lede">'+esc(prof.who)+'</p>'+
+      '<div class="stack" style="margin-top:16px">'+
+        '<div class="kv"><dt>Primary</dt><dd>#'+prof.primary+' '+esc(stream(prof.primary).short)+' — primary active income</dd></div>'+
+        '<div class="kv"><dt>Secondary</dt><dd>#'+prof.secondary+' '+esc(sec.short)+
+          (prof.altSecondary ? ' (or #'+prof.altSecondary+' '+esc(stream(prof.altSecondary).short)+')' : '')+'</dd></div>'+
+      '</div>'+
+      '<p style="margin-top:16px"><strong>Why this combination works.</strong> '+esc(prof.why)+'</p>'+
+      '<div class="note warn"><strong>Watch out for:</strong> '+esc(prof.watch)+'</div>'+
+      (Sec.st.id !== prof.secondary && Sec.st.id !== prof.altSecondary ?
+        '<div class="note" style="margin-top:12px">Your scores put <strong>#'+Sec.st.id+' '+esc(Sec.st.short)+'</strong> second, while the book pairs this primary with <strong>#'+prof.secondary+' '+esc(sec.short)+'</strong>. Both are defensible — the book’s pairing is based on workflow overlap, yours on personal fit.</div>' : '')+
+    '</div>';
+  } else {
+    var asSecondary = profilesWithSecondary(P.st.id);
+    h += '<div class="card">'+
+      '<div class="eyebrow">Chapter 13 · proven stream combinations</div>'+
+      '<h2>This stream is the book’s great complement</h2>'+
+      '<p class="lede">Prompt packs are the one stream the book never lists as a profile’s primary — it describes them as “quickest to build; complements any other stream.” They appear as the secondary stream in '+asSecondary.length+' of the six profiles.</p>'+
+      '<div class="note gold" style="margin-top:14px">Consider running #'+Sec.st.id+' '+esc(Sec.st.short)+' — your second-highest match — as the primary active income, with prompt packs built alongside it from the same expertise.</div>'+
+    '</div>';
+  }
+
+  /* Gut check */
+  var answered = GUTCHECKS.filter(function(g){ return S.gut[g.key] !== null; }).length;
+  var failed = GUTCHECKS.filter(function(g){ return S.gut[g.key] === false; });
+
+  h += '<div class="card">'+
+    '<div class="eyebrow muted">Step 3 · about 5 minutes</div>'+
+    '<h2>Gut-check the decision</h2>'+
+    '<p class="lede">Once the matrix has identified your top stream, apply these three questions to <strong>#'+P.st.id+' '+esc(P.st.short)+'</strong>.</p>'+
+    '<div style="margin-top:16px">'+
+    GUTCHECKS.map(function(g){
+      return '<div class="dim">'+
+        '<h3>'+esc(g.q)+'</h3>'+
+        '<div class="seg" style="margin-top:8px">'+
+          '<label><input type="radio" name="gut-'+g.key+'" value="yes" data-gut="'+g.key+'"'+(S.gut[g.key] === true ? ' checked' : '')+'>Yes</label>'+
+          '<label><input type="radio" name="gut-'+g.key+'" value="no" data-gut="'+g.key+'"'+(S.gut[g.key] === false ? ' checked' : '')+'>No</label>'+
+        '</div>'+
+        (S.gut[g.key] !== null ? '<div class="sub" style="margin-top:9px;margin-bottom:0">'+esc(S.gut[g.key] ? g.yes : g.no)+'</div>' : '')+
+      '</div>';
+    }).join("")+
+    '</div>'+
+    (answered === 3 ? (failed.length === 0
+      ? '<div class="note good" style="margin-top:16px"><strong>All three gut checks pass — commit.</strong> Write your commitment statement, then run the 7-day validation sprint before Day 1 of the launch plan.</div>'
+      : '<div class="note warn" style="margin-top:16px"><strong>'+failed.length+' gut check'+(failed.length>1?'s':'')+' failed.</strong> The book’s instruction is to revisit the second-highest-matching stream — <strong>#'+Sec.st.id+' '+esc(Sec.st.short)+'</strong> — and run the same three questions against it.</div>')
+      : '')+
+  '</div>';
+
+  /* Confirm choice */
+  h += '<div class="card">'+
+    '<h2>Lock in your choice</h2>'+
+    '<p class="lede">The rest of the kit — the sprint, the commitment statement, the launch plan track and the pricing table — works from these two. Override the recommendation here if your gut check pointed elsewhere.</p>'+
+    '<div class="grid-2" style="margin-top:16px">'+
+      '<label class="fld"><span class="lbl">Primary stream</span>'+
+        '<select data-chosen="primary">'+
+        '<option value="">Use the recommendation (#'+P.st.id+' '+esc(P.st.short)+')</option>'+
+        STREAMS.map(function(st){
+          return '<option value="'+st.id+'"'+(String(S.chosen.primary) === String(st.id) ? ' selected' : '')+'>#'+st.id+' '+esc(st.short)+'</option>';
+        }).join("")+
+        '</select></label>'+
+      '<label class="fld"><span class="lbl">Secondary stream</span>'+
+        '<select data-chosen="secondary">'+
+        '<option value="">Use the recommendation (#'+Sec.st.id+' '+esc(Sec.st.short)+')</option>'+
+        STREAMS.map(function(st){
+          return '<option value="'+st.id+'"'+(String(S.chosen.secondary) === String(st.id) ? ' selected' : '')+'>#'+st.id+' '+esc(st.short)+'</option>';
+        }).join("")+
+        '</select></label>'+
+    '</div>'+
+    '<div class="btn-row"><button class="btn" type="button" data-go="sprint">Next: the 7-day validation sprint</button></div>'+
+  '</div>';
+
+  return h;
+}
+
+function renderBars(row){
+  var h = '<div class="bars">';
+  row.dims.forEach(function(d){
+    var w = d.pts / 2 * 100;
+    var cls = d.pts === 2 ? "" : (d.pts === 1 ? " m1" : " m0");
+    var word = d.pts === 2 ? "exact match" : (d.pts === 1 ? "close" : "mismatch");
+    h += '<div class="bar-row">'+
+      '<span class="bl">'+esc(d.label)+'</span>'+
+      '<span class="bar-track"><span class="bar-fill'+cls+'" style="width:'+w+'%"></span></span>'+
+      '<span class="bv">you '+d.mine+' · stream '+d.theirs+' · '+word+'</span>'+
+    '</div>';
+  });
+  var sw = row.skillPts / 4 * 100;
+  var scls = row.skillPts === 4 ? "" : (row.skillPts === 2 ? " m1" : " m0");
+  h += '<div class="bar-row">'+
+    '<span class="bl">Skill match</span>'+
+    '<span class="bar-track"><span class="bar-fill'+scls+'" style="width:'+sw+'%"></span></span>'+
+    '<span class="bv">you rated '+row.skill+' of 3</span>'+
+  '</div>';
+  return h + '</div>';
+}
+
+function renderStreamFacts(st){
+  return '<div class="stack">'+
+    '<div class="kv"><dt>Type</dt><dd>'+esc(st.type)+'</dd></div>'+
+    '<div class="kv"><dt>Startup cost</dt><dd>'+esc(st.startup)+'</dd></div>'+
+    '<div class="kv"><dt>Time to income</dt><dd>'+esc(st.ttfi)+'</dd></div>'+
+    '<div class="kv"><dt>Realistic range</dt><dd>'+esc(st.range)+'</dd></div>'+
+    '<div class="kv"><dt>Primary tools</dt><dd>'+esc(st.tools)+'</dd></div>'+
+    '<div class="kv"><dt>Where to sell</dt><dd>'+esc(st.platforms)+'</dd></div>'+
+    '<div class="kv"><dt>Trajectory</dt><dd>'+esc(st.trajectory)+'</dd></div>'+
+    '<div class="kv"><dt>Read</dt><dd>Chapter '+st.chapter+'</dd></div>'+
+  '</div>';
+}
+
+/* -------------------------------- sprint -------------------------------- */
+
+function viewSprint(){
+  var prim = activePrimary();
+  var pr = sprintProgress();
+  var h = '';
+
+  h += '<div class="card">'+
+    '<div class="eyebrow">Chapter 13 · p.197</div>'+
+    '<h2>The 7-Day Validation Sprint</h2>'+
+    '<p class="lede">A rapid pre-commitment test that confirms your chosen stream is genuinely viable before you invest thirty days of serious effort. If you cannot complete seven specific actions in seven days, the obstacles you hit here are the same ones that will derail the full launch — and finding them in week one is dramatically more efficient than discovering them in week four.</p>'+
+    (prim ? '<div class="note" style="margin-top:16px">Running this sprint against <strong>#'+prim.id+' — '+esc(prim.name)+'</strong>. '+
+      (prim.ttfi.indexOf("Not separately") === 0 ? '' : 'The book’s stated time to first income for this stream is '+esc(prim.ttfi)+'.')+'</div>'
+      : '<div class="note warn" style="margin-top:16px">You have not chosen a stream yet. <button class="btn sm ghost" type="button" data-go="selector" style="margin-left:6px">Run the Fit Matrix first</button></div>')+
+  '</div>';
+
+  h += '<div class="card">'+
+    '<div class="prog">'+
+      '<span class="prog-label">'+pr.done+' of 7 days</span>'+
+      '<span class="prog-track"><span class="prog-fill" style="width:'+pr.pct+'%"></span></span>'+
+      '<span class="prog-label">'+pr.pct+'%</span>'+
+    '</div>'+
+    SPRINT.map(function(d){
+      var done = !!S.sprint.done[d.d];
+      return '<div class="sday'+(done ? ' checked' : '')+'">'+
+        '<div class="sday-top">'+
+          '<input class="big" type="checkbox" id="sp-'+d.d+'" data-sprint="'+d.d+'"'+(done ? ' checked' : '')+'>'+
+          '<div class="hd">'+
+            '<h4><label for="sp-'+d.d+'"><span class="dn">Day '+d.d+'</span>'+esc(d.focus)+'</label></h4>'+
+            '<div class="q">'+esc(d.q)+'</div>'+
+            '<div class="out">Output: '+esc(d.out)+'</div>'+
+          '</div>'+
+        '</div>'+
+        '<textarea data-sprintnote="'+d.d+'" placeholder="Your notes and output for day '+d.d+'…" aria-label="Notes for day '+d.d+'">'+esc(S.sprint.notes[d.d] || "")+'</textarea>'+
+      '</div>';
+    }).join("")+
+  '</div>';
+
+  h += '<div class="card">'+
+    '<h2>Day 7 decision</h2>'+
+    '<p class="lede">The sprint output is binary: proceed, refine, or pivot. Most readers will proceed. Some will refine. A small number will pivot — and all three are dramatically better than investing thirty days before discovering a fundamental mismatch.</p>'+
+    '<div class="decide" style="margin-top:16px">'+
+    SPRINT_OUTCOMES.map(function(o){
+      return '<label><input type="radio" name="sprint-decision" value="'+o.key+'" data-decision="'+o.key+'"'+
+        (S.sprint.decision === o.key ? ' checked' : '')+'>'+
+        '<strong>'+esc(o.name)+'</strong><span>'+esc(o.desc)+'</span></label>';
+    }).join("")+
+    '</div>'+
+    (S.sprint.decision === "proceed" ? '<div class="note good" style="margin-top:16px">Move immediately to the 30-Day Launch Plan. <button class="btn sm" type="button" data-go="plan" style="margin-left:8px">Open the plan</button></div>' : '')+
+    (S.sprint.decision === "refine" ? '<div class="note gold" style="margin-top:16px">Make your adjustments, update your commitment statement, then begin the launch plan with the refined version. <button class="btn sm ghost" type="button" data-go="commit" style="margin-left:8px">Edit the statement</button></div>' : '')+
+    (S.sprint.decision === "pivot" ? '<div class="note warn" style="margin-top:16px">Return to the matrix, choose your second-highest-scoring stream, and run the sprint again. <button class="btn sm ghost" type="button" data-go="selector" style="margin-left:8px">Back to the matrix</button></div>' : '')+
+  '</div>';
+
+  h += '<div class="card">'+
+    '<div class="eyebrow muted">Chapter 13 · the sprint in practice</div>'+
+    '<h2>What a pivot looks like</h2>'+
+    '<p>Denise began the sprint on career coaching. Day 3, attempting a sample session framework, it felt forced — she did not yet have a confident, articulated methodology. Day 4, a trusted friend asked “what makes your coaching different from anyone else’s?” and she could not answer clearly. Day 5’s gut check produced dread rather than energy at the thought of discovery calls. Day 6 she re-ran the matrix: digital products scored equally high on four of five dimensions and required no client interaction. Day 7: <strong>pivot</strong>. She re-ran the sprint from Day 1 with a Notion planner for HR professionals, and that second sprint ended in <strong>proceed</strong>.</p>'+
+    '<p>Her pivot saved four to six weeks of misaligned effort. The sprint worked exactly as designed.</p>'+
+  '</div>';
+
+  return h;
+}
+
+/* -------------------------------- commit -------------------------------- */
+
+function viewCommit(){
+  var prim = activePrimary(), sec = activeSecondary();
+  var c = S.commit;
+  var f = function(key, label, hint, ph){
+    return '<label class="fld"><span class="lbl">'+esc(label)+'</span>'+
+      (hint ? '<span class="hint">'+esc(hint)+'</span>' : '')+
+      '<input type="text" data-commit="'+key+'" value="'+esc(c[key])+'" placeholder="'+esc(ph||"")+'"></label>';
+  };
+
+  var h = '';
+  h += '<div class="card">'+
+    '<div class="eyebrow">Chapter 13 · p.200</div>'+
+    '<h2>Your Income Stream Commitment Statement</h2>'+
+    '<p class="lede">Not a journaling exercise for its own sake. It is a written commitment that forces the clarity vague intention never produces — stream, niche, offer, first action, timeline. The act of writing it converts a preference into a plan, and plans, unlike preferences, can be executed.</p>'+
+    (prim ? '' : '<div class="note warn" style="margin-top:16px">No stream chosen yet. <button class="btn sm ghost" type="button" data-go="selector" style="margin-left:6px">Run the Fit Matrix</button></div>')+
+  '</div>';
+
+  h += '<div class="card no-print">'+
+    '<h2>Fill in the template</h2>'+
+    f("name","Your name","","Sandra Mensah")+
+    '<div class="grid-2">'+
+      f("client","I help … (specific client or buyer type)","Be specific. “Small businesses” is not a niche.","EdTech companies that sell to teachers")+
+      f("outcome","… achieve (specific outcome)","","consistent blog and newsletter content that converts educators into engaged users")+
+      f("vehicle","… through (your service or product type)","","a monthly content retainer")+
+      f("expertise","… informed by my background in","","eighteen years in classroom teaching and curriculum design")+
+    '</div>'+
+    '<div class="grid-2">'+
+      f("offerName","Primary offer name","","The EdTech Content Engine")+
+      f("price","Price","See the pricing cheat sheet for the book’s starter, mid-tier and premium ranges.","$600/month")+
+    '</div>'+
+    f("buyer","Targeting (specific buyer description)","","marketing leads at 10–50 person EdTech companies")+
+    f("channel","Primary acquisition channel","Be specific: LinkedIn outreach, Etsy listings, cold email to local businesses, community seeding.","LinkedIn outreach plus cold email to a researched list of 30")+
+    f("firstAction","My first concrete action, today","Not this week, not tomorrow: today.","Draft and send five LinkedIn connection requests with a personalised note")+
+    '<div class="grid-2">'+
+      f("goalAmount","30-day income goal ($)","","$1,200")+
+      f("goalCount","From how many clients or sales","","2 retainer clients")+
+    '</div>'+
+    '<div class="grid-2">'+
+      '<label class="fld"><span class="lbl">By this date</span><input type="date" data-commit="goalDate" value="'+esc(c.goalDate)+'"></label>'+
+      '<label class="fld"><span class="lbl">Date signed</span><input type="date" data-commit="signedDate" value="'+esc(c.signedDate)+'"></label>'+
+    '</div>'+
+  '</div>';
+
+  var blank = function(v, fallback){
+    return v ? esc(v) : '<em class="blank">['+esc(fallback)+']</em>';
+  };
+  var fmtDate = function(d){
+    if(!d) return null;
+    var parts = d.split("-");
+    if(parts.length !== 3) return d;
+    var dt = new Date(Number(parts[0]), Number(parts[1])-1, Number(parts[2]));
+    if(isNaN(dt.getTime())) return d;
+    return dt.toLocaleDateString(undefined, { year:"numeric", month:"long", day:"numeric" });
+  };
+
+  h += '<div class="card">'+
+    '<h2 class="no-print">Your statement</h2>'+
+    '<div class="statement" id="statementOut">'+
+      '<p>I, '+blank(c.name,"your name")+', am committing to <strong>Income Stream #'+
+        (prim ? prim.id : '__')+': '+(prim ? esc(prim.name) : '<em class="blank">[stream name]</em>')+'</strong>.</p>'+
+      '<p><strong>My specific niche and positioning:</strong><br>'+
+        "“I help "+blank(c.client,"specific client or buyer type")+
+        " achieve "+blank(c.outcome,"specific outcome")+
+        " through "+blank(c.vehicle,"your service or product type")+
+        " informed by my background in "+blank(c.expertise,"your expertise")+'.”</p>'+
+      '<p><strong>My primary offer:</strong><br>'+
+        blank(c.offerName,"name of offer or product")+' at '+blank(c.price,"price")+
+        ' targeting '+blank(c.buyer,"specific buyer description")+'.</p>'+
+      '<p><strong>My primary acquisition channel:</strong><br>'+blank(c.channel,"how you will reach your first clients or buyers")+'</p>'+
+      '<p><strong>My first concrete action, today:</strong><br>'+blank(c.firstAction,"one specific action you will take today")+'</p>'+
+      '<p><strong>My 30-day income goal:</strong><br>'+
+        blank(c.goalAmount,"specific amount")+' from '+blank(c.goalCount,"number of clients or sales")+
+        ' by '+(c.goalDate ? esc(fmtDate(c.goalDate)) : '<em class="blank">[specific date]</em>')+'.</p>'+
+      '<p><strong>My secondary stream, to introduce in Month 3–4:</strong><br>'+
+        (sec ? 'Income Stream #'+sec.id+': '+esc(sec.name) : '<em class="blank">[stream number and name]</em>')+'</p>'+
+      '<p class="oath">I am not waiting until I feel fully ready.<br>I am starting with what I have, where I am, today.</p>'+
+      '<div class="sig">'+
+        '<span>Signed: '+(c.name ? esc(c.name) : "________________")+'</span>'+
+        '<span>Date: '+(c.signedDate ? esc(fmtDate(c.signedDate)) : "________________")+'</span>'+
+      '</div>'+
+    '</div>'+
+    '<div class="btn-row" style="margin-top:18px">'+
+      '<button class="btn" type="button" id="copyStatement">Copy statement</button>'+
+      '<button class="btn ghost" type="button" id="printStatement">Print</button>'+
+      '<button class="btn ghost" type="button" data-go="plan">Start the 30-day plan</button>'+
+    '</div>'+
+    '<p class="src no-print">Add this to your AI Income Declaration from Chapter 1. Together they are the foundation of everything in Chapter 14.</p>'+
+  '</div>';
+
+  return h;
+}
+
+function statementText(){
+  var prim = activePrimary(), sec = activeSecondary();
+  var c = S.commit;
+  var b = function(v, f){ return v || "["+f+"]"; };
+  var L = [];
+  L.push("INCOME STREAM COMMITMENT STATEMENT");
+  L.push("");
+  L.push("I, "+b(c.name,"your name")+", am committing to Income Stream #"+
+    (prim ? prim.id+": "+prim.name : "__: [stream name]")+".");
+  L.push("");
+  L.push("My specific niche and positioning:");
+  L.push("“I help "+b(c.client,"specific client/buyer type")+" achieve "+b(c.outcome,"specific outcome")+
+    " through "+b(c.vehicle,"your service/product type")+" informed by my background in "+b(c.expertise,"your expertise")+".”");
+  L.push("");
+  L.push("My primary offer:");
+  L.push(b(c.offerName,"name of offer / product")+" at "+b(c.price,"price")+" targeting "+b(c.buyer,"specific buyer description")+".");
+  L.push("");
+  L.push("My primary acquisition channel:");
+  L.push(b(c.channel,"how you will reach your first clients or buyers"));
+  L.push("");
+  L.push("My first concrete action, today:");
+  L.push(b(c.firstAction,"one specific action you will take today"));
+  L.push("");
+  L.push("My 30-day income goal:");
+  L.push(b(c.goalAmount,"specific amount")+" from "+b(c.goalCount,"number of clients/sales")+" by "+b(c.goalDate,"specific date")+".");
+  L.push("");
+  L.push("My secondary stream (to introduce in Month 3–4):");
+  L.push(sec ? "Income Stream #"+sec.id+": "+sec.name : "[stream number and name]");
+  L.push("");
+  L.push("I am not waiting until I feel fully ready.");
+  L.push("I am starting with what I have, where I am, today.");
+  L.push("");
+  L.push("Signed: "+(c.name || "________________")+"     Date: "+(c.signedDate || "________________"));
+  L.push("");
+  L.push("— Template from The AI Income Blueprint, Chapter 13.");
+  return L.join("\n");
+}
+
+/* --------------------------------- plan --------------------------------- */
+
+function viewPlan(){
+  var track = planTrack();
+  var prim = activePrimary();
+  var pr = planProgress();
+  var h = '';
+
+  h += '<div class="card">'+
+    '<div class="eyebrow">Chapter 14</div>'+
+    '<h2>Your 30-Day AI Income Launch Plan</h2>'+
+    '<p class="lede">Not a general motivational roadmap — a day-by-day sequence built for the thirty days between making your commitment and generating your first meaningful income. It assumes you have completed the 7-Day Validation Sprint, and it is designed for part-time execution at roughly two to three focused hours per day. If you have more time, compress the timeline. If less, extend it. The sequence matters more than the speed.</p>'+
+  '</div>';
+
+  h += '<div class="card">'+
+    '<h3>Which track are you on?</h3>'+
+    '<p class="lede" style="margin-bottom:14px">The day-by-day plan is written for service-based streams (#1, #3, #4, #6). The book provides week-level adaptations for product and content streams.</p>'+
+    '<div class="trackswitch">'+
+      '<label><input type="radio" name="track" value="service" data-track="service"'+(track==="service"?' checked':'')+'>Service streams · #1 #3 #4 #6</label>'+
+      '<label><input type="radio" name="track" value="product" data-track="product"'+(track==="product"?' checked':'')+'>Digital products & prompt packs · #2 #5</label>'+
+      '<label><input type="radio" name="track" value="content" data-track="content"'+(track==="content"?' checked':'')+'>Content creation · #7</label>'+
+    '</div>'+
+    (prim ? renderTrackAdvice(prim, track) : '')+
+    (track !== "service" ? '<div class="note gold">'+esc(ADAPTATIONS[track].note)+'</div>' : '')+
+    '<div class="prog" style="margin-top:18px;margin-bottom:0">'+
+      '<span class="prog-label">'+pr.done+' of '+pr.total+' actions</span>'+
+      '<span class="prog-track"><span class="prog-fill" style="width:'+pr.pct+'%"></span></span>'+
+      '<span class="prog-label">'+pr.pct+'%</span>'+
+    '</div>'+
+  '</div>';
+
+  h += '<div class="card tight no-print"><div class="note">'+
+    '<strong>One task at a time.</strong> Complete the primary task before the secondary — partial completion of two tasks is consistently less valuable than full completion of one. '+
+    '<strong>Do not skip days:</strong> skipping a day does not mean losing a day, it means the next day’s action is harder because its foundation is incomplete. '+
+    '<strong>Adapt, don’t abandon:</strong> if an action does not apply to your exact niche, adjust it rather than skip it. '+
+    '<strong>The milestone is the minimum,</strong> not the ceiling.'+
+  '</div></div>';
+
+  PLAN_WEEKS.forEach(function(w){
+    var adapt = track !== "service"
+      ? (ADAPTATIONS[track].weeks.filter(function(a){ return a.n === w.n; })[0] || null)
+      : null;
+    var replaced = adapt && adapt.mode === "replace";
+
+    h += '<section class="week">'+
+      '<div class="week-head">'+
+        '<span class="wk">Week '+w.n+'</span>'+
+        '<h3>'+esc(adapt ? adapt.title : w.title)+'</h3>'+
+        '<div class="goal">'+esc(adapt && replaced ? adapt.goal : w.goal)+'</div>'+
+      '</div>'+
+      '<div class="week-body">';
+
+    if(!replaced){
+      h += '<p style="font-size:13.5px;color:var(--ink-3);padding:13px 0 3px;margin:0">'+esc(w.intro)+'</p>';
+      w.days.forEach(function(d){
+        var done = planDone("d"+d.d);
+        h += '<div class="day'+(done ? ' checked' : '')+'">'+
+          '<div class="day-top">'+
+            '<input class="big chk" type="checkbox" id="pl-d'+d.d+'" data-plan="d'+d.d+'"'+(done ? ' checked' : '')+'>'+
+            '<div class="hd">'+
+              '<h4><label for="pl-d'+d.d+'"><span class="dn">Day '+d.d+'</span> <span class="ttl">'+esc(d.title)+'</span></label> <span class="t">'+esc(d.time)+'</span></h4>'+
+              '<ul>'+d.items.map(function(i){ return '<li>'+esc(i)+'</li>'; }).join("")+'</ul>'+
+              (d.check ? '<div class="mcheck">Milestone check: '+esc(d.check)+'</div>' : '')+
+            '</div>'+
+          '</div>'+
+        '</div>';
+      });
+    }
+
+    if(adapt){
+      if(!replaced){
+        h += '<div class="day"><div class="hd"><h4 style="color:var(--brand)">Plus, for '+esc(ADAPTATIONS[track].label)+'</h4></div></div>';
+      }
+      adapt.items.forEach(function(txt, i){
+        var id = track+"-w"+w.n+"-"+i;
+        var done = planDone(id);
+        h += '<div class="day'+(done ? ' checked' : '')+'">'+
+          '<div class="day-top">'+
+            '<input class="big chk" type="checkbox" id="pl-'+id+'" data-plan="'+id+'"'+(done ? ' checked' : '')+'>'+
+            '<div class="hd"><h4><label for="pl-'+id+'"><span class="ttl">'+esc(txt)+'</span></label></h4></div>'+
+          '</div>'+
+        '</div>';
+      });
+    }
+
+    h += '<div class="milestone">'+
+      '<h4>✓ Week '+w.n+' milestone</h4>'+
+      '<ul>'+w.milestone.map(function(m){ return '<li>'+esc(m)+'</li>'; }).join("")+'</ul>'+
+    '</div>';
+
+    if(w.milestoneNote){
+      h += '<div class="note gold" style="margin-top:11px">'+esc(w.milestoneNote)+'</div>';
+    }
+    if(w.troubleshoot){
+      h += '<div class="note warn" style="margin-top:11px"><strong>'+esc(w.troubleshoot.title)+'</strong><ul style="margin:7px 0 0;padding-left:18px">'+
+        w.troubleshoot.items.map(function(t){ return '<li>'+esc(t)+'</li>'; }).join("")+'</ul></div>';
+    }
+
+    h += '</div></section>';
+  });
+
+  h += '<div class="card no-print">'+
+    '<div class="btn-row">'+
+      '<button class="btn ghost" type="button" id="printPlan">Print this plan</button>'+
+      '<button class="btn ghost" type="button" data-go="prompt">Open the CLEAR builder</button>'+
+      '<button class="btn ghost" type="button" data-go="pricing">Check your pricing</button>'+
+    '</div>'+
+  '</div>';
+
+  return h;
+}
+
+function renderTrackAdvice(prim, track){
+  var suggested = prim.kind;
+  if(suggested === track) return '';
+  var names = { service:"the service track", product:"the digital products & prompt packs track", content:"the content creation track" };
+  return '<div class="note" style="margin-bottom:12px">Your primary stream is <strong>#'+prim.id+' '+esc(prim.short)+
+    '</strong>, which the book runs on <strong>'+esc(names[suggested])+'</strong>. '+
+    '<button class="btn sm ghost" type="button" data-settrack="'+suggested+'" style="margin-left:6px">Switch</button></div>';
+}
+
+/* -------------------------------- prompt -------------------------------- */
+
+function assembledPrompt(){
+  var p = S.prompt;
+  var L = [];
+  var add = function(label, v){ if(v && v.trim()) L.push(label+": "+v.trim()); };
+  add("ROLE", p.role);
+  add("CONTEXT", p.context);
+  add("AUDIENCE", p.audience);
+  add("EXAMPLE", p.example);
+  add("LENGTH", p.length);
+  add("TASK", p.task);
+  return L.join("\n\n");
+}
+
+function viewPrompt(){
+  var p = S.prompt;
+  var out = assembledPrompt();
+  var h = '';
+
+  h += '<div class="card">'+
+    '<div class="eyebrow">Chapter 5 · p.45</div>'+
+    '<h2>The CLEAR Formula</h2>'+
+    '<p class="lede">Five dimensions that address the five most common reasons AI output falls short. A complete CLEAR prompt takes about ninety seconds longer to write than a weak one; the editing time saved and the quality gained are typically ten to twenty times that investment.</p>'+
+    '<div class="clear-key" style="margin-top:18px">'+
+      CLEAR.slice().sort(function(a,b){
+        var order = ["context","length","example","audience","role"];
+        return order.indexOf(a.key) - order.indexOf(b.key);
+      }).map(function(c){
+        return '<div class="row"><span class="ltr">'+c.ltr+'</span><span><b>'+esc(c.name)+'</b><span>'+esc(c.sub)+'</span></span></div>';
+      }).join("")+
+    '</div>'+
+  '</div>';
+
+  h += '<div class="card">'+
+    '<h2>Build your prompt</h2>'+
+    '<p class="lede">Fields are ordered the way the book assembles a finished prompt. Placeholders are the book’s own worked example — a local Italian restaurant’s Instagram.</p>'+
+    '<div style="margin-top:18px">'+
+    CLEAR.map(function(c){
+      return '<label class="fld">'+
+        '<span class="lbl">'+c.ltr+' — '+esc(c.name)+'</span>'+
+        '<span class="hint">'+esc(c.why)+'</span>'+
+        '<textarea data-prompt="'+c.key+'" rows="3" placeholder="'+esc(c.ph)+'">'+esc(p[c.key])+'</textarea>'+
+      '</label>';
+    }).join("")+
+    '<label class="fld">'+
+      '<span class="lbl">TASK — what you actually want</span>'+
+      '<span class="hint">The specific job, stated last, after the AI knows who it is, what the situation is, and who it is writing for.</span>'+
+      '<textarea data-prompt="task" rows="2" placeholder="Write a Saturday evening caption promoting their new family-style pasta sharing platter, priced at $42 and designed for a table of four.">'+esc(p.task)+'</textarea>'+
+    '</label>'+
+    '</div>'+
+  '</div>';
+
+  h += '<div class="card">'+
+    '<h2>Your assembled prompt</h2>'+
+    (out
+      ? '<pre class="out" id="promptOut">'+highlightPrompt(out)+'</pre>'+
+        '<div class="btn-row" style="margin-top:16px">'+
+          '<button class="btn" type="button" id="copyPrompt">Copy prompt</button>'+
+          '<button class="btn ghost" type="button" id="clearPrompt">Clear fields</button>'+
+        '</div>'
+      : '<div class="empty">Fill in any field above and your assembled prompt appears here, ready to paste into ChatGPT or Claude.</div>')+
+  '</div>';
+
+  h += '<div class="card">'+
+    '<div class="eyebrow muted">Chapter 5 · p.51</div>'+
+    '<h2>The 3-Pass Method</h2>'+
+    '<p class="lede">CLEAR gets you the best possible first draft. The 3-Pass Method gets you from that draft to a finished, client-ready deliverable. The critical discipline is staying in each pass for its intended purpose — trying to edit, fact-check and polish simultaneously produces a slow, anxious process that undermines the speed advantage AI provides.</p>'+
+    '<div class="pass" style="margin-top:18px">'+
+      PASSES.map(function(x){
+        return '<div class="p"><div class="n">'+esc(x.n)+'</div><h4>'+esc(x.purpose)+'</h4>'+
+          '<p><strong>'+esc(x.what)+'</strong><br>'+esc(x.focus)+'</p></div>';
+      }).join("")+
+    '</div>'+
+    '<div class="note" style="margin-top:16px">With practice, three passes on a 600-word blog post take about twenty-five minutes total — against roughly ninety minutes of traditional production time. <strong>No unedited AI output reaches a client.</strong></div>'+
+  '</div>';
+
+  return h;
+}
+
+/* -------------------------------- pricing ------------------------------- */
+
+function viewPricing(){
+  var prim = activePrimary();
+  var focus = prim ? prim.id : null;
+  var h = '';
+
+  h += '<div class="card">'+
+    '<div class="eyebrow">Appendix D · p.286</div>'+
+    '<h2>Pricing Cheat Sheet</h2>'+
+    '<p class="lede">Starter, mid-tier and premium rates for all seven income streams, based on quality positioning and niche expertise.</p>'+
+    '<div class="note gold" style="margin-top:16px">Start at or above the <strong>starter</strong> rate — never below. Raise to <strong>mid-tier</strong> after 3+ positive client engagements. Target <strong>premium</strong> once your positioning, testimonials and delivery are demonstrably excellent.</div>'+
+  '</div>';
+
+  STREAMS.forEach(function(st){
+    var rows = PRICING.filter(function(r){ return r.s === st.id; });
+    if(!rows.length) return;
+    var isFocus = focus === st.id;
+    h += '<div class="card"'+(isFocus ? ' style="border-color:var(--brand);border-width:2px"' : '')+'>'+
+      '<div class="eyebrow'+(isFocus ? '' : ' muted')+'">Stream #'+st.id+(isFocus ? ' · your primary stream' : '')+'</div>'+
+      '<h2>'+esc(st.short)+'</h2>'+
+      '<p class="lede">'+esc(st.range)+'</p>'+
+      '<div class="tbl-scroll" style="margin-top:14px"><table>'+
+        '<thead><tr><th>Offering</th><th>Starter</th><th>Mid-tier</th><th>Premium</th><th>Notes</th></tr></thead><tbody>'+
+        rows.map(function(r){
+          return '<tr><td><strong>'+esc(r.offer)+'</strong></td>'+
+            '<td class="num">'+esc(r.a)+'</td><td class="num">'+esc(r.b)+'</td><td class="num">'+esc(r.c)+'</td>'+
+            '<td>'+esc(r.note)+'</td></tr>';
+        }).join("")+
+      '</tbody></table></div>'+
+    '</div>';
+  });
+
+  h += '<div class="card"><div class="note">All rates are the book’s, current as of the time of writing and subject to change. Tool pricing and platform terms move — always check current terms directly with the relevant providers.</div></div>';
+
+  return h;
+}
+
+/* =====================================================================
+   EVENTS
+   ===================================================================== */
+
+document.addEventListener("click", function(e){
+  if(!e.target || !e.target.closest) return;
+
+  var goBtn = e.target.closest("[data-go]");
+  if(goBtn){ go(goBtn.getAttribute("data-go")); return; }
+
+  var trackBtn = e.target.closest("[data-settrack]");
+  if(trackBtn){
+    S.track = trackBtn.getAttribute("data-settrack");
+    save(); render();
+    toast("Switched to the " + S.track + " track");
+    return;
+  }
+
+  if(e.target.closest("#copyStatement")){ copyText(statementText(), "Statement copied"); return; }
+  if(e.target.closest("#printStatement") || e.target.closest("#printPlan")){ window.print(); return; }
+
+  if(e.target.closest("#copyPrompt")){
+    var t = assembledPrompt();
+    if(t) copyText(t, "Prompt copied — paste it into ChatGPT or Claude");
+    return;
+  }
+  if(e.target.closest("#clearPrompt")){
+    S.prompt = { role:"", context:"", audience:"", example:"", length:"", task:"" };
+    save(); render(); toast("Prompt fields cleared");
+    return;
+  }
+});
+
+document.addEventListener("change", function(e){
+  var t = e.target;
+
+  if(t.hasAttribute("data-dim")){
+    S.scores[t.getAttribute("data-dim")] = Number(t.value);
+    save(); render(); return;
+  }
+  if(t.hasAttribute("data-skill")){
+    S.skills[t.getAttribute("data-skill")] = Number(t.value);
+    save(); render(); return;
+  }
+  if(t.hasAttribute("data-gut")){
+    S.gut[t.getAttribute("data-gut")] = (t.value === "yes");
+    save(); render(); return;
+  }
+  if(t.hasAttribute("data-chosen")){
+    var which = t.getAttribute("data-chosen");
+    S.chosen[which] = t.value ? Number(t.value) : null;
+    save(); render(); return;
+  }
+  if(t.hasAttribute("data-sprint")){
+    var d = t.getAttribute("data-sprint");
+    if(t.checked){ S.sprint.done[d] = true; } else { delete S.sprint.done[d]; }
+    save(); render(); return;
+  }
+  if(t.hasAttribute("data-decision")){
+    S.sprint.decision = t.value;
+    save(); render(); return;
+  }
+  if(t.hasAttribute("data-track")){
+    S.track = t.value;
+    save(); render(); return;
+  }
+  if(t.hasAttribute("data-plan")){
+    setPlanDone(t.getAttribute("data-plan"), t.checked);
+    /* Re-render only the progress bars and checked styling, keeping scroll position. */
+    var row = t.closest(".day");
+    if(row) row.classList.toggle("checked", t.checked);
+    updatePlanProgress();
+    renderTabs();
+    return;
+  }
+  if(t.hasAttribute("data-commit")){
+    S.commit[t.getAttribute("data-commit")] = t.value;
+    save(); updateStatement(); return;
+  }
+});
+
+document.addEventListener("input", function(e){
+  var t = e.target;
+
+  if(t.hasAttribute("data-sprintnote")){
+    S.sprint.notes[t.getAttribute("data-sprintnote")] = t.value;
+    save(); return;
+  }
+  if(t.hasAttribute("data-prompt")){
+    S.prompt[t.getAttribute("data-prompt")] = t.value;
+    save(); updatePromptOut(); return;
+  }
+  if(t.hasAttribute("data-commit")){
+    S.commit[t.getAttribute("data-commit")] = t.value;
+    save(); updateStatement(); return;
+  }
+});
+
+/* Live, non-destructive updates so the caret never jumps while typing. */
+function highlightPrompt(out){
+  return out.split("\n").map(function(line){
+    return esc(line).replace(/^(ROLE|CONTEXT|AUDIENCE|EXAMPLE|LENGTH|TASK):/,
+      function(m){ return '<span class="k">'+m+'</span>'; });
+  }).join("\n");
+}
+function updatePromptOut(){
+  var pre = el("promptOut");
+  var out = assembledPrompt();
+  /* Only re-render when the output panel has to appear or disappear. */
+  if(!!pre !== !!out){ render(); return; }
+  if(pre) pre.innerHTML = highlightPrompt(out);
+}
+
+var statementTimer = null;
+function updateStatement(){
+  clearTimeout(statementTimer);
+  statementTimer = setTimeout(function(){
+    if(!el("statementOut")) return;
+    var scrollY = window.scrollY;
+    var active = document.activeElement;
+    var key = active && active.getAttribute ? active.getAttribute("data-commit") : null;
+
+    /* selectionStart throws on date inputs, so only text fields keep a caret. */
+    var selStart = null, selEnd = null;
+    if(key && active.type === "text"){
+      try{ selStart = active.selectionStart; selEnd = active.selectionEnd; }catch(e){}
+    }
+
+    render();
+
+    if(key){
+      var again = document.querySelector('[data-commit="'+key+'"]');
+      if(again){
+        again.focus();
+        if(selStart !== null){
+          try{ again.setSelectionRange(selStart, selEnd); }catch(e){}
+        }
+      }
+    }
+    window.scrollTo(0, scrollY);
+  }, 420);
+}
+
+function updatePlanProgress(){
+  var pr = planProgress();
+  var bars = document.querySelectorAll(".prog");
+  bars.forEach(function(b){
+    var labels = b.querySelectorAll(".prog-label");
+    var fill = b.querySelector(".prog-fill");
+    if(labels[0]) labels[0].textContent = pr.done + " of " + pr.total + " actions";
+    if(labels[1]) labels[1].textContent = pr.pct + "%";
+    if(fill) fill.style.width = pr.pct + "%";
+  });
+}
+
+/* ------------------------------- theme ---------------------------------- */
+
+function applyTheme(){
+  if(S.theme === "dark" || S.theme === "light"){
+    document.documentElement.setAttribute("data-theme", S.theme);
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+  }
+}
+el("themeBtn").addEventListener("click", function(){
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  var currentDark = S.theme ? S.theme === "dark" : prefersDark;
+  S.theme = currentDark ? "light" : "dark";
+  applyTheme(); save();
+});
+
+/* ------------------------------- export --------------------------------- */
+
+el("exportBtn").addEventListener("click", function(){
+  var prim = activePrimary(), sec = activeSecondary();
+  var L = [];
+  L.push("AI INCOME LAUNCH KIT — my progress");
+  L.push("Companion to The AI Income Blueprint by Hassan Mohammed");
+  L.push("Exported " + new Date().toLocaleString());
+  L.push("");
+  L.push("========================================");
+  L.push("FIT MATRIX");
+  L.push("========================================");
+  if(assessmentComplete()){
+    DIMENSIONS.forEach(function(d){ L.push(d.label + ": " + S.scores[d.key] + " of 3"); });
+    L.push("");
+    rankStreams().forEach(function(r, i){
+      L.push((i+1) + ". #" + r.st.id + " " + r.st.short + " — " + r.pct + "% fit (skill match " + r.skill + "/3)");
+    });
+    L.push("");
+    L.push("Primary:   #" + (prim ? prim.id + " " + prim.name : "—"));
+    L.push("Secondary: #" + (sec ? sec.id + " " + sec.name : "—"));
+    var g = GUTCHECKS.map(function(x){
+      return x.q + " " + (S.gut[x.key] === null ? "(unanswered)" : (S.gut[x.key] ? "YES" : "NO"));
+    });
+    L.push("");
+    L.push("Gut checks:");
+    g.forEach(function(x){ L.push("  - " + x); });
+  } else {
+    L.push("(not completed)");
+  }
+  L.push("");
+  L.push("========================================");
+  L.push("7-DAY VALIDATION SPRINT");
+  L.push("========================================");
+  SPRINT.forEach(function(d){
+    L.push("[" + (S.sprint.done[d.d] ? "x" : " ") + "] Day " + d.d + " — " + d.focus);
+    var n = S.sprint.notes[d.d];
+    if(n && n.trim()) L.push("    " + n.trim().split("\n").join("\n    "));
+  });
+  L.push("");
+  L.push("Decision: " + (S.sprint.decision ? S.sprint.decision.toUpperCase() : "(not made)"));
+  L.push("");
+  L.push("========================================");
+  L.push(statementText());
+  L.push("");
+  L.push("========================================");
+  L.push("30-DAY LAUNCH PLAN — " + planTrack() + " track");
+  L.push("========================================");
+  var pr = planProgress();
+  L.push(pr.done + " of " + pr.total + " actions complete (" + pr.pct + "%)");
+  L.push("");
+  planItems().forEach(function(it, i, arr){
+    if(i === 0 || arr[i-1].week !== it.week){ L.push(""); L.push("-- Week " + it.week + " --"); }
+    L.push("[" + (planDone(it.id) ? "x" : " ") + "] " + it.label);
+  });
+  var ap = assembledPrompt();
+  if(ap){
+    L.push("");
+    L.push("========================================");
+    L.push("CLEAR PROMPT");
+    L.push("========================================");
+    L.push(ap);
+  }
+  L.push("");
+
+  var blob = new Blob([L.join("\n")], { type:"text/plain;charset=utf-8" });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "ai-income-launch-kit.txt";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  toast("Downloaded ai-income-launch-kit.txt");
+});
+
+/* ------------------------------- reset ---------------------------------- */
+
+el("resetBtn").addEventListener("click", function(){
+  if(!window.confirm("Clear every answer, note and checkbox saved in this browser?\n\nThis cannot be undone. Download your data first if you want a copy.")) return;
+  var theme = S.theme;
+  S = blankState();
+  S.theme = theme;
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  save();
+  go("home");
+  toast("Everything cleared");
+});
+
+/* ------------------------------- boot ----------------------------------- */
+
+load();
+applyTheme();
+go("home");
+</script>
+</body>
+</html>
