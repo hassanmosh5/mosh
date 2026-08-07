@@ -1,0 +1,2434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Wealth Ideas Prompt Generator — CLEAR Formula Edition</title>
+<meta name="description" content="Build tens of thousands of CLEAR-formula AI prompts across 10 wealth ideas, then export them as a prompt pack you can sell on Gumroad, Etsy, Payhip and beyond. Single file, fully offline.">
+<meta name="color-scheme" content="light dark">
+<style>
+/* ===========================================================================
+   THE WEALTH IDEAS PROMPT GENERATOR
+   Single file. No external requests of any kind. Everything below is inline.
+   =========================================================================== */
+
+:root {
+  --ink:            #16161d;
+  --ink-2:          #414152;
+  --ink-3:          #6b6b80;
+  --bg:             #f6f5f2;
+  --surface:        #ffffff;
+  --surface-2:      #fbfaf7;
+  --line:           #e3e0d8;
+  --line-2:         #cfcbc0;
+  --gold:           #9a7413;
+  --gold-bg:        #fdf6e3;
+  --indigo:         #35357a;
+  --indigo-2:       #4a4aa0;
+  --indigo-bg:      #eeeefb;
+  --green:          #1d6b45;
+  --green-bg:       #e8f4ed;
+  --red:            #9d2f2f;
+  --shadow:         0 1px 2px rgba(20,20,35,.06), 0 8px 24px -12px rgba(20,20,35,.18);
+  --shadow-lg:      0 2px 4px rgba(20,20,35,.06), 0 24px 48px -20px rgba(20,20,35,.28);
+  --radius:         14px;
+  --radius-sm:      9px;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif: ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
+}
+
+html[data-theme="dark"] {
+  --ink:            #ece9e3;
+  --ink-2:          #b9b5ad;
+  --ink-3:          #8d8981;
+  --bg:             #14141a;
+  --surface:        #1c1c24;
+  --surface-2:      #22222c;
+  --line:           #30303c;
+  --line-2:         #43434f;
+  --gold:           #e0b64a;
+  --gold-bg:        #2b2413;
+  --indigo:         #a8a8f0;
+  --indigo-2:       #8f8fe0;
+  --indigo-bg:      #1f1f33;
+  --green:          #6fce9f;
+  --green-bg:       #16281f;
+  --red:            #e88b8b;
+  --shadow:         0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  --shadow-lg:      0 2px 4px rgba(0,0,0,.4), 0 24px 48px -20px rgba(0,0,0,.7);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --ink:            #ece9e3;
+    --ink-2:          #b9b5ad;
+    --ink-3:          #8d8981;
+    --bg:             #14141a;
+    --surface:        #1c1c24;
+    --surface-2:      #22222c;
+    --line:           #30303c;
+    --line-2:         #43434f;
+    --gold:           #e0b64a;
+    --gold-bg:        #2b2413;
+    --indigo:         #a8a8f0;
+    --indigo-2:       #8f8fe0;
+    --indigo-bg:      #1f1f33;
+    --green:          #6fce9f;
+    --green-bg:       #16281f;
+    --red:            #e88b8b;
+    --shadow:         0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+    --shadow-lg:      0 2px 4px rgba(0,0,0,.4), 0 24px 48px -20px rgba(0,0,0,.7);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { line-height: 1.25; margin: 0; font-weight: 650; letter-spacing: -.011em; }
+p { margin: 0 0 1em; }
+p:last-child { margin-bottom: 0; }
+a { color: var(--indigo); }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+
+/* ---------- top bar ---------- */
+
+.topbar {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.topbar .wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 62px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.brand { display: flex; align-items: baseline; gap: 10px; margin-right: auto; }
+.brand b { font-size: 17px; font-weight: 650; letter-spacing: -.02em; }
+.brand span { font-size: 12px; color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; }
+@media (max-width: 640px) { .brand span { display: none; } }
+
+/* ---------- buttons ---------- */
+
+button, .btn {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 550;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm);
+  padding: 8px 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: background .12s, border-color .12s, transform .12s;
+}
+button:hover, .btn:hover { background: var(--surface-2); border-color: var(--ink-3); }
+button:active { transform: translateY(1px); }
+button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visible,
+input:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--indigo-2);
+  outline-offset: 2px;
+}
+button.primary {
+  background: var(--indigo);
+  border-color: var(--indigo);
+  color: #fff;
+}
+html[data-theme="dark"] button.primary { color: #14141a; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) button.primary { color: #14141a; } }
+button.primary:hover { background: var(--indigo-2); border-color: var(--indigo-2); }
+button.gold {
+  background: var(--gold-bg);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+button.ghost { background: transparent; border-color: transparent; color: var(--ink-2); }
+button.ghost:hover { background: var(--surface-2); border-color: var(--line); }
+button.danger { color: var(--red); border-color: var(--line-2); }
+button.danger:hover { border-color: var(--red); }
+button[disabled] { opacity: .45; cursor: not-allowed; }
+button.sm { padding: 5px 10px; font-size: 13px; }
+
+/* ---------- tabs ---------- */
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  scrollbar-width: thin;
+}
+.tabs .wrap { display: flex; gap: 2px; }
+.tab {
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  border-bottom: 2.5px solid transparent;
+  padding: 12px 14px;
+  color: var(--ink-3);
+  font-weight: 550;
+  white-space: nowrap;
+  font-size: 14.5px;
+}
+.tab:hover { background: var(--surface-2); border-color: transparent; border-bottom-color: var(--line-2); }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--gold); }
+
+main { padding: 26px 0 80px; }
+.panel[hidden] { display: none; }
+
+/* ---------- cards ---------- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.card + .card { margin-top: 18px; }
+.card > h2 { font-size: 17px; margin-bottom: 4px; }
+.card > h2 + .sub { margin-top: 0; }
+.sub { color: var(--ink-3); font-size: 14px; margin: 0 0 16px; }
+
+.grid-2 { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 18px; }
+@media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 480px); gap: 18px; align-items: start; }
+@media (max-width: 1000px) { .split { grid-template-columns: 1fr; } }
+.sticky { position: sticky; top: 128px; }
+@media (max-width: 1000px) { .sticky { position: static; } }
+
+/* ---------- idea chips ---------- */
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 13.5px;
+  font-weight: 550;
+  color: var(--ink-2);
+}
+.chip[aria-pressed="true"] {
+  background: var(--indigo);
+  border-color: var(--indigo);
+  color: #fff;
+}
+html[data-theme="dark"] .chip[aria-pressed="true"] { color: #14141a; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) .chip[aria-pressed="true"] { color: #14141a; } }
+
+/* ---------- CLEAR fields ---------- */
+
+.field { border: 0; padding: 0; margin: 0 0 16px; }
+.field:last-child { margin-bottom: 0; }
+.field > legend {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0;
+  margin-bottom: 7px;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.letter {
+  display: inline-grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  border-radius: 6px;
+  background: var(--gold-bg);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  font: 650 12.5px/1 var(--mono);
+  flex: none;
+}
+.letter.plain { background: var(--indigo-bg); color: var(--indigo); border-color: var(--indigo-2); }
+.hint { font-size: 12.5px; color: var(--ink-3); margin: 5px 0 0; font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+select, textarea, input[type="text"], input[type="number"] {
+  font: inherit;
+  font-size: 14.5px;
+  width: 100%;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm);
+  padding: 9px 11px;
+}
+select { cursor: pointer; }
+textarea { resize: vertical; min-height: 62px; line-height: 1.55; }
+label.inline { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-2); cursor: pointer; }
+input[type="checkbox"], input[type="radio"] { width: 16px; height: 16px; accent-color: var(--indigo); flex: none; cursor: pointer; }
+
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.row.end { justify-content: flex-end; }
+.spacer { flex: 1 1 auto; }
+
+/* ---------- output ---------- */
+
+.output {
+  font: 13.5px/1.6 var(--mono);
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  max-height: 60vh;
+  overflow: auto;
+  margin: 0;
+  color: var(--ink);
+}
+.output .lbl { color: var(--gold); font-weight: 700; }
+.tokens { font-size: 12.5px; color: var(--ink-3); }
+
+/* ---------- misc ---------- */
+
+.pill {
+  display: inline-block;
+  font: 550 11.5px/1 var(--sans);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: var(--indigo-bg);
+  color: var(--indigo);
+  border: 1px solid transparent;
+}
+.pill.gold { background: var(--gold-bg); color: var(--gold); }
+.pill.green { background: var(--green-bg); color: var(--green); }
+
+.note {
+  background: var(--gold-bg);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-sm);
+  padding: 13px 15px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.note b { color: var(--ink); }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 9px 11px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); font-weight: 650; }
+tbody tr:last-child td { border-bottom: 0; }
+.scroll-x { overflow-x: auto; }
+
+ul.tight, ol.tight { margin: 0 0 1em; padding-left: 1.25em; }
+ul.tight li, ol.tight li { margin-bottom: .35em; }
+
+.stat { display: flex; gap: 22px; flex-wrap: wrap; }
+.stat > div { min-width: 88px; }
+.stat b { display: block; font: 650 24px/1.2 var(--sans); letter-spacing: -.02em; }
+.stat span { font-size: 12.5px; color: var(--ink-3); }
+
+.saved-item {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 13px 15px;
+  background: var(--surface-2);
+}
+.saved-item + .saved-item { margin-top: 10px; }
+.saved-item header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+.saved-item h3 { font-size: 14.5px; font-weight: 600; }
+.saved-item .meta { font-size: 12.5px; color: var(--ink-3); }
+.saved-item pre {
+  font: 12.5px/1.55 var(--mono);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 8px 0 0;
+  max-height: 220px;
+  overflow: auto;
+  color: var(--ink-2);
+}
+details > summary { cursor: pointer; font-size: 13.5px; color: var(--ink-2); }
+
+.empty { text-align: center; padding: 40px 20px; color: var(--ink-3); }
+.empty b { display: block; color: var(--ink-2); margin-bottom: 4px; }
+
+/* ---------- toast ---------- */
+
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 11px 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 550;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s, transform .18s;
+  z-index: 100;
+  max-width: calc(100vw - 40px);
+  text-align: center;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ---------- print ---------- */
+
+@media print {
+  .topbar, .tabs, .no-print { display: none !important; }
+  body { background: #fff; color: #000; }
+  .card { border: 0; box-shadow: none; padding: 0; }
+  .output { border: 1px solid #999; max-height: none; background: #fff; }
+  main { padding: 0; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <b>The Wealth Ideas Prompt Generator</b>
+      <span>CLEAR Formula Edition</span>
+    </div>
+    <button id="themeBtn" class="ghost" type="button" aria-label="Switch colour theme"><span id="themeIcon">◐</span> Theme</button>
+    <button id="exportAllBtn" class="ghost" type="button">⬇ Back up</button>
+    <button id="resetAllBtn" class="ghost danger" type="button">🗑 Clear</button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="wrap" role="tablist">
+    <button class="tab" role="tab" id="tab-build"   aria-controls="panel-build"   aria-selected="true">🎯 Generator</button>
+    <button class="tab" role="tab" id="tab-pack"    aria-controls="panel-pack"    aria-selected="false">📦 Pack Builder</button>
+    <button class="tab" role="tab" id="tab-library" aria-controls="panel-library" aria-selected="false">💾 My Library <span id="libCount" class="tokens"></span></button>
+    <button class="tab" role="tab" id="tab-sell"    aria-controls="panel-sell"    aria-selected="false">💰 Sell It</button>
+    <button class="tab" role="tab" id="tab-formula" aria-controls="panel-formula" aria-selected="false">📖 The Formula</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =================================================================== -->
+<!-- GENERATOR                                                            -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-build" role="tabpanel" aria-labelledby="tab-build">
+
+  <div class="card">
+    <h2>1. Pick a wealth idea</h2>
+    <p class="sub">Each idea carries 10 expert roles, 10 real business contexts, 10 audiences and 10 offers, drawn from the Wealth Ideas Matrix. Mixing them freely gives <b id="comboCount">10,000</b> distinct prompts inside a single idea.</p>
+    <div class="chips" id="ideaChips" role="group" aria-label="Wealth ideas"></div>
+    <p class="sub" style="margin:14px 0 0"><span class="pill gold" id="nichePill">Niche</span></p>
+  </div>
+
+  <div class="split" style="margin-top:18px">
+
+    <div>
+      <div class="card">
+        <h2>2. Build the prompt</h2>
+        <p class="sub">Every control below maps to one letter of the CLEAR Formula from Chapter 5 of <i>The AI Income Blueprint</i>. Choose a preset or select <b>Write my own…</b> in any dropdown.</p>
+
+        <fieldset class="field">
+          <legend><span class="letter">R</span> Role — the expertise the AI adopts</legend>
+          <select id="selRole" aria-describedby="hintRole"></select>
+          <textarea id="txtRole" hidden aria-label="Custom role" rows="2" placeholder="You are a…"></textarea>
+          <p class="hint" id="hintRole">The single highest-leverage line in the prompt. Specific credentials beat job titles.</p>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter">C</span> Context — the situation the AI cannot know</legend>
+          <select id="selContext" aria-describedby="hintContext"></select>
+          <textarea id="txtContext" hidden aria-label="Custom context" rows="3" placeholder="The business, the constraint, the number that matters…"></textarea>
+          <p class="hint" id="hintContext">Include the real constraint and any number you actually have. Vague context is the #1 cause of generic output.</p>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter">A</span> Audience — who reads the result</legend>
+          <select id="selAudience" aria-describedby="hintAudience"></select>
+          <textarea id="txtAudience" hidden aria-label="Custom audience" rows="2" placeholder="Who they are, what they care about, what they're sceptical of…"></textarea>
+          <p class="hint" id="hintAudience">Skipping Audience is the most common CLEAR mistake — it is what makes copy land or read like a brochure.</p>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter plain">$</span> Offer — the income stream you are selling</legend>
+          <select id="selOffer" aria-describedby="hintOffer"></select>
+          <p class="hint" id="hintOffer">Sets which of the book's seven income streams this prompt serves, and filters the task list below.</p>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter plain">▸</span> Task — what you want produced</legend>
+          <select id="selTask" aria-describedby="hintTask"></select>
+          <textarea id="txtTask" hidden aria-label="Custom task" rows="2" placeholder="Write / build / design / outline…"></textarea>
+          <p class="hint" id="hintTask">One task per prompt. Stuffing three requests into one prompt degrades all three.</p>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter">L</span> Length — exact format and size</legend>
+          <select id="selLength" aria-describedby="hintLength"></select>
+          <textarea id="txtLength" hidden aria-label="Custom length" rows="4" placeholder="800 words, 5 sections, markdown…"></textarea>
+          <p class="hint" id="hintLength">Without this you get default medium-length prose, which is almost never what you needed.</p>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter">E</span> Example — the tone or format to match</legend>
+          <select id="selExample" aria-describedby="hintExample"></select>
+          <textarea id="txtExample" hidden aria-label="Custom example" rows="3" placeholder="Paste a sample, or describe the reference…"></textarea>
+          <p class="hint" id="hintExample">A pasted sample of your own writing is worth more than any adjective.</p>
+        </fieldset>
+
+        <div class="row" style="margin-top:18px">
+          <button id="matchBtn" class="primary" type="button">🔗 Matched row</button>
+          <button id="shuffleBtn" type="button">🎲 Mixed combination</button>
+          <button id="resetBtn" type="button">↺ Reset fields</button>
+        </div>
+        <p class="hint" style="margin-top:9px"><b>Matched</b> takes the role, context, audience and offer from one row of the workbook, so they describe a single coherent business. <b>Mixed</b> recombines all four freely — far more variety, but check the combination makes sense before you sell the output.</p>
+      </div>
+
+      <div class="card">
+        <h2>3. Finishing options</h2>
+        <p class="sub">Small additions that measurably improve first-draft quality.</p>
+        <div style="display:grid; gap:11px">
+          <label class="inline"><input type="checkbox" id="optQuestions"> Ask me up to 3 clarifying questions before writing</label>
+          <label class="inline"><input type="checkbox" id="optNoFluff" checked> Ban AI clichés (“delve”, “tapestry”, “in today's fast-paced world”)</label>
+          <label class="inline"><input type="checkbox" id="optConstraints" checked> Flag anything invented, and mark where I must add real numbers</label>
+          <label class="inline"><input type="checkbox" id="optVariants"> Give 3 distinct versions rather than one</label>
+          <label class="inline"><input type="checkbox" id="optOrder"> Order the prompt strictly C · L · E · A · R (default is role-first)</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="sticky">
+      <div class="card">
+        <div class="row" style="margin-bottom:12px">
+          <h2 style="margin:0">Your CLEAR prompt</h2>
+          <div class="spacer"></div>
+          <span class="tokens" id="promptStats"></span>
+        </div>
+        <pre class="output" id="promptOut" tabindex="0" aria-live="polite" aria-label="Generated prompt"></pre>
+        <div class="row" style="margin-top:12px">
+          <button id="copyBtn" class="primary" type="button">📋 Copy</button>
+          <button id="saveBtn" class="gold" type="button">💾 Save to library</button>
+          <button id="dlBtn" type="button">⬇ .txt</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>The 3-Pass Method</h2>
+        <p class="sub">Chapter 5: never ship the first draft. Run the prompt above, then paste these two follow-ups into the same chat.</p>
+        <div style="display:grid; gap:10px">
+          <div>
+            <div class="row" style="margin-bottom:6px">
+              <span class="pill">Pass 2 — accuracy &amp; depth</span>
+              <div class="spacer"></div>
+              <button class="sm" type="button" data-copy="pass2">📋</button>
+            </div>
+            <pre class="output" id="pass2" style="max-height:180px"></pre>
+          </div>
+          <div>
+            <div class="row" style="margin-bottom:6px">
+              <span class="pill">Pass 3 — voice &amp; polish</span>
+              <div class="spacer"></div>
+              <button class="sm" type="button" data-copy="pass3">📋</button>
+            </div>
+            <pre class="output" id="pass3" style="max-height:180px"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<!-- PACK BUILDER                                                         -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-pack" role="tabpanel" aria-labelledby="tab-pack" hidden>
+
+  <div class="card">
+    <h2>Build a sellable prompt pack</h2>
+    <p class="sub">Chapter 10 treats a prompt pack as its own product category: a curated, tested collection for one niche, sold as a download. This builds one — cover page, how-to-use guide, numbered CLEAR prompts, customising instructions and a licence — as a single Markdown or plain-text file you can upload anywhere.</p>
+
+    <div class="grid-2">
+      <div>
+        <fieldset class="field">
+          <legend><span class="letter plain">1</span> Which wealth ideas?</legend>
+          <div class="chips" id="packIdeas" role="group" aria-label="Wealth ideas to include"></div>
+          <p class="hint">A pack aimed at <b>one</b> idea outsells a general pack. Pick several only if you are building a bundle.</p>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter plain">2</span> Which income streams?</legend>
+          <div class="chips" id="packStreams" role="group" aria-label="Income streams to include"></div>
+        </fieldset>
+      </div>
+
+      <div>
+        <fieldset class="field">
+          <legend><span class="letter plain">3</span> Pack size</legend>
+          <select id="packSize">
+            <option value="20">20 prompts — entry tier ($9–$17)</option>
+            <option value="30" selected>30 prompts — the sweet spot ($17–$27)</option>
+            <option value="50">50 prompts — full pack ($27–$37)</option>
+            <option value="75">75 prompts — professional collection ($47–$67)</option>
+            <option value="100">100 prompts — premium bundle ($67–$97)</option>
+          </select>
+          <p class="hint">Price bands are the book's ranges for prompt packs, not guarantees. List at the bottom of the band and raise as reviews accumulate.</p>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter plain">4</span> Pack title</legend>
+          <input type="text" id="packTitle" placeholder="Auto-generated from your selection">
+          <p class="hint">Lead with the searchable keywords: audience + outcome + format.</p>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter plain">5</span> Your name / brand</legend>
+          <input type="text" id="packAuthor" placeholder="Appears on the cover page and licence">
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter plain">6</span> Licence granted to the buyer</legend>
+          <select id="packLicense">
+            <option value="personal">Personal use — one buyer, own business, no resale</option>
+            <option value="commercial" selected>Commercial use — use for client work, no resale of the pack</option>
+            <option value="extended">Extended — commercial use plus modification, still no resale</option>
+          </select>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter plain">7</span> Combination quality</legend>
+          <label class="inline"><input type="checkbox" id="packCoherent" checked> Keep each prompt's role, context and audience matched as they appear in the workbook</label>
+          <p class="hint">Leave this on for anything you intend to sell. Turning it off recombines all four fields freely — many more variations, but some pairings will not describe a business that exists, and a buyer will notice.</p>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter plain">8</span> Format</legend>
+          <div class="row">
+            <label class="inline"><input type="radio" name="packFmt" value="md" checked> Markdown (.md)</label>
+            <label class="inline"><input type="radio" name="packFmt" value="txt"> Plain text (.txt)</label>
+          </div>
+          <p class="hint">Both open anywhere. Paste into Google Docs or Canva Docs and export a PDF for platforms that prefer one.</p>
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:6px">
+      <button id="packBtn" class="primary" type="button">⚙ Generate the pack</button>
+      <button id="packCopyBtn" type="button" disabled>📋 Copy all</button>
+      <button id="packDlBtn" type="button" disabled>⬇ Download</button>
+      <div class="spacer"></div>
+      <span class="tokens" id="packStats"></span>
+    </div>
+  </div>
+
+  <div class="card" id="packPreviewCard" hidden>
+    <div class="row" style="margin-bottom:10px">
+      <h2 style="margin:0">Preview</h2>
+      <div class="spacer"></div>
+      <button class="sm ghost" id="packPrintBtn" type="button">🖨 Print</button>
+    </div>
+    <pre class="output" id="packOut" style="max-height:70vh" tabindex="0" aria-label="Generated prompt pack"></pre>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<!-- LIBRARY                                                              -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-library" role="tabpanel" aria-labelledby="tab-library" hidden>
+  <div class="card">
+    <div class="row" style="margin-bottom:14px">
+      <h2 style="margin:0">My library</h2>
+      <div class="spacer"></div>
+      <button id="libExportBtn" type="button">⬇ Export all (.md)</button>
+      <button id="libClearBtn" class="danger" type="button">🗑 Clear library</button>
+    </div>
+    <p class="sub">Everything you save is stored in this browser only. Nothing is uploaded anywhere. Chapter 5's advice: the prompts that worked are the asset — never start from a blank page twice.</p>
+    <div id="libList"></div>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<!-- SELL IT                                                              -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-sell" role="tabpanel" aria-labelledby="tab-sell" hidden>
+
+  <div class="card">
+    <h2>Where to list it</h2>
+    <p class="sub">Fees, traffic and fit per platform, from the book's platform comparison. The recommended sequence is <b>Gumroad first</b> (zero cost, validate fast) → <b>Etsy</b> once you have 2–3 positive reviews → your <b>own site or Stan Store</b> once income is consistent, to cut fees and own the customer.</p>
+    <div class="scroll-x">
+      <table>
+        <thead><tr><th>Platform</th><th>Fees</th><th>Built-in traffic</th><th>What to upload</th><th>Why it's here</th></tr></thead>
+        <tbody id="platformRows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Listing copy generator</h2>
+    <p class="sub">The book's five-paragraph description structure, filled in from your pack. Generate, then edit in your own voice before you publish.</p>
+    <div class="row" style="margin-bottom:14px">
+      <button id="listingBtn" class="primary" type="button">✍ Generate listing copy</button>
+      <button id="listingCopyBtn" type="button" disabled>📋 Copy</button>
+      <span class="tokens">Uses the Pack Builder settings.</span>
+    </div>
+    <pre class="output" id="listingOut" style="max-height:50vh" tabindex="0" aria-label="Generated listing copy"></pre>
+  </div>
+
+  <div class="card">
+    <h2>Pre-launch checklist</h2>
+    <p class="sub">Tick these before you list. Saved automatically.</p>
+    <div id="checklist" style="display:grid; gap:10px"></div>
+  </div>
+
+  <div class="card">
+    <h2>Price bands</h2>
+    <p class="sub">The book's ranges for prompt packs and neighbouring product types. Price at the <b>bottom</b> of the band, then raise as reviews accumulate — a low price signals low value, and the higher-priced version often converts better.</p>
+    <div class="scroll-x">
+      <table>
+        <thead><tr><th>Product</th><th>Price range</th><th>Best platform</th><th>Buyer</th></tr></thead>
+        <tbody id="priceRows"></tbody>
+      </table>
+    </div>
+    <div class="note" style="margin-top:16px">
+      <b>Tiered pricing beats a single price.</b> Sell the same pack at three points with incremental value — pack at $17, pack + a 5-minute walkthrough video at $27, pack + walkthrough + a 30-minute setup call at $47. The middle tier almost always sells most; the premium tier exists to make the middle feel like exceptional value.
+    </div>
+    <div class="note" style="margin-top:12px">
+      <b>Income figures are the book's ranges, drawn from observed practitioner outcomes.</b> They are not guarantees of results, and nothing here is financial advice.
+    </div>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<!-- THE FORMULA                                                          -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-formula" role="tabpanel" aria-labelledby="tab-formula" hidden>
+
+  <div class="card">
+    <h2>The CLEAR Formula</h2>
+    <p class="sub">From Chapter 5, <i>The Art of the Prompt</i>. A CLEAR prompt takes about 90 seconds longer to write than a weak one and saves 10–20× that in editing.</p>
+    <div class="scroll-x">
+      <table>
+        <thead><tr><th style="width:1%"></th><th>Part</th><th>What it does</th><th>What goes wrong without it</th></tr></thead>
+        <tbody>
+          <tr><td><span class="letter">C</span></td><td><b>Context</b></td><td>The situation, background and specifics that frame the task.</td><td>The AI has no knowledge of your situation unless you give it. Output is generic.</td></tr>
+          <tr><td><span class="letter">L</span></td><td><b>Length</b></td><td>Exact format, structure, word count, output type.</td><td>You get default medium-length prose, which is almost never what you needed.</td></tr>
+          <tr><td><span class="letter">E</span></td><td><b>Example</b></td><td>A sample of the tone or format to match.</td><td>Tone drifts to the model's house style instead of yours.</td></tr>
+          <tr><td><span class="letter">A</span></td><td><b>Audience</b></td><td>Who reads this, what they care about, what they respond to.</td><td>The most commonly skipped part — and the reason copy reads like a brochure.</td></tr>
+          <tr><td><span class="letter">R</span></td><td><b>Role</b></td><td>The expertise the AI should adopt.</td><td>You get a competent generalist instead of a specialist.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub" style="margin:16px 0 0">Plus the <b>task</b> itself. This generator adds the task as its own labelled block, because one prompt should carry exactly one task.</p>
+  </div>
+
+  <div class="card">
+    <h2>The 3-Pass Method</h2>
+    <p class="sub">Refine the output instead of accepting the first draft.</p>
+    <ol class="tight">
+      <li><b>Draft pass</b> — generate the initial version. Judge structure only, not wording.</li>
+      <li><b>Accuracy &amp; depth pass</b> — check every claim, add what only you know, cut what is invented.</li>
+      <li><b>Voice &amp; polish pass</b> — make it sound like a person, and specifically like you.</li>
+    </ol>
+    <p class="sub" style="margin-bottom:0"><b>Mindset Shift #5:</b> prompting is a skill you build through iteration, not a trick you either know or don't.</p>
+  </div>
+
+  <div class="card">
+    <h2>The five mistakes this generator is designed to prevent</h2>
+    <ul class="tight">
+      <li><b>Vagueness</b> — every field here forces a specific, and every preset is a real business situation rather than a placeholder.</li>
+      <li><b>Stuffing several requests into one prompt</b> — the task field takes one task.</li>
+      <li><b>Skipping Audience</b> — it is a required field, not an optional one.</li>
+      <li><b>Not saving what worked</b> — the library is one click from the output.</li>
+      <li><b>Stopping at the first draft</b> — the 3-Pass follow-ups are generated alongside every prompt.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>The seven income streams</h2>
+    <p class="sub">Every offer in the matrix belongs to one of these. Chapters 6–12 of the book cover one each.</p>
+    <div class="scroll-x">
+      <table>
+        <thead><tr><th>Stream</th><th>Chapter</th><th>What you actually sell</th></tr></thead>
+        <tbody id="streamRows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>About this generator</h2>
+    <p>Built on the Wealth Ideas Matrix: <b>10 wealth ideas, each with 10 expert roles, 10 business contexts, 10 audiences and 10 offers</b>. Every preset in the dropdowns is a real row from that workbook — none of them are filler. Combined freely, that is <b id="totalCombos">99,000</b> distinct prompts. <span id="dupNote"></span></p>
+    <p>The prompt structure, the 3-Pass Method, the seven income streams, the platform comparison and the price bands are all from <i>The AI Income Blueprint</i> by Hassan Mohammed.</p>
+    <p style="margin-bottom:0">This file is entirely self-contained. It makes no network requests, loads no fonts, scripts, images or trackers, and sends nothing anywhere. Your saved prompts live in this browser's <code>localStorage</code> and nowhere else.</p>
+  </div>
+</section>
+
+</main>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+/* ---------------------------------------------------------------------------
+   THE WEALTH IDEAS MATRIX
+   10 wealth ideas x 10 expert roles x 10 contexts x 10 audiences x 10 offers.
+   Every value below is a real row from the Wealth Ideas Matrix workbook.
+   Mixing freely inside one idea gives 10,000 distinct CLEAR prompts, and
+   99,000 across all ten. (Not 100,000: the Life Coaching sheet repeats one
+   context, so it carries 9 unique contexts rather than 10. Duplicates are
+   dropped rather than padded, and every count in the app is computed from
+   the real arrays below.)
+   --------------------------------------------------------------------------- */
+const IDEAS = [
+  {
+    id: "marketplace", short: "Marketplace",
+    name: "Middleman App / Marketplace",
+    niche: "Two-Sided Marketplace & Platform Economy",
+    roles: [
+      "Marketplace Operations Consultant – specialises in user acquisition and vendor retention for multi-sided platforms",
+      "Conversion Rate Optimisation (CRO) Expert – focused on turning app visitors into active, paying users",
+      "Technical Workflow Automator – a Time Recovery Specialist who connects software to eliminate manual data entry",
+      "B2B Client Acquisition Strategist – specialises in cold outreach and referral architecture for professional service providers",
+      "Prompt Engineer for Tech Teams – designs custom internal prompt libraries to speed up technical documentation and coding",
+      "Marketplace Operations Consultant – vendor onboarding optimisation specialist",
+      "Fractional COO for Solopreneurs – focused on scaling solo operations through systems and process documentation",
+      "Conversion Rate Optimisation (CRO) Expert – B2B lead magnet design for over-extended agency founders",
+      "Marketplace Operations Consultant – sensitive-data onboarding and trust workflows",
+      "Marketplace Operations Consultant – social proof and review-collection automation",
+    ],
+    contexts: [
+      "A platform connecting independent electricians with property developers, struggling with a 15% drop-off rate during the vendor onboarding process.",
+      "An app for local mobile car detailers with 500 active users that needs to increase repeat booking frequency through an automated loyalty sequence.",
+      "A freelance programmer needs to build a demonstration workflow in Zapier showing an Instant Lead Response System for law firms.",
+      "A B2B marketplace for restaurant suppliers struggling to communicate volume-discount value to small, independent café owners.",
+      "A niche platform for specialized language tutors that needs to address the pain point of leakage, where users take transactions off-platform.",
+      "A marketplace for freelance graphic designers currently facing frequent disputes over scope creep and payment delays.",
+      "A peer-to-peer equipment rental app for construction that needs a trust-building verification workflow to reduce insurance claims.",
+      "A platform for virtual assistants that needs a B2B lead magnet targeting over-extended agency founders.",
+      "An app connecting elderly care providers with families that requires a reassuring tone for the onboarding of sensitive health data.",
+      "A marketplace for local photographers that aims to automate Google Review collection for top-rated vendors to build social proof.",
+    ],
+    audiences: [
+      "Independent electricians in metropolitan areas looking for reliable commercial property contracts.",
+      "Property developers seeking vetted, high-quality tradespeople to reduce project delays.",
+      "Operations managers at mid-sized logistics firms needing temporary warehouse labor.",
+      "Boutique law firm partners wanting to outsource consistent B2B content to a specialist.",
+      "Tech startup CEOs looking to hire marketing generalists rather than narrow specialists.",
+      "Freelance virtual assistants seeking to double their rates by adding AI automation services.",
+      "Retail chain owners needing to automate inventory management using custom Python scripts.",
+      "Senior systems architects in the FinTech sector struggling with the long-term costs of technical debt.",
+      "Local marketing agencies requiring bulk, high-speed digital offset printing for client campaigns.",
+      "Remote software engineers interested in off-grid, ergonomic mobile office van conversions.",
+    ],
+    offers: [
+      { stream: "Freelance Writing", detail: "Write B2B case studies demonstrating the ROI for service providers using the app." },
+      { stream: "Digital Products", detail: "Sell a Notion template for vendors to manage their marketplace orders." },
+      { stream: "Social Media Management", detail: "Offer a monthly retainer to manage the app's LinkedIn presence for investors." },
+      { stream: "AI Automation", detail: "Build an Instant Lead Response system that connects app inquiries to vendor SMS." },
+      { stream: "Prompt Packs", detail: "Sell a pack of 50 ChatGPT prompts for marketplace founders to handle dispute resolution." },
+      { stream: "Coaching/Consulting", detail: "Offer a 4-Week Sprint for niche providers to optimize their app profiles." },
+      { stream: "Content at Scale", detail: "Launch a faceless YouTube channel reviewing similar niche apps for affiliates." },
+      { stream: "Freelance Writing", detail: "Produce conversion-optimized homepage copy for the app's landing page." },
+      { stream: "Digital Products", detail: "Create a Canva ad kit for vendors to promote their services outside the app." },
+      { stream: "AI Automation", detail: "Implement an automated Google Review collection system for highly-rated providers." },
+    ],
+    rows: [
+      [0, 0, 0, 0],
+      [1, 1, 1, 1],
+      [2, 2, 2, 2],
+      [3, 3, 3, 3],
+      [4, 4, 4, 4],
+      [5, 5, 5, 5],
+      [6, 6, 6, 6],
+      [7, 7, 7, 7],
+      [8, 8, 8, 8],
+      [9, 9, 9, 9],
+    ],
+  },
+  {
+    id: "school", short: "School",
+    name: "School / Online School / Computer School",
+    niche: "EdTech & Online Education",
+    roles: [
+      "Instructional Design Architect – expert in converting complex manuals into digestible, 5-module mini-courses",
+      "Curriculum Development Mentor – focused on preparing students for high-stakes exams like WASSCE Physics",
+      "Student Engagement & Retention Strategist – specialises in reducing churn rates for online and correspondence schools",
+      "Self-Reliance Curriculum Designer – creator of workshops and guides for rural, low-bandwidth study contexts",
+      "Andragogy (Adult Learning) Specialist – expert in designing professional development programs for career-switchers",
+      "Talent Acquisition Brand Strategist – helps build employer brand and attract apprentices via outreach",
+      "Student Engagement & Retention Strategist – churn-reduction email sequences for music schools",
+      "Knowledge Monetisation Consultant – helps package domain expertise for parent education content",
+      "Academic Operational Specialist – helps school principals recover staff time using AI-powered parent communication tools",
+      "Instructional Design Architect – workbook validation and community feedback loops for business schools",
+    ],
+    contexts: [
+      "A corporate training center needs to convert a 40-page manual into a 5-module mini-course for remote team leads.",
+      "An author writing a Smart Physics Guide for WASSCE students needs a 10-chapter outline focusing on high-yield exam topics.",
+      "An online computer programming school is struggling to explain complex logic (recursion, APIs) to non-technical career-switchers.",
+      "A correspondence school for rural agriculture needs to develop low-bandwidth study guides for students with limited internet access.",
+      "A professional development platform for HR managers needs a How to Use AI workshop outline to address replacement fears.",
+      "A vocational school for tradespeople aims to increase attendance at Open Days using LinkedIn outreach to local apprentices.",
+      "A music school for adult beginners needs an automated email sequence to reduce student churn in the first 30 days.",
+      "A specialized school for dyslexic learners requires parent education content that breaks down recent pedagogical research.",
+      "A local Montessori school has declining enrollment and needs a Facebook ad campaign targeting local parents aged 25 to 40.",
+      "A business school for first-time entrepreneurs needs to validate a 7-Day Launch Sprint workbook using community feedback.",
+    ],
+    audiences: [
+      "Corporate HR managers needing Basics of Online Child Safety training for remote-working parents.",
+      "WASSCE candidates aged 16 to 19 who find Physics intimidating and need high-yield exam shortcuts.",
+      "Aspiring programmers from non-technical backgrounds wanting to learn clean code as a communication tool.",
+      "Rural agriculture students requiring low-bandwidth correspondence study guides.",
+      "Career-switchers aged 30 to 45 mapping their professional history to new roles in the AI economy.",
+      "Secondary school educators transitioning into EdTech content creation using classroom experience.",
+      "Retired teachers wanting to transition their classroom skills into a profitable online tutoring brand.",
+      "New managers in their first 90 days struggling with team delegation and running effective one-on-ones.",
+      "Millennial parents seeking modern classics for nursery rhymes that reflect 21st-century life.",
+      "First-time car owners looking for a simplified, non-technical guide to car maintenance.",
+    ],
+    offers: [
+      { stream: "AI Automation", detail: "Build automated enrollment and student onboarding sequences via Zapier." },
+      { stream: "Digital Products", detail: "Sell AI-generated study guides and workbooks on Etsy or Gumroad." },
+      { stream: "Prompt Packs", detail: "Create a Teacher's AI Command Centre pack with 50 lesson-planning prompts." },
+      { stream: "Social Media Management", detail: "Manage a local school's Google Business Profile to increase enrollment." },
+      { stream: "Freelance Writing", detail: "Write weekly parent newsletters using AI to maintain a consistent brand voice." },
+      { stream: "Coaching/Consulting", detail: "Provide AI Adoption Consulting to help school administrators recover staff time." },
+      { stream: "Content at Scale", detail: "Build an SEO-optimized blog regarding modern education trends for affiliate income." },
+      { stream: "Digital Products", detail: "Create a Notion Student OS template for academic organization." },
+      { stream: "AI Automation", detail: "Set up automated SMS reminders for parent-teacher conferences to reduce no-shows." },
+      { stream: "Freelance Writing", detail: "Produce technical blog posts explaining complex coding logic for computer schools." },
+    ],
+    rows: [
+      [0, 0, 0, 0],
+      [1, 1, 1, 1],
+      [2, 2, 2, 2],
+      [3, 3, 3, 3],
+      [4, 4, 4, 4],
+      [5, 5, 5, 5],
+      [6, 6, 6, 6],
+      [7, 7, 7, 7],
+      [8, 8, 8, 8],
+      [9, 9, 9, 9],
+    ],
+  },
+  {
+    id: "wellness", short: "Wellness",
+    name: "Herbal Medicine / Spiritual Products / Soap Making",
+    niche: "Holistic Wellness & Natural Products",
+    roles: [
+      "Holistic Wellness Content Strategist – writes compliance-safe, expert-led content for herbal medicine apothecaries",
+      "Mindfulness Ritual Set Designer – expert in creating product bundles that solve specific emotional pain points like chronic stress",
+      "Knowledge Monetisation Consultant – helps build email lists via lead magnets like a Herbal Pharmacy Guide",
+      "Mindfulness Ritual Set Designer – Pinterest and long-tail traffic specialist for Gumroad stores",
+      "Artisan Business Launch Consultant – focused on calculating profit margins and COGS for home-based soap makers",
+      "Executive Transformation Coach – coaching session frameworks for clients recovering from professional burnout",
+      "Horticultural E-commerce Consultant – identifies top pain points of balcony gardeners for seedling suppliers",
+      "Biblical Research & Analysis Consultant – specialises in repurposing ancient scripture insights for modern digital platforms",
+      "Holistic Wellness Content Strategist – compliance-safe FAQ writing that avoids medical claims",
+      "Self-Reliance Curriculum Designer – creator of workshops and guides for emergency preparedness and food security",
+    ],
+    contexts: [
+      "An apothecary shop in an urban area targeting stressed corporate professionals who suffer from chronic insomnia.",
+      "A spiritual product brand selling meditation journals needs a conversion-optimized product description for an Etsy listing.",
+      "A herbal medicine dispensary wants to create a lead magnet (Herbal Pharmacy Guide) to build an email list of eco-conscious mothers.",
+      "A mindfulness ritual set creator needs Pinterest pins to drive long-tail traffic to their Gumroad store.",
+      "A brand selling artisan soaps needs a TikTok ad script that highlights the satisfying process of hand-pouring ingredients.",
+      "A spiritual teacher offering guided meditations needs a coaching session framework for clients recovering from professional burnout.",
+      "A bulk seedling supplier needs to identify the top 10 pain points of balcony gardeners who have failed with plants before.",
+      "A niche blog about ancient scriptures wants to repurpose a 3,000-word article into 5 LinkedIn thought-leadership posts.",
+      "A wellness brand selling essential oils needs a compliance-safe FAQ section that avoids making medical claims.",
+      "A company selling Self-Reliance starter kits needs a YouTube video script for a faceless channel explaining emergency water filtration.",
+    ],
+    audiences: [
+      "Stressed corporate professionals suffering from chronic insomnia and seeking natural herbal remedies.",
+      "Middle-aged women seeking adaptogenic herbs for hormonal balance during menopause.",
+      "Busy mothers seeking a 30-day guided meditation journal habit.",
+      "Hobbyist soap makers wanting to calculate profit margins and COGS for an Etsy launch.",
+      "Burnt-out executives looking to reclaim work-life balance through structured mindfulness coaching.",
+      "Graduating university students needing a self-reliance curriculum for the digital age.",
+      "Amateur carpenters attempting their first furniture build with a structured workbook.",
+      "Small group leaders building community through structured scripture reflection exercises.",
+      "First-generation earners seeking personal finance content empowered by spiritual or mindset resilience.",
+      "Church administrators needing to automate volunteer outreach and Sunday service recaps.",
+    ],
+    offers: [
+      { stream: "Freelance Writing", detail: "Write holistic wellness blog posts targeting professionals with chronic stress." },
+      { stream: "Digital Products", detail: "Sell Mindfulness Ritual Sets or guidebooks for herbal tinctures." },
+      { stream: "Social Media Management", detail: "Manage an Instagram account for an apothecary focusing on process Reels." },
+      { stream: "AI Automation", detail: "Automate lead response for wellness consultation inquiries on a website." },
+      { stream: "Prompt Packs", detail: "Create a pack of prompts for holistic practitioners to draft custom remedy explainers." },
+      { stream: "Coaching/Consulting", detail: "Offer a Business Launch Sprint for hobbyist soap makers." },
+      { stream: "Content at Scale", detail: "Launch a niche newsletter on Substack about ancient spiritual practices." },
+      { stream: "Digital Products", detail: "Sell printable habit trackers for daily wellness routines." },
+      { stream: "Freelance Writing", detail: "Write product descriptions for Etsy shops selling ornamental seedlings or soaps." },
+      { stream: "AI Automation", detail: "Build a review request sequence for customers who buy spiritual products online." },
+    ],
+    rows: [
+      [0, 0, 0, 0],
+      [1, 1, 1, 1],
+      [2, 2, 2, 2],
+      [3, 3, 3, 3],
+      [4, 4, 4, 4],
+      [5, 5, 5, 5],
+      [6, 6, 6, 6],
+      [7, 7, 7, 7],
+      [8, 8, 8, 8],
+      [9, 9, 9, 9],
+    ],
+  },
+  {
+    id: "publishing", short: "Publishing",
+    name: "eBooks / Children's Rhymes / Scriptures",
+    niche: "Digital Publishing & Self-Publishing",
+    roles: [
+      "Nonfiction Developmental Editor – expert in structuring 10-chapter e-book outlines that deliver clear outcome promises",
+      "Early Childhood Literacy Consultant – specialist in rhythmic patterns and mnemonic devices for children's rhymes and nursery art",
+      "Knowledge Monetisation Consultant – ghostwriting and book outline architecture for executives",
+      "Self-Publishing Marketing Architect – focused on Etsy and Amazon SEO for digital books and printable workbooks",
+      "Knowledge Monetisation Consultant – 30-second hook and promo scripting for personal finance authors",
+      "Nonfiction Developmental Editor – breaking down technical topics using simple analogies for first-time owners",
+      "Biblical Research & Analysis Consultant – automated email drip campaigns for scripture sample-chapter downloads",
+      "Artisan Business Launch Consultant – Standard Operating Procedure design for soap-making safety guides",
+      "Self-Publishing Marketing Architect – sales-page mockup and visual asset design for digital workbooks",
+      "Knowledge Monetisation Consultant – quantifying curriculum results for B2B case studies",
+    ],
+    contexts: [
+      "An author writing a Smart Physics Guide for WASSCE students needs a 10-chapter outline focusing on high-yield exam topics.",
+      "A creator of children's rhymes needs a Notion Author Dashboard to track manuscript progress and character consistency.",
+      "An executive coach ghostwriting a book on leadership transitions needs a 2,000-word chapter on The First 90 Days.",
+      "A publisher of Modern Nursery Rhymes needs an Etsy SEO strategy for Millennial nursery art.",
+      "A personal finance expert writing an eBook for first-generation earners needs a 30-second hook for a YouTube promo video.",
+      "A writer of a DIY Mechanic guide needs to break down essential car maintenance for first-time owners using simple analogies.",
+      "An author of spiritual scripture reflections needs an automated email drip campaign for users who download a free sample chapter.",
+      "A content creator writing a Soap Making Business Launch guide needs a Standard Operating Procedure for lye safety.",
+      "A productivity specialist creating a 30-Day Habit Tracker eBook needs three mockup images for a sales page.",
+      "A teacher creating Basics of Online Child Safety materials needs to quantify the results of their curriculum for a B2B case study.",
+    ],
+    audiences: [
+      "WASSCE candidates aged 16 to 19 who find Physics intimidating and need high-yield exam shortcuts.",
+      "Millennial parents seeking modern classics for nursery rhymes that reflect 21st-century life.",
+      "New managers in their first 90 days struggling with team delegation and running effective one-on-ones.",
+      "First-generation earners seeking personal finance content empowered by spiritual or mindset resilience.",
+      "First-time car owners looking for a simplified, non-technical guide to car maintenance.",
+      "Hobbyist soap makers wanting to calculate profit margins and COGS for an Etsy launch.",
+      "Small group leaders building community through structured scripture reflection exercises.",
+      "Busy mothers seeking a 30-day guided meditation journal habit.",
+      "Retired teachers wanting to transition their classroom skills into a profitable online tutoring brand.",
+      "Corporate HR managers needing Basics of Online Child Safety training for remote-working parents.",
+    ],
+    offers: [
+      { stream: "Freelance Writing", detail: "Offer ghostwriting services for executives wanting to publish niche industry books." },
+      { stream: "Digital Products", detail: "Sell children's rhyme collections as printable PDF workbooks." },
+      { stream: "Content at Scale", detail: "Build a faceless YouTube channel narrating rhymes or scripture reflections." },
+      { stream: "Prompt Packs", detail: "Sell 50 prompts for authors to generate rhythmic patterns and character dialogue." },
+      { stream: "AI Automation", detail: "Automate an email drip campaign for readers who download a free sample chapter." },
+      { stream: "Coaching/Consulting", detail: "Consult for first-time authors on e-book self-publishing and marketing." },
+      { stream: "Digital Products", detail: "Create a Canva Brand Kit for independent authors to use on social media." },
+      { stream: "Freelance Writing", detail: "Produce SEO-optimized blog summaries of religious or philosophical texts." },
+      { stream: "Social Media Management", detail: "Manage a TikTok account for an author focusing on writing-tips videos." },
+      { stream: "Digital Products", detail: "Sell Notion Author Dashboards to track manuscript progress and sales." },
+    ],
+    rows: [
+      [0, 0, 0, 0],
+      [1, 1, 1, 1],
+      [2, 2, 2, 2],
+      [3, 3, 3, 3],
+      [4, 4, 4, 4],
+      [5, 5, 5, 5],
+      [6, 6, 6, 6],
+      [7, 7, 7, 7],
+      [8, 8, 8, 8],
+      [9, 9, 9, 9],
+    ],
+  },
+  {
+    id: "design", short: "Design",
+    name: "3D Illustrations / Animations / Cartoons / Graphics",
+    niche: "Creative & Digital Design Assets",
+    roles: [
+      "Technical Director for Motion Design – specialises in rigging, character consistency, and workflow for cartoon animators",
+      "Video-First Content Director – specialises in high-organic-reach Reels and TikToks for visual creative businesses",
+      "Game Development Asset Consultant – expert in building industry-specific illustration libraries for game designers",
+      "Visual Identity Brand Designer – focused on creating AI-enhanced design rationale and logo kits for B2B firms",
+      "3D Asset Marketplace Strategist – specialist in creating high-converting product descriptions for 3D asset packs",
+      "Print Production Efficiency Auditor – consultant for printing presses to reduce paper waste and automate inventory",
+      "Visual Identity Brand Designer – color palette rationale design for Canva template businesses",
+      "Video-First Content Director – YouTube SEO tags and titling for workflow-documentation vloggers",
+      "Creative Agency Pricing Coach – consultant who helps designers transition from hourly to value-based project fees",
+      "Video-First Content Director – Instagram content calendar design for community engagement",
+    ],
+    contexts: [
+      "A 3D illustration studio needs a service package design for Video-First social media content for luxury property brands.",
+      "A motion design studio needs to generate 20 LinkedIn content ideas targeting brand managers concerned about low engagement.",
+      "An independent animator creating cartoons needs a how-to-use guide for their Toon-Talker Script Pack on Creative Market.",
+      "A graphic designer specializing in SaaS brand identities needs a LinkedIn About section that highlights their AI-Enhanced speed.",
+      "A 3D asset pack creator needs a Gumroad sales page for Retro-Toon rigs targeting indie game developers.",
+      "A printing press owner needs to produce a case study on how automated inventory systems reduced paper waste by 90 percent.",
+      "A graphics business creating Canva templates for holistic wellness coaches needs a color palette rationale for their design brief.",
+      "A vlogger documenting their 3D workflow needs YouTube SEO tags and titles for a video titled How I Built a $2k/mo Side Hustle.",
+      "A design agency needs a rate increase letter for a retainer client after adding 3D modeling as a new service.",
+      "A cartoonist creating relatable daily struggle reels needs an Instagram content calendar focusing on community engagement.",
+    ],
+    audiences: [
+      "Brand managers concerned about declining engagement on static social media ads.",
+      "Indie game developers needing high-quality, pre-rigged 3D cartoon characters to save development time.",
+      "SaaS website designers seeking modern 3D asset packs to improve site conversion aesthetics.",
+      "Home-based bakery owners needing high-end visual branding kits for Instagram.",
+      "Eco-conscious art collectors interested in limited-edition, artist-designed sustainable apparel.",
+      "Local marketing agencies requiring bulk, high-speed digital offset printing for client campaigns.",
+      "Aspiring filmmakers struggling with funding hurdles and niche distribution for documentaries.",
+      "Solo travelers wanting to document their journeys for a vlog without losing presence in the moment.",
+      "Podcast hosts needing AI-assisted show notes and guest interview question frameworks.",
+      "Unsigned hip-hop artists in Atlanta looking for professional mixing and mastering sessions.",
+    ],
+    offers: [
+      { stream: "Digital Products", detail: "Sell 3D asset packs or cartoon character rigs on Creative Market." },
+      { stream: "Freelance Writing", detail: "Write design rationale documents for graphics agencies to present to clients." },
+      { stream: "Social Media Management", detail: "Offer Video-First packages managing high-organic-reach Reels for brands." },
+      { stream: "AI Automation", detail: "Build a project management SOP for creative studios to handle multiple client revisions." },
+      { stream: "Prompt Packs", detail: "Sell curated Midjourney or Firefly prompt packs for specific artistic styles." },
+      { stream: "Coaching/Consulting", detail: "Consult for businesses on using AI-enhanced visuals for brand identity." },
+      { stream: "Content at Scale", detail: "Launch a YouTube channel showcasing Day in the Life animation workflows." },
+      { stream: "Digital Products", detail: "Sell Canva templates featuring unique 3D illustrations for SaaS websites." },
+      { stream: "Freelance Writing", detail: "Produce technical blog posts on the future of 3D modeling and AI." },
+      { stream: "AI Automation", detail: "Build an automated client onboarding questionnaire for graphic design services." },
+    ],
+    rows: [
+      [0, 0, 0, 0],
+      [1, 1, 1, 1],
+      [2, 2, 2, 2],
+      [3, 3, 3, 3],
+      [4, 4, 4, 4],
+      [5, 5, 5, 5],
+      [6, 6, 6, 6],
+      [7, 7, 7, 7],
+      [8, 8, 8, 8],
+      [9, 9, 9, 9],
+    ],
+  },
+  {
+    id: "audio", short: "Audio",
+    name: "Beat Making / Music Studio / Online TV / Vlogger",
+    niche: "Music Production & Audio Media",
+    roles: [
+      "Music Production Workflow Architect – helps local studios manage sessions, mixing, and mastering retainers",
+      "Sonic Branding Consultant – expert in designing unique audio identities for brands using AI-enhanced production",
+      "Technical Workflow Automator – Time Recovery Specialist for studio booking reminders and lead response",
+      "Music Production Workflow Architect – TikTok behind-the-glass session-clip social strategy",
+      "Stage Presence and Speaking Mentor – music marketing prompt design covering ad copy to Spotify bios",
+      "Music Production Workflow Architect – 4-Week Sprint coaching offers for unsigned artists",
+      "Music Production Workflow Architect – Standard Operating Procedure design for weekly social media batching",
+      "3D Asset Marketplace Strategist – Etsy niche search-term identification for Children's Nursery Beats",
+      "B2B Client Acquisition Strategist – cold email templates targeting accounting firms with dormant podcasts",
+      "Creative Agency Pricing Coach – 3-tier pricing menu design anchoring price in value of a professional release",
+    ],
+    contexts: [
+      "A music studio owner in Atlanta needs an Instagram caption promoting their new lo-fi hip-hop beat-making sessions.",
+      "A producer selling synth loops needs a Creative Market product description for a HyperReal Audio Asset Pack.",
+      "A local recording studio suffering from a 15% no-show rate for evening sessions needs an automated SMS reminder system.",
+      "A beat maker targeting bedroom producers needs a lead magnet (Sample Pack) to build an email list for future sales.",
+      "An inspirational speaker needs a 3-hour workshop outline on The Resilience Factor for high-pressure corporate environments.",
+      "A music production consultant needs a 4-Week Sprint coaching offer for unsigned artists wanting to optimize their digital presence.",
+      "A studio manager needs a Standard Operating Procedure for the Weekly Social Media Batching of session clips.",
+      "A beat maker creating Children's Nursery Beats needs to identify niche search terms on Etsy to beat generic competitors.",
+      "A podcast editor using Descript needs a cold email template targeting local accounting firms with dormant podcasts.",
+      "A music studio offering Mixing and Mastering needs a 3-tier pricing menu that anchors the price in the value of a professional release.",
+    ],
+    audiences: [
+      "Independent bedroom producers seeking royalty-free lo-fi synth loops for instant inspiration.",
+      "Unsigned hip-hop artists in Atlanta looking for professional mixing and mastering sessions.",
+      "Podcast hosts needing AI-assisted show notes and guest interview question frameworks.",
+      "Solo travelers wanting to document their journeys for a vlog without losing presence in the moment.",
+      "Burnt-out executives looking to reclaim work-life balance through structured mindfulness coaching.",
+      "Brand managers concerned about declining engagement on static social media ads.",
+      "Aspiring filmmakers struggling with funding hurdles and niche distribution for documentaries.",
+      "Millennial parents seeking modern classics for nursery rhymes that reflect 21st-century life.",
+      "Independent craft brewery owners needing automated social media management for local event growth.",
+      "Indie game developers needing high-quality, pre-rigged 3D cartoon characters to save development time.",
+    ],
+    offers: [
+      { stream: "Digital Products", detail: "Sell royalty-free beat packs or synth loops on audio marketplaces." },
+      { stream: "Freelance Writing", detail: "Write video scripts for YouTube vloggers or online TV hosts." },
+      { stream: "AI Automation", detail: "Automate studio booking reminders and lead response for local musicians." },
+      { stream: "Social Media Management", detail: "Manage a music studio's TikTok focusing on behind-the-glass session clips." },
+      { stream: "Prompt Packs", detail: "Sell prompts for music marketing, covering everything from ad copy to Spotify bios." },
+      { stream: "Coaching/Consulting", detail: "Offer advisory retainers for independent artists on digital presence and strategy." },
+      { stream: "Content at Scale", detail: "Launch an SEO blog reviewing the latest studio gear and software." },
+      { stream: "Digital Products", detail: "Create a Spreadsheet Budget Tracker for unsigned bands." },
+      { stream: "Freelance Writing", detail: "Write monthly email newsletters for fans of a specific vlog or TV show." },
+      { stream: "AI Automation", detail: "Implement review request automation for studios to build local credibility." },
+    ],
+    rows: [
+      [0, 0, 0, 0],
+      [1, 1, 1, 1],
+      [2, 2, 2, 2],
+      [3, 3, 3, 3],
+      [4, 4, 4, 4],
+      [5, 5, 5, 5],
+      [6, 6, 6, 6],
+      [7, 7, 7, 7],
+      [8, 8, 8, 8],
+      [9, 9, 9, 9],
+    ],
+  },
+  {
+    id: "coaching", short: "Coaching",
+    name: "Life Coaching / Inspirational Speaking / Spiritual Teacher",
+    niche: "Personal Development & Coaching",
+    roles: [
+      "Executive Transformation Coach – specialises in career transitions and reclaiming work-life balance for burnt-out professionals",
+      "Behavioral Design Specialist – designs guided meditation journals and 30-day habit trackers for wellness brands",
+      "Stage Presence and Speaking Mentor – helps inspirational speakers refine their signature story for corporate audiences",
+      "Spiritual Practice Community Manager – focused on building deep engagement in niche mindfulness Facebook and LinkedIn groups",
+      "Knowledge Monetisation Consultant – weekly thought-leadership article production for spiritual teachers",
+      "Executive Transformation Coach – pre-session discovery questionnaire and scheduling automation",
+      "Knowledge Monetisation Consultant – Substack paid-tier strategy for exclusive spiritual teachings",
+      "Behavioral Design Specialist – gratitude journal Notion template design for coaching clients",
+      "Fractional COO for Solopreneurs – productized group programme design using AI-enhanced materials",
+      "B2B Client Acquisition Strategist – referral architecture and automated testimonial collection",
+    ],
+    contexts: [
+      "A spiritual teacher offering guided meditations needs a coaching session framework for clients recovering from professional burnout.",
+      "A productivity specialist creating a 30-Day Habit Tracker eBook needs three mockup images for a sales page.",
+      "An inspirational speaker needs a 3-hour workshop outline on The Resilience Factor for high-pressure corporate environments.",
+      "A niche blog about ancient scriptures wants to repurpose a 3,000-word article into 5 LinkedIn thought-leadership posts.",
+      "A virtual office manager needs a website homepage copy that emphasizes recovered focus time for remote consultants.",
+      "An author of spiritual scripture reflections needs an automated email drip campaign for users who download a free sample chapter.",
+      "A mindfulness ritual set creator needs Pinterest pins to drive long-tail traffic to their Gumroad store.",
+      "A solopreneur needs to calculate their Survival and Freedom Numbers before committing to a 30-day launch plan.",
+      "A marketplace for local photographers aims to automate Google Review collection for top-rated vendors to build social proof.",
+    ],
+    audiences: [
+      "Burnt-out executives looking to reclaim work-life balance through structured mindfulness coaching.",
+      "Busy mothers seeking a 30-day guided meditation journal habit.",
+      "High-pressure corporate teams needing resilience training delivered by an inspirational speaker.",
+      "Small group leaders building community through structured scripture reflection exercises.",
+      "First-generation earners seeking personal finance content empowered by spiritual or mindset resilience.",
+      "Remote consultants and solopreneurs seeking structured focus-time systems.",
+      "Church administrators needing to automate volunteer outreach and Sunday service recaps.",
+      "Hobbyist soap makers and wellness entrepreneurs wanting structured daily-habit products.",
+      "Freelance virtual assistants seeking to double their rates by adding AI automation services.",
+      "Independent real estate agents needing hyper-local market update reports for their email lists.",
+    ],
+    offers: [
+      { stream: "Coaching/Consulting", detail: "Offer high-ticket 4-week sprints focusing on personal transformation." },
+      { stream: "Digital Products", detail: "Sell designed coaching workbooks or guided reflection guides." },
+      { stream: "Prompt Packs", detail: "Create a pack of 50 Reflective Questioning prompts for fellow coaches." },
+      { stream: "Social Media Management", detail: "Manage a speaker's LinkedIn profile to build authority and book gigs." },
+      { stream: "Freelance Writing", detail: "Produce weekly thought-leadership articles for a spiritual teacher." },
+      { stream: "AI Automation", detail: "Automate session scheduling and pre-session discovery questionnaires." },
+      { stream: "Content at Scale", detail: "Launch a Substack newsletter with paid tiers for exclusive spiritual teachings." },
+      { stream: "Digital Products", detail: "Create a gratitude journal Notion template for coaching clients." },
+      { stream: "Coaching/Consulting", detail: "Design productized group programmes using AI-enhanced materials." },
+      { stream: "AI Automation", detail: "Build a referral architecture system to automatically seek testimonials from past clients." },
+    ],
+    rows: [
+      [0, 0, 0, 0],
+      [1, 1, 1, 1],
+      [2, 2, 2, 2],
+      [3, 0, 3, 3],
+      [4, 3, 4, 4],
+      [5, 4, 5, 5],
+      [6, 5, 6, 6],
+      [7, 6, 7, 7],
+      [8, 7, 8, 8],
+      [9, 8, 9, 9],
+    ],
+  },
+  {
+    id: "freelance", short: "Freelance",
+    name: "Freelancer / Virtual Office / Marketing Services",
+    niche: "B2B Freelance & Professional Services",
+    roles: [
+      "Remote Work Infrastructure Specialist – designs ergonomic and technical setups for mobile and virtual offices",
+      "Technical Workflow Automator – Business Efficiency Audit specialist identifying manual task bottlenecks",
+      "Fractional COO for Solopreneurs – Notion Freelancer OS template design for project tracking",
+      "Talent Acquisition Brand Strategist – trust-focused account management for local professional service firms",
+      "B2B Client Acquisition Strategist – Virtual Assistant's Client Toolkit prompt design for daily tasks",
+      "Creative Agency Pricing Coach – AI-assisted production scaling consulting for agencies",
+      "Knowledge Monetisation Consultant – SEO blog strategy for Modern Solopreneurs with tool reviews",
+      "B2B Client Acquisition Strategist – white paper and short-form industry report writing for B2B clients",
+      "Technical Workflow Automator – automated SMS follow-up systems for virtual office lead inquiries",
+      "Self-Publishing Marketing Architect – Canva Proposal Template design for freelancers",
+    ],
+    contexts: [
+      "A virtual office manager in London needs a website homepage copy that emphasizes recovered focus time for remote consultants.",
+      "A technical professional (analyst) needs to inventory their professional assets to find a boring niche where they have an unfair advantage.",
+      "A solopreneur needs to calculate their Survival and Freedom Numbers before committing to a 30-day launch plan.",
+      "A marketing specialist needs a Difficult Conversation email script for a client who is 14 days late on an invoice.",
+      "A freelance virtual assistant seeking to double their rates by adding AI automation services.",
+      "A design agency needs a rate increase letter for a retainer client after adding 3D modeling as a new service.",
+      "A freelance writer needs to position themselves as an AI-Enhanced specialist for B2B supply chain companies.",
+      "A B2B copywriter needs to write a 200-word LinkedIn post for an Operations Director about the hidden costs of technical debt.",
+      "A recruitment specialist needs a lead magnet (AI Job Description Toolkit) for busy HR managers in mid-sized firms.",
+      "A data analyst transitioning to AI consulting needs a positioning statement targeting medical office administrators.",
+    ],
+    audiences: [
+      "Remote software engineers interested in off-grid, ergonomic mobile office van conversions.",
+      "Boutique law firm partners wanting to outsource consistent B2B content to a specialist.",
+      "Tech startup CEOs looking to hire marketing generalists rather than narrow specialists.",
+      "Operations managers at mid-sized logistics firms needing temporary warehouse labor.",
+      "Senior systems architects in the FinTech sector struggling with the long-term costs of technical debt.",
+      "Local marketing agencies requiring bulk, high-speed digital offset printing for client campaigns.",
+      "Retail chain owners needing to automate inventory management using custom Python scripts.",
+      "Independent real estate agents needing hyper-local market update reports for their email lists.",
+      "Career-switchers aged 30 to 45 mapping their professional history to new roles in the AI economy.",
+      "New managers in their first 90 days struggling with team delegation and running effective one-on-ones.",
+    ],
+    offers: [
+      { stream: "Freelance Writing", detail: "Offer email marketing sequence packages (3, 5, or 7-email series)." },
+      { stream: "AI Automation", detail: "Sell Business Efficiency Audits to identify manual task bottlenecks." },
+      { stream: "Digital Products", detail: "Sell Notion Freelancer OS templates for project tracking." },
+      { stream: "Social Media Management", detail: "Manage local professional service accounts (Law/Accounting) focusing on trust." },
+      { stream: "Prompt Packs", detail: "Create a Virtual Assistant's Client Toolkit with 50 prompts for daily tasks." },
+      { stream: "Coaching/Consulting", detail: "Consult for agencies on scaling through AI-assisted production." },
+      { stream: "Content at Scale", detail: "Launch an SEO blog for Modern Solopreneurs with tool reviews." },
+      { stream: "Freelance Writing", detail: "Produce white papers or short-form industry reports for B2B clients." },
+      { stream: "AI Automation", detail: "Implement automated SMS follow-ups for virtual office lead inquiries." },
+      { stream: "Digital Products", detail: "Sell Canva Proposal Templates for other freelancers to use." },
+    ],
+    rows: [
+      [0, 0, 0, 0],
+      [1, 1, 1, 1],
+      [2, 2, 2, 2],
+      [3, 3, 3, 3],
+      [4, 4, 4, 4],
+      [5, 5, 5, 5],
+      [6, 6, 6, 6],
+      [7, 7, 7, 7],
+      [8, 8, 8, 8],
+      [9, 9, 9, 9],
+    ],
+  },
+  {
+    id: "agri", short: "Agriculture",
+    name: "Duck Farming / Dog Business / Agriculture / Seedlings",
+    niche: "Niche Agriculture & Pet Care",
+    roles: [
+      "Niche Agriculture Marketing Strategist – helps duck farmers and livestock suppliers build process-driven social content",
+      "Pet Industry Consumer Insight Analyst – specialises in identifying the funded pain of high-income pet owners for boarding businesses",
+      "Direct-Response Ad Copywriter – specialist in writing high-converting scripts for Facebook and TikTok ad hooks",
+      "Horticultural E-commerce Consultant – specialist in unboxing experiences and arrival guarantees for ornamental seedling sellers",
+      "Community Seed Marketer – specialises in sharing high-value prompt samples in niche groups to drive digital product sales",
+      "Self-Reliance Curriculum Designer – business launch framework for urban professionals moving to rural farming",
+      "Niche Agriculture Marketing Strategist – faceless YouTube channel content on self-reliance and emergency food systems",
+      "Horticultural E-commerce Consultant – e-commerce listing template design for ornamental plant sellers",
+      "Local Search SEO Specialist – case study writing on sustainable farming practices for agricultural suppliers",
+      "Local Search SEO Specialist – review-collection automation for local veterinary or grooming practices",
+    ],
+    contexts: [
+      "A duck farmer in Ohio wants to build a YouTube content platform about Backyard Homesteading for passive affiliate income.",
+      "A dog boarding business needs an Instagram content calendar showing process videos of specialized pet care.",
+      "A Facebook ad specialist needs a lead magnet (5-Step Formula for Ad Hooks) targeting e-commerce store owners.",
+      "A specialized agriculture supplier needs to identify B2B referral sources within their local network of independent nurseries.",
+      "A TikTok ad creator needs a swipe file of 10 examples for high-converting herbal tea advertisements.",
+      "A dog trainer needs an SEO blog article targeting the informational search intent of how to stop a puppy from biting.",
+      "An ornamental plant seller needs a monthly performance report for a client, using data on reach, engagement, and top posts.",
+      "A church business administrator needs three reflection exercises for small group leaders to build community.",
+      "A scriptwriter for an online TV channel needs a 10-minute video script about the Future of Remote Work for an HR audience.",
+      "A marketing consultant for small retailers needs to audit 10 local businesses to find automation gaps in their customer service.",
+    ],
+    audiences: [
+      "Aspiring small-scale homesteaders starting backyard duck farms for food security.",
+      "Urban professionals who have recently moved to rural areas and feel overwhelmed by livestock care.",
+      "High-income pet owners who travel frequently and require luxury long-term dog boarding.",
+      "Apartment dwellers needing a 7-day guide for seedling success on a balcony.",
+      "E-commerce store owners needing high-converting TikTok ad hooks to stop the scroll.",
+      "Dental practice managers losing revenue to a high (15%+) appointment no-show rate.",
+      "Independent real estate agents needing hyper-local market update reports for their email lists.",
+      "Independent craft brewery owners needing automated social media management for local event growth.",
+      "Emergency preparedness enthusiasts needing faceless video guides on water filtration systems.",
+      "Local restaurant owners in suburban areas wanting to increase table bookings from families.",
+    ],
+    offers: [
+      { stream: "Digital Products", detail: "Sell livestock starter guides or backyard farming printable planners." },
+      { stream: "Freelance Writing", detail: "Produce SEO-optimized blog posts for local nurseries on seedling success." },
+      { stream: "Social Media Management", detail: "Manage an Instagram for a luxury dog boarding facility focusing on pet care." },
+      { stream: "AI Automation", detail: "Build lead response systems for seedling pre-orders to capture seasonal demand." },
+      { stream: "Prompt Packs", detail: "Create a Niche Agriculture Marketing pack for small-scale farm owners." },
+      { stream: "Coaching/Consulting", detail: "Offer a business launch framework for urban professionals moving to rural farming." },
+      { stream: "Content at Scale", detail: "Launch a faceless YouTube channel about Self-Reliance and Emergency Food Systems." },
+      { stream: "Digital Products", detail: "Sell E-commerce Listing Templates for ornamental plant sellers." },
+      { stream: "Freelance Writing", detail: "Produce case studies on sustainable farming practices for agricultural suppliers." },
+      { stream: "AI Automation", detail: "Implement review collection automation for local veterinary or grooming practices." },
+    ],
+    rows: [
+      [0, 0, 0, 0],
+      [1, 1, 1, 1],
+      [2, 2, 2, 2],
+      [3, 3, 3, 3],
+      [4, 4, 4, 4],
+      [5, 5, 5, 5],
+      [6, 6, 6, 6],
+      [7, 7, 7, 7],
+      [8, 8, 8, 8],
+      [9, 9, 9, 9],
+    ],
+  },
+  {
+    id: "dev", short: "Dev & Ads",
+    name: "Programmer / Computer Programming / Facebook & TikTok Ads",
+    niche: "Software Development & Digital Advertising",
+    roles: [
+      "Senior Systems Architect – expert in refactoring legacy code and designing scalable software infrastructure for B2B tech",
+      "B2B Client Acquisition Strategist – B2B thought-leadership content production on technical debt and AI management",
+      "Self-Publishing Marketing Architect – Spreadsheet Template design for small business cash flow and ad tracking",
+      "Talent Acquisition Brand Strategist – personal-brand management focused on technical expertise",
+      "Prompt Engineer for Tech Teams – Software Engineer's AI Stack pack for refactoring and code comments",
+      "Fractional COO for Solopreneurs – AI Adoption consulting for technical and non-technical teams",
+      "Educational Media Producer – YouTube channel production for coding tutorials and technical career transitions",
+      "Direct-Response Ad Copywriter – Canva Ad Hooks and swipe file design for high-converting TikTok ads",
+      "Technical Workflow Automator – manual documentation and technical website copywriting for SaaS startups",
+      "Technical Workflow Automator – automated lead response and qualification for ad agency inquiries",
+    ],
+    contexts: [
+      "A retail chain owner needing to automate inventory management using custom Python scripts.",
+      "A B2B copywriter needs to write a 200-word LinkedIn post for an Operations Director about the hidden costs of technical debt.",
+      "A music studio offering Mixing and Mastering needs a budget and ad-tracking spreadsheet template for small businesses.",
+      "A design agency needs a rate increase letter and personal-brand strategy after expanding technical service offerings.",
+      "A technical professional (analyst) needs to inventory their professional assets to find a boring niche where they have an unfair advantage.",
+      "A professional development platform for HR managers needs a How to Use AI workshop outline to address replacement fears.",
+      "A vlogger documenting their 3D workflow needs YouTube SEO tags and titles for a video about a coding-based side hustle.",
+      "A Facebook ad specialist needs a lead magnet (5-Step Formula for Ad Hooks) targeting e-commerce store owners.",
+      "A graphic designer specializing in SaaS brand identities needs technical website copy that highlights their AI-Enhanced speed.",
+      "A marketplace for virtual assistants needs an automated lead response and qualification system for B2B inquiries.",
+    ],
+    audiences: [
+      "Retail chain owners needing to automate inventory management using custom Python scripts.",
+      "Senior systems architects in the FinTech sector struggling with the long-term costs of technical debt.",
+      "Independent craft brewery owners needing automated social media management for local event growth.",
+      "Boutique law firm partners wanting to outsource consistent B2B content to a specialist.",
+      "Aspiring programmers from non-technical backgrounds wanting to learn clean code as a communication tool.",
+      "Career-switchers aged 30 to 45 mapping their professional history to new roles in the AI economy.",
+      "Solo travelers wanting to document their journeys for a vlog without losing presence in the moment.",
+      "E-commerce store owners needing high-converting TikTok ad hooks to stop the scroll.",
+      "SaaS website designers seeking modern 3D asset packs to improve site conversion aesthetics.",
+      "Freelance virtual assistants seeking to double their rates by adding AI automation services.",
+    ],
+    offers: [
+      { stream: "AI Automation", detail: "Build complex CRM integrations and custom workflows for local businesses." },
+      { stream: "Freelance Writing", detail: "Produce B2B thought leadership content on technical debt or AI management." },
+      { stream: "Digital Products", detail: "Sell Spreadsheet Templates for small business cash flow and ad tracking." },
+      { stream: "Social Media Management", detail: "Manage an executive's personal brand focusing on technical expertise." },
+      { stream: "Prompt Packs", detail: "Create a Software Engineer's AI Stack pack for refactoring and code comments." },
+      { stream: "Coaching/Consulting", detail: "Provide consulting on AI Adoption for technical and non-technical teams." },
+      { stream: "Content at Scale", detail: "Launch a YouTube channel for coding tutorials or technical career transitions." },
+      { stream: "Digital Products", detail: "Sell Canva Ad Hooks and swipe files for high-converting TikTok ads." },
+      { stream: "Freelance Writing", detail: "Produce technical website copy or manual documentation for SaaS startups." },
+      { stream: "AI Automation", detail: "Set up automated lead response and qualification for ad agency inquiries." },
+    ],
+    rows: [
+      [0, 0, 0, 0],
+      [1, 1, 1, 1],
+      [2, 2, 2, 2],
+      [3, 3, 3, 3],
+      [4, 4, 4, 4],
+      [5, 5, 5, 5],
+      [6, 6, 6, 6],
+      [7, 7, 7, 7],
+      [8, 8, 8, 8],
+      [9, 9, 9, 9],
+    ],
+  },
+];
+
+/* ---------------------------------------------------------------------------
+   THE SEVEN INCOME STREAMS  (Chapters 6-12)
+   --------------------------------------------------------------------------- */
+const STREAMS = [
+  { name: "Freelance Writing",       ch: 6,  sells: "Words a business needs but cannot produce at pace — blog posts, email sequences, website copy, case studies, ghostwritten chapters." },
+  { name: "Digital Products",        ch: 7,  sells: "A file that solves one painful problem for one defined buyer — templates, planners, workbooks, guides, spreadsheets." },
+  { name: "Social Media Management", ch: 8,  sells: "A monthly retainer for the whole content operation — calendar, captions, short-form scripts, engagement, reporting." },
+  { name: "AI Automation",           ch: 9,  sells: "Recovered hours — connected software that removes manual data entry, slow lead response and no-shows." },
+  { name: "Prompt Packs",            ch: 10, sells: "A curated, tested collection of prompts for one niche, packaged as a download with a customising guide." },
+  { name: "Coaching/Consulting",     ch: 11, sells: "A transformation, priced to the outcome rather than the hour, with AI carrying the prep and the resources." },
+  { name: "Content at Scale",        ch: 12, sells: "A media property you own — YouTube, a newsletter, a blog — monetised by stacking several revenue lines on one audience." },
+];
+
+/* ---------------------------------------------------------------------------
+   TASK PRESETS, one set per income stream.
+   `len` is the Length line the generator suggests when the task is chosen.
+   --------------------------------------------------------------------------- */
+const TASKS = {
+  "Freelance Writing": [
+    { t: "Write a search-optimised blog post that answers the single question this audience types into Google before they buy.", len: "1,200–1,500 words. Markdown. One H1, five to seven H2 sections, a 40-word summary at the top, and a closing call to action of no more than two sentences." },
+    { t: "Write a five-email nurture sequence that takes a cold subscriber from download to first paid enquiry.", len: "Five emails. Each: subject line (under 45 characters), preview text, and 120–180 words of body. Plain text, no headers, one link per email." },
+    { t: "Write the homepage copy, section by section, leading with the outcome rather than the service.", len: "Hero (headline under 12 words, subhead under 25, one button label), three benefit blocks of 40 words, a social-proof section, an FAQ of five questions, and a final call to action." },
+    { t: "Write a one-page client case study built on the problem → intervention → measurable result structure.", len: "600–700 words. Sections: The situation, What we changed, The result, In their words. Include a pull-quote and three numbered outcomes." },
+    { t: "Write a LinkedIn post that opens with a specific, uncomfortable observation about this audience's work.", len: "180–220 words. No hashtags beyond three. Short paragraphs, one line each for the first two. End on a question." },
+    { t: "Ghostwrite one chapter that delivers a single promise and ends where the reader can act.", len: "2,000 words. Opening scene or anecdote, three numbered principles, one worked example per principle, and a 5-step action list to close." },
+    { t: "Write ten headline variants for the same page, then rank them and explain the ranking in one line each.", len: "Ten headlines, each under 12 words, numbered. Then a ranked table: rank, headline, and a one-line reason." },
+  ],
+  "Digital Products": [
+    { t: "Specify a Notion template in enough detail that I could build it without asking a follow-up question.", len: "A build spec: database list with every property and its type, view list with filters and sorts, page structure, and the sample data to pre-fill. Tables where possible." },
+    { t: "Outline a printable planner or tracker, page by page, with the exact fields on each page.", len: "A page-by-page table: page number, page title, purpose, and the fields or prompts printed on it. 12–20 pages." },
+    { t: "Write the full text of a workbook that a buyer can complete in one sitting and finish with a usable output.", len: "Six exercises. Each: title, why it matters (40 words), the instruction, the fill-in fields, and a worked example. Markdown." },
+    { t: "Design a three-tier version of this product so the middle tier is the obvious choice.", len: "A comparison table of three tiers: name, price, what is included, who it is for. Then two lines on why the middle tier is positioned to win." },
+    { t: "Write the product listing — title, description and tags — using the five-paragraph description structure.", len: "Title under 140 characters, keyword-first. Five description paragraphs: what and who, the problem solved, everything included, technical details, five FAQs. Then 13 tags of up to 20 characters." },
+    { t: "Write a brief for three lifestyle mockup images showing this product in use.", len: "Three briefs. Each: scene, device or surface, what is on screen or page, lighting, props, and the one thing the image must communicate. 60 words each." },
+    { t: "Turn this product into a lead magnet by identifying what to give away and what to hold back.", len: "Two lists — give away, hold back — with a one-line reason each. Then the opt-in page: headline, three bullets, button label." },
+  ],
+  "Social Media Management": [
+    { t: "Build a 30-day content calendar mixing education, proof, process and offer posts.", len: "A table of 30 rows: day, pillar, format, hook line, and the call to action. Roughly 40% education, 25% proof, 25% process, 10% offer." },
+    { t: "Write ten captions in this brand's voice, each opening on a different hook type.", len: "Ten captions of 60–110 words. Label each with its hook type (question, statistic, confession, contrarian, story, before/after, list, myth, prediction, direct offer)." },
+    { t: "Write five short-form video scripts built to survive the first three seconds.", len: "Five scripts, 30–45 seconds each. Format: on-screen hook text, spoken script line by line with timings, b-roll note per line, and the caption to publish with it." },
+    { t: "Write the reply bank for the twelve comments and DMs this account gets most often.", len: "Twelve entries: the incoming message, the reply (under 40 words), and a note on when not to use it." },
+    { t: "Draft the monthly client report that shows what the work bought, not just what was posted.", len: "One page. Sections: headline result, three metrics with the previous month beside them, what worked and why, what did not, and next month's single focus." },
+    { t: "Write the retainer proposal that prices this by outcome rather than by post count.", len: "800 words. Sections: what I understand about your situation, what changes, what is delivered monthly, three pricing tiers, timeline, and what I need from you." },
+    { t: "Turn one long piece of content into fifteen posts across three platforms.", len: "A table: platform, format, angle, the exact opening line, and which part of the source it draws from. Fifteen rows." },
+  ],
+  "AI Automation": [
+    { t: "Map the current manual process step by step, then mark exactly which steps automation removes.", len: "A table: step, who does it now, minutes per week, automate or keep, and the tool that replaces it. Then total hours recovered per month." },
+    { t: "Specify an automation in build-ready detail — trigger, steps, data fields, and failure handling.", len: "Trigger, then numbered steps. Each step: app, action, input fields with their source, and what happens if it fails. Close with a test plan of five cases." },
+    { t: "Design an instant lead-response system that replies in under five minutes without sounding automated.", len: "The trigger, the routing rules, three message variants by lead source (under 60 words each), the escalation rule, and the follow-up schedule over seven days." },
+    { t: "Write a business efficiency audit that finds the bottlenecks and prices the fix.", len: "Two pages. Sections: what I reviewed, the five bottlenecks ranked by hours lost, the recommended fix for each with a build estimate, and a phased plan over 90 days." },
+    { t: "Write the SOP for this process so a new hire can run it unaided on day one.", len: "Numbered steps with the exact click path, screenshots marked as [SCREENSHOT: description], a prerequisites list, and a troubleshooting table of five common failures." },
+    { t: "Design the reminder sequence that removes no-shows from this business.", len: "The schedule (how many messages, at what intervals), the channel for each, the message text under 40 words each, and the rule for when to stop." },
+    { t: "Write the discovery questionnaire that tells me whether this business is worth automating.", len: "Fifteen questions grouped into four sections, each with a note on what a disqualifying answer looks like." },
+  ],
+  "Prompt Packs": [
+    { t: "Draft 25 prompts for this niche, each solving a different recurring task.", len: "25 numbered prompts. Each: a title, the prompt itself in full, and a one-line note on what to swap before running it." },
+    { t: "Organise a prompt pack into categories a buyer can navigate without reading everything.", len: "Five to seven categories. For each: name, what it covers, how many prompts belong in it, and the order they should appear." },
+    { t: "Write the how-to-use guide that sits at the front of the pack and cuts refunds.", len: "600–800 words. Sections: how to run these, what to replace before running, which AI tool to use for what, how to iterate a weak result, and what this pack will not do." },
+    { t: "Write the sales page for this prompt pack, leading with hours saved rather than prompt count.", len: "Headline, subhead, the problem in 80 words, what is inside as a bulleted list, three objections answered, price with a tier table, and a guarantee." },
+    { t: "Stress-test these prompts by naming where each one produces weak output and how to fix it.", len: "A table: prompt number, the failure mode, the tell that it has happened, and the corrective follow-up to send." },
+    { t: "Write ten prompts that each produce a finished deliverable rather than a draft.", len: "Ten prompts, each with a clearly stated output format and acceptance criteria the buyer can check against." },
+  ],
+  "Coaching/Consulting": [
+    { t: "Design a four-week sprint that ends with one visible, provable change.", len: "Week by week: theme, the session focus, the between-session task, and the evidence that the week worked. Then the single promise for the whole sprint in one sentence." },
+    { t: "Build the framework for a single session — what is asked, in what order, and why.", len: "A 60-minute agenda with timings, the questions asked at each stage, the two decision points, and what the client leaves holding." },
+    { t: "Write the intake questionnaire that surfaces the real problem before the first session.", len: "Twelve questions, each with a one-line note on what the answer tells me. Mix scaled, multiple-choice and open questions." },
+    { t: "Outline a workshop for a group, built around one exercise per key idea.", len: "A three-hour outline with timings: opening, three teaching blocks each followed by an exercise, a break, and a commitment close. Include facilitator notes." },
+    { t: "Write the discovery call script that qualifies out the wrong client in the first ten minutes.", len: "The opening, eight questions in order, the three disqualifying answers, the price reveal, and two objection responses under 60 words each." },
+    { t: "Price this offer to the outcome rather than the hours, and justify it in the buyer's language.", len: "Three tiers with prices and what each buys, then the value case: what the problem costs them per month, and what the change is worth over a year." },
+    { t: "Write the between-session resource that makes the work continue without me.", len: "Two pages: the one idea, a five-minute daily practice, a tracking sheet, and three questions to bring to the next session." },
+  ],
+  "Content at Scale": [
+    { t: "Write a full video script with the hook already earning the first thirty seconds.", len: "8–10 minutes of spoken script. Cold open under 20 seconds, then labelled sections with b-roll notes in brackets, and a close that names the next video." },
+    { t: "Generate twenty video titles and thumbnail concepts for the same core idea.", len: "A table of twenty rows: title under 60 characters, the thumbnail's three-word text, the visual, and the curiosity gap it opens." },
+    { t: "Write one complete newsletter issue that a subscriber would forward.", len: "700–900 words. A subject line, a one-line preview, an opening story, the single idea, three practical applications, and one link worth clicking." },
+    { t: "Plan a 90-day content calendar around three pillars and one recurring format.", len: "A table: week, pillar, topic, format, and the asset it repurposes into. Twelve weeks, three posts per week." },
+    { t: "Design the monetisation stack for this channel at 1,000, 10,000 and 100,000 followers.", len: "Three stages. Each: the revenue lines available, realistic monthly range, what has to be true to unlock it, and the one thing to build now." },
+    { t: "Write the repurposing plan that turns one long video into a fortnight of content.", len: "A table: asset, platform, format, the cut or excerpt it uses, and the new hook written for that platform. At least fourteen rows." },
+  ],
+};
+
+/* ---------------------------------------------------------------------------
+   LENGTH and EXAMPLE presets
+   --------------------------------------------------------------------------- */
+const LENGTHS = [
+  "Exactly 150 words, one paragraph, no headings.",
+  "300–400 words. Three short paragraphs and a one-line close.",
+  "600–800 words. Markdown with H2 subheadings and no more than three bullets per section.",
+  "1,200–1,500 words. Markdown. One H1, five to seven H2 sections, and a 40-word summary at the top.",
+  "A table only. Columns as specified in the task, no prose before or after it.",
+  "A numbered list of ten items, each one sentence, no preamble.",
+  "A bulleted outline three levels deep. No prose paragraphs at all.",
+  "Five sections with a bold label each, 60–90 words per section.",
+  "A script with timings in the left margin and stage or b-roll notes in square brackets.",
+  "A single page — under 500 words — that fits on one screen without scrolling.",
+];
+
+const EXAMPLES = [
+  "Match the tone of a specialist writing to a peer: plain words, concrete numbers, no adjectives doing the work of evidence.",
+  "Match this structure: a specific observation, the reason most people get it wrong, then what to do instead.",
+  "Write the way a good trade magazine writes — informed, unexcited, and useful by the second sentence.",
+  "Model the tone on a well-written internal memo: direct, senior, assumes competence, wastes nobody's time.",
+  "Warm and practical, like a knowledgeable friend explaining it across a table. Contractions welcome, jargon not.",
+  "Follow the before/after pattern: what it looks like now, what it looks like afterwards, and the smallest step between them.",
+  "Match a high-converting sales page: short sentences, one idea per line, the objection answered before it is raised.",
+  "I will paste a sample of my own writing below. Match its rhythm, sentence length and vocabulary rather than its topic.\n\n[PASTE 200–300 WORDS OF YOUR OWN WRITING HERE]",
+];
+
+/* ---------------------------------------------------------------------------
+   PLATFORMS and PRICE BANDS (from the book's comparison tables)
+   --------------------------------------------------------------------------- */
+const PLATFORMS = [
+  ["Gumroad",         "10% free plan / 0% on paid ($10/mo)", "Medium",              "The .md or .pdf pack + a cover image",           "Simplest setup and the recommended first listing. Best home for info products."],
+  ["Etsy",            "6.5%",                                "High — 120M buyers",  "PDF + 5–10 mockup images",                       "The largest search traffic in the market. Add it once you have 2–3 positive reviews elsewhere."],
+  ["Payhip",          "5% free plan / 0% on paid ($29/mo)",  "Medium",              "PDF or .md + cover",                             "Strong built-in affiliate tools — other people can sell the pack for you."],
+  ["Stan Store",      "$29/mo flat",                         "Medium–High",         "PDF + a short video walkthrough",                "All-in-one: products, bookings and links. Good once traffic comes from your own audience."],
+  ["Creative Market", "No listing fee, 70% royalty",         "High — creative buyers", "PDF + polished preview images",               "The highest-quality buyers, and the highest design bar. Worth it for a well-presented pack."],
+  ["Own website",     "Hosting + Stripe fees only",          "Whatever you build",  "Anything, including this HTML file itself",      "Maximum margin and you own the customer. Slowest traffic to build."],
+  ["Teachable / Podia","Varies by plan",                     "Platform audience",   "PDF + the pack as a course module",              "Best when the pack is bundled with a course or membership."],
+];
+
+const PRICE_BANDS = [
+  ["Prompt pack (20–50 prompts)",  "$9–$37",   "Gumroad, Payhip",           "Marketers, coaches, freelancers"],
+  ["Professional prompt collection","$47–$97", "Gumroad, Payhip, own site", "Agencies and specialists"],
+  ["Workbook / guide",             "$17–$47",  "Gumroad, Payhip, Etsy",     "Coaches, self-improvers"],
+  ["Notion template (single)",     "$7–$17",   "Etsy, Gumroad",             "Freelancers, students, solopreneurs"],
+  ["Full template bundle (20+)",   "$27–$67",  "Etsy, Gumroad",             "Agencies, serious solopreneurs"],
+  ["Swipe file / resource library","$27–$97",  "Gumroad, Payhip",           "Marketers, copywriters"],
+];
+
+const CHECKLIST = [
+  "Validated the niche — searched it on Etsy and Gumroad and found listings with real reviews, not just listings.",
+  "Ran at least 3 of the 6 validation methods and got 2+ positive signals.",
+  "Every prompt in the pack has been run at least once and the output checked.",
+  "The how-to-use guide is written — this is what justifies the price and cuts refunds.",
+  "Three lifestyle mockup images made. This is the single biggest conversion factor, and the most skipped step.",
+  "Listing title leads with the searchable keyword, not with a clever name.",
+  "All five description paragraphs written: what and who, problem solved, what's included, technical details, FAQs.",
+  "Every tag slot filled — broad terms mixed with long-tail phrases.",
+  "Three price tiers set, with the middle one positioned to win.",
+  "Licence terms stated on the listing and inside the file.",
+  "A post-purchase message drafted asking whether it worked, and inviting a review.",
+  "Calendar reminder set to revisit this listing's SEO in 30 days using the platform's search analytics.",
+];
+
+const LICENSES = {
+  personal: {
+    label: "Personal use licence",
+    body: "You may use these prompts for your own business and your own projects, on any AI tool you choose, for as long as you like.\n\nYou may not resell, redistribute, sublicense or republish the prompts, in whole or in part, and you may not include them in another product for sale.",
+  },
+  commercial: {
+    label: "Commercial use licence",
+    body: "You may use these prompts for your own business and for paid client work, on any AI tool you choose, and you may sell the output you create with them.\n\nYou may not resell, redistribute, sublicense or republish the prompts themselves, in whole or in part, and you may not include them in another prompt pack, template or product offered for sale.",
+  },
+  extended: {
+    label: "Extended commercial licence",
+    body: "You may use these prompts for your own business and for paid client work, modify and adapt them freely, on any AI tool you choose, and sell the output you create with them.\n\nYou may not resell, redistribute, sublicense or republish the prompts themselves — modified or unmodified — as a prompt collection, and you may not include them in another prompt pack offered for sale.",
+  },
+};
+
+/* ---------------------------------------------------------------------------
+   APP
+   --------------------------------------------------------------------------- */
+
+const $  = (id) => document.getElementById(id);
+const el = (tag, props, kids) => {
+  const n = Object.assign(document.createElement(tag), props || {});
+  (kids || []).forEach((k) => n.append(k));
+  return n;
+};
+const CUSTOM = "__custom__";
+const STORE_KEY = "wealth-ideas-prompt-generator/v1";
+
+/* ---------- storage (never fatal — the app works with it disabled) ---------- */
+
+let store = {
+  theme: null,
+  idea: 0,
+  sel: {},
+  custom: {},
+  opts: { questions: false, noFluff: true, constraints: true, variants: false, order: false },
+  library: [],
+  pack: { ideas: [0], streams: STREAMS.map((s) => s.name), size: "30", title: "", author: "", license: "commercial", fmt: "md", coherent: true },
+  checks: [],
+};
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      store = Object.assign(store, parsed);
+      store.opts = Object.assign({ questions: false, noFluff: true, constraints: true, variants: false, order: false }, parsed.opts || {});
+      store.pack = Object.assign(store.pack, parsed.pack || {});
+    }
+  } catch (e) { /* private mode, file:// restrictions — carry on in memory */ }
+}
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) { /* ignore */ }
+}
+
+/* ---------- small helpers ---------- */
+
+let toastTimer;
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
+}
+
+function copyText(text, okMsg) {
+  const done = () => toast(okMsg || "Copied to clipboard");
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+function fallbackCopy(text, done) {
+  const ta = el("textarea", { value: text });
+  ta.setAttribute("aria-hidden", "true");
+  ta.style.cssText = "position:fixed;top:-1000px;opacity:0";
+  document.body.append(ta);
+  ta.select();
+  try { document.execCommand("copy"); done(); }
+  catch (e) { toast("Copy failed — select the text and copy manually"); }
+  ta.remove();
+}
+
+function download(filename, text) {
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = el("a", { href: url, download: filename });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  toast("Downloaded " + filename);
+}
+
+const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
+const today = () => new Date().toISOString().slice(0, 10);
+const streamOf = (offer) => offer.stream;
+
+/* ---------- theme ---------- */
+
+function applyTheme() {
+  const t = store.theme;
+  if (t) document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+  $("themeIcon").textContent = t === "dark" ? "●" : t === "light" ? "○" : "◐";
+}
+$("themeBtn").onclick = () => {
+  store.theme = store.theme === "light" ? "dark" : store.theme === "dark" ? null : "light";
+  applyTheme(); save();
+  toast(store.theme ? store.theme[0].toUpperCase() + store.theme.slice(1) + " theme" : "Following your system theme");
+};
+
+/* ---------- tabs ---------- */
+
+const tabs = Array.from(document.querySelectorAll(".tab"));
+tabs.forEach((tab) => {
+  tab.onclick = () => selectTab(tab);
+  tab.onkeydown = (e) => {
+    const i = tabs.indexOf(tab);
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      e.preventDefault();
+      const next = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+      next.focus(); selectTab(next);
+    }
+  };
+});
+function selectTab(tab) {
+  tabs.forEach((t) => {
+    const on = t === tab;
+    t.setAttribute("aria-selected", String(on));
+    $(t.getAttribute("aria-controls")).hidden = !on;
+  });
+}
+
+/* ===========================================================================
+   GENERATOR
+   =========================================================================== */
+
+function idea() { return IDEAS[store.idea] || IDEAS[0]; }
+
+function renderIdeaChips() {
+  const box = $("ideaChips");
+  box.textContent = "";
+  IDEAS.forEach((it, i) => {
+    const b = el("button", { type: "button", className: "chip", textContent: it.short });
+    b.setAttribute("aria-pressed", String(i === store.idea));
+    b.title = it.name;
+    b.onclick = () => { store.idea = i; store.sel = {}; save(); renderIdeaChips(); fillSelects(); render(); };
+    box.append(b);
+  });
+  $("nichePill").textContent = idea().name + "  ·  " + idea().niche;
+}
+
+function option(value, label) {
+  const o = el("option", { value: String(value) });
+  o.textContent = label;
+  return o;
+}
+
+function fillSelect(sel, items, labeller) {
+  sel.textContent = "";
+  items.forEach((it, i) => sel.append(option(i, labeller ? labeller(it, i) : it)));
+  sel.append(option(CUSTOM, "✍ Write my own…"));
+}
+
+function currentOffers() { return idea().offers; }
+
+function currentTasks() {
+  const offerIdx = store.sel.offer;
+  const offer = currentOffers()[offerIdx === undefined ? 0 : offerIdx];
+  const stream = offer ? offer.stream : "Freelance Writing";
+  return TASKS[stream] || TASKS["Freelance Writing"];
+}
+
+function fillSelects() {
+  const it = idea();
+  fillSelect($("selRole"), it.roles);
+  fillSelect($("selContext"), it.contexts);
+  fillSelect($("selAudience"), it.audiences);
+
+  const offerSel = $("selOffer");
+  offerSel.textContent = "";
+  it.offers.forEach((o, i) => offerSel.append(option(i, o.stream + " — " + o.detail)));
+
+  fillTasks();
+  fillSelect($("selLength"), LENGTHS);
+  fillSelect($("selExample"), EXAMPLES);
+  restoreSelections();
+}
+
+function fillTasks() {
+  fillSelect($("selTask"), currentTasks(), (t) => t.t);
+}
+
+const FIELDS = [
+  ["role", "selRole", "txtRole"],
+  ["context", "selContext", "txtContext"],
+  ["audience", "selAudience", "txtAudience"],
+  ["offer", "selOffer", null],
+  ["task", "selTask", "txtTask"],
+  ["length", "selLength", "txtLength"],
+  ["example", "selExample", "txtExample"],
+];
+
+function restoreSelections() {
+  FIELDS.forEach(([key, selId, txtId]) => {
+    const sel = $(selId);
+    const v = store.sel[key];
+    sel.value = v === undefined || !Array.from(sel.options).some((o) => o.value === String(v)) ? "0" : String(v);
+    store.sel[key] = sel.value === CUSTOM ? CUSTOM : Number(sel.value);
+    if (txtId) {
+      const ta = $(txtId);
+      ta.hidden = sel.value !== CUSTOM;
+      ta.value = store.custom[key] || "";
+    }
+  });
+  Object.entries({ questions: "optQuestions", noFluff: "optNoFluff", constraints: "optConstraints", variants: "optVariants", order: "optOrder" })
+    .forEach(([k, id]) => { $(id).checked = !!store.opts[k]; });
+}
+
+FIELDS.forEach(([key, selId, txtId]) => {
+  $(selId).onchange = (e) => {
+    const v = e.target.value;
+    store.sel[key] = v === CUSTOM ? CUSTOM : Number(v);
+    if (txtId) $(txtId).hidden = v !== CUSTOM;
+    if (key === "offer") {
+      // a new stream means a new task list
+      store.sel.task = 0;
+      fillTasks();
+      $("selTask").value = "0";
+      $("txtTask").hidden = true;
+      suggestLength();
+    }
+    if (key === "task" && v !== CUSTOM) suggestLength();
+    save(); render();
+  };
+  if (txtId) $(txtId).oninput = (e) => { store.custom[key] = e.target.value; save(); render(); };
+});
+
+function suggestLength() {
+  if (store.sel.length === CUSTOM) return;
+  const t = currentTasks()[store.sel.task];
+  if (!t) return;
+  const i = LENGTHS.indexOf(t.len);
+  if (i >= 0) { store.sel.length = i; $("selLength").value = String(i); return; }
+  // task-specific length that isn't in the shared list: carry it as a custom value
+  store.sel.length = CUSTOM;
+  store.custom.length = t.len;
+  $("selLength").value = CUSTOM;
+  $("txtLength").hidden = false;
+  $("txtLength").value = t.len;
+}
+
+Object.entries({ questions: "optQuestions", noFluff: "optNoFluff", constraints: "optConstraints", variants: "optVariants", order: "optOrder" })
+  .forEach(([k, id]) => { $(id).onchange = (e) => { store.opts[k] = e.target.checked; save(); render(); }; });
+
+function val(key, list, labeller) {
+  if (store.sel[key] === CUSTOM) return (store.custom[key] || "").trim();
+  const item = list[store.sel[key]];
+  if (item === undefined) return "";
+  return labeller ? labeller(item) : item;
+}
+
+function currentParts() {
+  const it = idea();
+  const offer = it.offers[store.sel.offer] || it.offers[0];
+  return {
+    ideaName: it.name,
+    niche: it.niche,
+    role: val("role", it.roles),
+    context: val("context", it.contexts),
+    audience: val("audience", it.audiences),
+    offer: offer,
+    task: val("task", currentTasks(), (t) => t.t),
+    length: val("length", LENGTHS),
+    example: val("example", EXAMPLES),
+  };
+}
+
+/* Roles in the matrix are noun phrases ("Marketplace Operations Consultant – …"),
+   so they need an article. A role somebody types themselves might already carry
+   one, or already be a full sentence. Handle all three rather than producing
+   "You are a a wellness writer." */
+function roleLine(role) {
+  if (!role) return "You are [describe the expertise the AI should adopt].";
+  const r = role.trim().replace(/\.$/, "");
+  if (/^(you are|you're|act as|imagine you)\b/i.test(r)) return r + ".";
+  if (/^(a|an|the)\s/i.test(r)) return "You are " + r + ".";
+  return "You are " + (/^[aeiou]/i.test(r) ? "an " : "a ") + r + ".";
+}
+
+function assemble(p, opts) {
+  const o = opts || store.opts;
+  const B = {
+    R: "R — ROLE\n" + roleLine(p.role),
+    C: "C — CONTEXT\n" + (p.context || "[describe the situation, the constraint, and any real number you have]") +
+       "\nThe offer this supports: " + p.offer.stream + " — " + p.offer.detail +
+       "\nMarket: " + p.ideaName + " (" + p.niche + ").",
+    A: "A — AUDIENCE\n" + (p.audience || "[who reads this, what they care about, what they doubt]"),
+    T: "TASK\n" + (p.task || "[the one thing you want produced]"),
+    L: "L — LENGTH & FORMAT\n" + (p.length || "[exact length, structure and output type]"),
+    E: "E — EXAMPLE\n" + (p.example || "[the tone or format to match]"),
+  };
+
+  const rules = [];
+  if (o.questions) rules.push("Before writing anything, ask me up to 3 questions about whatever above is ambiguous. Wait for my answers.");
+  if (o.noFluff) rules.push("No AI clichés. Do not use \"delve\", \"tapestry\", \"testament to\", \"navigate the landscape\", \"in today's fast-paced world\", or an opening sentence that restates the task.");
+  if (o.constraints) rules.push("Invent nothing. Where a real statistic, price, name or date is needed and I have not given it, write [NEEDS: what is missing] and carry on.");
+  if (o.variants) rules.push("Give me 3 genuinely different versions, not three rewordings of one. Label each with the angle it takes and say in one line who each is for.");
+
+  const order = o.order ? ["C", "L", "E", "A", "R", "T"] : ["R", "C", "A", "T", "L", "E"];
+  const body = order.map((k) => B[k]).join("\n\n");
+  return body + (rules.length ? "\n\nRULES\n" + rules.map((r) => "- " + r).join("\n") : "");
+}
+
+function passes(p) {
+  const two =
+    "Pass 2 — accuracy and depth.\n" +
+    "Go back through what you just wrote and do four things:\n" +
+    "1. Mark every claim that is asserted rather than supported, and either support it or cut it.\n" +
+    "2. Find the three places a " + (p.audience || "reader in this audience") + " would push back, and answer them in the text.\n" +
+    "3. Add the specific detail a genuine " + (p.role || "specialist") + " would know and a generalist would not.\n" +
+    "4. List anything you invented, so I can replace it with real figures.";
+  const three =
+    "Pass 3 — voice and polish.\n" +
+    "Rewrite it so it reads like a person wrote it in one sitting:\n" +
+    "- Vary sentence length. Break up anything over 25 words.\n" +
+    "- Cut every sentence that could be deleted without loss. Aim to lose 15% of the words.\n" +
+    "- Replace abstract nouns with concrete ones, and hedges with plain statements.\n" +
+    "- Make the first line earn the second, and the last line land rather than summarise.\n" +
+    "Return only the finished piece.";
+  return { two, three };
+}
+
+function render() {
+  const p = currentParts();
+  const text = assemble(p);
+  const out = $("promptOut");
+  out.textContent = "";
+  text.split("\n").forEach((line, i, arr) => {
+    if (/^([CLEAR] — [A-Z& ]+|TASK|RULES)$/.test(line)) {
+      out.append(el("span", { className: "lbl", textContent: line }));
+    } else {
+      out.append(document.createTextNode(line));
+    }
+    if (i < arr.length - 1) out.append(document.createTextNode("\n"));
+  });
+
+  const words = text.trim().split(/\s+/).length;
+  $("promptStats").textContent = words + " words · ~" + Math.round(text.length / 4) + " tokens";
+
+  const ps = passes(p);
+  $("pass2").textContent = ps.two;
+  $("pass3").textContent = ps.three;
+  $("comboCount").textContent = (idea().roles.length * idea().contexts.length * idea().audiences.length * idea().offers.length).toLocaleString();
+}
+
+function applyCombination(sel, msg) {
+  Object.assign(store.sel, sel);
+  fillTasks();
+  store.sel.task = Math.floor(Math.random() * currentTasks().length);
+  store.sel.example = Math.floor(Math.random() * EXAMPLES.length);
+  ["role", "context", "audience", "offer", "task", "example"].forEach((k) => {
+    const f = FIELDS.find((x) => x[0] === k);
+    $(f[1]).value = String(store.sel[k]);
+    if (f[2]) $(f[2]).hidden = true;
+  });
+  suggestLength();
+  $("selLength").value = String(store.sel.length);
+  $("txtLength").hidden = store.sel.length !== CUSTOM;
+  save(); render();
+  toast(msg);
+}
+
+/* One row of the workbook: role, context, audience and offer that were written
+   to describe the same business. */
+$("matchBtn").onclick = () => {
+  const it = idea();
+  const row = it.rows[Math.floor(Math.random() * it.rows.length)];
+  applyCombination({ role: row[0], context: row[1], audience: row[2], offer: row[3] }, "Matched row from the workbook");
+};
+
+/* Free recombination across the whole matrix. */
+$("shuffleBtn").onclick = () => {
+  const it = idea();
+  const r = (n) => Math.floor(Math.random() * n);
+  applyCombination({ role: r(it.roles.length), context: r(it.contexts.length), audience: r(it.audiences.length), offer: r(it.offers.length) }, "New mixed combination");
+};
+
+$("resetBtn").onclick = () => {
+  store.sel = {}; store.custom = {};
+  fillSelects(); save(); render();
+  toast("Fields reset");
+};
+
+$("copyBtn").onclick = () => copyText(assemble(currentParts()), "Prompt copied");
+$("dlBtn").onclick = () => {
+  const p = currentParts();
+  download("clear-prompt-" + slug(p.offer.stream) + "-" + today() + ".txt", assemble(p));
+};
+document.querySelectorAll("[data-copy]").forEach((b) => {
+  b.onclick = () => copyText($(b.dataset.copy).textContent, "Copied");
+});
+
+$("saveBtn").onclick = () => {
+  const p = currentParts();
+  store.library.unshift({
+    id: Date.now(),
+    idea: p.ideaName,
+    stream: p.offer.stream,
+    task: p.task,
+    text: assemble(p),
+    at: new Date().toISOString(),
+  });
+  save(); renderLibrary();
+  toast("Saved — " + store.library.length + " in your library");
+};
+
+/* ===========================================================================
+   LIBRARY
+   =========================================================================== */
+
+function renderLibrary() {
+  const box = $("libList");
+  box.textContent = "";
+  $("libCount").textContent = store.library.length ? "(" + store.library.length + ")" : "";
+  $("libExportBtn").disabled = !store.library.length;
+  $("libClearBtn").disabled = !store.library.length;
+
+  if (!store.library.length) {
+    box.append(el("div", { className: "empty" }, [
+      el("b", { textContent: "Nothing saved yet" }),
+      document.createTextNode("Build a prompt on the Generator tab and press “Save to library”."),
+    ]));
+    return;
+  }
+
+  store.library.forEach((item) => {
+    const head = el("header", {}, [
+      el("h3", { textContent: item.task.slice(0, 90) + (item.task.length > 90 ? "…" : "") }),
+    ]);
+    head.append(el("span", { className: "pill", textContent: item.stream }));
+    head.append(el("div", { className: "spacer" }));
+    head.append(el("span", { className: "meta", textContent: item.at.slice(0, 10) }));
+
+    const copyB = el("button", { type: "button", className: "sm", textContent: "📋 Copy" });
+    copyB.onclick = () => copyText(item.text, "Copied");
+    const delB = el("button", { type: "button", className: "sm danger", textContent: "Delete" });
+    delB.onclick = () => {
+      store.library = store.library.filter((x) => x.id !== item.id);
+      save(); renderLibrary(); toast("Deleted");
+    };
+
+    const det = el("details", {}, [el("summary", { textContent: "Show prompt" }), el("pre", { textContent: item.text })]);
+    const row = el("div", { className: "row", style: "margin-top:9px" }, [copyB, delB]);
+    box.append(el("div", { className: "saved-item" }, [
+      head,
+      el("div", { className: "meta", textContent: item.idea }),
+      det, row,
+    ]));
+  });
+}
+
+$("libExportBtn").onclick = () => {
+  const md = ["# My CLEAR prompt library", "", "Exported " + today() + " · " + store.library.length + " prompts", ""];
+  store.library.forEach((p, i) => {
+    md.push("---", "", "## " + (i + 1) + ". " + p.task, "", "**Wealth idea:** " + p.idea + "  ", "**Income stream:** " + p.stream + "  ", "**Saved:** " + p.at.slice(0, 10), "", "```", p.text, "```", "");
+  });
+  download("clear-prompt-library-" + today() + ".md", md.join("\n"));
+};
+
+$("libClearBtn").onclick = () => {
+  if (!confirm("Delete all " + store.library.length + " saved prompts? This cannot be undone.")) return;
+  store.library = []; save(); renderLibrary(); toast("Library cleared");
+};
+
+/* ===========================================================================
+   PACK BUILDER
+   =========================================================================== */
+
+function renderPackChips() {
+  const ib = $("packIdeas");
+  ib.textContent = "";
+  IDEAS.forEach((it, i) => {
+    const b = el("button", { type: "button", className: "chip", textContent: it.short, title: it.name });
+    b.setAttribute("aria-pressed", String(store.pack.ideas.includes(i)));
+    b.onclick = () => {
+      const on = store.pack.ideas.includes(i);
+      store.pack.ideas = on ? store.pack.ideas.filter((x) => x !== i) : store.pack.ideas.concat(i).sort((a, b2) => a - b2);
+      if (!store.pack.ideas.length) store.pack.ideas = [i];
+      save(); renderPackChips(); autoTitle();
+    };
+    ib.append(b);
+  });
+
+  const sb = $("packStreams");
+  sb.textContent = "";
+  STREAMS.forEach((s) => {
+    const b = el("button", { type: "button", className: "chip", textContent: s.name });
+    b.setAttribute("aria-pressed", String(store.pack.streams.includes(s.name)));
+    b.onclick = () => {
+      const on = store.pack.streams.includes(s.name);
+      store.pack.streams = on ? store.pack.streams.filter((x) => x !== s.name) : store.pack.streams.concat(s.name);
+      if (!store.pack.streams.length) store.pack.streams = [s.name];
+      save(); renderPackChips(); autoTitle();
+    };
+    sb.append(b);
+  });
+}
+
+function autoTitle() {
+  if ($("packTitle").value && $("packTitle").dataset.touched === "1") return;
+  const ideas = store.pack.ideas.map((i) => IDEAS[i]);
+  const n = store.pack.size;
+  const t = ideas.length === 1
+    ? ideas[0].niche + " AI Prompt Pack — " + n + " CLEAR Prompts for " + ideas[0].short + " Businesses"
+    : n + " CLEAR AI Prompts for " + ideas.length + " Wealth Ideas — Complete Bundle";
+  $("packTitle").value = t;
+  store.pack.title = t;
+}
+
+["packSize", "packTitle", "packAuthor", "packLicense"].forEach((id) => {
+  $(id).oninput = $(id).onchange = (e) => {
+    const key = id.replace("pack", "").toLowerCase();
+    store.pack[key] = e.target.value;
+    if (id === "packTitle") e.target.dataset.touched = e.target.value ? "1" : "0";
+    if (id === "packSize") { $("packTitle").dataset.touched = "0"; autoTitle(); }
+    save();
+  };
+});
+document.querySelectorAll("input[name=packFmt]").forEach((r) => {
+  r.onchange = () => { store.pack.fmt = r.value; save(); };
+});
+$("packCoherent").onchange = (e) => { store.pack.coherent = e.target.checked; save(); };
+
+function buildPack() {
+  const p = store.pack;
+  const ideas = p.ideas.map((i) => IDEAS[i]);
+  const size = Number(p.size);
+  const md = p.fmt === "md";
+  const H = (lvl, s) => (md ? "#".repeat(lvl) + " " + s : s.toUpperCase());
+  const RULE = md ? "\n---\n" : "\n" + "=".repeat(72) + "\n";
+  const author = (p.author || "").trim();
+  const lic = LICENSES[p.license];
+  const title = (p.title || "").trim() || "AI Prompt Pack";
+
+  const out = [];
+
+  /* cover */
+  out.push(H(1, title), "");
+  out.push(size + " ready-to-run prompts, written to the CLEAR Formula.", "");
+  if (author) out.push("By " + author, "");
+  out.push("Covers: " + ideas.map((i) => i.name).join(" · "), "");
+  out.push("Income streams: " + p.streams.join(" · "), "");
+  if (!p.coherent) out.push("Combinations: recombined across the matrix — check each prompt's context and audience pairing before client use.", "");
+  out.push("Version " + today(), "");
+  out.push(RULE);
+
+  /* how to use */
+  out.push(H(2, "How to use this pack"), "");
+  out.push("Every prompt here is built on the CLEAR Formula — Context, Length, Example, Audience, Role — plus one clearly stated task. That structure is why these produce usable first drafts instead of generic filler.", "");
+  out.push(H(3, "Running a prompt"), "");
+  out.push("1. Copy the whole prompt, labels included. The labels are doing work — do not strip them.");
+  out.push("2. Replace anything in [SQUARE BRACKETS] with your own detail before you run it.");
+  out.push("3. Paste it into any capable AI assistant. These are model-agnostic.");
+  out.push("4. Judge the first output on structure only. It is a draft, not a deliverable.", "");
+  out.push(H(3, "The three things to change every time"), "");
+  out.push("- **CONTEXT** — swap in your real business, your real constraint, and a real number. This single edit is the difference between a prompt that sounds like you and one that sounds like everyone.");
+  out.push("- **AUDIENCE** — narrow it until it describes someone you could name.");
+  out.push("- **EXAMPLE** — paste 200 words of your own writing. Nothing else moves the tone as far.", "");
+  out.push(H(3, "The 3-Pass Method"), "");
+  out.push("Never ship pass one.", "");
+  out.push("**Pass 1 — Draft.** Run the prompt. Judge the shape, ignore the wording.");
+  out.push("**Pass 2 — Accuracy and depth.** Ask: mark every claim asserted rather than supported and either support it or cut it; answer the three objections this audience would raise; add the detail only a specialist would know; list anything invented.");
+  out.push("**Pass 3 — Voice and polish.** Ask: vary sentence length, cut 15% of the words, replace abstract nouns with concrete ones, make the first line earn the second.", "");
+  out.push(H(3, "What this pack will not do"), "");
+  out.push("It will not do your thinking, and it will not know your business. Every prompt assumes you supply the specifics. Run one unedited and you will get output that is competent and forgettable — which is exactly what the CLEAR Formula exists to prevent.", "");
+  out.push(RULE);
+
+  /* index */
+  out.push(H(2, "What's inside"), "");
+  const counts = {};
+  const rows = [];
+  for (let i = 0; i < size; i++) rows.push(combo(ideas, i));
+  rows.forEach((r) => { counts[r.offer.stream] = (counts[r.offer.stream] || 0) + 1; });
+  if (md) {
+    out.push("| Income stream | Prompts |", "|---|---|");
+    Object.entries(counts).forEach(([k, v]) => out.push("| " + k + " | " + v + " |"));
+  } else {
+    Object.entries(counts).forEach(([k, v]) => out.push("  " + k + " — " + v + " prompts"));
+  }
+  out.push("", RULE);
+
+  /* prompts */
+  let lastStream = null;
+  rows.forEach((r, i) => {
+    if (r.offer.stream !== lastStream) {
+      lastStream = r.offer.stream;
+      const s = STREAMS.find((x) => x.name === lastStream);
+      out.push(H(2, lastStream), "");
+      if (s) out.push(md ? "*" + s.sells + "*" : s.sells, "");
+    }
+    out.push(H(3, (i + 1) + ". " + r.task));
+    out.push(md ? "*" + r.ideaName + " · " + r.offer.detail + "*" : "(" + r.ideaName + " · " + r.offer.detail + ")", "");
+    if (md) out.push("```");
+    out.push(assemble(r, { questions: false, noFluff: true, constraints: true, variants: false, order: false }));
+    if (md) out.push("```");
+    out.push("");
+  });
+
+  /* licence */
+  out.push(RULE);
+  out.push(H(2, lic.label), "");
+  out.push(lic.body, "");
+  out.push("© " + new Date().getFullYear() + (author ? " " + author : "") + ". All rights reserved.", "");
+  out.push(H(3, "A note on AI output"), "");
+  out.push("These prompts produce drafts. Check every fact, figure, name and claim before you publish or send anything generated with them. Where a prompt returns [NEEDS: …], that is the prompt telling you it does not have the information — supply it yourself rather than letting the model guess.", "");
+
+  return out.join("\n");
+}
+
+function combo(ideas, i) {
+  const it = ideas[i % ideas.length];
+  const j = Math.floor(i / ideas.length);
+  const wanted = it.offers.filter((o) => store.pack.streams.includes(o.stream));
+  const pool = wanted.length ? wanted : it.offers;
+
+  let role, context, audience, offer;
+
+  if (store.pack.coherent) {
+    /* Replay a workbook row so the four fields describe one real business. Rows
+       whose own offer is outside the chosen streams keep their role, context and
+       audience and take the nearest selected offer instead. */
+    const rowsInScope = it.rows.filter((r) => store.pack.streams.includes(it.offers[r[3]].stream));
+    const rows = rowsInScope.length ? rowsInScope : it.rows;
+    const row = rows[j % rows.length];
+    role = it.roles[row[0]];
+    context = it.contexts[row[1]];
+    audience = it.audiences[row[2]];
+    offer = store.pack.streams.includes(it.offers[row[3]].stream) ? it.offers[row[3]] : pool[j % pool.length];
+  } else {
+    role = it.roles[j % it.roles.length];
+    context = it.contexts[(j * 3 + Math.floor(j / 10)) % it.contexts.length];
+    audience = it.audiences[(j * 7 + Math.floor(j / 10) * 3) % it.audiences.length];
+    offer = pool[j % pool.length];
+  }
+
+  const tasks = TASKS[offer.stream] || TASKS["Freelance Writing"];
+  const task = tasks[(j * 3 + (i % ideas.length)) % tasks.length];
+  return {
+    ideaName: it.name,
+    niche: it.niche,
+    role: role,
+    context: context,
+    audience: audience,
+    offer: offer,
+    task: task.t,
+    length: task.len,
+    example: EXAMPLES[(j * 5 + i) % EXAMPLES.length],
+  };
+}
+
+let packText = "";
+$("packBtn").onclick = () => {
+  packText = buildPack();
+  $("packOut").textContent = packText;
+  $("packPreviewCard").hidden = false;
+  $("packCopyBtn").disabled = false;
+  $("packDlBtn").disabled = false;
+  const words = packText.trim().split(/\s+/).length;
+  $("packStats").textContent = store.pack.size + " prompts · " + words.toLocaleString() + " words · " + Math.round(packText.length / 1024) + " KB";
+  toast("Pack generated — " + store.pack.size + " prompts");
+  $("packOut").focus();
+};
+$("packCopyBtn").onclick = () => copyText(packText, "Whole pack copied");
+$("packDlBtn").onclick = () => download(slug(store.pack.title || "ai-prompt-pack") + "." + store.pack.fmt, packText);
+$("packPrintBtn").onclick = () => window.print();
+
+/* ===========================================================================
+   SELL IT
+   =========================================================================== */
+
+function renderSell() {
+  const pr = $("platformRows");
+  pr.textContent = "";
+  PLATFORMS.forEach((row) => {
+    const tr = el("tr");
+    row.forEach((cell, i) => tr.append(el("td", {}, [i === 0 ? el("b", { textContent: cell }) : document.createTextNode(cell)])));
+    pr.append(tr);
+  });
+
+  const prc = $("priceRows");
+  prc.textContent = "";
+  PRICE_BANDS.forEach((row) => {
+    const tr = el("tr");
+    row.forEach((cell, i) => tr.append(el("td", {}, [i <= 1 ? el("b", { textContent: cell }) : document.createTextNode(cell)])));
+    prc.append(tr);
+  });
+
+  const sr = $("streamRows");
+  sr.textContent = "";
+  STREAMS.forEach((s) => {
+    sr.append(el("tr", {}, [
+      el("td", {}, [el("b", { textContent: s.name })]),
+      el("td", { textContent: "Ch. " + s.ch }),
+      el("td", { textContent: s.sells }),
+    ]));
+  });
+
+  const cl = $("checklist");
+  cl.textContent = "";
+  CHECKLIST.forEach((text, i) => {
+    const cb = el("input", { type: "checkbox", checked: !!store.checks[i] });
+    cb.onchange = () => { store.checks[i] = cb.checked; save(); };
+    cl.append(el("label", { className: "inline" }, [cb, document.createTextNode(text)]));
+  });
+}
+
+$("listingBtn").onclick = () => {
+  const p = store.pack;
+  const ideas = p.ideas.map((i) => IDEAS[i]);
+  const first = ideas[0];
+  const aud = first.audiences[0];
+  const title = (p.title || "AI Prompt Pack").trim();
+  const lic = LICENSES[p.license];
+  const L = [];
+
+  L.push("TITLE (keyword-first, under 140 characters)");
+  L.push(title.slice(0, 140), "");
+
+  L.push("DESCRIPTION — paragraph 1: what it is and who it's for");
+  L.push("A pack of " + p.size + " ready-to-run AI prompts for " + ideas.map((i) => i.niche.toLowerCase()).join(" and ") +
+         ". Every prompt is written to the CLEAR Formula — Context, Length, Example, Audience, Role — so it produces a usable first draft instead of the generic output a one-line request gives you. Built for " + aud.toLowerCase().replace(/\.$/, "") + ".", "");
+
+  L.push("DESCRIPTION — paragraph 2: the problem it solves");
+  L.push("Most people write prompts one line long, get bland output, and conclude AI cannot do the job. The problem is not the model — it is the missing context, the missing audience, and the missing format. These prompts carry all three already. You supply your business specifics and run them. Reckon on 10–20 minutes saved per piece of work, every time.", "");
+
+  L.push("DESCRIPTION — paragraph 3: exactly what's included");
+  L.push("• " + p.size + " full CLEAR-structured prompts, grouped by income stream (" + p.streams.join(", ") + ")");
+  L.push("• A how-to-use guide covering what to change before running each prompt");
+  L.push("• The 3-Pass Method for turning a first draft into publishable work");
+  L.push("• Every prompt labelled with the business situation and audience it was written for");
+  L.push("• " + lic.label + " included", "");
+
+  L.push("DESCRIPTION — paragraph 4: technical details");
+  L.push("Format: " + (p.fmt === "md" ? "Markdown (.md) — opens in any text editor, Notion, Obsidian, Google Docs or Word" : "Plain text (.txt) — opens anywhere") +
+         ". Model-agnostic: works with any capable AI assistant. Instant download, no software or subscription required. This is a digital product — no physical item ships.", "");
+
+  L.push("DESCRIPTION — paragraph 5: FAQs");
+  L.push("Q: Which AI tool do I need? A: Any capable assistant. The prompts do not depend on one vendor's features.");
+  L.push("Q: Do I need to know how to prompt? A: No. That is what the structure is for. The guide explains the three fields to change.");
+  L.push("Q: Can I use these for client work? A: " + (p.license === "personal" ? "This licence covers your own business only. An extended licence is available." : "Yes — the licence covers paid client work. You may not resell the prompts themselves."));
+  L.push("Q: Will the output be original? A: The prompt is the structure; your context makes the output yours. Always fact-check before publishing.");
+  L.push("Q: Refunds? A: State your platform's policy here. Digital downloads are commonly final sale — say so plainly and buyers complain less.", "");
+
+  L.push("TAGS (fill every slot — mix broad and long-tail)");
+  const tags = ["ai prompts", "chatgpt prompts", "prompt pack", slug(first.short).replace(/-/g, " ") + " prompts",
+    "ai for " + first.short.toLowerCase(), "digital download", "small business ai", "content prompts",
+    "ai templates", first.niche.toLowerCase().slice(0, 20), "prompt engineering", "ai side hustle", "clear formula prompts"];
+  L.push(tags.join(", "), "");
+
+  L.push("POST-PURCHASE MESSAGE (drives the reviews that drive the ranking)");
+  L.push("Thanks for picking this up. One favour: run any two prompts this week and tell me whether the output was usable as-is. If it was, a review helps more than you would think. If it was not, reply and tell me which one — I will send you a rewritten version.", "");
+
+  L.push("THREE-TIER PRICING");
+  L.push("Tier 1 — " + title + " ....................... the pack alone");
+  L.push("Tier 2 — " + title + " + walkthrough ......... the pack, plus a 5-minute video showing two prompts run end to end");
+  L.push("Tier 3 — " + title + " + setup call .......... both of the above, plus 30 minutes customising the prompts to your business");
+  L.push("Set tier 1 at the bottom of the band for this product type, tier 2 at roughly 1.6×, tier 3 at roughly 2.8×. The middle tier is the one designed to sell.");
+
+  $("listingOut").textContent = L.join("\n");
+  $("listingCopyBtn").disabled = false;
+  toast("Listing copy generated");
+};
+$("listingCopyBtn").onclick = () => copyText($("listingOut").textContent, "Listing copy copied");
+
+/* ===========================================================================
+   BACK UP / RESET / BOOT
+   =========================================================================== */
+
+$("exportAllBtn").onclick = () => {
+  download("prompt-generator-backup-" + today() + ".json", JSON.stringify(store, null, 2));
+};
+
+$("resetAllBtn").onclick = () => {
+  if (!confirm("Clear everything saved in this browser — your library, pack settings and checklist? A backup file will download first.")) return;
+  download("prompt-generator-backup-" + today() + ".json", JSON.stringify(store, null, 2));
+  try { localStorage.removeItem(STORE_KEY); } catch (e) { /* ignore */ }
+  location.reload();
+};
+
+/* Counts are computed from the real arrays, never hard-coded — one sheet in the
+   source workbook repeats a context, so the honest total is 99,000, not 100,000. */
+function renderCounts() {
+  const per = IDEAS.map((it) => it.roles.length * it.contexts.length * it.audiences.length * it.offers.length);
+  const total = per.reduce((a, b) => a + b, 0);
+  $("totalCombos").textContent = total.toLocaleString();
+  const short = IDEAS.filter((it, i) => per[i] < 10000);
+  $("dupNote").textContent = short.length
+    ? "(" + short.map((s) => s.short).join(", ") + " carries " + short[0].contexts.length +
+      " unique contexts rather than 10 — the source workbook repeats one, and this app drops duplicates rather than padding the count.)"
+    : "";
+}
+
+function boot() {
+  load();
+  applyTheme();
+  renderCounts();
+  renderIdeaChips();
+  fillSelects();
+  render();
+  renderLibrary();
+  renderPackChips();
+  $("packSize").value = store.pack.size;
+  $("packAuthor").value = store.pack.author || "";
+  $("packLicense").value = store.pack.license;
+  $("packCoherent").checked = store.pack.coherent !== false;
+  store.pack.coherent = store.pack.coherent !== false;
+  document.querySelectorAll("input[name=packFmt]").forEach((r) => { r.checked = r.value === store.pack.fmt; });
+  $("packTitle").value = store.pack.title || "";
+  if (!store.pack.title) autoTitle();
+  renderSell();
+}
+boot();
+</script>
+</body>
+</html>
