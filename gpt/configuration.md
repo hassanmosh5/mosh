@@ -25,8 +25,12 @@ Alternatives if that name is taken:
 *(300 character limit — shown on the GPT's card)*
 
 ```
-Turn what you already know into a digital product that actually sells. I validate your idea before you waste 15 hours building it, then write the product, price it, and hand you a listing ready to publish. Built on the Chapter 7 frameworks of THE AI INCOME BLUEPRINT.
+Turn what you already know into a digital product that actually sells. I validate the idea before you waste 15 hours building it, then write it, price it, and hand you a listing ready to publish. If it's live and not selling, I find the step that's broken. From THE AI INCOME BLUEPRINT.
 ```
+
+286 characters. The previous version stopped at "ready to publish" — the closing line is
+there because people search for help with a product that already exists more often than
+for help starting one.
 
 ---
 
@@ -34,9 +38,19 @@ Turn what you already know into a digital product that actually sells. I validat
 
 Paste the full contents of [`instructions.txt`](./instructions.txt).
 
-Currently ~7.5k characters against ChatGPT's 8,000 character limit, leaving room
-for your own edits. If you add to it, trim elsewhere or move the detail into the
-knowledge file instead.
+Currently **7,875 characters against ChatGPT's 8,000 limit — 125 to spare.** It is close
+to the cap because it covers seven modes. Anything you add has to come out somewhere
+else, and the right home for new material is a knowledge file: those have no practical
+size limit and the GPT retrieves from them just as reliably.
+
+To check after editing:
+
+```bash
+python3 -c "print(len(open('gpt/instructions.txt', encoding='utf-8').read()))"
+```
+
+`wc -m` will report a higher number — it counts the em dashes and arrows as multiple
+bytes each, and ChatGPT counts characters.
 
 ---
 
@@ -55,27 +69,41 @@ Validate my product idea before I build it
 Write the listing and SEO for a product I've made
 ```
 ```
+My product isn't selling — help me work out why
+```
+
+Swap in either of these if your audience skews differently — the fourth slot is the one
+worth testing:
+
+```
 Plan my first 20-product catalogue
+```
+```
+Check I'm allowed to sell what I've made
 ```
 
 ---
 
 ## Knowledge
 
-Upload both files:
+Upload these:
 
 1. **`knowledge/digital-product-playbook.md`** — required. The pricing tables,
    platform comparison, validation methods, and income projections the instructions
    refer to. Without it the GPT will invent numbers.
-2. **`THE_AI_INCOME_BLUEPRINT.pdf`** — optional but recommended. Gives the GPT the
+2. **`knowledge/delivery-licensing-and-policy.md`** — required. Delivery format per
+   product type, the pre-publish file checklist, licence wording, what assets are
+   safe to build with, marketplace rules, refund handling, and the funnel diagnostic
+   Mode 7 runs on. Modes 3 and 7 and the licensing section all reference it directly.
+3. **`THE_AI_INCOME_BLUEPRINT.pdf`** — optional but recommended. Gives the GPT the
    full book, so it can pull from the other income streams, the CLEAR chapter, and
    the 30-day launch plan when a conversation goes beyond digital products.
 
 > **Note on uploading the book:** knowledge files can be surfaced to users if the
 > GPT is public and Code Interpreter is enabled — a user can sometimes get the GPT
 > to hand over the raw file. If you're selling the book, either publish the GPT
-> with Code Interpreter **off**, keep the GPT private/link-only, or upload only the
-> playbook file rather than the full PDF.
+> with Code Interpreter **off**, keep the GPT private/link-only, or upload only the two
+> markdown files rather than the full PDF.
 
 ---
 
