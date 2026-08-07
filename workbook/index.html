@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Star Explorers — Interactive Workbook for Kids</title>
+<meta name="description" content="A playful, offline-friendly interactive workbook for kids ages 4–8: counting, math, spelling, patterns, shapes, memory and drawing.">
+<style>
+  /* ---------- tokens ---------- */
+  :root{
+    --ink:#22243f;
+    --ink-soft:#5b5f86;
+    --paper:#fdf7ef;
+    --paper-2:#fffdfa;
+    --line:#e4d9c8;
+    --shadow:rgba(58,44,20,.18);
+
+    --grape:#7c5cff;
+    --berry:#ff5d8f;
+    --tangerine:#ff9f45;
+    --lemon:#ffd23f;
+    --mint:#2fd6a3;
+    --sky:#3ab6ff;
+
+    --good:#18a06a;
+    --bad:#e2564a;
+
+    --r-lg:26px;
+    --r-md:18px;
+    --r-sm:12px;
+    --font: "Trebuchet MS", "Verdana", "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:var(--font);
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 12% -10%, #ffe9c9 0%, transparent 60%),
+      radial-gradient(1000px 700px at 100% 0%, #d9f2ff 0%, transparent 55%),
+      radial-gradient(900px 600px at 50% 110%, #ffe0ee 0%, transparent 60%),
+      var(--paper);
+    -webkit-text-size-adjust:100%;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .wrap{max-width:1040px;margin:0 auto;padding:18px 16px 80px}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    background:var(--paper-2);
+    border:3px solid var(--ink);
+    border-radius:var(--r-lg);
+    padding:12px 16px;
+    box-shadow:0 6px 0 var(--ink);
+    margin-bottom:22px;
+  }
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.25rem;letter-spacing:.2px}
+  .logo .mark{
+    width:44px;height:44px;display:grid;place-items:center;font-size:26px;
+    background:linear-gradient(140deg,var(--lemon),var(--tangerine));
+    border:3px solid var(--ink);border-radius:14px;
+  }
+  .spacer{flex:1 1 auto}
+
+  .scoreboard{
+    display:flex;align-items:center;gap:8px;
+    background:linear-gradient(140deg,#fff6d8,#ffe6b8);
+    border:3px solid var(--ink);border-radius:999px;
+    padding:6px 16px;font-weight:800;font-size:1.05rem;
+  }
+  .scoreboard .num{font-variant-numeric:tabular-nums;min-width:2ch;text-align:right}
+
+  /* ---------- buttons ---------- */
+  button{font-family:inherit}
+  .btn{
+    cursor:pointer;border:3px solid var(--ink);border-radius:var(--r-md);
+    background:var(--paper-2);color:var(--ink);
+    font-weight:800;font-size:1rem;padding:10px 16px;
+    box-shadow:0 4px 0 var(--ink);
+    transition:transform .08s ease, box-shadow .08s ease, background .15s ease;
+  }
+  .btn:hover{background:#fff}
+  .btn:active{transform:translateY(4px);box-shadow:0 0 0 var(--ink)}
+  .btn:focus-visible{outline:4px solid var(--sky);outline-offset:3px}
+  .btn.primary{background:linear-gradient(140deg,var(--mint),#7ef0c8)}
+  .btn.grape{background:linear-gradient(140deg,var(--grape),#a58cff);color:#fff}
+  .btn.berry{background:linear-gradient(140deg,var(--berry),#ff92b4);color:#fff}
+  .btn.small{padding:7px 12px;font-size:.9rem;border-radius:12px;box-shadow:0 3px 0 var(--ink)}
+
+  /* ---------- screens ---------- */
+  .screen{display:none;animation:pop .28s ease}
+  .screen.active{display:block}
+  @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.99)}to{opacity:1;transform:none}}
+
+  h1{font-size:clamp(1.8rem,5vw,2.6rem);margin:.2em 0 .1em;line-height:1.1}
+  h2{font-size:clamp(1.4rem,4vw,1.9rem);margin:.2em 0}
+  .lede{color:var(--ink-soft);font-size:1.05rem;margin:.2em 0 1.2em;max-width:60ch}
+
+  /* ---------- name card ---------- */
+  .hello{
+    display:flex;gap:14px;align-items:center;flex-wrap:wrap;
+    background:var(--paper-2);border:3px dashed var(--line);border-radius:var(--r-lg);
+    padding:14px 18px;margin-bottom:24px;
+  }
+  .hello label{font-weight:800}
+  .hello input{
+    font-family:inherit;font-size:1.05rem;font-weight:700;
+    padding:9px 14px;border:3px solid var(--ink);border-radius:14px;background:#fff;color:var(--ink);
+    min-width:min(260px,60vw);
+  }
+  .hello input:focus-visible{outline:4px solid var(--sky);outline-offset:2px}
+
+  /* ---------- level picker ---------- */
+  .levels{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 26px}
+  .levels .label{font-weight:800;margin-right:4px}
+  .chip{
+    cursor:pointer;border:3px solid var(--ink);background:var(--paper-2);
+    border-radius:999px;padding:8px 18px;font-weight:800;box-shadow:0 3px 0 var(--ink);
+  }
+  .chip[aria-pressed="true"]{background:linear-gradient(140deg,var(--sky),#8ed8ff);color:#04324d}
+  .chip:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
+
+  /* ---------- activity grid ---------- */
+  .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+  .card{
+    position:relative;text-align:left;cursor:pointer;
+    border:3px solid var(--ink);border-radius:var(--r-lg);
+    padding:18px 16px 16px;background:var(--paper-2);
+    box-shadow:0 6px 0 var(--ink);
+    transition:transform .12s ease, box-shadow .12s ease;
+    display:flex;flex-direction:column;gap:6px;min-height:172px;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:0 9px 0 var(--ink)}
+  .card:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+  .card:focus-visible{outline:4px solid var(--grape);outline-offset:4px}
+  .card .emoji{font-size:44px;line-height:1}
+  .card .title{font-weight:800;font-size:1.2rem}
+  .card .desc{color:var(--ink-soft);font-size:.95rem;flex:1 1 auto}
+  .card .stars{font-size:1rem;font-weight:800;color:#a06a00}
+  .card::after{
+    content:"";position:absolute;inset:6px 6px auto auto;width:0;height:0;
+  }
+  .card.c1{background:linear-gradient(150deg,#fff0d6,#ffe0b3)}
+  .card.c2{background:linear-gradient(150deg,#e3f7ff,#c9ecff)}
+  .card.c3{background:linear-gradient(150deg,#ffe6f0,#ffd0e2)}
+  .card.c4{background:linear-gradient(150deg,#eae4ff,#d8ceff)}
+  .card.c5{background:linear-gradient(150deg,#e0fff2,#c4f7e4)}
+  .card.c6{background:linear-gradient(150deg,#fff6cc,#ffeda1)}
+  .card.c7{background:linear-gradient(150deg,#ffe8e0,#ffd3c4)}
+
+  /* ---------- activity shell ---------- */
+  .actbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+  .panel{
+    background:var(--paper-2);border:3px solid var(--ink);border-radius:var(--r-lg);
+    box-shadow:0 6px 0 var(--ink);padding:24px 20px;
+  }
+  .question{
+    text-align:center;font-size:clamp(1.5rem,6vw,2.4rem);font-weight:800;margin:6px 0 4px;
+  }
+  .prompt{text-align:center;color:var(--ink-soft);font-weight:700;margin-bottom:14px}
+  .stage{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px;min-height:120px;margin:8px 0 18px}
+
+  .options{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));max-width:640px;margin:0 auto}
+  .opt{
+    cursor:pointer;border:3px solid var(--ink);border-radius:var(--r-md);
+    background:#fff;box-shadow:0 5px 0 var(--ink);
+    font-weight:800;font-size:1.6rem;padding:16px 10px;
+    transition:transform .1s ease, box-shadow .1s ease, background .15s ease;
+  }
+  .opt:hover:not(:disabled){background:#f4fbff;transform:translateY(-2px);box-shadow:0 7px 0 var(--ink)}
+  .opt:active:not(:disabled){transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+  .opt:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
+  .opt:disabled{cursor:default}
+  .opt.right{background:linear-gradient(140deg,#7ef0c8,#2fd6a3);animation:cheer .45s ease}
+  .opt.wrong{background:linear-gradient(140deg,#ffc2bd,#ff9a92);animation:shake .4s ease}
+  @keyframes cheer{0%{transform:scale(1)}45%{transform:scale(1.12)}100%{transform:scale(1)}}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+  .feedback{
+    text-align:center;font-weight:800;font-size:1.25rem;min-height:1.8em;margin-top:16px;
+  }
+  .feedback.good{color:var(--good)}
+  .feedback.bad{color:var(--bad)}
+
+  .progress{
+    height:18px;background:#fff;border:3px solid var(--ink);border-radius:999px;overflow:hidden;margin:0 auto 18px;max-width:560px;
+  }
+  .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--lemon),var(--tangerine));transition:width .35s ease}
+
+  /* counting stage */
+  .critter{font-size:clamp(30px,7vw,46px);line-height:1;animation:bob 2s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+  /* math dots */
+  .dotset{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:230px}
+  .dot{width:22px;height:22px;border-radius:50%;border:3px solid var(--ink);background:var(--berry)}
+  .dot.b{background:var(--sky)}
+  .dot.gone{opacity:.22}
+  .plus{font-size:2rem;font-weight:800;padding:0 6px}
+
+  /* word builder */
+  .wordslots{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .slot{
+    width:56px;height:64px;border:3px dashed var(--line);border-radius:14px;background:#fff;
+    display:grid;place-items:center;font-size:1.9rem;font-weight:800;
+  }
+  .slot.filled{border-style:solid;border-color:var(--ink);background:linear-gradient(140deg,#fff7dc,#ffe9b3)}
+  .tiles{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+  .tile{
+    cursor:pointer;width:58px;height:62px;font-size:1.7rem;font-weight:800;
+    border:3px solid var(--ink);border-radius:14px;background:linear-gradient(140deg,#e8f6ff,#c9ecff);
+    box-shadow:0 5px 0 var(--ink);
+  }
+  .tile:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+  .tile:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
+  .tile[hidden]{visibility:hidden;display:inline-block}
+
+  /* patterns */
+  .patternrow{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}
+  .pcell{
+    width:64px;height:64px;display:grid;place-items:center;font-size:2rem;
+    background:#fff;border:3px solid var(--ink);border-radius:16px;
+  }
+  .pcell.blank{background:repeating-linear-gradient(45deg,#fff,#fff 8px,#f0e7d8 8px,#f0e7d8 16px);font-size:1.6rem;color:var(--ink-soft)}
+
+  /* memory */
+  .memgrid{display:grid;gap:12px;grid-template-columns:repeat(4,minmax(0,1fr));max-width:480px;margin:0 auto}
+  .memcard{
+    aspect-ratio:1/1;font-size:clamp(24px,7vw,38px);cursor:pointer;
+    border:3px solid var(--ink);border-radius:16px;box-shadow:0 5px 0 var(--ink);
+    background:linear-gradient(140deg,var(--grape),#a58cff);color:transparent;
+    transition:transform .18s ease, background .18s ease;
+  }
+  .memcard.up{background:#fff;color:inherit}
+  .memcard.done{background:linear-gradient(140deg,#7ef0c8,#2fd6a3);color:inherit;cursor:default}
+  .memcard:focus-visible{outline:4px solid var(--sky);outline-offset:3px}
+
+  /* shapes */
+  .shapebox{display:grid;place-items:center;padding:8px}
+  .shapebox svg{width:min(190px,52vw);height:auto}
+
+  /* doodle */
+  .toolrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;margin-bottom:14px}
+  .swatch{
+    width:40px;height:40px;border-radius:50%;border:3px solid var(--ink);cursor:pointer;padding:0;
+    box-shadow:0 3px 0 var(--ink);
+  }
+  .swatch[aria-pressed="true"]{outline:4px solid var(--ink);outline-offset:3px}
+  .swatch:focus-visible{outline:4px solid var(--sky);outline-offset:3px}
+  #pad{
+    width:100%;max-width:820px;aspect-ratio:4/3;display:block;margin:0 auto;
+    background:#fff;border:3px solid var(--ink);border-radius:var(--r-md);
+    touch-action:none;cursor:crosshair;
+  }
+
+  /* sticker chart */
+  .stickerchart{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));margin-top:8px}
+  .sticker{
+    aspect-ratio:1/1;display:grid;place-items:center;font-size:30px;
+    border:3px dashed var(--line);border-radius:16px;background:#fff;color:#cbbfae;
+  }
+  .sticker.on{border-style:solid;border-color:var(--ink);background:linear-gradient(140deg,#fff3cf,#ffe3a3);color:inherit;animation:cheer .5s ease}
+
+  /* certificate */
+  .cert{
+    border:8px double var(--ink);border-radius:20px;background:#fffdf6;
+    padding:34px 26px;text-align:center;max-width:760px;margin:0 auto;
+  }
+  .cert .ribbon{font-size:60px}
+  .cert .who{font-size:clamp(1.6rem,6vw,2.4rem);font-weight:800;margin:.3em 0;border-bottom:4px dotted var(--line);display:inline-block;padding:0 .4em .1em}
+  .cert .why{color:var(--ink-soft);font-size:1.1rem}
+
+  .note{color:var(--ink-soft);font-size:.92rem}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .center{text-align:center}
+  .mt{margin-top:18px}
+
+  .visually-hidden{
+    position:absolute!important;width:1px;height:1px;overflow:hidden;
+    clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;
+  }
+
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none!important;transition:none!important}
+  }
+
+  @media print{
+    body{background:#fff}
+    .topbar,.actbar,.no-print{display:none!important}
+    .wrap{padding:0}
+    .cert{border-color:#000}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<div class="wrap">
+
+  <header class="topbar">
+    <div class="logo"><span class="mark" aria-hidden="true">🚀</span><span>Star Explorers</span></div>
+    <div class="spacer"></div>
+    <button class="btn small" id="soundBtn" aria-pressed="true">🔊 Sound on</button>
+    <div class="scoreboard" title="Stars you have earned">
+      <span aria-hidden="true">⭐</span>
+      <span class="num" id="starCount">0</span>
+      <span class="visually-hidden">stars earned</span>
+    </div>
+  </header>
+
+  <!-- ================= HOME ================= -->
+  <main id="home" class="screen active">
+    <h1 id="greeting">Hello, explorer! 👋</h1>
+    <p class="lede">Pick an activity below. Every right answer earns a ⭐. Collect stars, fill your sticker chart, and print your certificate!</p>
+
+    <div class="hello">
+      <label for="nameInput">My name is</label>
+      <input id="nameInput" type="text" maxlength="18" placeholder="type your name" autocomplete="off">
+      <button class="btn small primary" id="saveName">Save</button>
+    </div>
+
+    <div class="levels" role="group" aria-label="Difficulty level">
+      <span class="label">How tricky?</span>
+      <button class="chip" data-level="1" aria-pressed="true">🐣 Easy</button>
+      <button class="chip" data-level="2" aria-pressed="false">🐰 Medium</button>
+      <button class="chip" data-level="3" aria-pressed="false">🦁 Challenge</button>
+    </div>
+
+    <div class="grid" id="activityGrid"></div>
+
+    <section class="panel mt no-print" aria-labelledby="chartHead">
+      <h2 id="chartHead">🏅 My sticker chart</h2>
+      <p class="note">You earn a sticker for every 5 stars. <span id="stickerNote"></span></p>
+      <div class="stickerchart" id="stickerChart"></div>
+      <div class="row mt">
+        <button class="btn grape" id="goCert">🎓 See my certificate</button>
+        <button class="btn small" id="resetBtn">↺ Start over</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= QUIZ-STYLE ACTIVITY ================= -->
+  <section id="quiz" class="screen" aria-live="polite">
+    <div class="actbar">
+      <button class="btn" data-home>⬅ Back</button>
+      <h2 id="quizTitle">Activity</h2>
+      <div class="spacer"></div>
+      <span class="note" id="quizCounter"></span>
+    </div>
+    <div class="progress"><i id="quizBar"></i></div>
+    <div class="panel">
+      <p class="prompt" id="quizPrompt"></p>
+      <div class="question" id="quizQuestion"></div>
+      <div class="stage" id="quizStage"></div>
+      <div class="options" id="quizOptions"></div>
+      <p class="feedback" id="quizFeedback"></p>
+    </div>
+  </section>
+
+  <!-- ================= WORD BUILDER ================= -->
+  <section id="word" class="screen">
+    <div class="actbar">
+      <button class="btn" data-home>⬅ Back</button>
+      <h2>🔤 Word Builder</h2>
+      <div class="spacer"></div>
+      <span class="note" id="wordCounter"></span>
+    </div>
+    <div class="progress"><i id="wordBar"></i></div>
+    <div class="panel">
+      <p class="prompt">Tap the letters in the right order to spell the picture.</p>
+      <div class="stage"><span id="wordPic" style="font-size:clamp(48px,14vw,90px)"></span></div>
+      <div class="wordslots" id="wordSlots"></div>
+      <div class="tiles" id="wordTiles"></div>
+      <p class="feedback" id="wordFeedback"></p>
+      <div class="center mt"><button class="btn small" id="wordUndo">⬅ Undo a letter</button></div>
+    </div>
+  </section>
+
+  <!-- ================= MEMORY ================= -->
+  <section id="memory" class="screen">
+    <div class="actbar">
+      <button class="btn" data-home>⬅ Back</button>
+      <h2>🧠 Memory Match</h2>
+      <div class="spacer"></div>
+      <span class="note" id="memCounter"></span>
+    </div>
+    <div class="panel">
+      <p class="prompt">Flip two cards. Find the matching pairs!</p>
+      <div class="memgrid" id="memGrid"></div>
+      <p class="feedback" id="memFeedback"></p>
+      <div class="center mt"><button class="btn small" id="memAgain">🔀 Shuffle again</button></div>
+    </div>
+  </section>
+
+  <!-- ================= DOODLE ================= -->
+  <section id="doodle" class="screen">
+    <div class="actbar">
+      <button class="btn" data-home>⬅ Back</button>
+      <h2>🎨 Doodle Pad</h2>
+    </div>
+    <div class="panel">
+      <p class="prompt" id="doodlePrompt"></p>
+      <div class="toolrow" id="palette" role="group" aria-label="Colours"></div>
+      <div class="toolrow">
+        <button class="btn small" data-brush="6">• Thin</button>
+        <button class="btn small" data-brush="16">⬤ Medium</button>
+        <button class="btn small" data-brush="34">⬛ Thick</button>
+        <button class="btn small" id="eraser">🧽 Eraser</button>
+        <button class="btn small berry" id="clearPad">🗑 Clear</button>
+        <button class="btn small" id="savePad">💾 Save picture</button>
+        <button class="btn small" id="newIdea">💡 New idea</button>
+      </div>
+      <canvas id="pad" role="img" aria-label="Drawing canvas"></canvas>
+    </div>
+  </section>
+
+  <!-- ================= CERTIFICATE ================= -->
+  <section id="certificate" class="screen">
+    <div class="actbar no-print">
+      <button class="btn" data-home>⬅ Back</button>
+      <div class="spacer"></div>
+      <button class="btn grape" id="printCert">🖨 Print</button>
+    </div>
+    <div class="cert">
+      <div class="ribbon" aria-hidden="true">🏆</div>
+      <p class="why">This certificate is proudly awarded to</p>
+      <div class="who" id="certName">A Star Explorer</div>
+      <p class="why" id="certBody"></p>
+      <p class="why" style="margin-top:26px">⭐ ⭐ ⭐ ⭐ ⭐</p>
+      <p class="note" id="certDate"></p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* =========================================================
+   State
+   ========================================================= */
+const STORE_KEY = "starExplorers.v1";
+const defaults = { name:"", level:1, sound:true, stars:0, byActivity:{} };
+let state = load();
+
+function load(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return {...defaults};
+    return Object.assign({}, defaults, JSON.parse(raw));
+  }catch(e){ return {...defaults}; }
+}
+function save(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+}
+
+const $  = (sel, root) => (root||document).querySelector(sel);
+const $$ = (sel, root) => Array.from((root||document).querySelectorAll(sel));
+const rand = n => Math.floor(Math.random()*n);
+const pick = arr => arr[rand(arr.length)];
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j = rand(i+1); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function uniqueOptions(correct, makeWrong, count){
+  const set = new Set([String(correct)]);
+  let guard = 0;
+  while(set.size < count && guard++ < 200) set.add(String(makeWrong()));
+  return shuffle(Array.from(set));
+}
+
+/* =========================================================
+   Sound (WebAudio — no files needed)
+   ========================================================= */
+let audioCtx = null;
+function tone(freq, dur, type, when, gain){
+  if(!state.sound) return;
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state === "suspended") audioCtx.resume();
+    const t0 = audioCtx.currentTime + (when||0);
+    const osc = audioCtx.createOscillator();
+    const amp = audioCtx.createGain();
+    osc.type = type || "sine";
+    osc.frequency.setValueAtTime(freq, t0);
+    amp.gain.setValueAtTime(0.0001, t0);
+    amp.gain.exponentialRampToValueAtTime(gain || 0.16, t0 + 0.02);
+    amp.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(amp).connect(audioCtx.destination);
+    osc.start(t0); osc.stop(t0 + dur + 0.05);
+  }catch(e){}
+}
+const sfx = {
+  right(){ tone(660,.14,"triangle",0); tone(880,.18,"triangle",.11); tone(1180,.24,"triangle",.22); },
+  wrong(){ tone(240,.18,"sine",0,.12); tone(180,.22,"sine",.12,.12); },
+  pop(){ tone(520,.07,"square",0,.07); },
+  win(){ [523,659,784,1046].forEach((f,i)=>tone(f,.28,"triangle",i*.13)); }
+};
+
+/* =========================================================
+   Confetti
+   ========================================================= */
+const confettiCanvas = $("#confetti");
+const cctx = confettiCanvas.getContext("2d");
+let bits = [], confettiRunning = false;
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function sizeConfetti(){
+  confettiCanvas.width = window.innerWidth;
+  confettiCanvas.height = window.innerHeight;
+}
+sizeConfetti();
+window.addEventListener("resize", sizeConfetti);
+
+function confetti(amount){
+  if(reduceMotion) return;
+  const colors = ["#7c5cff","#ff5d8f","#ff9f45","#ffd23f","#2fd6a3","#3ab6ff"];
+  for(let i=0;i<(amount||60);i++){
+    bits.push({
+      x: Math.random()*confettiCanvas.width,
+      y: -20 - Math.random()*confettiCanvas.height*0.3,
+      w: 7 + Math.random()*8,
+      h: 10 + Math.random()*12,
+      vy: 2 + Math.random()*3.4,
+      vx: -1.4 + Math.random()*2.8,
+      rot: Math.random()*Math.PI,
+      vr: -0.16 + Math.random()*0.32,
+      color: colors[rand(colors.length)]
+    });
+  }
+  if(!confettiRunning){ confettiRunning = true; requestAnimationFrame(stepConfetti); }
+}
+function stepConfetti(){
+  cctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+  bits = bits.filter(b => b.y < confettiCanvas.height + 40);
+  bits.forEach(b => {
+    b.x += b.vx; b.y += b.vy; b.rot += b.vr;
+    cctx.save();
+    cctx.translate(b.x,b.y);
+    cctx.rotate(b.rot);
+    cctx.fillStyle = b.color;
+    cctx.fillRect(-b.w/2,-b.h/2,b.w,b.h);
+    cctx.restore();
+  });
+  if(bits.length){ requestAnimationFrame(stepConfetti); }
+  else { confettiRunning = false; cctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height); }
+}
+
+/* =========================================================
+   Stars & progress
+   ========================================================= */
+function addStar(activityId, n){
+  const amount = n || 1;
+  state.stars += amount;
+  state.byActivity[activityId] = (state.byActivity[activityId] || 0) + amount;
+  save();
+  paintStars();
+}
+function paintStars(){
+  $("#starCount").textContent = state.stars;
+  renderGrid();
+  renderStickers();
+}
+
+/* =========================================================
+   Screens
+   ========================================================= */
+function show(id){
+  $$(".screen").forEach(s => s.classList.toggle("active", s.id === id));
+  window.scrollTo({top:0, behavior: reduceMotion ? "auto" : "smooth"});
+}
+$$("[data-home]").forEach(b => b.addEventListener("click", () => { stopTimers(); show("home"); }));
+
+let timers = [];
+function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
+function stopTimers(){ timers.forEach(clearTimeout); timers = []; }
+
+/* =========================================================
+   Content
+   ========================================================= */
+const ANIMALS = ["🐶","🐱","🐭","🐰","🦊","🐻","🐼","🐨","🐸","🐵","🐷","🐮","🦄","🐝","🐢","🐙","🦋","🐧"];
+const THINGS  = ["🍎","🍌","🍓","🍕","⚽","🚗","🚂","🎈","🌟","🌈","🌸","🍪","🎁","🧩","🪀","🚀"];
+
+const WORDS = {
+  1:[["CAT","🐱"],["DOG","🐶"],["SUN","☀️"],["BUS","🚌"],["HAT","🎩"],["PIG","🐷"],["CUP","🥤"],["BEE","🐝"],["OWL","🦉"],["FOX","🦊"]],
+  2:[["FROG","🐸"],["STAR","⭐"],["TREE","🌳"],["FISH","🐟"],["BOOK","📚"],["MOON","🌙"],["CAKE","🍰"],["BEAR","🐻"],["DUCK","🦆"],["BOAT","⛵"]],
+  3:[["APPLE","🍎"],["TRAIN","🚂"],["HOUSE","🏠"],["ROBOT","🤖"],["TIGER","🐯"],["GRAPE","🍇"],["PIZZA","🍕"],["CLOUD","☁️"],["WHALE","🐳"],["SNAKE","🐍"]]
+};
+
+const SHAPES = {
+  circle:   '<circle cx="60" cy="60" r="46" />',
+  square:   '<rect x="16" y="16" width="88" height="88" rx="6" />',
+  triangle: '<polygon points="60,14 108,104 12,104" />',
+  rectangle:'<rect x="8" y="30" width="104" height="60" rx="6" />',
+  star:     '<polygon points="60,10 73,45 111,45 80,68 92,104 60,81 28,104 40,68 9,45 47,45" />',
+  heart:    '<path d="M60 106 L20 66 A22 22 0 0 1 60 38 A22 22 0 0 1 100 66 Z" />',
+  oval:     '<ellipse cx="60" cy="60" rx="52" ry="34" />',
+  diamond:  '<polygon points="60,10 110,60 60,110 10,60" />',
+  hexagon:  '<polygon points="34,16 86,16 112,60 86,104 34,104 8,60" />',
+  pentagon: '<polygon points="60,10 110,47 91,106 29,106 10,47" />'
+};
+const SHAPE_SETS = { 1:["circle","square","triangle","star"], 2:["circle","square","triangle","star","rectangle","heart","oval"], 3:Object.keys(SHAPES) };
+const SHAPE_COLORS = ["#7c5cff","#ff5d8f","#ff9f45","#2fd6a3","#3ab6ff","#ffd23f"];
+
+const PATTERN_ITEMS = [
+  ["🔴","🔵"],["🟡","🟢"],["🐶","🐱"],["⭐","🌙"],["🍎","🍌"],["🔺","🟦"],["🌸","🍀"],["🚗","🚂"]
+];
+
+const DOODLE_IDEAS = [
+  "Draw a monster with 5 eyes.","Draw your favourite animal wearing a hat.",
+  "Draw a rocket flying to a purple planet.","Draw a house for a mouse.",
+  "Draw an underwater city.","Draw a robot chef making pancakes.",
+  "Draw a tree with candy growing on it.","Draw the silliest hat you can imagine.",
+  "Draw a dragon who is scared of butterflies.","Draw yourself as a superhero."
+];
+
+/* =========================================================
+   Activity registry
+   ========================================================= */
+const ACTIVITIES = [
+  {id:"count",   emoji:"🐥", title:"Counting Critters", desc:"How many do you see?",        color:"c1", start:()=>startQuiz("count")},
+  {id:"math",    emoji:"➕", title:"Math Lab",          desc:"Add and take away.",          color:"c2", start:()=>startQuiz("math")},
+  {id:"word",    emoji:"🔤", title:"Word Builder",      desc:"Spell the picture.",          color:"c3", start:startWord},
+  {id:"pattern", emoji:"🔁", title:"Pattern Party",     desc:"What comes next?",            color:"c4", start:()=>startQuiz("pattern")},
+  {id:"shape",   emoji:"🔷", title:"Shape Safari",      desc:"Name that shape!",            color:"c5", start:()=>startQuiz("shape")},
+  {id:"memory",  emoji:"🧠", title:"Memory Match",      desc:"Find the pairs.",             color:"c6", start:startMemory},
+  {id:"doodle",  emoji:"🎨", title:"Doodle Pad",        desc:"Draw anything you like.",     color:"c7", start:startDoodle}
+];
+
+function renderGrid(){
+  const grid = $("#activityGrid");
+  grid.innerHTML = "";
+  ACTIVITIES.forEach(a => {
+    const earned = state.byActivity[a.id] || 0;
+    const card = document.createElement("button");
+    card.className = "card " + a.color;
+    card.type = "button";
+    card.innerHTML =
+      '<span class="emoji" aria-hidden="true">'+a.emoji+'</span>' +
+      '<span class="title">'+a.title+'</span>' +
+      '<span class="desc">'+a.desc+'</span>' +
+      '<span class="stars">'+(earned ? "⭐ "+earned : "&nbsp;")+'</span>';
+    card.setAttribute("aria-label", a.title + ". " + a.desc + " " + earned + " stars earned.");
+    card.addEventListener("click", () => { sfx.pop(); a.start(); });
+    grid.appendChild(card);
+  });
+}
+
+/* =========================================================
+   Sticker chart
+   ========================================================= */
+const STICKERS = ["🌟","🍭","🦄","🚀","🎈","🐨","🍩","🌈","🏅","🦖","🎸","🐳","🧁","⚽","🎁","👑","🐝","🌻","🎨","🏆"];
+function renderStickers(){
+  const earned = Math.floor(state.stars / 5);
+  const total = STICKERS.length;
+  const chart = $("#stickerChart");
+  chart.innerHTML = "";
+  STICKERS.forEach((s,i) => {
+    const cell = document.createElement("div");
+    const on = i < earned;
+    cell.className = "sticker" + (on ? " on" : "");
+    cell.textContent = on ? s : "?";
+    cell.setAttribute("role","img");
+    cell.setAttribute("aria-label", on ? "Sticker earned: " + s : "Locked sticker");
+    chart.appendChild(cell);
+  });
+  const left = 5 - (state.stars % 5);
+  $("#stickerNote").textContent =
+    earned >= total ? "You collected them all! 🎉"
+                    : "You have " + Math.min(earned,total) + " of " + total + " — " + left + " more star" + (left===1?"":"s") + " to go.";
+}
+
+/* =========================================================
+   Generic quiz engine
+   ========================================================= */
+const ROUND_LENGTH = 8;
+let quiz = null;
+
+const GENERATORS = {
+  count: {
+    title:"🐥 Counting Critters",
+    prompt:"Count them, then tap the number.",
+    make(level){
+      const max = level===1 ? 5 : level===2 ? 10 : 20;
+      const n = 1 + rand(max);
+      const critter = pick(level===3 ? ANIMALS.concat(THINGS) : ANIMALS);
+      const stage = '<div class="dotset" style="max-width:340px">' +
+        Array.from({length:n}, () => '<span class="critter" aria-hidden="true">'+critter+'</span>').join("") + '</div>';
+      return {
+        question:"How many " + critter + " ?",
+        stage,
+        answer:String(n),
+        options: uniqueOptions(n, () => Math.max(1, n + (rand(7)-3)), 4),
+        say: n + " " + critter
+      };
+    }
+  },
+
+  math: {
+    title:"➕ Math Lab",
+    prompt:"Work it out, then tap your answer.",
+    make(level){
+      const max = level===1 ? 5 : level===2 ? 10 : 20;
+      const allowMinus = level >= 2;
+      const minus = allowMinus && Math.random() < 0.45;
+      let a, b, ans, sign;
+      if(minus){
+        a = 1 + rand(max); b = rand(a+1); ans = a - b; sign = "−";
+      }else{
+        a = 1 + rand(max); b = 1 + rand(max); ans = a + b; sign = "+";
+      }
+      const dots = (n, cls, gone) =>
+        '<div class="dotset">' + Array.from({length:n}, () => '<span class="dot '+cls+(gone?" gone":"")+'"></span>').join("") + '</div>';
+      const stage = minus
+        ? dots(ans,"") + '<span class="plus" aria-hidden="true">−</span>' + dots(b,"b",true)
+        : dots(a,"")  + '<span class="plus" aria-hidden="true">+</span>' + dots(b,"b");
+      return {
+        question: a + " " + sign + " " + b + " = ?",
+        stage,
+        answer:String(ans),
+        options: uniqueOptions(ans, () => Math.max(0, ans + (rand(9)-4)), 4),
+        say: a + " " + (minus ? "minus" : "plus") + " " + b + " equals " + ans
+      };
+    }
+  },
+
+  pattern: {
+    title:"🔁 Pattern Party",
+    prompt:"Look at the pattern. What comes next?",
+    make(level){
+      const pair = pick(PATTERN_ITEMS);
+      const other = pick(PATTERN_ITEMS.filter(p => p !== pair));
+      let seq;
+      if(level === 1){
+        seq = [pair[0],pair[1],pair[0],pair[1],pair[0],pair[1]];          // ABABAB
+      }else if(level === 2){
+        seq = Math.random()<.5
+          ? [pair[0],pair[0],pair[1],pair[0],pair[0],pair[1]]              // AABAAB
+          : [pair[0],pair[1],pair[1],pair[0],pair[1],pair[1]];             // ABBABB
+      }else{
+        const c = other[0];
+        seq = [pair[0],pair[1],c,pair[0],pair[1],c];                       // ABCABC
+      }
+      // every sequence above is two full repeats of its unit, so the next item is the first one
+      const answer = seq[0];
+      const cells = seq.map(s => '<div class="pcell" aria-hidden="true">'+s+'</div>').join("") +
+                    '<div class="pcell blank">?</div>';
+      const choices = shuffle(Array.from(new Set([answer, pair[0], pair[1], other[0], other[1]]))).slice(0,4);
+      if(!choices.includes(answer)) choices[0] = answer;
+      return {
+        question:"",
+        stage:'<div class="patternrow">'+cells+'</div>',
+        answer,
+        options: shuffle(choices),
+        optionStyle:"emoji",
+        say:"the pattern repeats"
+      };
+    }
+  },
+
+  shape: {
+    title:"🔷 Shape Safari",
+    prompt:"What is this shape called?",
+    last:null,
+    make(level){
+      const set = SHAPE_SETS[level];
+      let name = pick(set);
+      while(set.length > 1 && name === this.last) name = pick(set);
+      this.last = name;
+      const color = pick(SHAPE_COLORS);
+      const stage = '<div class="shapebox"><svg viewBox="0 0 120 120" role="img" aria-label="a shape">' +
+        '<g fill="'+color+'" stroke="#22243f" stroke-width="6" stroke-linejoin="round">' + SHAPES[name] + '</g></svg></div>';
+      return {
+        question:"",
+        stage,
+        answer:name,
+        options: uniqueOptions(name, () => pick(set), Math.min(4, set.length)),
+        optionStyle:"word",
+        say:"a " + name
+      };
+    }
+  }
+};
+
+function startQuiz(kind){
+  stopTimers();
+  const gen = GENERATORS[kind];
+  quiz = { kind, gen, index:0, correct:0 };
+  $("#quizTitle").textContent = gen.title;
+  $("#quizPrompt").textContent = gen.prompt;
+  show("quiz");
+  nextQuizItem();
+}
+
+function nextQuizItem(){
+  if(quiz.index >= ROUND_LENGTH) return finishQuiz();
+  const item = quiz.gen.make(state.level);
+  quiz.item = item;
+
+  $("#quizCounter").textContent = "Question " + (quiz.index + 1) + " of " + ROUND_LENGTH;
+  $("#quizBar").style.width = (quiz.index / ROUND_LENGTH * 100) + "%";
+  $("#quizQuestion").textContent = item.question || "";
+  $("#quizStage").innerHTML = item.stage || "";
+  $("#quizFeedback").textContent = "";
+  $("#quizFeedback").className = "feedback";
+
+  const box = $("#quizOptions");
+  box.innerHTML = "";
+  item.options.forEach(opt => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.type = "button";
+    b.textContent = item.optionStyle === "word" ? cap(opt) : opt;
+    if(item.optionStyle === "emoji") b.style.fontSize = "2.2rem";
+    b.setAttribute("aria-label", item.optionStyle === "word" ? cap(opt) : ("answer " + opt));
+    b.addEventListener("click", () => answerQuiz(b, opt));
+    box.appendChild(b);
+  });
+}
+
+function answerQuiz(button, value){
+  const item = quiz.item;
+  const box = $("#quizOptions");
+  $$(".opt", box).forEach(b => b.disabled = true);
+  const fb = $("#quizFeedback");
+
+  if(String(value) === String(item.answer)){
+    button.classList.add("right");
+    quiz.correct++;
+    addStar(quiz.kind);
+    sfx.right();
+    confetti(26);
+    fb.textContent = pick(["Nice one! ⭐","Brilliant! ⭐","You got it! ⭐","Superstar! ⭐","Yes! ⭐"]);
+    fb.className = "feedback good";
+  }else{
+    button.classList.add("wrong");
+    sfx.wrong();
+    $$(".opt", box).forEach(b => {
+      const label = item.optionStyle === "word" ? cap(item.answer) : String(item.answer);
+      if(b.textContent === label) b.classList.add("right");
+    });
+    fb.textContent = "Almost! It was " + (item.optionStyle === "word" ? cap(item.answer) : item.answer) + ".";
+    fb.className = "feedback bad";
+  }
+
+  quiz.index++;
+  later(nextQuizItem, 1250);
+}
+
+function finishQuiz(){
+  $("#quizBar").style.width = "100%";
+  $("#quizCounter").textContent = "Round finished!";
+  $("#quizQuestion").textContent = "You got " + quiz.correct + " out of " + ROUND_LENGTH + "!";
+  $("#quizStage").innerHTML = '<span style="font-size:70px">' + (quiz.correct >= 6 ? "🏆" : quiz.correct >= 3 ? "🎉" : "💪") + '</span>';
+  $("#quizFeedback").textContent = quiz.correct >= 6 ? "Amazing work!" : quiz.correct >= 3 ? "Good going — try again for more stars!" : "Keep practising, you're getting better!";
+  $("#quizFeedback").className = "feedback good";
+  sfx.win();
+  confetti(120);
+
+  const box = $("#quizOptions");
+  box.innerHTML = "";
+  const again = document.createElement("button");
+  again.className = "btn primary";
+  again.type = "button";
+  again.textContent = "🔁 Play again";
+  again.addEventListener("click", () => startQuiz(quiz.kind));
+  const back = document.createElement("button");
+  back.className = "btn";
+  back.type = "button";
+  back.textContent = "🏠 Home";
+  back.addEventListener("click", () => show("home"));
+  box.appendChild(again); box.appendChild(back);
+}
+
+const cap = s => String(s).charAt(0).toUpperCase() + String(s).slice(1);
+
+/* =========================================================
+   Word Builder
+   ========================================================= */
+const WORD_ROUND = 6;
+let wordGame = null;
+
+function startWord(){
+  stopTimers();
+  // draw without replacement so a round never repeats the same word
+  wordGame = { index:0, correct:0, deck: shuffle(WORDS[state.level]).slice(0, WORD_ROUND) };
+  show("word");
+  nextWord();
+}
+
+function nextWord(){
+  if(wordGame.index >= WORD_ROUND) return finishWord();
+  const [text, emoji] = wordGame.deck[wordGame.index];
+  wordGame.word = text;
+  wordGame.typed = [];
+
+  $("#wordCounter").textContent = "Word " + (wordGame.index + 1) + " of " + WORD_ROUND;
+  $("#wordBar").style.width = (wordGame.index / WORD_ROUND * 100) + "%";
+  $("#wordPic").textContent = emoji;
+  $("#wordFeedback").textContent = "";
+  $("#wordFeedback").className = "feedback";
+
+  const slots = $("#wordSlots");
+  slots.innerHTML = "";
+  text.split("").forEach(() => {
+    const d = document.createElement("div");
+    d.className = "slot";
+    slots.appendChild(d);
+  });
+
+  const tiles = $("#wordTiles");
+  tiles.innerHTML = "";
+  let letters = shuffle(text.split(""));
+  if(letters.join("") === text && text.length > 1) letters = shuffle(letters);
+  letters.forEach(ch => {
+    const b = document.createElement("button");
+    b.className = "tile";
+    b.type = "button";
+    b.textContent = ch;
+    b.setAttribute("aria-label","letter " + ch);
+    b.addEventListener("click", () => tapLetter(b, ch));
+    tiles.appendChild(b);
+  });
+}
+
+function tapLetter(tile, ch){
+  if(wordGame.typed.length >= wordGame.word.length) return;
+  wordGame.typed.push({ch, tile});
+  tile.hidden = true;
+  sfx.pop();
+  paintSlots();
+
+  if(wordGame.typed.length === wordGame.word.length) checkWord();
+}
+
+function paintSlots(){
+  const slots = $$(".slot", $("#wordSlots"));
+  slots.forEach((s,i) => {
+    const entry = wordGame.typed[i];
+    s.textContent = entry ? entry.ch : "";
+    s.classList.toggle("filled", !!entry);
+  });
+}
+
+$("#wordUndo").addEventListener("click", () => {
+  if(!wordGame || !wordGame.typed.length) return;
+  const last = wordGame.typed.pop();
+  last.tile.hidden = false;
+  paintSlots();
+  sfx.pop();
+});
+
+function checkWord(){
+  const typed = wordGame.typed.map(t => t.ch).join("");
+  const fb = $("#wordFeedback");
+  if(typed === wordGame.word){
+    wordGame.correct++;
+    addStar("word");
+    sfx.right();
+    confetti(30);
+    fb.textContent = wordGame.word + " — that's right! ⭐";
+    fb.className = "feedback good";
+    wordGame.index++;
+    later(nextWord, 1300);
+  }else{
+    sfx.wrong();
+    fb.textContent = "Not quite — try again!";
+    fb.className = "feedback bad";
+    later(() => {
+      wordGame.typed.forEach(t => t.tile.hidden = false);
+      wordGame.typed = [];
+      paintSlots();
+      fb.textContent = "";
+      fb.className = "feedback";
+    }, 1100);
+  }
+}
+
+function finishWord(){
+  $("#wordBar").style.width = "100%";
+  $("#wordCounter").textContent = "All done!";
+  $("#wordPic").textContent = "🏆";
+  const fb = $("#wordFeedback");
+  fb.textContent = "You spelled " + wordGame.correct + " word" + (wordGame.correct===1?"":"s") + "!";
+  fb.className = "feedback good";
+  $("#wordSlots").innerHTML = "";
+  const tiles = $("#wordTiles");
+  tiles.innerHTML = "";
+  const again = document.createElement("button");
+  again.className = "btn primary";
+  again.type = "button";
+  again.textContent = "🔁 Play again";
+  again.addEventListener("click", startWord);
+  const back = document.createElement("button");
+  back.className = "btn";
+  back.type = "button";
+  back.textContent = "🏠 Home";
+  back.addEventListener("click", () => show("home"));
+  tiles.appendChild(again); tiles.appendChild(back);
+  sfx.win();
+  confetti(120);
+}
+
+/* =========================================================
+   Memory Match
+   ========================================================= */
+let mem = null;
+
+function startMemory(){
+  stopTimers();
+  const pairs = state.level === 1 ? 4 : state.level === 2 ? 6 : 8;
+  const faces = shuffle(ANIMALS.concat(THINGS)).slice(0, pairs);
+  const deck = shuffle(faces.concat(faces));
+  mem = { deck, flipped:[], matched:0, pairs, moves:0, busy:false };
+
+  const grid = $("#memGrid");
+  grid.innerHTML = "";
+  deck.forEach((face, i) => {
+    const b = document.createElement("button");
+    b.className = "memcard";
+    b.type = "button";
+    b.textContent = face;
+    b.dataset.index = String(i);
+    b.setAttribute("aria-label","hidden card");
+    b.addEventListener("click", () => flipCard(b, i, face));
+    grid.appendChild(b);
+  });
+  $("#memFeedback").textContent = "";
+  $("#memFeedback").className = "feedback";
+  $("#memCounter").textContent = "0 of " + pairs + " pairs";
+  show("memory");
+}
+
+function flipCard(btn, index, face){
+  if(mem.busy || btn.classList.contains("up") || btn.classList.contains("done")) return;
+  btn.classList.add("up");
+  btn.setAttribute("aria-label","card showing " + face);
+  sfx.pop();
+  mem.flipped.push({btn, index, face});
+
+  if(mem.flipped.length === 2){
+    mem.moves++;
+    const [a,b] = mem.flipped;
+    if(a.face === b.face){
+      mem.matched++;
+      addStar("memory");
+      sfx.right();
+      a.btn.classList.add("done"); b.btn.classList.add("done");
+      mem.flipped = [];
+      $("#memCounter").textContent = mem.matched + " of " + mem.pairs + " pairs";
+      $("#memFeedback").textContent = "Match! ⭐";
+      $("#memFeedback").className = "feedback good";
+      confetti(20);
+      if(mem.matched === mem.pairs){
+        $("#memFeedback").textContent = "You found them all in " + mem.moves + " tries! 🏆";
+        sfx.win(); confetti(140);
+      }
+    }else{
+      mem.busy = true;
+      sfx.wrong();
+      later(() => {
+        a.btn.classList.remove("up"); b.btn.classList.remove("up");
+        a.btn.setAttribute("aria-label","hidden card");
+        b.btn.setAttribute("aria-label","hidden card");
+        mem.flipped = []; mem.busy = false;
+        $("#memFeedback").textContent = "";
+      }, 850);
+    }
+  }
+}
+$("#memAgain").addEventListener("click", startMemory);
+
+/* =========================================================
+   Doodle Pad
+   ========================================================= */
+const pad = $("#pad");
+const pctx = pad.getContext("2d");
+let drawing = false, brush = 16, colour = "#7c5cff", erasing = false, lastPt = null;
+
+const PALETTE = ["#22243f","#e2564a","#ff9f45","#ffd23f","#2fd6a3","#3ab6ff","#7c5cff","#ff5d8f","#8b5a2b","#ffffff"];
+
+function buildPalette(){
+  const box = $("#palette");
+  box.innerHTML = "";
+  PALETTE.forEach((c,i) => {
+    const b = document.createElement("button");
+    b.className = "swatch";
+    b.type = "button";
+    b.style.background = c;
+    b.setAttribute("aria-label","colour " + c);
+    b.setAttribute("aria-pressed", String(i === 6));
+    b.addEventListener("click", () => {
+      colour = c; erasing = false;
+      $$(".swatch", box).forEach(s => s.setAttribute("aria-pressed","false"));
+      b.setAttribute("aria-pressed","true");
+      sfx.pop();
+    });
+    box.appendChild(b);
+  });
+}
+buildPalette();
+
+function sizePad(){
+  const rect = pad.getBoundingClientRect();
+  if(!rect.width) return;
+  const dpr = window.devicePixelRatio || 1;
+  const snapshot = pad.width ? pctx.getImageData(0,0,pad.width,pad.height) : null;
+  pad.width = Math.round(rect.width * dpr);
+  pad.height = Math.round(rect.height * dpr);
+  pctx.setTransform(dpr,0,0,dpr,0,0);
+  pctx.lineCap = "round";
+  pctx.lineJoin = "round";
+  pctx.fillStyle = "#ffffff";
+  pctx.fillRect(0,0,rect.width,rect.height);
+  if(snapshot){
+    try{ pctx.putImageData(snapshot,0,0); }catch(e){}
+  }
+}
+
+function padPoint(evt){
+  const rect = pad.getBoundingClientRect();
+  return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+}
+pad.addEventListener("pointerdown", e => {
+  drawing = true;
+  pad.setPointerCapture(e.pointerId);
+  lastPt = padPoint(e);
+  strokeTo(lastPt, true);
+});
+pad.addEventListener("pointermove", e => {
+  if(!drawing) return;
+  const p = padPoint(e);
+  strokeTo(p, false);
+  lastPt = p;
+});
+["pointerup","pointercancel","pointerleave"].forEach(ev =>
+  pad.addEventListener(ev, () => { drawing = false; lastPt = null; })
+);
+
+function strokeTo(p, isDot){
+  pctx.strokeStyle = erasing ? "#ffffff" : colour;
+  pctx.fillStyle = erasing ? "#ffffff" : colour;
+  pctx.lineWidth = brush;
+  if(isDot){
+    pctx.beginPath();
+    pctx.arc(p.x, p.y, brush/2, 0, Math.PI*2);
+    pctx.fill();
+  }else if(lastPt){
+    pctx.beginPath();
+    pctx.moveTo(lastPt.x, lastPt.y);
+    pctx.lineTo(p.x, p.y);
+    pctx.stroke();
+  }
+}
+
+$$("[data-brush]").forEach(b => b.addEventListener("click", () => {
+  brush = Number(b.dataset.brush);
+  erasing = false;
+  sfx.pop();
+}));
+$("#eraser").addEventListener("click", () => { erasing = true; sfx.pop(); });
+$("#clearPad").addEventListener("click", () => {
+  const rect = pad.getBoundingClientRect();
+  pctx.fillStyle = "#ffffff";
+  pctx.fillRect(0,0,rect.width,rect.height);
+  sfx.pop();
+});
+$("#savePad").addEventListener("click", () => {
+  try{
+    const link = document.createElement("a");
+    link.download = "my-drawing.png";
+    link.href = pad.toDataURL("image/png");
+    link.click();
+    addStar("doodle");
+    confetti(50);
+    sfx.win();
+  }catch(e){}
+});
+$("#newIdea").addEventListener("click", () => {
+  $("#doodlePrompt").textContent = "💡 " + pick(DOODLE_IDEAS);
+  sfx.pop();
+});
+
+function startDoodle(){
+  show("doodle");
+  $("#doodlePrompt").textContent = "💡 " + pick(DOODLE_IDEAS);
+  requestAnimationFrame(sizePad);
+}
+window.addEventListener("resize", () => { if($("#doodle").classList.contains("active")) sizePad(); });
+
+/* =========================================================
+   Certificate
+   ========================================================= */
+function showCertificate(){
+  $("#certName").textContent = state.name || "A Star Explorer";
+  const done = Object.keys(state.byActivity).filter(k => state.byActivity[k] > 0).length;
+  $("#certBody").textContent =
+    "for earning " + state.stars + " star" + (state.stars===1?"":"s") +
+    " across " + done + " activit" + (done===1?"y":"ies") + " in the Star Explorers workbook.";
+  $("#certDate").textContent = new Date().toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"});
+  show("certificate");
+  confetti(90);
+  sfx.win();
+}
+$("#goCert").addEventListener("click", showCertificate);
+$("#printCert").addEventListener("click", () => window.print());
+
+/* =========================================================
+   Home controls
+   ========================================================= */
+function paintGreeting(){
+  $("#greeting").textContent = state.name ? ("Hello, " + state.name + "! 👋") : "Hello, explorer! 👋";
+  $("#nameInput").value = state.name;
+}
+$("#saveName").addEventListener("click", () => {
+  state.name = $("#nameInput").value.trim().slice(0,18);
+  save(); paintGreeting(); sfx.pop(); confetti(24);
+});
+$("#nameInput").addEventListener("keydown", e => { if(e.key === "Enter") $("#saveName").click(); });
+
+$$(".chip").forEach(chip => chip.addEventListener("click", () => {
+  state.level = Number(chip.dataset.level);
+  save();
+  $$(".chip").forEach(c => c.setAttribute("aria-pressed", String(Number(c.dataset.level) === state.level)));
+  sfx.pop();
+}));
+
+$("#soundBtn").addEventListener("click", () => {
+  state.sound = !state.sound;
+  save();
+  const b = $("#soundBtn");
+  b.setAttribute("aria-pressed", String(state.sound));
+  b.textContent = state.sound ? "🔊 Sound on" : "🔇 Sound off";
+  if(state.sound) sfx.pop();
+});
+
+$("#resetBtn").addEventListener("click", () => {
+  if(!window.confirm("Start over? This clears all stars and stickers.")) return;
+  state = {...defaults, name: state.name, level: state.level, sound: state.sound};
+  save();
+  paintStars();
+});
+
+/* =========================================================
+   Boot
+   ========================================================= */
+paintGreeting();
+$$(".chip").forEach(c => c.setAttribute("aria-pressed", String(Number(c.dataset.level) === state.level)));
+$("#soundBtn").setAttribute("aria-pressed", String(state.sound));
+$("#soundBtn").textContent = state.sound ? "🔊 Sound on" : "🔇 Sound off";
+paintStars();
+
+})();
+</script>
+</body>
+</html>
