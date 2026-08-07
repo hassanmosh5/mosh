@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Markdown from "react-markdown";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { isLessonAccessible } from "@/lib/entitlement";
 import { MarkCompleteButton } from "./mark-complete-button";
 import { LessonQuiz } from "./lesson-quiz";
 
@@ -43,6 +44,41 @@ export default async function LessonPage({
     currentIndex >= 0 && currentIndex < flatLessons.length - 1
       ? flatLessons[currentIndex + 1]
       : null;
+
+  const accessible = session?.user
+    ? await isLessonAccessible(session.user.id, lesson.id)
+    : currentIndex === 0;
+
+  if (!accessible) {
+    return (
+      <div className="mx-auto max-w-3xl px-6 py-16">
+        <div className="text-xs text-black/40 dark:text-white/40">
+          <Link href={`/courses/${course.slug}`} className="hover:underline">
+            {course.title}
+          </Link>{" "}
+          · {lesson.module.title.replace(/^Part [A-Za-z]+: /, "")}
+        </div>
+        <h1 className="mt-2 text-3xl font-semibold">{lesson.title}</h1>
+        {lesson.summary && (
+          <p className="mt-2 text-black/60 dark:text-white/60">
+            {lesson.summary}
+          </p>
+        )}
+        <div className="mt-8 rounded-xl border border-black/10 p-8 text-center dark:border-white/10">
+          <p className="text-lg font-medium">🔒 This lesson is locked</p>
+          <p className="mt-2 text-sm text-black/60 dark:text-white/60">
+            Buy course access to unlock every lesson, quiz, and the AI tutor.
+          </p>
+          <Link
+            href={`/courses/${course.slug}`}
+            className="mt-5 inline-block rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition hover:opacity-85 dark:bg-white dark:text-black"
+          >
+            View pricing
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const progress = session?.user
     ? await prisma.lessonProgress.findUnique({

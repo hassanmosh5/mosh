@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import OpenAI from "openai";
 import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { isLessonAccessible } from "@/lib/entitlement";
 import { buildTutorSystemPrompt } from "@/lib/tutor-context";
 
 const schema = z.object({
@@ -39,7 +41,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const { messages, lessonSlug } = parsed.data;
+  const { messages } = parsed.data;
+  let { lessonSlug } = parsed.data;
+
+  if (lessonSlug) {
+    const lesson = await prisma.lesson.findUnique({
+      where: { slug: lessonSlug },
+      select: { id: true },
+    });
+    const accessible =
+      lesson && (await isLessonAccessible(session.user.id, lesson.id));
+    if (!accessible) lessonSlug = undefined;
+  }
+
   const systemPrompt = await buildTutorSystemPrompt(lessonSlug);
 
   const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });

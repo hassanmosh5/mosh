@@ -8,15 +8,17 @@ AI tutor grounded in the book's actual content.
 
 This is a scoped **MVP foundation**, not the full 19-phase platform some
 briefs describe. Everything below is real and working. Anything bigger
-(payments, extra OAuth providers, admin/instructor panels, community,
-certificates, gamification) is deliberately deferred — see
-[Roadmap](#roadmap) for how to build each one on top of this foundation.
+(extra OAuth providers, admin/instructor panels, community, certificates,
+gamification) is deliberately deferred — see [Roadmap](#roadmap) for how to
+build each one on top of this foundation.
 
 ## Stack
 
 - **Next.js 16** (App Router) + TypeScript + Tailwind CSS 4
 - **PostgreSQL** + **Prisma 7** (driver adapter: `@prisma/adapter-pg`)
 - **NextAuth v5** (Auth.js) — credentials (bcrypt) + optional Google OAuth
+- **Stripe** — one-time course checkout, with a webhook + synchronous fallback
+  for fulfillment
 - **OpenAI** — AI tutor, grounded in course content via system-prompt context injection
 - `react-markdown` for lesson content, Tailwind Typography for prose styling
 
@@ -26,15 +28,28 @@ certificates, gamification) is deliberately deferred — see
 - **Auth** (`/login`, `/register`) — email+password (bcrypt-hashed), plus a
   "Continue with Google" button that appears automatically once
   `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` are set. Sessions are JWT-based.
-  `middleware.ts` protects `/dashboard`, `/tutor`, and `/learn/*`.
+  `src/proxy.ts` protects `/dashboard`, `/tutor`, and `/learn/*`.
 - **Course library** (`/courses`, `/courses/[slug]`) — lists modules and
   lessons in order, with a per-lesson completion checkmark and progress bar
-  for signed-in users.
+  for signed-in users, and (for paid courses) a Buy button or price.
+- **Payments** (`Course.priceCents`) — a course with `priceCents > 0`
+  requires purchase. Every course's *first lesson* is always a free preview;
+  the rest are locked behind a paywall until the user buys access via Stripe
+  Checkout (`POST /api/checkout`). Fulfillment happens two ways for
+  reliability: a webhook (`POST /api/webhooks/stripe`) marks the purchase
+  complete asynchronously, and the success-redirect page does a synchronous
+  fallback check (`fulfillCheckoutSession`) in case the webhook hasn't
+  landed yet. Access is enforced server-side — the lesson viewer, the
+  progress API, the quiz-attempt API, and the AI tutor's lesson-grounding
+  all check `isLessonAccessible`/`hasCourseAccess` (`src/lib/entitlement.ts`)
+  before returning gated content. A free course (`priceCents = 0`, the seed
+  default) behaves exactly as before — fully open, no checkout involved.
 - **Lesson viewer** (`/learn/[lessonSlug]`) — renders real lesson content
   (markdown), key takeaways, case study, and action step; has prev/next
   navigation across the whole course; a "Mark as complete" button backed by
   `POST /api/progress`; and an inline knowledge-check quiz backed by
-  `POST /api/quiz/[quizId]/attempt`.
+  `POST /api/quiz/[quizId]/attempt`. Locked lessons render a paywall instead
+  of content.
 - **Dashboard** (`/dashboard`) — per-course progress, recent quiz scores, and
   quick links back into the course and the AI tutor.
 - **AI tutor** (`/tutor`) — a chat UI backed by `POST /api/tutor`. The system
@@ -77,9 +92,25 @@ Open http://localhost:3000.
 
 See `.env.example`. Only `DATABASE_URL`, `NEXTAUTH_URL`, and
 `NEXTAUTH_SECRET` are required to run the app with email/password auth.
-`GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` and `OPENAI_API_KEY` are optional —
-the app degrades gracefully (hides the Google button; the tutor returns a
-clear "not configured" message) when they're unset.
+`GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`, `OPENAI_API_KEY`, and
+`STRIPE_SECRET_KEY`/`STRIPE_WEBHOOK_SECRET` are all optional — the app
+degrades gracefully (hides the Google button; the tutor returns a clear
+"not configured" message; `/api/checkout` returns a clear 503) when they're
+unset.
+
+### Enabling paid access for a course
+
+By default the seeded course is free (`priceCents = 0`) so the app is fully
+usable out of the box. To sell it:
+
+1. Set `STRIPE_SECRET_KEY` (from the [Stripe dashboard](https://dashboard.stripe.com/test/apikeys)).
+2. For local webhook testing, run `stripe listen --forward-to localhost:3000/api/webhooks/stripe`
+   and put the printed secret in `STRIPE_WEBHOOK_SECRET`. In production, add
+   a webhook endpoint pointed at `/api/webhooks/stripe` for the
+   `checkout.session.completed` event in the Stripe dashboard instead.
+3. Set a price: `UPDATE "Course" SET "priceCents" = 4900 WHERE slug = 'ai-income-blueprint';`
+   (or add `priceCents`/`currency` to `prisma/seed-data.ts` and re-seed).
+4. Test with Stripe's test card `4242 4242 4242 4242`, any future expiry, any CVC.
 
 ## Architecture notes
 
@@ -88,24 +119,35 @@ clear "not configured" message) when they're unset.
   bundled query engine. See `src/lib/prisma.ts`.
 - **Edge-safe middleware**: `src/lib/auth.config.ts` holds the
   Node-runtime-agnostic parts of the NextAuth config (pages, `authorized`
-  callback) used by `middleware.ts`. `src/lib/auth.ts` holds the full config
-  (Prisma adapter, providers, bcrypt) used everywhere else. This split is
-  required because the Prisma Postgres adapter is not edge-compatible.
+  callback) used by `src/proxy.ts` (Next.js 16's replacement for
+  `middleware.ts`). `src/lib/auth.ts` holds the full config (Prisma adapter,
+  providers, bcrypt) used everywhere else. This split is required because
+  the Prisma Postgres adapter is not edge-compatible.
 - **Data model** (`prisma/schema.prisma`): `User`/`Account`/`Session` for
   auth; `Course` → `Module` → `Lesson` for curriculum; `Quiz` → `Question` →
   `QuizAttempt` for knowledge checks; `LessonProgress` for completion state;
-  `Note` and `Bookmark` models exist in the schema for a future notes/
-  bookmarks feature but have no UI yet.
+  `Enrollment` for course purchases (`PENDING`/`COMPLETED`/`REFUNDED`,
+  linked to a Stripe Checkout Session); `Note` and `Bookmark` models exist in
+  the schema for a future notes/bookmarks feature but have no UI yet.
+- **Payment fulfillment is belt-and-suspenders**: Stripe recommends not
+  relying solely on the success-page redirect (a closed tab loses it) or
+  solely on webhooks (delivery can lag or be missed in dev without
+  `stripe listen`). `fulfillCheckoutSession` in `src/lib/entitlement.ts` is
+  idempotent and is called from both `POST /api/webhooks/stripe` and the
+  course page's `session_id` success-redirect handler.
 
 ## Roadmap: deferred features
 
 These are intentionally **not** built in this MVP. Each has a real,
 concrete starting point in the existing schema/architecture:
 
-- **Payments** (Stripe/PayPal/Google Pay/Apple Pay/Mobile Money): add a
-  `Plan`/`Subscription` model, a Stripe Checkout session route, and a
-  webhook handler that flips `Course.published`-style access or a new
-  `Enrollment` model. Gate `/learn/*` in `middleware.ts` on entitlement.
+- **Additional payment methods** (PayPal, Google Pay, Apple Pay, Mobile
+  Money) and **subscriptions**: Stripe Checkout already supports Google
+  Pay/Apple Pay as wallet options with no extra integration work — enable
+  them in the Stripe Dashboard's payment methods settings. A recurring
+  model would add a `Plan` model and switch `mode: "payment"` to
+  `mode: "subscription"` in `POST /api/checkout`, plus handle
+  `customer.subscription.deleted` in the webhook.
 - **Additional OAuth providers** (Facebook, Apple, GitHub, Microsoft):
   NextAuth v5 supports these as drop-in providers — add them to the
   `providers` array in `src/lib/auth.ts` the same way Google was added,

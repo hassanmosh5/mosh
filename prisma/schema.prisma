@@ -29,12 +29,13 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  accounts  Account[]
-  sessions  Session[]
-  progress  LessonProgress[]
-  notes     Note[]
-  bookmarks Bookmark[]
-  attempts  QuizAttempt[]
+  accounts    Account[]
+  sessions    Session[]
+  progress    LessonProgress[]
+  notes       Note[]
+  bookmarks   Bookmark[]
+  attempts    QuizAttempt[]
+  enrollments Enrollment[]
 }
 
 model Account {
@@ -84,10 +85,13 @@ model Course {
   description String   @db.Text
   coverImage  String?
   published   Boolean  @default(true)
+  priceCents  Int      @default(0) // 0 = free/open access
+  currency    String   @default("usd")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  modules Module[]
+  modules     Module[]
+  enrollments Enrollment[]
 }
 
 model Module {
@@ -207,4 +211,32 @@ model Bookmark {
   createdAt DateTime @default(now())
 
   @@unique([userId, lessonId])
+}
+
+// ---------- Payments ----------
+
+enum EnrollmentStatus {
+  PENDING
+  COMPLETED
+  REFUNDED
+}
+
+model Enrollment {
+  id       String @id @default(cuid())
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  status      EnrollmentStatus @default(PENDING)
+  amountCents Int
+  currency    String
+
+  stripeCheckoutSessionId String? @unique
+  stripePaymentIntentId   String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, courseId])
 }
