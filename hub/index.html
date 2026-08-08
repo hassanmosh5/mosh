@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Learning apps — The AI Income Blueprint</title>
+<meta name="description" content="Every interactive e-book and learning app built from The AI Income Blueprint, in one place.">
+<meta name="color-scheme" content="light dark">
+<style>
+:root{
+  --bg:#faf8f5; --surface:#fff; --surface-2:#f4f1ec; --text:#1d1b18; --muted:#6d6862;
+  --accent:#b0521c; --accent-soft:#f6e7db; --rule:#e6e1d8;
+  --shadow:0 1px 2px rgba(28,24,18,.05), 0 10px 30px rgba(28,24,18,.07);
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#131519; --surface:#1a1d23; --surface-2:#22262e; --text:#e7e6e3; --muted:#9aa1ab;
+    --accent:#f0a468; --accent-soft:#33261c; --rule:#2c313a;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.4);
+  }
+}
+*,*::before,*::after{ box-sizing:border-box; }
+body{
+  margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{ color:var(--accent); }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:8px; }
+
+.wrap{ max-width:64rem; margin:0 auto; padding:clamp(2rem,6vw,4.5rem) 1.25rem 5rem; }
+
+header.masthead{ margin-bottom:2.5rem; }
+.eyebrow{
+  font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); font-weight:700;
+}
+h1{
+  font-family:var(--serif); font-size:clamp(2rem,5.5vw,3.1rem); line-height:1.1; letter-spacing:-.02em;
+  margin:.5rem 0 .6rem;
+}
+.lede{ font-size:clamp(1rem,2.2vw,1.12rem); color:var(--muted); max-width:44rem; margin:0; }
+.source{
+  margin-top:1.4rem; font-size:.85rem; color:var(--muted); display:flex; align-items:center; gap:.6rem;
+  flex-wrap:wrap;
+}
+.source .book{
+  display:inline-flex; align-items:center; gap:.45rem; background:var(--surface-2); border-radius:999px;
+  padding:.3rem .75rem; font-weight:600; color:var(--text);
+}
+.source .book::before{ content:"📘"; }
+
+h2.section{
+  font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:700;
+  margin:3rem 0 1rem; display:flex; align-items:center; gap:.8rem;
+}
+h2.section::after{ content:""; flex:1 1 auto; height:1px; background:var(--rule); }
+
+.grid{ display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(min(100%,21rem),1fr)); }
+
+.card{
+  background:var(--surface); border:1px solid var(--rule); border-radius:16px; padding:1.3rem 1.4rem 1.2rem;
+  display:flex; flex-direction:column; gap:.7rem; position:relative; overflow:hidden;
+  transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+.card:hover{ border-color:var(--accent); transform:translateY(-2px); box-shadow:var(--shadow); }
+.card.featured{ grid-column:1/-1; }
+.card-top{ display:flex; align-items:flex-start; gap:.85rem; }
+.glyph{
+  width:2.7rem; height:2.7rem; border-radius:12px; flex:0 0 auto; display:grid; place-items:center;
+  font-size:1.35rem; background:var(--accent-soft);
+}
+.card h3{ margin:0; font-size:1.08rem; font-family:var(--serif); letter-spacing:-.01em; }
+.card h3 a{ text-decoration:none; color:inherit; }
+.card h3 a::after{ content:""; position:absolute; inset:0; }
+.card h3 a:hover{ color:var(--accent); }
+.kicker{ font-size:.73rem; color:var(--muted); margin-top:.15rem; }
+.card p{ margin:0; font-size:.92rem; color:var(--muted); }
+.card.featured p{ max-width:46rem; }
+
+.chips{ display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.1rem; }
+.chip{
+  font-size:.72rem; padding:.22rem .55rem; border-radius:999px; background:var(--surface-2); color:var(--muted);
+  white-space:nowrap;
+}
+.card-foot{
+  margin-top:auto; padding-top:.9rem; display:flex; align-items:center; gap:.9rem; flex-wrap:wrap;
+  font-size:.8rem;
+}
+.open{
+  display:inline-flex; align-items:center; gap:.35rem; font-weight:650; color:var(--accent); text-decoration:none;
+}
+.open::after{ content:"→"; transition:transform .18s ease; }
+.card:hover .open::after{ transform:translateX(3px); }
+.needs{ color:var(--muted); position:relative; z-index:1; }
+.needs a{ position:relative; z-index:1; }
+
+.note{
+  margin-top:3rem; background:var(--surface-2); border-radius:16px; padding:1.2rem 1.4rem; font-size:.88rem;
+  color:var(--muted);
+}
+.note h3{ margin:0 0 .5rem; font-size:.95rem; color:var(--text); font-family:var(--serif); }
+.note ul{ margin:.4rem 0 0; padding-left:1.2rem; }
+.note li{ margin:.3rem 0; }
+.note code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.85em; background:var(--surface);
+  padding:.12em .38em; border-radius:5px; border:1px solid var(--rule);
+}
+footer{ margin-top:2.5rem; font-size:.8rem; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">Learning apps</div>
+    <h1>Everything built from the Blueprint</h1>
+    <p class="lede">
+      One book, turned into things you can actually use: an interactive edition to read and annotate,
+      decision tools that run the book's frameworks for you, a prompt factory, a children's workbook,
+      and a full course platform.
+    </p>
+    <p class="source">
+      <span class="book">The AI Income Blueprint — Hassan Mohammed</span>
+      <span>Every app below is derived from the book's real content.</span>
+    </p>
+  </header>
+
+  <h2 class="section">Read</h2>
+  <div class="grid">
+    <article class="card featured">
+      <div class="card-top">
+        <div class="glyph" aria-hidden="true">📖</div>
+        <div>
+          <h3><a href="../ebook/index.html">The AI Income Blueprint — Interactive Edition</a></h3>
+          <div class="kicker">All 5 parts · 17 chapters · 28 knowledge checks</div>
+        </div>
+      </div>
+      <p>
+        The whole book as a reader you can work in: highlight any passage and attach notes, check
+        yourself with the end-of-chapter quizzes, tick off each chapter's action step, track how far
+        you've got, and export everything you wrote as a Markdown file. Three themes, adjustable
+        typography, full-text search, keyboard navigation.
+      </p>
+      <div class="chips">
+        <span class="chip">Highlights &amp; notes</span>
+        <span class="chip">Quizzes</span>
+        <span class="chip">Progress tracking</span>
+        <span class="chip">Export to Markdown</span>
+        <span class="chip">Light · Sepia · Night</span>
+        <span class="chip">Works offline</span>
+      </div>
+      <div class="card-foot">
+        <span class="open">Start reading</span>
+        <span class="needs">Just open it — no install</span>
+      </div>
+    </article>
+  </div>
+
+  <h2 class="section">Practice</h2>
+  <div class="grid">
+
+    <article class="card">
+      <div class="card-top">
+        <div class="glyph" aria-hidden="true">🚀</div>
+        <div>
+          <h3><a href="../launch-kit/index.html">AI Income Launch Kit</a></h3>
+          <div class="kicker">Chapters 5, 13–14 &amp; Appendix D</div>
+        </div>
+      </div>
+      <p>
+        Part Four's decision tools, made to actually run: score yourself on the Fit Matrix and get a
+        ranked recommendation across all seven income streams, work the 7-Day Validation Sprint,
+        sign a commitment statement, and tick through the 30-Day Launch Plan day by day.
+      </p>
+      <div class="chips">
+        <span class="chip">Fit Matrix</span>
+        <span class="chip">7-day sprint</span>
+        <span class="chip">30-day plan</span>
+        <span class="chip">CLEAR builder</span>
+        <span class="chip">Pricing sheet</span>
+      </div>
+      <div class="card-foot">
+        <span class="open">Open the kit</span>
+        <span class="needs"><a href="../launch-kit/README.md">Read me</a></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-top">
+        <div class="glyph" aria-hidden="true">✨</div>
+        <div>
+          <h3><a href="../prompt-generator/index.html">Wealth Ideas Prompt Generator</a></h3>
+          <div class="kicker">Chapters 5, 7 &amp; 10</div>
+        </div>
+      </div>
+      <p>
+        The Wealth Ideas Matrix wired into the CLEAR Formula: pick a role, context, audience and
+        offer, and it assembles a finished prompt plus its 3-Pass follow-ups. Bundle 20–100 of them
+        into a sellable prompt pack, keep a library of the ones that worked, and draft the listing copy.
+      </p>
+      <div class="chips">
+        <span class="chip">CLEAR generator</span>
+        <span class="chip">Pack builder</span>
+        <span class="chip">Prompt library</span>
+        <span class="chip">Listing copy</span>
+      </div>
+      <div class="card-foot">
+        <span class="open">Generate prompts</span>
+        <span class="needs"><a href="../prompt-generator/README.md">Read me</a></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-top">
+        <div class="glyph" aria-hidden="true">⭐</div>
+        <div>
+          <h3><a href="../workbook/index.html">Star Explorers Workbook</a></h3>
+          <div class="kicker">For children, roughly ages 4–8</div>
+        </div>
+      </div>
+      <p>
+        The odd one out, and deliberately so — the same single-file, offline approach applied to
+        early learning. Seven activities across counting, phonics, patterns, shapes and memory, with
+        three difficulty levels, stars and stickers, and a printable certificate.
+      </p>
+      <div class="chips">
+        <span class="chip">7 activities</span>
+        <span class="chip">3 levels</span>
+        <span class="chip">Touch-first</span>
+        <span class="chip">No accounts</span>
+      </div>
+      <div class="card-foot">
+        <span class="open">Open the workbook</span>
+        <span class="needs"><a href="../workbook/README.md">Read me</a></span>
+      </div>
+    </article>
+
+  </div>
+
+  <h2 class="section">Build</h2>
+  <div class="grid">
+
+    <article class="card">
+      <div class="card-top">
+        <div class="glyph" aria-hidden="true">🎓</div>
+        <div>
+          <h3><a href="../README.md">AI Income Academy</a></h3>
+          <div class="kicker">Next.js · Prisma · NextAuth · OpenAI</div>
+        </div>
+      </div>
+      <p>
+        The full course platform: accounts, a course library, a lesson viewer with progress tracking
+        and quizzes, a student dashboard, and an AI tutor grounded in the book's content. The only
+        app here that needs a server and a database.
+      </p>
+      <div class="chips">
+        <span class="chip">Auth</span>
+        <span class="chip">PostgreSQL</span>
+        <span class="chip">AI tutor</span>
+        <span class="chip">Dashboard</span>
+      </div>
+      <div class="card-foot">
+        <span class="open">Setup guide</span>
+        <span class="needs"><code>npm run dev</code> → localhost:3000</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-top">
+        <div class="glyph" aria-hidden="true">🧠</div>
+        <div>
+          <h3><a href="../gpt/README.md">Digital Product Studio</a></h3>
+          <div class="kicker">Chapter 7 · a custom GPT</div>
+        </div>
+      </div>
+      <p>
+        Not a web app but a configured ChatGPT GPT: system instructions, configuration, and a
+        knowledge file covering the 3 Criteria, the 30-Minute Validation Method, the 8-step creation
+        workflow and the pricing tables. Roughly ten minutes to set up.
+      </p>
+      <div class="chips">
+        <span class="chip">Instructions</span>
+        <span class="chip">Knowledge file</span>
+        <span class="chip">Config</span>
+      </div>
+      <div class="card-foot">
+        <span class="open">Setup guide</span>
+        <span class="needs">Needs a ChatGPT account</span>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="note">
+    <h3>How to run these</h3>
+    <ul>
+      <li>
+        <strong>The e-book, launch kit, prompt generator and workbook</strong> are single HTML files.
+        Open one in any modern browser — no install, no build step, no accounts, no network. Everything
+        you type or save stays in that browser's local storage; nothing is uploaded.
+      </li>
+      <li>
+        <strong>The academy</strong> is a real Next.js app. Follow <a href="../README.md">the root README</a>:
+        <code>npm install</code>, set <code>DATABASE_URL</code>, then <code>npm run db:migrate</code>,
+        <code>npm run db:seed</code> and <code>npm run dev</code>.
+      </li>
+      <li>
+        <strong>The e-book is generated</strong> from <code>prisma/seed-data.ts</code> — the same
+        content that seeds the academy's database. Edit the seed data or
+        <code>ebook/template.html</code> and re-run <code>npm run ebook:build</code>.
+      </li>
+    </ul>
+  </div>
+
+  <footer>
+    Content adapted from <em>The AI Income Blueprint</em> by Hassan Mohammed
+    (<code>books/THE_AI_INCOME_BLUEPRINT.pdf</code>).
+  </footer>
+
+</div>
+</body>
+</html>

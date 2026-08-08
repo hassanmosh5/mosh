@@ -12,6 +12,20 @@ briefs describe. Everything below is real and working. Anything bigger
 certificates, gamification) is deliberately deferred — see
 [Roadmap](#roadmap) for how to build each one on top of this foundation.
 
+## Also in this repo: standalone apps
+
+The academy needs a database and a server. Alongside it are single-file apps that need
+neither — open the HTML file and they run, offline, with everything stored locally.
+**[`hub/index.html`](hub/index.html) links to all of them** with descriptions.
+
+| App | What it is |
+|---|---|
+| [`ebook/`](ebook/) | **The book as an interactive reader** — all 17 chapters with highlighting, notes, inline quizzes, action-step tracking, search, three themes and Markdown export. Generated from `prisma/seed-data.ts`; rebuild with `npm run ebook:build`. |
+| [`launch-kit/`](launch-kit/) | Part Four's decision tools as working tools: Fit Matrix, 7-Day Validation Sprint, 30-Day Launch Plan, CLEAR builder, pricing sheet. |
+| [`prompt-generator/`](prompt-generator/) | The Wealth Ideas Matrix wired into the CLEAR Formula, plus a prompt-pack builder and listing-copy generator. |
+| [`workbook/`](workbook/) | Star Explorers — an interactive workbook for children aged 4–8. |
+| [`gpt/`](gpt/) | Digital Product Studio — a ChatGPT custom GPT built on Chapter 7 (instructions, config and knowledge file). |
+
 ## Stack
 
 - **Next.js 16** (App Router) + TypeScript + Tailwind CSS 4
