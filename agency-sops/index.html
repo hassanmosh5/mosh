@@ -1,0 +1,2782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Agency Operations System — SOPs, Delegation &amp; Pricing</title>
+<meta name="description" content="Build, test and maintain the six SOPs that turn a solo AI service practice into an agency that runs without you. Single file, fully offline.">
+<meta name="color-scheme" content="light dark">
+<style>
+/* ===========================================================================
+   THE AGENCY OPERATIONS SYSTEM
+   Single file. No external requests of any kind. Everything below is inline.
+   =========================================================================== */
+
+:root {
+  --ink:            #16161d;
+  --ink-2:          #414152;
+  --ink-3:          #6b6b80;
+  --bg:             #f6f5f2;
+  --surface:        #ffffff;
+  --surface-2:      #fbfaf7;
+  --line:           #e3e0d8;
+  --line-2:         #cfcbc0;
+  --gold:           #9a7413;
+  --gold-bg:        #fdf6e3;
+  --indigo:         #35357a;
+  --indigo-2:       #4a4aa0;
+  --indigo-bg:      #eeeefb;
+  --green:          #1d6b45;
+  --green-bg:       #e8f4ed;
+  --red:            #9d2f2f;
+  --red-bg:         #fbeeee;
+  --shadow:         0 1px 2px rgba(20,20,35,.06), 0 8px 24px -12px rgba(20,20,35,.18);
+  --shadow-lg:      0 2px 4px rgba(20,20,35,.06), 0 24px 48px -20px rgba(20,20,35,.28);
+  --radius:         14px;
+  --radius-sm:      9px;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif: ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
+}
+
+html[data-theme="dark"] {
+  --ink:            #ece9e3;
+  --ink-2:          #b9b5ad;
+  --ink-3:          #8d8981;
+  --bg:             #14141a;
+  --surface:        #1c1c24;
+  --surface-2:      #22222c;
+  --line:           #30303c;
+  --line-2:         #43434f;
+  --gold:           #e0b64a;
+  --gold-bg:        #2b2413;
+  --indigo:         #a8a8f0;
+  --indigo-2:       #8f8fe0;
+  --indigo-bg:      #1f1f33;
+  --green:          #6fce9f;
+  --green-bg:       #16281f;
+  --red:            #e88b8b;
+  --red-bg:         #2a1818;
+  --shadow:         0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  --shadow-lg:      0 2px 4px rgba(0,0,0,.4), 0 24px 48px -20px rgba(0,0,0,.7);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --ink:            #ece9e3;
+    --ink-2:          #b9b5ad;
+    --ink-3:          #8d8981;
+    --bg:             #14141a;
+    --surface:        #1c1c24;
+    --surface-2:      #22222c;
+    --line:           #30303c;
+    --line-2:         #43434f;
+    --gold:           #e0b64a;
+    --gold-bg:        #2b2413;
+    --indigo:         #a8a8f0;
+    --indigo-2:       #8f8fe0;
+    --indigo-bg:      #1f1f33;
+    --green:          #6fce9f;
+    --green-bg:       #16281f;
+    --red:            #e88b8b;
+    --red-bg:         #2a1818;
+    --shadow:         0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+    --shadow-lg:      0 2px 4px rgba(0,0,0,.4), 0 24px 48px -20px rgba(0,0,0,.7);
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { line-height: 1.25; margin: 0; font-weight: 650; letter-spacing: -.011em; }
+p { margin: 0 0 1em; }
+p:last-child { margin-bottom: 0; }
+a { color: var(--indigo); }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+
+/* ---------- top bar ---------- */
+
+.topbar {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.topbar .wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 62px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.brand { display: flex; align-items: baseline; gap: 10px; margin-right: auto; }
+.brand b { font-size: 17px; font-weight: 650; letter-spacing: -.02em; }
+.brand span { font-size: 12px; color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; }
+@media (max-width: 700px) { .brand span { display: none; } }
+
+/* ---------- buttons ---------- */
+
+button, .btn {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 550;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm);
+  padding: 8px 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: background .12s, border-color .12s, transform .12s;
+}
+button:hover, .btn:hover { background: var(--surface-2); border-color: var(--ink-3); }
+button:active { transform: translateY(1px); }
+button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visible,
+input:focus-visible, [tabindex]:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--indigo-2);
+  outline-offset: 2px;
+}
+button.primary { background: var(--indigo); border-color: var(--indigo); color: #fff; }
+html[data-theme="dark"] button.primary { color: #14141a; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) button.primary { color: #14141a; } }
+button.primary:hover { background: var(--indigo-2); border-color: var(--indigo-2); }
+button.gold { background: var(--gold-bg); border-color: var(--gold); color: var(--gold); }
+button.ghost { background: transparent; border-color: transparent; color: var(--ink-2); }
+button.ghost:hover { background: var(--surface-2); border-color: var(--line); }
+button.danger { color: var(--red); border-color: var(--line-2); }
+button.danger:hover { border-color: var(--red); }
+button[disabled] { opacity: .45; cursor: not-allowed; }
+button.sm { padding: 5px 10px; font-size: 13px; }
+button.icon { padding: 4px 8px; font-size: 13px; line-height: 1.2; color: var(--ink-3); }
+
+/* ---------- tabs ---------- */
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  scrollbar-width: thin;
+}
+.tabs .wrap { display: flex; gap: 2px; }
+.tab {
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  border-bottom: 2.5px solid transparent;
+  padding: 12px 14px;
+  color: var(--ink-3);
+  font-weight: 550;
+  white-space: nowrap;
+  font-size: 14.5px;
+}
+.tab:hover { background: var(--surface-2); border-color: transparent; border-bottom-color: var(--line-2); }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--gold); }
+
+main { padding: 26px 0 80px; }
+.panel[hidden] { display: none; }
+
+/* ---------- cards ---------- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.card + .card { margin-top: 18px; }
+.card > h2 { font-size: 17px; margin-bottom: 4px; }
+.card > h2 + .sub { margin-top: 0; }
+.sub { color: var(--ink-3); font-size: 14px; margin: 0 0 16px; }
+.sub:last-child { margin-bottom: 0; }
+
+.grid-2 { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 18px; }
+@media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 18px; }
+@media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr; } }
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 18px; align-items: start; }
+@media (max-width: 1000px) { .split { grid-template-columns: 1fr; } }
+.sticky { position: sticky; top: 128px; }
+@media (max-width: 1000px) { .sticky { position: static; } }
+
+/* ---------- chips ---------- */
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 13.5px;
+  font-weight: 550;
+  color: var(--ink-2);
+}
+.chip[aria-pressed="true"] { background: var(--indigo); border-color: var(--indigo); color: #fff; }
+html[data-theme="dark"] .chip[aria-pressed="true"] { color: #14141a; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) .chip[aria-pressed="true"] { color: #14141a; } }
+
+/* ---------- form controls ---------- */
+
+select, textarea, input[type="text"], input[type="number"], input[type="date"] {
+  font: inherit;
+  font-size: 14.5px;
+  width: 100%;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm);
+  padding: 9px 11px;
+}
+select { cursor: pointer; }
+textarea { resize: vertical; min-height: 56px; line-height: 1.55; }
+label.inline { display: flex; align-items: flex-start; gap: 9px; font-size: 14px; color: var(--ink-2); cursor: pointer; }
+label.inline input { margin-top: 3px; }
+input[type="checkbox"], input[type="radio"] { width: 16px; height: 16px; accent-color: var(--indigo); flex: none; cursor: pointer; }
+input[type="range"] { width: 100%; accent-color: var(--indigo); }
+
+fieldset { border: 0; padding: 0; margin: 0 0 16px; }
+fieldset:last-child { margin-bottom: 0; }
+fieldset > legend {
+  padding: 0;
+  margin-bottom: 7px;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.hint { font-size: 12.5px; color: var(--ink-3); margin: 5px 0 0; font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.row.end { justify-content: flex-end; }
+.spacer { flex: 1 1 auto; }
+
+/* ---------- output ---------- */
+
+.output {
+  font: 13.5px/1.6 var(--mono);
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  max-height: 60vh;
+  overflow: auto;
+  margin: 0;
+  color: var(--ink);
+}
+.output .lbl { color: var(--gold); font-weight: 700; }
+
+/* ---------- pills ---------- */
+
+.pill {
+  display: inline-block;
+  font: 550 11.5px/1 var(--sans);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: var(--indigo-bg);
+  color: var(--indigo);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.pill.gold  { background: var(--gold-bg);  color: var(--gold); }
+.pill.green { background: var(--green-bg); color: var(--green); }
+.pill.red   { background: var(--red-bg);   color: var(--red); }
+.pill.grey  { background: var(--surface-2); color: var(--ink-3); border-color: var(--line); }
+
+.note {
+  background: var(--gold-bg);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-sm);
+  padding: 13px 15px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.note b { color: var(--ink); }
+.note.plain { background: var(--surface-2); border-color: var(--line); }
+.note.green { background: var(--green-bg); border-color: var(--green); }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 9px 11px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); font-weight: 650; }
+tbody tr:last-child td { border-bottom: 0; }
+tr.hi td { background: var(--gold-bg); }
+.scroll-x { overflow-x: auto; }
+
+ul.tight, ol.tight { margin: 0 0 1em; padding-left: 1.25em; }
+ul.tight li, ol.tight li { margin-bottom: .35em; }
+ul.tight:last-child, ol.tight:last-child { margin-bottom: 0; }
+
+.stat { display: flex; gap: 22px; flex-wrap: wrap; }
+.stat > div { min-width: 92px; }
+.stat b { display: block; font: 650 24px/1.2 var(--sans); letter-spacing: -.02em; }
+.stat span { font-size: 12.5px; color: var(--ink-3); }
+
+details > summary { cursor: pointer; font-size: 13.5px; color: var(--ink-2); }
+details[open] > summary { margin-bottom: 10px; }
+
+.empty { text-align: center; padding: 36px 20px; color: var(--ink-3); }
+.empty b { display: block; color: var(--ink-2); margin-bottom: 4px; }
+
+/* ---------- SOP list ---------- */
+
+.sop-row {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  padding: 13px 15px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  flex-wrap: wrap;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+.sop-row + .sop-row { margin-top: 10px; }
+.sop-row:hover { border-color: var(--ink-3); background: var(--surface-2); }
+.sop-row[aria-current="true"] { border-color: var(--gold); box-shadow: inset 0 0 0 1px var(--gold); }
+.sop-row .num {
+  display: inline-grid; place-items: center;
+  width: 27px; height: 27px; flex: none;
+  border-radius: 8px;
+  background: var(--indigo-bg); color: var(--indigo);
+  border: 1px solid var(--indigo-2);
+  font: 650 13px/1 var(--mono);
+}
+.sop-row .nm { font-weight: 600; font-size: 14.5px; }
+.sop-row .mt { font-size: 12.5px; color: var(--ink-3); display: block; font-weight: 400; }
+
+/* ---------- step editor ---------- */
+
+.steps { counter-reset: step; }
+.step {
+  display: grid;
+  grid-template-columns: 26px minmax(0,1fr) 74px auto;
+  gap: 9px;
+  align-items: start;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.step:last-child { border-bottom: 0; }
+@media (max-width: 620px) {
+  .step { grid-template-columns: 26px minmax(0,1fr); }
+  .step .mins, .step .ctl { grid-column: 2; }
+}
+.step .idx {
+  font: 650 12.5px/1.9 var(--mono);
+  color: var(--ink-3);
+  text-align: right;
+}
+.step textarea { min-height: 46px; font-size: 14px; }
+.step .mins input { text-align: right; padding: 9px 8px; }
+.step .ctl { display: flex; gap: 3px; }
+.line-item { display: flex; gap: 9px; align-items: start; padding: 6px 0; border-bottom: 1px dashed var(--line); }
+.line-item:last-child { border-bottom: 0; }
+.line-item textarea { min-height: 42px; font-size: 14px; }
+.line-item .ctl { display: flex; gap: 3px; flex: none; }
+
+/* ---------- board ---------- */
+
+.board { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+@media (max-width: 900px) { .board { grid-template-columns: 1fr; } }
+.col {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  background: var(--surface-2);
+}
+.col h3 { font-size: 14px; margin-bottom: 3px; }
+.col .when { font-size: 12px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 11px; }
+.col.never { background: var(--red-bg); border-color: var(--red); }
+.col ul { margin: 0; padding-left: 0; list-style: none; }
+.col li { font-size: 13.5px; color: var(--ink-2); padding: 6px 0; border-bottom: 1px dashed var(--line); }
+.col li:last-child { border-bottom: 0; }
+
+/* ---------- stage ---------- */
+
+.stage-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 17px; background: var(--surface-2); }
+.stage-card.on { border-color: var(--gold); background: var(--gold-bg); box-shadow: inset 0 0 0 1px var(--gold); }
+.stage-card h3 { font-size: 15.5px; }
+.stage-card .rng { font: 650 13px/1 var(--mono); color: var(--ink-3); margin: 5px 0 12px; display: block; }
+.stage-card ul { margin: 0 0 12px; padding: 0; list-style: none; }
+.stage-card li { padding: 5px 0; }
+.meter { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; margin: 10px 0 4px; }
+.meter i { display: block; height: 100%; background: var(--gold); border-radius: 999px; }
+
+/* ---------- toast ---------- */
+
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 11px 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 550;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s, transform .18s;
+  z-index: 100;
+  max-width: calc(100vw - 40px);
+  text-align: center;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ---------- print ---------- */
+
+@media print {
+  .topbar, .tabs, .no-print { display: none !important; }
+  body { background: #fff; color: #000; }
+  .card { border: 0; box-shadow: none; padding: 0; }
+  .card + .card { margin-top: 24px; }
+  .output { border: 1px solid #999; max-height: none; background: #fff; }
+  main { padding: 0; }
+  .step { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <b>The Agency Operations System</b>
+      <span>SOPs · Delegation · Pricing</span>
+    </div>
+    <button id="themeBtn" class="ghost" type="button" aria-label="Switch colour theme"><span id="themeIcon">◐</span> Theme</button>
+    <button id="exportAllBtn" class="ghost" type="button">⬇ Back up</button>
+    <button id="resetAllBtn" class="ghost danger" type="button">🗑 Clear</button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="wrap" role="tablist">
+    <button class="tab" role="tab" id="tab-stage"  aria-controls="panel-stage"  aria-selected="true">🏗 Stage</button>
+    <button class="tab" role="tab" id="tab-sops"   aria-controls="panel-sops"   aria-selected="false">📋 SOP Library <span id="sopCount" class="pill grey"></span></button>
+    <button class="tab" role="tab" id="tab-draft"  aria-controls="panel-draft"  aria-selected="false">✨ Drafter</button>
+    <button class="tab" role="tab" id="tab-deleg"  aria-controls="panel-deleg"  aria-selected="false">👥 Delegation</button>
+    <button class="tab" role="tab" id="tab-price"  aria-controls="panel-price"  aria-selected="false">💰 Pricing</button>
+    <button class="tab" role="tab" id="tab-pack"   aria-controls="panel-pack"   aria-selected="false">📎 Client Pack</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =================================================================== -->
+<!-- STAGE                                                                -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-stage" role="tabpanel" aria-labelledby="tab-stage">
+
+  <div class="card">
+    <h2>Which stage are you actually in?</h2>
+    <p class="sub">Chapter 15 of <i>The AI Income Blueprint</i> maps three stages — Hustler, Operator, Owner — and warns that the strategies that build one stage actively limit the next. Tick every statement that is true of your business today. Nothing here is aspirational: tick what is true this week.</p>
+    <div class="grid-3" id="stageCards"></div>
+  </div>
+
+  <div class="card">
+    <h2>Your read</h2>
+    <p class="sub">Computed from what you ticked, not from your income alone.</p>
+    <div id="stageVerdict"></div>
+  </div>
+
+  <div class="card">
+    <h2>What to build next</h2>
+    <p class="sub">The build order comes from Chapter 15's SOP priority table. This list follows the status you set in the SOP Library — the first procedure that is not yet live is the one to build.</p>
+    <div id="nextUp"></div>
+  </div>
+
+  <div class="card">
+    <h2>Which service line are you running?</h2>
+    <p class="sub">Every SOP, questionnaire and delivery workflow in this app changes with this choice. Pick the stream you deliver most of — you can switch at any time, and each stream keeps its own edits.</p>
+    <div class="chips" id="streamChipsStage" role="group" aria-label="Service line"></div>
+    <p class="sub" style="margin:14px 0 0" id="streamBlurb"></p>
+  </div>
+
+</section>
+
+<!-- =================================================================== -->
+<!-- SOP LIBRARY                                                          -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-sops" role="tabpanel" aria-labelledby="tab-sops" hidden>
+
+  <div class="card no-print">
+    <div class="row" style="margin-bottom:14px">
+      <div>
+        <h2 style="margin-bottom:3px">Your operations manual</h2>
+        <p class="sub" style="margin:0">Six procedures, in the build order Chapter 15 recommends. Every step below is editable — the defaults are the book's actual workflows, not placeholders.</p>
+      </div>
+      <div class="spacer"></div>
+      <button id="manualBtn" type="button" class="gold">⬇ Download the manual</button>
+    </div>
+    <div class="chips" id="streamChipsSops" role="group" aria-label="Service line"></div>
+    <div id="sopList" style="margin-top:16px"></div>
+  </div>
+
+  <div id="sopDetail"></div>
+
+</section>
+
+<!-- =================================================================== -->
+<!-- DRAFTER                                                              -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-draft" role="tabpanel" aria-labelledby="tab-draft" hidden>
+
+  <div class="split">
+    <div>
+      <div class="card">
+        <h2>The SOP drafting prompt</h2>
+        <p class="sub">Step 2 of Chapter 15's AI-assisted SOP creation process, with your details filled in. Paste it into Claude or ChatGPT, then edit the draft against your actual process — the book puts the AI draft at 70–80% accurate, and the remaining 20–30% is the part that makes it yours.</p>
+
+        <fieldset>
+          <legend>What kind of earner are you</legend>
+          <input type="text" id="dfRole" placeholder="e.g. social media manager for local dental practices">
+          <p class="hint">Be specific. "Freelancer" produces a generic SOP; "social media manager for local dental practices" produces one you can almost use as-is.</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>The task this SOP covers</legend>
+          <input type="text" id="dfTask" placeholder="e.g. monthly client reporting">
+          <p class="hint">One task per SOP. If you cannot name it in five words, it is two SOPs.</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Tools you actually use for it</legend>
+          <input type="text" id="dfTools" placeholder="e.g. Metricool, Canva, ChatGPT, Notion, Gmail">
+          <p class="hint">Optional, but naming your tools is what turns a generic draft into something a new assistant can follow.</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Your quality standard</legend>
+          <textarea id="dfStd" rows="2" placeholder="e.g. every number traceable to a platform screenshot; report leads with one concrete win"></textarea>
+          <p class="hint">Optional. What "done properly" means, in the words you would use to reject work that missed it.</p>
+        </fieldset>
+
+        <div class="row">
+          <button id="dfCopy" class="primary" type="button">📋 Copy the prompt</button>
+          <button id="dfLoad" type="button">↧ Fill from a library SOP</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>The five-step creation process</h2>
+        <p class="sub">Chapter 15, page 225. Drafting is one step of five, and the two most often skipped are the two that matter.</p>
+        <div id="dfProcess"></div>
+      </div>
+
+      <div class="card">
+        <h2>Step 4: the gap log</h2>
+        <p class="sub">"Ask a friend or your future VA to follow it without your help. Note where they get stuck. Those are the gaps to fill." A procedure nobody has tested is a draft, however good it reads.</p>
+        <textarea id="dfGaps" rows="5" placeholder="Where did they get stuck? What did they have to ask you? What did they guess wrong?"></textarea>
+        <p class="hint">Saved as you type. Fold each gap back into the SOP, then move its status to Tested.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="card sticky">
+        <h2>Prompt</h2>
+        <p class="sub">Copy this into your AI tool.</p>
+        <pre class="output" id="dfOut"></pre>
+        <div class="row" style="margin-top:14px">
+          <button id="dfCopy2" type="button">📋 Copy</button>
+          <button id="dfDl" type="button">⬇ Download</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>The 90-day review schedule</h2>
+    <p class="sub">"Review and update each SOP every 90 days. A living SOP system is worth more than any single document in your business." Dates below come from the last time you marked each procedure reviewed in the SOP Library.</p>
+    <div class="scroll-x" id="reviewTable"></div>
+  </div>
+
+</section>
+
+<!-- =================================================================== -->
+<!-- DELEGATION                                                           -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-deleg" role="tabpanel" aria-labelledby="tab-deleg" hidden>
+
+  <div class="card">
+    <h2>Are you ready to hire?</h2>
+    <p class="sub">Chapter 15 gives three signals. Hiring before them creates cost the business cannot carry; hiring after them creates a ceiling on income. Any one signal is a reason to look; two is a reason to act.</p>
+    <div class="grid-3">
+      <fieldset>
+        <legend>Signal 1 — Monthly income</legend>
+        <input type="number" id="vaMrr" min="0" step="100" placeholder="3000" inputmode="numeric">
+        <p class="hint">Your current monthly income from this business, in whole dollars.</p>
+      </fieldset>
+      <fieldset>
+        <legend>Signal 2 — Admin hours</legend>
+        <input type="number" id="vaHrs" min="0" step="1" placeholder="5" inputmode="numeric">
+        <p class="hint">Hours per month on tasks that do not require your specific expertise.</p>
+      </fieldset>
+      <fieldset>
+        <legend>Signal 3 — Capacity</legend>
+        <label class="inline" style="margin-top:9px"><input type="checkbox" id="vaTurn"> I am turning down work, or stretched enough that I nearly am</label>
+        <p class="hint">Every declined client is lost revenue that a VA's freed capacity could recover.</p>
+      </fieldset>
+    </div>
+    <div id="vaVerdict" style="margin-top:16px"></div>
+  </div>
+
+  <div class="card">
+    <h2>What goes to a VA, and what never does</h2>
+    <p class="sub">Start with tasks that are fully documented in your SOPs and require no creative judgment. Tick the tasks you have already written down — an undocumented task is not delegable, it is just a task you will end up explaining live, repeatedly.</p>
+    <div class="board" id="delegBoard"></div>
+    <p class="sub" style="margin:14px 0 0" id="delegCount"></p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h2>Where to find your first VA</h2>
+      <div class="scroll-x" id="vaPlatforms"></div>
+      <h3 style="font-size:14px;margin:18px 0 8px">What to look for</h3>
+      <ul class="tight" id="vaLookFor"></ul>
+    </div>
+    <div class="card">
+      <h2>How to hire safely</h2>
+      <p class="sub">The trial task should be your most documented procedure — which, from your SOP Library, is currently:</p>
+      <p id="trialSop" class="note plain" style="margin-bottom:16px"></p>
+      <div id="vaHireSteps"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>The micro-agency arithmetic</h2>
+    <p class="sub">Chapter 8's scaling model, applied to the numbers you entered above. This is the move that turns a freelance practice into a business: the VA is paid for by one additional client, and everything after that is margin.</p>
+    <div id="vaMath"></div>
+  </div>
+
+</section>
+
+<!-- =================================================================== -->
+<!-- PRICING                                                              -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-price" role="tabpanel" aria-labelledby="tab-price" hidden>
+
+  <div class="split">
+    <div>
+      <div class="card">
+        <h2>The Three-Number Value Pricing System</h2>
+        <p class="sub">Chapter 15, page 224. Value-based pricing is not a slogan — it is three numbers, and you need all three before you quote anything.</p>
+
+        <fieldset>
+          <legend>Number 1 — Outcome value per month</legend>
+          <input type="number" id="pvOutcome" min="0" step="50" placeholder="1200" inputmode="numeric">
+          <p class="hint">What the result is worth to the client each month. 8 recovered appointments × $150 = $1,200. 3 new clients from Instagram × $200 = $600. Use their numbers, not yours.</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Your share of it</legend>
+          <input type="range" id="pvPct" min="5" max="15" step="1" value="10" aria-describedby="pvPctVal">
+          <p class="hint" id="pvPctVal">10% of the outcome value</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Number 2 — Market rate range</legend>
+          <div class="row">
+            <input type="number" id="pvLow" min="0" step="25" placeholder="150" inputmode="numeric" style="flex:1 1 120px" aria-label="Market rate, budget end">
+            <span class="hint" style="margin:0">to</span>
+            <input type="number" id="pvHigh" min="0" step="25" placeholder="400" inputmode="numeric" style="flex:1 1 120px" aria-label="Market rate, premium end">
+          </div>
+          <p class="hint">Look at five comparable services on Upwork, Clutch, or by direct enquiry. Budget end to premium end. Your rate belongs in the top third.</p>
+        </fieldset>
+      </div>
+
+      <div class="card">
+        <h2>Is your current rate too low?</h2>
+        <p class="sub">Four signals from Chapter 15. Each one is independently sufficient — you do not need all four.</p>
+        <div id="rateSignals"></div>
+        <div id="rateVerdict" style="margin-top:14px"></div>
+      </div>
+
+      <div class="card">
+        <h2>Raising a rate without losing the client</h2>
+        <p class="sub">Rule 3: do not announce an increase — propose an expansion. Fill this in and it writes the message.</p>
+        <div class="grid-2">
+          <fieldset><legend>Current rate</legend><input type="number" id="riOld" min="0" step="25" placeholder="400" inputmode="numeric"></fieldset>
+          <fieldset><legend>New rate</legend><input type="number" id="riNew" min="0" step="25" placeholder="550" inputmode="numeric"></fieldset>
+        </div>
+        <fieldset>
+          <legend>The deliverable you are adding</legend>
+          <input type="text" id="riAdd" placeholder="e.g. a monthly performance report with competitor tracking">
+          <p class="hint">Choose something AI leverage makes cheap for you and expensive-sounding for them. That asymmetry is the whole move.</p>
+        </fieldset>
+        <pre class="output" id="riOut" style="max-height:none"></pre>
+        <div class="row" style="margin-top:12px"><button id="riCopy" type="button">📋 Copy the message</button></div>
+        <div id="riCheck" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card sticky">
+        <h2>Your rate</h2>
+        <div id="pvResult"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Productise it</h2>
+    <p class="sub">Bespoke work is quoted, negotiated and re-explained every time. A package is sold. Chapter 15's five worked conversions, and a slot to write your own.</p>
+    <div class="scroll-x" id="prodTable"></div>
+    <div class="grid-2" style="margin-top:18px">
+      <div>
+        <fieldset><legend>What you say now</legend><input type="text" id="pdBespoke" placeholder="I offer social media management"></fieldset>
+        <fieldset><legend>Package name</legend><input type="text" id="pdName" placeholder="The Local Business Visibility Pack"></fieldset>
+        <fieldset><legend>Exactly what is included</legend><textarea id="pdIncl" rows="3" placeholder="Facebook + Instagram + Google Business, 16 posts/month, monthly report"></textarea></fieldset>
+      </div>
+      <div>
+        <fieldset><legend>Fixed price</legend><input type="text" id="pdPrice" placeholder="$550/month"></fieldset>
+        <fieldset><legend>Delivery window</legend><input type="text" id="pdWhen" placeholder="Calendar delivered the 25th, posts live from the 1st"></fieldset>
+        <fieldset><legend>The outcome you are selling</legend><input type="text" id="pdOutcome" placeholder="A local business that looks open, active and worth calling"></fieldset>
+        <p class="hint">Market the package by its outcome, not its components. The components justify the price; the outcome is what gets the reply.</p>
+      </div>
+    </div>
+    <pre class="output" id="pdOut" style="max-height:none"></pre>
+    <div class="row" style="margin-top:12px"><button id="pdCopy" type="button">📋 Copy the pitch</button></div>
+  </div>
+
+  <div class="card">
+    <h2>MRR against the book's targets</h2>
+    <p class="sub">Monthly Recurring Revenue is the metric Chapter 15 calls the clearest evidence a business is working. Enter what you actually booked; the target bands are the book's.</p>
+    <div class="scroll-x" id="mrrTable"></div>
+    <p class="sub" style="margin:14px 0 0" id="mrrNote"></p>
+  </div>
+
+  <div class="card">
+    <h2>Where recurring revenue comes from, per stream</h2>
+    <p class="sub">Chapter 15's MRR table. Project income restarts at zero every month; recurring income starts from a known baseline and grows by addition.</p>
+    <div class="scroll-x" id="mrrStreams"></div>
+  </div>
+
+</section>
+
+<!-- =================================================================== -->
+<!-- CLIENT PACK                                                          -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-pack" role="tabpanel" aria-labelledby="tab-pack" hidden>
+
+  <div class="card no-print">
+    <h2>The pack a signed client receives</h2>
+    <p class="sub">Four documents, assembled once and personalised in minutes thereafter. Everything below follows the service line you picked — switch it here if you deliver more than one.</p>
+    <div class="chips" id="streamChipsPack" role="group" aria-label="Service line"></div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="margin-bottom:6px">
+      <h2 id="qTitle" style="margin:0">Intake questionnaire</h2>
+      <div class="spacer"></div>
+      <button id="qCopy" type="button" class="sm no-print">📋 Copy</button>
+      <button id="qDl" type="button" class="sm no-print">⬇ Download</button>
+    </div>
+    <p class="sub" id="qSub"></p>
+    <div id="questionnaire"></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h2>Service agreement — the six clauses</h2>
+      <p class="sub">Appendix G. A written agreement before any service engagement prevents the most common sources of client conflict. Tick each clause once your template covers it.</p>
+      <div id="agreeList"></div>
+      <div class="note" style="margin-top:14px">
+        <b>Not legal advice.</b> The book's own disclaimer applies here: this is general educational information. Laws vary by country, state and circumstance. Free templates exist at LawDepot or Rocket Lawyer, or by searching "[your country] freelance service agreement template" — but for engagements over $2,000, or with complex scope, a lawyer's review is worth the money.
+      </div>
+    </div>
+    <div class="card">
+      <h2>Invoice — the seven fields</h2>
+      <p class="sub">Every service invoice needs all seven. Number them sequentially from 001 and never reuse a number.</p>
+      <div id="invList"></div>
+      <p class="sub" style="margin:14px 0 0">Wave is free and enough for a solo practitioner. Gumroad, Payhip and Etsy invoice automatically for product sales.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>The retention rhythm</h2>
+    <p class="sub">Chapter 8: a retained client at $600/month for twelve months is $7,200. A client who churns after two months is $1,200 plus a full replacement acquisition cycle. Retention is the higher-value skill, and it is three habits.</p>
+    <div id="retention"></div>
+  </div>
+
+  <div class="card">
+    <h2>Scope creep — the sentence that fixes it</h2>
+    <p class="sub">Each request is minor. Collectively they double your production time. Chapter 6 gives the response; it works because it says yes.</p>
+    <pre class="output" id="scOut" style="max-height:none"></pre>
+    <div class="row" style="margin-top:12px">
+      <input type="text" id="scRate" placeholder="your add-on rate, e.g. $95 per extra post" style="max-width:340px" aria-label="Your add-on rate">
+      <button id="scCopy" type="button">📋 Copy</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>About this app</h2>
+    <p>Every procedure, price band, questionnaire and threshold here is transcribed from <i>The AI Income Blueprint</i> by Hassan Mohammed — principally Chapter 15 (stages, SOPs, pricing, hiring, productisation, MRR), with the delivery workflows drawn from Chapters 6, 8, 9 and 11 and the legal and invoicing basics from Appendix G. Chapter and page references appear throughout.</p>
+    <p>The income figures are the book's. As its own disclaimer notes, they are ranges based on observed outcomes, not guarantees of results.</p>
+    <p style="margin-bottom:0">This file is entirely self-contained. It makes no network requests, loads no fonts, scripts, images or trackers, and sends nothing anywhere. Your SOPs and answers live in this browser's <code>localStorage</code> and nowhere else. <b>⬇ Back up</b> downloads the lot as JSON; <b>🗑 Clear</b> backs up first, then wipes.</p>
+  </div>
+
+</section>
+
+</main>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* ===========================================================================
+   DATA — transcribed from The AI Income Blueprint (Hassan Mohammed)
+   =========================================================================== */
+
+const STREAMS = [
+  { id: "writing",    short: "✍ Writing",    name: "AI-Assisted Writing & Content",        stream: "#1", ch: "Chapter 6",  role: "freelance writer running content retainers for B2B service businesses", blurb: "Retainers of 4–12 pieces a month. The workflow below produces an 800-word post in 48 minutes at full efficiency — the leverage is in Passes 2 and 3, not in the draft." },
+  { id: "social",     short: "📱 Social",    name: "AI-Powered Social Media Management",   stream: "#3", ch: "Chapter 8",  role: "social media manager working with local businesses on monthly retainers", blurb: "Monthly retainers, batched delivery. Three to four hours per client per month after onboarding — which is why five clients fits inside a part-time week." },
+  { id: "automation", short: "⚙ Automation", name: "AI Automation for Local Business",     stream: "#4", ch: "Chapter 9",  role: "no-code automation consultant building Zapier workflows for local businesses", blurb: "Project fee plus maintenance retainer. The Business Efficiency Audit is both your discovery process and your highest-converting sales tool." },
+  { id: "coaching",   short: "🎓 Coaching",  name: "AI-Enhanced Coaching & Consulting",    stream: "#6", ch: "Chapter 11", role: "coach delivering fixed-price client programmes rather than hourly sessions", blurb: "Programmes, not sessions. AI carries proposal, onboarding, session prep and follow-up, so between-session support scales past a tiny roster." },
+];
+
+const STAGES = [
+  {
+    id: "hustler", name: "Stage 1 — The Hustler", range: "$0–$2,000/month",
+    line: "Everything is manual, everything is new, and income depends on daily active effort.",
+    chars: [
+      "I personally execute every task: outreach, delivery, client communication, administration",
+      "No systems or templates yet — each client engagement starts from scratch",
+      "Income is directly proportional to the hours I work",
+      "The main skill I am building is the delivery capability itself",
+      "Clients are won one at a time through active, personalised outreach",
+    ],
+    focus: "Delivering excellent work consistently; building your first testimonials and case studies.",
+    trigger: "3+ consistent clients or sales, and a clear, repeatable delivery workflow.",
+  },
+  {
+    id: "operator", name: "Stage 2 — The Operator", range: "$2,000–$6,000/month",
+    line: "Systems are in place, delivery is efficient, and income grows without proportional hour growth.",
+    chars: [
+      "Core delivery workflows are documented in SOPs and supported by prompt templates",
+      "Client onboarding is systematised: questionnaire, welcome pack, delivery schedule",
+      "Outreach is a documented, repeatable process rather than ad hoc effort",
+      "A growing library of reusable assets — prompts, templates, frameworks — reduces rework",
+      "I have implemented a rate increase at least once",
+      "Referrals are beginning to supplement outbound acquisition",
+    ],
+    focus: "Building systems that deliver the same quality at lower effort per client.",
+    trigger: "You are at capacity — turning down work or feeling stretched — and income is consistent.",
+  },
+  {
+    id: "owner", name: "Stage 3 — The Owner", range: "$6,000–$15,000+/month",
+    line: "The business runs with or without your daily active presence in specific tasks.",
+    chars: [
+      "A virtual assistant handles production, scheduling and administrative tasks",
+      "Passive income — products, content, automations — supplements active service income",
+      "Client acquisition is increasingly inbound: referral and content-driven",
+      "My time is concentrated on strategy, client relationships and high-value delivery",
+      "The business has value beyond my personal effort — it could be sold or delegated",
+      "Monthly income is predictable rather than variable",
+    ],
+    focus: "Building an operation that functions at quality without your direct involvement in every task.",
+    trigger: "Passive income and referral income together exceed 30% of monthly revenue.",
+  },
+];
+
+/* ---- per-stream delivery workflows (the heart of SOP #2) ---- */
+
+const DELIVERY = {
+  writing: {
+    trigger: "A brief lands, or the next piece on the content calendar comes due.",
+    materials: [
+      "The client's voice reference document, built during onboarding",
+      "The client brief or your intake form",
+      "Your saved CLEAR prompt for this client's niche",
+      "Your AI-phrase elimination list",
+      "The client folder, for filing the dated version",
+    ],
+    steps: [
+      { mins: 5,  text: "Brief intake. Confirm topic, target audience, key message, word count, tone, and any specific facts or stats to include. If no brief arrived, send the intake form rather than guessing. Reread the voice notes from onboarding." },
+      { mins: 8,  text: "Research sprint. Ask the AI for the five most important angles, statistics or insights on this topic for this specific audience. Cross-reference two to three real sources to verify anything factual — this is the hallucination check, and it is not optional. Identify one or two counterintuitive angles that differentiate the piece from generic content." },
+      { mins: 10, text: "CLEAR prompt and first draft. Build the full prompt: client industry, audience, tone, the insights from the research step, word count, structural requirements. Generate. If the draft misses the tone or the angle, apply one iteration instruction and regenerate — do not start rewriting a draft that is aimed wrong." },
+      { mins: 12, text: "Pass 2 — domain enrichment. Read the whole draft with your domain expertise active. Add the specific examples, industry context and client references the AI could not know. Correct factual errors, vague claims and generic statements. Strengthen the opening hook and the closing call to action specifically." },
+      { mins: 8,  text: "Pass 3 — voice and polish. Read aloud for flow, rhythm and client voice. Cut every sentence over 25 words; break every paragraph over four sentences. Strip AI-typical phrasing — \"it's worth noting\", \"in conclusion\", \"delve into\", reflexive three-part lists. Confirm the title, subheadings and meta description carry the agreed keywords." },
+      { mins: 5,  text: "Delivery and filing. Format in the client's preferred delivery format. File a dated, version-numbered copy in the client folder. Add any prompt that worked unusually well to this client's prompt library. Send with a short professional note that restates the revision window." },
+    ],
+    checks: [
+      "Every statistic, study and data point traced to a real source you opened",
+      "Voice matches the client's reference document, not the AI's default register",
+      "No phrase from your elimination list survived Pass 3",
+      "Word count and deliverable count match the package exactly",
+      "A dated copy is filed before the email is sent",
+    ],
+    mistakes: [
+      "Publishing an unverified statistic — one fabricated number permanently damages the client's credibility and yours",
+      "Ignoring the brand voice guidelines: voice inconsistency is the single most common client complaint about AI-assisted content",
+      "Leaving AI-typical phrases in place, which experienced readers recognise immediately",
+      "Absorbing \"small additions\" without a rate adjustment until they have doubled your production time",
+    ],
+  },
+  social: {
+    trigger: "The same working day each month — name the date and never move it.",
+    materials: [
+      "The client's brand kit, photo library and content pillars from onboarding",
+      "Saved niche caption prompts",
+      "Canva Brand Kit and Bulk Create",
+      "Scheduler (Buffer, Later or Metricool)",
+      "The shared approval board (Notion or Google Docs)",
+    ],
+    steps: [
+      { mins: 30, text: "Monthly strategy. Generate the content calendar with a CLEAR strategy prompt: themes, post frequency, platform mix, promotional dates, and the ratio of educational to promotional to community content." },
+      { mins: 75, text: "Caption batch. Write every caption for the month in one session using the saved niche prompt templates. Batch all clients' captions on the same day — context-switching is the single greatest productivity drain in creative work, and batching lets your prompts and momentum compound across clients." },
+      { mins: 55, text: "Graphics batch. Design all post graphics from the client's Canva Brand Kit, using Bulk Create for variations. Same principle: all clients' graphics on one day." },
+      { mins: 15, text: "Hashtag research. Research and assign platform-optimised hashtag sets per post type." },
+      { mins: 15, text: "Client review. Send the full calendar and every post to the shared board for approval, on the same day each month. Include post date, platform, content type, caption, graphic preview and hashtags — a well-presented calendar communicates \"professional operation\" in a way no verbal update can." },
+      { mins: 30, text: "Scheduling. Schedule everything the client approved. Nothing goes live that has not been approved in writing." },
+      { mins: 20, text: "Monthly report. Pull platform analytics, draft the summary and recommendations, and lead with one concrete win. Add one proactive suggestion about their business that was not on the deliverable list." },
+    ],
+    checks: [
+      "Every post has a date, a platform, a caption, a graphic and a hashtag set",
+      "Nothing is scheduled before written client approval",
+      "The calendar went out on the agreed day of the month",
+      "The report leads with one number, not a dashboard",
+      "Exactly one proactive suggestion is included",
+    ],
+    mistakes: [
+      "Offering four platforms at a bargain rate — those clients are more demanding, churn faster and earn you less than two platforms priced properly",
+      "Scheduling before approval, which turns one wrong post into a trust problem",
+      "Spreading strategy, captions and design across the week instead of batching them",
+      "Letting the calendar date drift, which quietly removes the rhythm the client is actually paying for",
+    ],
+  },
+  automation: {
+    trigger: "A signed proposal following a Business Efficiency Audit.",
+    materials: [
+      "The completed audit and the opportunity list it produced",
+      "Your own Zapier or Make account for the build",
+      "The client's account credentials, for handover",
+      "Test data: a dummy lead, a dummy booking, a test phone number",
+      "The automation documentation template",
+    ],
+    steps: [
+      { mins: 30, text: "Confirm scope against the audit. Name each automation to be built, in priority order, with the trigger, the action and the result it produces. Anything not on this list is a change request, not an inclusion." },
+      { mins: 45, text: "Map before you build. Write each workflow out in plain language first: when X happens, do Y, then Z, unless W. Most build failures are mapping failures found late." },
+      { mins: 90, text: "Build in your own account. Use your free tier for the build so the client is never paying for work in progress. Zapier's AI assistant will generate the structure from a plain-English description of the workflow." },
+      { mins: 45, text: "Test with real data end to end. Trigger every automation for real: submit the form, book the appointment, mark the no-show. Walk every conditional branch. Check that emails arrive and are not filtered, and that SMS sends and reads correctly on a phone." },
+      { mins: 30, text: "Handover to the client's own account. Rebuild or transfer into the client's paid account so they own the automations and the credentials. This is the step that protects them if you part ways — and the step that makes you easy to work with." },
+      { mins: 30, text: "Document each automation: trigger, action, tools, what it costs to run, what it looks like when it breaks, and who to contact. Per-message costs — Twilio at roughly $0.0075 per SMS — are passed through as a transparent operating expense." },
+      { mins: 20, text: "Monthly maintenance cycle. Check the run history for errors, fix what failed, make minor updates, and send a short report: runs completed, errors caught, time saved." },
+    ],
+    checks: [
+      "Every automation triggered end to end with real data, not a test payload",
+      "Every conditional branch walked at least once",
+      "The client owns the account and the credentials",
+      "Each automation documented well enough for someone else to repair it",
+      "Running costs stated to the client in writing before they start accruing",
+    ],
+    mistakes: [
+      "Leaving automations running on your account — it looks like leverage and behaves like a hostage situation",
+      "Building before the audit, so you solve a problem the owner does not feel",
+      "Quoting hours instead of value: a lead-response automation that recovers five consultations a month at $150 is not a two-hour job, it is a $750/month result",
+      "No error monitoring, so the first person to notice a broken automation is the client",
+    ],
+  },
+  coaching: {
+    trigger: "A programme is live and the next session is scheduled.",
+    materials: [
+      "The client's onboarding questionnaire responses",
+      "Your three-sentence summary from the previous session",
+      "The programme overview and its stated outcomes",
+      "Your workbook and framework templates",
+    ],
+    steps: [
+      { mins: 5,  text: "Write the three-sentence post-session summary immediately after every session: what emerged, what the client is working through, and what would serve them most next time. Everything downstream depends on this being written while it is fresh." },
+      { mins: 15, text: "Generate the session pack. Prompt for a 60-minute agenda with timings, five powerful coaching questions on the main topic, one reflective exercise to complete during the session, and one between-session task. Edit for your voice and their specific situation — the AI generates question angles you would not have reached, and phrasing you would never use." },
+      { mins: 20, text: "Produce or adapt the session materials: the worksheet for this week's theme, a framework document structured around their situation, or a progress tracker against their stated goals. These are what the client keeps long after the programme ends." },
+      { mins: 60, text: "Run the session. Hold the agenda loosely — it exists so that you are never improvising structure, not so the client is marched through it." },
+      { mins: 6,  text: "Follow up 48 hours later. An 80-word message that acknowledges the commitment they made, offers one brief encouragement, and asks one question to keep them focused. This used to be possible only with a tiny roster; now no client gets skipped." },
+      { mins: 10, text: "Log progress against the programme's three stated outcomes, and note anything that should change in the next session or in the programme itself." },
+    ],
+    checks: [
+      "The three-sentence summary was written the same day as the session",
+      "Every session pack is specific to this client, not to the programme",
+      "The between-session commitment is written down where both of you can see it",
+      "The 48-hour follow-up went out for every client, without exception",
+      "Progress is tracked against the three outcomes you sold, not against attendance",
+    ],
+    mistakes: [
+      "Sending the AI's session plan unedited — clients can hear the difference immediately",
+      "Skipping follow-up when the week gets busy, which is exactly when it matters most to completion rates",
+      "Selling sessions rather than outcomes, which caps your price at your hourly rate",
+      "Letting materials become generic: they are the tangible thing the client shows other people",
+    ],
+  },
+};
+
+/* ---- per-stream onboarding specifics (SOP #1) ---- */
+
+const ONBOARD_ACCESS = {
+  writing:    "CMS or WordPress login (or the shared Drive folder), three sample pieces whose voice they like, the keyword or topic list, any existing style guide, and the name of the one person who approves.",
+  social:     "Admin access to every platform in scope, the brand kit, the photo and video library, promotional dates for the next 90 days, and the name of the one person who approves.",
+  automation: "Admin credentials for the booking system, CRM, email platform, website forms and POS — created in the client's own accounts, never yours. Confirm who at the business owns each one.",
+  coaching:   "Calendar access or a booking link, the completed questionnaire, and agreement on the between-session communication channel and expected response time.",
+};
+const ONBOARD_REF = {
+  writing:    "Build the voice reference document: three sample pieces, the words and claims that are banned, the register (formal or conversational and where the line sits), and two paragraphs of their existing copy you consider on-voice.",
+  social:     "Build the brand reference: voice, content pillars, visual guidelines, competitors to watch, and what must never be posted.",
+  automation: "Write the automation map: each workflow in scope, in priority order, with its trigger, its action and the result it should produce.",
+  coaching:   "Assemble the five-part onboarding pack: welcome email, the 15-question questionnaire, the programme overview with week-by-week objectives, the pre-session preparation guide, and the \"how we work together\" document.",
+};
+
+/* ---- per-stream reporting metrics (SOP #3) ---- */
+
+const REPORT_METRICS = {
+  writing:    "Pieces delivered against pieces contracted, publication status of each, keyword positions where you track them, and the single best-performing piece with a sentence on why.",
+  social:     "Profile visits, the top post's reach and the share of that reach who do not follow the account, follower change against the previous three months, engagement rate, and the best-performing day and format.",
+  automation: "Runs completed per automation, errors caught and fixed, estimated time saved (runs × minutes per run), and recovered appointments or leads attributable to each workflow.",
+  coaching:   "Sessions held, commitments made against commitments completed, progress against the three outcomes in the programme overview, and materials delivered.",
+};
+
+/* ---- the six SOPs, in Chapter 15's build order ---- */
+
+const SOPS = [
+  {
+    id: "onboarding", n: 1, name: "Client onboarding workflow",
+    when: "Month 2, after your first client", mins: "45–60 min",
+    purpose: "Take a client from \"yes\" to fully set up, briefed and scheduled — the same way every time, without rebuilding the experience from memory.",
+    trigger: "A client says yes and the first payment or deposit clears.",
+    materials: [
+      "Service agreement template",
+      "Invoice template with your next sequential number",
+      "Intake questionnaire (see the Client Pack tab)",
+      "Welcome email template",
+      "Client folder template and shared workspace",
+    ],
+    steps: [
+      { mins: 10, text: "Send the service agreement covering scope, revisions, payment terms, intellectual property, confidentiality and termination. No work begins before it comes back signed." },
+      { mins: 5,  text: "Issue the invoice with a unique sequential number, the issue date, the due date and your payment method. Log it the moment it goes out." },
+      { mins: 10, text: "Send the welcome email: what happens next, the dates that matter, who to contact, and how to send feedback." },
+      { mins: 5,  text: "Send the intake questionnaire with a return-by date. Say plainly that the first deliverable is scheduled from the day it comes back." },
+      { mins: 10, text: "Create the client folder and workspace from your template: brief, assets, deliverables, reports, invoices." },
+      { mins: 10, text: "Collect access and assets." },
+      { mins: 15, text: "Build the reference document from the questionnaire." },
+      { mins: 10, text: "Book the kickoff call and put every recurring delivery date in both calendars for the next three months." },
+      { mins: 2,  text: "Ask the email-list question: \"Would you like to receive monthly resources from me on [topic]? If yes, I'll add you to my list.\" Satisfied clients opt in at 60–80%, and they are the warmest subscribers you will ever get." },
+      { mins: 3,  text: "Confirm the first delivery date in writing, in a sentence, in its own paragraph." },
+    ],
+    checks: [
+      "The agreement is signed before any work starts",
+      "The invoice is logged with a unique sequential number",
+      "The questionnaire has come back and you have read it before drafting anything",
+      "You have tested every credential yourself rather than assuming it works",
+      "The first delivery date exists in writing, in both calendars",
+    ],
+    mistakes: [
+      "Starting work on a verbal yes",
+      "Collecting access ad hoc over three weeks, which delays the first delivery and sets the tone for everything after",
+      "Skipping the reference document — then discovering the voice problem after the client has read the work",
+      "Leaving the first delivery date vague, which makes every later date negotiable",
+    ],
+    perStream: {
+      steps: {
+        5: (s) => ONBOARD_ACCESS[s],
+        6: (s) => ONBOARD_REF[s],
+      },
+    },
+  },
+  {
+    id: "delivery", n: 2, name: "Core delivery workflow",
+    when: "Month 2, after your first delivery", mins: "45–60 min",
+    purpose: "Produce the thing you are paid for at a consistent standard, at a speed that makes the rate work — and in a form someone else could eventually run.",
+    fromStream: true,
+  },
+  {
+    id: "reporting", n: 3, name: "Monthly client reporting",
+    when: "Month 3, when the first report is due", mins: "30–45 min",
+    purpose: "Turn a month of delivery into one page the owner actually reads, led by a single number that makes the invoice feel obviously worth paying.",
+    trigger: "The same working day each month, before the next month's plan goes out.",
+    materials: [
+      "Platform analytics or run logs",
+      "Last month's report, for comparison",
+      "Your deliverable log: contracted against delivered",
+      "The report template",
+    ],
+    steps: [
+      { mins: 10, text: "Pull the numbers." },
+      { mins: 5,  text: "Find the quick win: the one metric that improved most, written as a sentence with a number in it. \"Your profile visits increased 34% this month.\" Business owners do not read analytics; they remember one number that made the investment feel worthwhile." },
+      { mins: 10, text: "Draft the report from the raw data with AI, then cut it to one page." },
+      { mins: 5,  text: "Add the deliverable log: what was contracted, what was delivered, stated plainly. This is the paragraph that prevents the awkward renewal conversation." },
+      { mins: 5,  text: "Write one proactive suggestion — something you noticed about their business beyond the deliverables. A competitor's new format worth borrowing, a seasonal date six weeks out. This is what makes you a partner rather than a vendor, and it is what justifies the next rate increase." },
+      { mins: 5,  text: "Check every number against its source before sending. One wrong figure costs more trust than the report earns." },
+      { mins: 5,  text: "Send on the agreed day. A three-minute Loom walkthrough attached to the report measurably improves how the work is perceived." },
+      { mins: 2,  text: "File the report in the client folder and note the renewal or rate-review date." },
+    ],
+    checks: [
+      "The report leads with one concrete number",
+      "Every figure is traceable to a source you can screenshot",
+      "Contracted against delivered is stated explicitly",
+      "Exactly one proactive suggestion is included",
+      "It went out on the agreed day",
+    ],
+    mistakes: [
+      "Leading with a dashboard dump nobody reads",
+      "Reporting activity (\"20 posts published\") instead of outcome (\"91% of your top post's reach were not followers\")",
+      "Sending late, which converts a retention tool into a chase-up",
+      "Omitting the suggestion, which quietly reclassifies you as an execution vendor",
+    ],
+    perStream: { steps: { 0: (s) => REPORT_METRICS[s] } },
+  },
+  {
+    id: "outreach", n: 4, name: "Outreach and follow-up sequence",
+    when: "Month 3, before any delegation", mins: "30–45 min",
+    purpose: "Make client acquisition a process you run on a schedule and could hand over — rather than a burst of panic when income dips.",
+    trigger: "A fixed weekly block, plus any week your live conversations fall below your target number.",
+    materials: [
+      "Target list spreadsheet",
+      "Your outreach scripts",
+      "Free audit or health-check template",
+      "Calendar link",
+      "Pipeline tracker: sent, replied, called, closed",
+    ],
+    steps: [
+      { mins: 30, text: "Build the target list: 30 businesses that match your niche precisely. One niche at a time — a list of 30 dental practices outperforms 200 assorted small businesses." },
+      { mins: 20, text: "Research each one and write down one specific, true observation: their last post date, inconsistent posting, generic content, engagement under 1%, a missing follow-up process. The observation is the entire message." },
+      { mins: 5,  text: "Select the ten with the most obvious gaps. Discard the rest without guilt." },
+      { mins: 30, text: "Send the personalised message: one specific observation, one concrete suggestion, one low-friction ask (a 15–20 minute call). Never a service description. Business owners respond to problems, not pitches — personalised cold email runs 15–20% response, and the audit approach converts 10–20% to a discovery call." },
+      { mins: 5,  text: "Log every send with date and channel. If it is not in the tracker it did not happen." },
+      { mins: 10, text: "Follow up once at day 4 and once at day 10. Stop after the third touch — a fourth costs you the option of ever approaching them again." },
+      { mins: 20, text: "Run the discovery call: listen first, then give one specific outcome-oriented recommendation, name the package and the price, then stop talking and let the silence sit." },
+      { mins: 10, text: "Send the proposal or the agreement the same day, while the conversation is still warm." },
+      { mins: 10, text: "Review the funnel weekly: sent → replied → called → closed. Fix the weakest single step. A healthy close rate on a premium service is 30–50%; if yours is 90%, the problem is not your outreach, it is your price." },
+    ],
+    checks: [
+      "Every message names one specific, verifiable observation about that business",
+      "Nothing was sent to a list without personalisation",
+      "Every prospect is logged",
+      "Follow-ups are capped at three touches",
+      "Every call ended with a named next step and a date",
+    ],
+    mistakes: [
+      "Templated blasts, which convert badly and burn the list permanently",
+      "Pitching the service instead of naming the problem",
+      "Filling the silence after you state the price",
+      "No tracking, so you cannot tell which step is broken and end up rewriting the whole funnel",
+      "Stopping outreach the moment delivery gets busy — the cause of every income trough two months later",
+    ],
+  },
+  {
+    id: "proposal", n: 5, name: "New client proposal process",
+    when: "Month 4, once your rate and package are stable", mins: "30–45 min",
+    purpose: "Turn a good conversation into a one-page proposal, priced on outcome value, sent the same day, with exactly one next step.",
+    trigger: "A discovery call ends with interest.",
+    materials: [
+      "Proposal template",
+      "Your package sheet with three tiers",
+      "The Three-Number Value Pricing figures (see the Pricing tab)",
+      "Agreement and invoice templates, ready to send on acceptance",
+    ],
+    steps: [
+      { mins: 10, text: "Write the problem statement in the client's own words, from your call notes. If they cannot recognise their own situation in your first paragraph, nothing after it will land." },
+      { mins: 10, text: "Calculate the outcome value: what the result is worth to them per month, in their numbers. Recovered appointments × their average value. New clients × their average value." },
+      { mins: 5,  text: "Set the price at the higher of outcome value × 5–15% or the top third of the market range. For project work, the project fee is 3–5× the first month's retainer." },
+      { mins: 5,  text: "Present three tiers and anchor on the middle one. The starter exists to be affordable; the premium exists to make the middle feel reasonable." },
+      { mins: 15, text: "Draft with AI: problem statement, proposed approach, three key outcomes, investment, next steps. One page." },
+      { mins: 10, text: "Personalise until it could not have been sent to anyone else — their names, their numbers, the thing they said on the call that you wrote down." },
+      { mins: 3,  text: "Add a start date and an expiry date on the price. A proposal without an expiry becomes a document they mean to get back to." },
+      { mins: 5,  text: "Send within 24 hours of the call and diarise the follow-up." },
+      { mins: 2,  text: "On acceptance, trigger the onboarding SOP the same day." },
+    ],
+    checks: [
+      "The proposal states three outcomes, not a task list",
+      "The price is anchored to the outcome value in a sentence the client could repeat to a partner",
+      "Three tiers, middle anchored",
+      "One next step, with a date",
+      "Sent within 24 hours",
+    ],
+    mistakes: [
+      "Quoting by the hour, which caps your income exactly as your speed improves",
+      "Sending a menu instead of a recommendation",
+      "No expiry, so the proposal ages quietly into a no",
+      "Waiting three days, by which point the conversation has cooled and a competitor has answered",
+      "Discounting before the client has raised a single objection",
+    ],
+  },
+  {
+    id: "va", n: 6, name: "VA training documentation",
+    when: "Before your first VA hire", mins: "60–90 min",
+    purpose: "Everything a new assistant needs to produce your standard of work on their first paid task, without you narrating it live.",
+    trigger: "You meet the hiring signals in the Delegation tab and are about to run a trial.",
+    materials: [
+      "Your five existing SOPs",
+      "A password manager for credential sharing",
+      "Loom, or any screen recorder",
+      "One example of good output and one you rejected",
+      "A shared task tracker",
+    ],
+    steps: [
+      { mins: 5,  text: "Choose the trial task: your single most documented SOP. Not the most annoying task — the most documented one." },
+      { mins: 30, text: "Write the standards page. What \"done\" looks like, shown with one good example and one you rejected, with the reason for the rejection written out. Examples teach standards; adjectives do not." },
+      { mins: 20, text: "Record a Loom walking through the SOP once, end to end, at normal speed. Narrate the judgment calls, not the clicks." },
+      { mins: 15, text: "Write the access and security page: which tools they need, how credentials are shared (through a password manager, never in a message), and what they must never access." },
+      { mins: 10, text: "Write the communication page: your working hours and theirs, expected response times, where questions go, and what to escalate rather than decide alone." },
+      { mins: 5,  text: "Write the never-delegate list, with the reason beside each item. An assistant who knows why the line exists will defend it when you are not looking." },
+      { mins: null, text: "Run a paid three-hour trial on that most-documented SOP — their three hours, not yours. Pay for it whatever you decide afterwards: it is professional, it is fair, and it is the cheapest reference check available." },
+      { mins: 15, text: "Score the trial on two questions: did they follow the SOP exactly, and did they ask good questions? Both matter. Only one is teachable." },
+      { mins: 20, text: "Fold every gap the trial exposed back into the SOP within the week, while you still remember what they had to ask." },
+      { mins: 5,  text: "Begin a 30-day trial at reduced but fair hours before committing to anything larger." },
+    ],
+    checks: [
+      "Someone who has never done the task can complete it from the document alone",
+      "Credentials are shared through a manager, never pasted into chat or email",
+      "The never-delegate list is explicit and reasoned",
+      "The trial was paid regardless of the outcome",
+      "Trial gaps were written back into the SOP within a week",
+    ],
+    mistakes: [
+      "Training live over calls instead of writing it down — you will do it again for the next hire, and the one after",
+      "Delegating quality control sign-off, which is where your premium actually lives",
+      "Sharing passwords in a chat message",
+      "Hiring before $3,000/month, which creates cost the business cannot yet carry",
+      "Skipping the paid trial because someone interviewed well",
+    ],
+  },
+];
+
+const STATUSES = [
+  { id: "todo",    label: "Not started", cls: "grey"  },
+  { id: "drafted", label: "Drafted",     cls: "gold"  },
+  { id: "tested",  label: "Tested",      cls: ""      },
+  { id: "live",    label: "Live",        cls: "green" },
+];
+
+const SOP_PROCESS = [
+  { n: 1, t: "Identify your three highest-frequency tasks", d: "The ones you could do in your sleep but that consume the most total time. Usually: client onboarding, content production, monthly reporting." },
+  { n: 2, t: "Draft it with AI", d: "Use the prompt on this page. Purpose, trigger, materials, numbered steps, quality checks, common mistakes — written for someone doing this for the first time." },
+  { n: 3, t: "Edit the draft against your actual process", d: "The draft will be 70–80% accurate. Your job is the other 20–30%: your tools, your client preferences, your quality standards. This is the step that makes it usable." },
+  { n: 4, t: "Test it", d: "Ask a friend or your future VA to follow it without your help. Note where they get stuck. Those are the gaps to fill — and they are never where you expected." },
+  { n: 5, t: "Store it, and review it every 90 days", d: "Keep them together under a dedicated Operations section. A living SOP system is worth more than any single document in your business." },
+];
+
+const DELEGATION = [
+  {
+    id: "now", title: "Delegate from week one", when: "Fully process-dependent",
+    items: [
+      "Social media scheduling — you create the content, the VA schedules it",
+      "Invoice tracking and payment follow-up",
+      "Basic research: competitor analysis, target list building",
+      "Formatting and uploading finished content to platforms",
+      "Calendar management and appointment confirmations",
+    ],
+  },
+  {
+    id: "later", title: "Delegate from month two", when: "Requires light training",
+    items: [
+      "First-pass editing of AI-generated content against your written standards",
+      "Basic graphic customisation from your Canva templates",
+      "Client communication using your scripts",
+      "Monthly report data compilation — you write the analysis, they compile the data",
+    ],
+  },
+  {
+    id: "never", title: "Never delegate", when: "Where your premium is earned",
+    items: [
+      "Client strategy",
+      "Creative direction",
+      "Quality control sign-off",
+      "Pricing conversations",
+      "Any client-facing communication that requires your voice",
+    ],
+  },
+];
+
+const VA_PLATFORMS = [
+  ["Upwork", "Large talent pool, transparent reviews, milestone payment protection"],
+  ["OnlineJobs.ph", "Filipino VA specialists — strong English, high reliability, lower rates"],
+  ["Belay / Time etc", "Higher cost, higher vetting — executive-level support"],
+];
+const VA_LOOKFOR = [
+  "Strong written English",
+  "Familiarity with Google Workspace and Notion",
+  "Experience with your primary platform — Canva, Buffer, Zapier, whichever you live in",
+  "A track record of long-term client relationships, not job-hopping",
+  "Available for 10–20 hours per month to start",
+];
+const VA_HIRE = [
+  "Start with a paid three-hour trial task using your most documented SOP",
+  "Evaluate two things: did they follow the SOP exactly, and did they ask good questions",
+  "Pay for the trial whether or not you proceed — it is professional and fair",
+  "Begin with a 30-day trial at reduced but fair hours before committing further",
+];
+
+const RATE_SIGNALS = [
+  { t: "I am consistently fully booked", d: "Demand exceeds supply. A full roster at $400/month is not success — it is underpricing." },
+  { t: "Clients say yes without hesitation", d: "A healthy close rate for a premium service is 30–50%. If 90% say yes immediately, you are below market. Some hesitation is a signal of correct pricing." },
+  { t: "I feel resentful about the work", d: "Resentment is almost always a pricing signal. \"This is more work than I am being paid for\" means the rate does not reflect the value." },
+  { t: "My income has plateaued despite growing output", d: "More clients, same income means you are filling capacity at flat rates. Rate increases are the only path to growth without more hours." },
+];
+
+const RATE_RULES = [
+  ["Raise for new clients immediately", "Do not wait for the right moment. Set the new rate and apply it to every new engagement from today."],
+  ["Increase in 20–30% increments", "$400 to $500 is invisible to most clients. $400 to $1,200 requires a repositioning. Three 25% increases compound to 95%."],
+  ["Raise existing clients by adding value", "Do not announce an increase — propose a package expansion. The added deliverable costs you little with AI leverage; the increase is significant."],
+  ["Raise after delivering a strong result", "The moment a client says \"this is making a real difference\" is the moment their price sensitivity is lowest."],
+  ["Accept that some clients will leave", "A client who leaves over a rate increase was buying your time, not your value. The one who stays is the practice you want."],
+];
+
+const PRODUCTISE = [
+  ["\"I write content for businesses\" — scope varies per client", "The Content Engine: 8 posts/month + 1 newsletter, fixed schedule, fixed rate", "Easier to sell, deliver and delegate"],
+  ["\"I offer social media management\" — varies by platform and volume", "The Local Business Visibility Pack: FB + Instagram + Google Business, 16 posts/month, $550/month flat", "Removes scope negotiation; improves margins"],
+  ["\"I build automation for clients\" — quoted per project", "The Practice Automation Starter: 3 automations (lead response + reminder + review), $1,200 flat, 2-week delivery", "Faster to pitch, easier to compare, simpler to repeat"],
+  ["\"I offer coaching\" — sessions charged hourly", "The 90-Day Career Clarity Programme: 12 sessions, workbook, weekly support, $2,200 flat", "Clients buy outcomes, not sessions; higher close rate"],
+  ["\"I create digital products for clients\" — custom per request", "The Brand Canva Kit: 25 templates, 3 colour variations, 5-day delivery, $350 flat", "Systematised; production can go to a VA"],
+];
+
+const MRR_TARGETS = [
+  { label: "Month 1–3",   lo: 0,    hi: 500,   note: "Foundational. Every retainer or catalogue sale counts." },
+  { label: "Month 4–6",   lo: 500,  hi: 1500,  note: "First real stability. Income is no longer entirely variable." },
+  { label: "Month 7–9",   lo: 1500, hi: 3500,  note: "Confidence milestone. Income replacement becomes realistic." },
+  { label: "Month 10–12", lo: 3500, hi: 6000,  note: "Business milestone. Growing faster than costs." },
+  { label: "Month 13–18", lo: 6000, hi: 10000, note: "Owner stage. Systems doing significant heavy lifting." },
+];
+
+const MRR_STREAMS = [
+  ["#1 Freelance writing", "Monthly content retainer, 8–12 pieces", "$500–$2,000 per client"],
+  ["#2 Digital products", "Catalogue compound growth + list promotions", "$50–$500+ (catalogue-dependent)"],
+  ["#3 Social media management", "Monthly management retainer", "$300–$1,500 per client"],
+  ["#4 AI automation", "Maintenance retainer after the project build", "$100–$400 per client"],
+  ["#5 Prompt packs", "Catalogue passive income, grows with SEO and reviews", "$200–$2,000+ (catalogue-dependent)"],
+  ["#6 Coaching / consulting", "Advisory retainer after programme completion", "$300–$800 per client"],
+  ["#7 Content creation", "Ad revenue + sponsorship + affiliate", "$500–$10,000+ (audience-dependent)"],
+];
+
+const QUESTIONNAIRE = {
+  writing: {
+    title: "Content client intake questionnaire",
+    sub: "Send with the welcome email, with a return-by date. Everything here feeds the voice reference document — which is the fix for the most common complaint about AI-assisted content.",
+    sections: [
+      { t: "The business and its reader", qs: [
+        "What does the business do, in one sentence a stranger would understand?",
+        "Who is the ideal reader of this content — role, situation, what keeps them up at night?",
+        "What do they currently believe that you need them to stop believing?",
+        "What does a reader do next, if the piece works?",
+      ]},
+      { t: "Voice", qs: [
+        "Name three pieces of content — yours or anyone's — whose voice you want to sound like.",
+        "Which words, phrases or claims must never appear?",
+        "Formal or conversational, and where exactly is the line for you?",
+        "Paste two paragraphs of your existing copy that sound right to you.",
+      ]},
+      { t: "Content", qs: [
+        "What are your three to five content pillars?",
+        "Which keywords or search terms matter this quarter?",
+        "What has already been published that we should not repeat?",
+        "Which competitors do you watch, and what do they do well?",
+      ]},
+      { t: "Operating agreement", qs: [
+        "Who approves, and how quickly can they turn work around?",
+        "What format do you want delivery in — Google Doc, WordPress draft, email?",
+        "What is your publishing schedule?",
+        "Would you like to receive monthly resources from me by email?",
+      ]},
+    ],
+  },
+  social: {
+    title: "Social media client intake questionnaire",
+    sub: "Chapter 8 budgets 45 minutes once for onboarding. This is that 45 minutes — the only time in the engagement you will ask these questions.",
+    sections: [
+      { t: "Brand and audience", qs: [
+        "Describe your brand voice in three adjectives, and one thing it is definitely not.",
+        "Who is your target customer, specifically enough that I could recognise one?",
+        "What do customers most often ask you before they buy?",
+        "What are your three to five content pillars?",
+      ]},
+      { t: "Landscape and goals", qs: [
+        "Name three competitors whose social presence you rate.",
+        "What is the goal for the next 90 days — visibility, enquiries, bookings, recruitment?",
+        "What has worked before, and what fell flat?",
+        "What would make this month feel obviously worth paying for?",
+      ]},
+      { t: "Assets and access", qs: [
+        "Which platforms are in scope, and who currently has admin access?",
+        "Where do your logo files, brand colours and fonts live?",
+        "What photo and video library exists, and who can add to it?",
+        "Which promotional dates, events or launches fall in the next 90 days?",
+      ]},
+      { t: "Operating agreement", qs: [
+        "Who approves the monthly calendar, and by when each month?",
+        "What must never be posted — topics, claims, images, competitors?",
+        "How should I reach you for something time-sensitive?",
+        "Would you like to receive monthly resources from me by email?",
+      ]},
+    ],
+  },
+  automation: {
+    title: "The 30-Minute Business Efficiency Audit",
+    sub: "Chapter 9's audit is simultaneously your discovery process and your highest-converting sales tool. Offer it free: it costs you thirty minutes and almost always surfaces two to four automations the client will pay to have built. Watch for the opportunity signals in each section.",
+    sections: [
+      { t: "1 · Lead and enquiry management (10 min)", signal: "Any \"we miss calls\" or \"we don't follow up\" answer.", qs: [
+        "How do new leads currently contact you — phone, website form, email, walk-in?",
+        "What happens when a lead contacts you outside business hours?",
+        "How long does it typically take to respond to a new enquiry?",
+        "Do leads who don't convert immediately receive any follow-up?",
+      ]},
+      { t: "2 · Appointment and booking management (8 min)", signal: "Phone-only booking, manual reminders, a no-show rate above 10%.", qs: [
+        "How do clients currently book appointments — online or by phone?",
+        "Do clients receive automated appointment reminders?",
+        "What happens when a client needs to reschedule?",
+        "How do you handle no-shows — is there a follow-up process?",
+      ]},
+      { t: "3 · Client communication and follow-up (7 min)", signal: "Manual follow-up, inconsistent communication, no review process.", qs: [
+        "After a client visit or purchase, do they receive any automated follow-up?",
+        "Do you have an email list, and how often do you communicate with it?",
+        "How do you currently request reviews from satisfied clients?",
+        "Are there recurring communications you send manually every month?",
+      ]},
+      { t: "4 · Internal operations (5 min)", signal: "Disconnected tools, recurring manual reports, data re-entry.", qs: [
+        "What administrative tasks consume the most time for you or your staff?",
+        "Are there reports or documents you produce manually on a recurring schedule?",
+        "Do your tools — CRM, booking system, email — talk to each other?",
+      ]},
+      { t: "Close", qs: [
+        "\"Based on what you've shared, I can see [X] clear automation opportunities. Let me put together a brief proposal showing exactly what I'd build and what time it would save you each month. Can I send that by [day]?\"",
+      ]},
+    ],
+  },
+  coaching: {
+    title: "Coaching programme onboarding questionnaire",
+    sub: "Fifteen questions covering background, goals, constraints and learning style — one of the five components of the onboarding pack. A polished onboarding experience measurably increases programme completion rates.",
+    sections: [
+      { t: "The goal", qs: [
+        "In one sentence, what do you want to be true by the end of this programme that is not true now?",
+        "What does success look like, specifically enough that we would both know we had reached it?",
+        "What is the cost to you of not solving this in the next twelve months?",
+        "What have you already tried, and what happened?",
+      ]},
+      { t: "The situation", qs: [
+        "What is your current role, and how long have you been in it?",
+        "What in your background is most relevant to this goal?",
+        "What are the three biggest constraints on your time, money or authority?",
+        "Who else is affected by this change?",
+      ]},
+      { t: "How you work", qs: [
+        "How do you prefer to learn — reading, talking it through, or doing exercises?",
+        "What feedback style works for you: direct, or gentle first?",
+        "When during the week will you do the between-session work?",
+        "What do you want me to do when you miss a commitment?",
+      ]},
+      { t: "Working together", qs: [
+        "How should I contact you between sessions, and how quickly do you expect a reply?",
+        "Is there anything you would rather I not raise unless you raise it first?",
+        "What are you not willing to change?",
+        "Would you like to receive monthly resources from me by email?",
+      ]},
+    ],
+  },
+};
+
+const AGREEMENT = [
+  ["Scope of work", "Exactly what is delivered, in what format, at what frequency. The most expensive clause to leave vague."],
+  ["Revision policy", "How many rounds are included, and what happens beyond them."],
+  ["Payment terms", "Amount, due date, and what happens if payment is late."],
+  ["Intellectual property", "Who owns the final work product."],
+  ["Confidentiality", "Whether client information must be kept private."],
+  ["Termination", "How either party can end the agreement."],
+];
+
+const INVOICE = [
+  "Your full name or business name and contact details",
+  "The client's name and business details",
+  "A unique invoice number, starting at 001 and incrementing",
+  "Date of issue and payment due date",
+  "A clear description of what was delivered",
+  "The amount owed, and the currency",
+  "Your preferred payment method",
+];
+
+const RETENTION = [
+  { t: "The monthly plan, on the same day every month", d: "Deliver a complete month-ahead plan for approval on the same date each month. The rhythm itself builds trust, reduces ad hoc change requests, and makes the strategy visible. A well-presented calendar says \"professional operation\" in a way no verbal update can." },
+  { t: "The quick-win report", d: "Every report leads with one concrete metric that improved. Business owners do not read detailed analytics; they remember one number that made the investment feel worthwhile. Your job is to find that number — every single month." },
+  { t: "One proactive suggestion", d: "Every month, include one unsolicited idea that shows you are thinking about their business beyond your deliverables. A competitor's format worth borrowing. A seasonal campaign six weeks out. This is the difference between a strategic partner and an execution vendor — and it is what makes a rate increase feel earned." },
+];
+
+/* ===========================================================================
+   APP
+   =========================================================================== */
+
+const $ = (id) => document.getElementById(id);
+const el = (tag, props, kids) => {
+  const n = document.createElement(tag);
+  Object.keys(props || {}).forEach((k) => {
+    // aria-*, data-* and role are attributes, not properties — assigning them
+    // as properties sets an expando nothing reads.
+    if (k.indexOf("-") > -1 || k === "role") n.setAttribute(k, props[k]);
+    else n[k] = props[k];
+  });
+  (kids || []).forEach((k) => n.append(k));
+  return n;
+};
+const STORE_KEY = "agency-operations-system/v1";
+
+const DEFAULTS = () => ({
+  theme: null,
+  stream: "writing",
+  openSop: null,
+  sop: {},          // key `${sopId}/${streamId}` -> { body, status, reviewed, notes }
+  stage: {},        // stageId -> [bool]
+  drafter: { role: "", task: "", tools: "", std: "", gaps: "" },
+  va: { mrr: "", hrs: "", turn: false, done: {} },
+  price: { outcome: "", pct: 10, low: "", high: "", signals: [false, false, false, false] },
+  raise: { old: "", nw: "", add: "" },
+  prod: { bespoke: "", name: "", incl: "", price: "", when: "", outcome: "" },
+  mrr: {},          // band index -> value
+  pack: { agree: {}, inv: {}, rate: "" },
+});
+
+let store = DEFAULTS();
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) {
+      const p = JSON.parse(raw);
+      const d = DEFAULTS();
+      store = Object.assign(d, p);
+      // shallow-merge the nested objects so a new field never arrives undefined
+      ["drafter", "va", "price", "raise", "prod", "pack"].forEach((k) => {
+        store[k] = Object.assign(d[k], p[k] || {});
+      });
+      if (!Array.isArray(store.price.signals) || store.price.signals.length !== 4) {
+        store.price.signals = [false, false, false, false];
+      }
+    }
+  } catch (e) { /* private mode or file:// restrictions — carry on in memory */ }
+}
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) { /* ignore */ }
+}
+
+/* ---------- small helpers ---------- */
+
+let toastTimer;
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
+}
+
+function copyText(text, okMsg) {
+  const done = () => toast(okMsg || "Copied to clipboard");
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+function fallbackCopy(text, done) {
+  const ta = el("textarea", { value: text });
+  ta.setAttribute("aria-hidden", "true");
+  ta.style.cssText = "position:fixed;top:-1000px;opacity:0";
+  document.body.append(ta);
+  ta.select();
+  try { document.execCommand("copy"); done(); }
+  catch (e) { toast("Copy failed — select the text and copy manually"); }
+  ta.remove();
+}
+
+function download(filename, text) {
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = el("a", { href: url, download: filename });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  toast("Downloaded " + filename);
+}
+
+/* Write a value back into an input without stealing the caret from a user
+   who is mid-edit — these panels re-render on every keystroke. */
+function setVal(id, v) {
+  const n = $(id);
+  if (!n) return;
+  const s = v == null ? "" : String(v);
+  if (document.activeElement !== n && n.value !== s) n.value = s;
+}
+
+const today = () => new Date().toISOString().slice(0, 10);
+const money = (n) => "$" + Math.round(n).toLocaleString("en-US");
+const num = (v) => { const n = parseFloat(v); return isFinite(n) && n >= 0 ? n : 0; };
+const fmtMins = (m) => (m >= 120 ? (m / 60).toFixed(1) + " hours" : m + " minutes");
+const daysBetween = (a, b) => Math.round((new Date(b) - new Date(a)) / 86400000);
+const addDays = (iso, d) => new Date(new Date(iso).getTime() + d * 86400000).toISOString().slice(0, 10);
+const streamById = (id) => STREAMS.find((s) => s.id === id) || STREAMS[0];
+const curStream = () => streamById(store.stream);
+
+/* ---------- theme ---------- */
+
+function applyTheme() {
+  const t = store.theme;
+  if (t) document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+  $("themeIcon").textContent = t === "dark" ? "●" : t === "light" ? "○" : "◐";
+}
+$("themeBtn").onclick = () => {
+  store.theme = store.theme === "light" ? "dark" : store.theme === "dark" ? null : "light";
+  applyTheme(); save();
+  toast(store.theme ? store.theme[0].toUpperCase() + store.theme.slice(1) + " theme" : "Following your system theme");
+};
+
+/* ---------- tabs ---------- */
+
+const tabs = Array.from(document.querySelectorAll(".tab"));
+tabs.forEach((tab) => {
+  tab.onclick = () => selectTab(tab);
+  tab.onkeydown = (e) => {
+    const i = tabs.indexOf(tab);
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      e.preventDefault();
+      const next = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+      next.focus(); selectTab(next);
+    }
+  };
+});
+function selectTab(tab) {
+  tabs.forEach((t) => {
+    const on = t === tab;
+    t.setAttribute("aria-selected", String(on));
+    $(t.getAttribute("aria-controls")).hidden = !on;
+  });
+}
+
+/* ---------- shared: stream chips ---------- */
+
+function renderStreamChips() {
+  ["streamChipsStage", "streamChipsSops", "streamChipsPack"].forEach((id) => {
+    const box = $(id);
+    if (!box) return;
+    box.textContent = "";
+    STREAMS.forEach((s) => {
+      const b = el("button", { type: "button", className: "chip", textContent: s.short });
+      b.setAttribute("aria-pressed", String(s.id === store.stream));
+      b.title = s.name + " · " + s.ch + " · income stream " + s.stream;
+      b.onclick = () => {
+        store.stream = s.id; save();
+        renderStreamChips(); renderSopList(); renderSopDetail(); renderPack(); renderStage(); renderReviewTable();
+      };
+      box.append(b);
+    });
+  });
+  const s = curStream();
+  $("streamBlurb").innerHTML = "";
+  $("streamBlurb").append(
+    el("b", { textContent: s.name }),
+    document.createTextNode(" — income stream " + s.stream + ", " + s.ch + ". " + s.blurb)
+  );
+}
+
+/* ===========================================================================
+   SOP BODIES
+   =========================================================================== */
+
+function defaultBody(sop, streamId) {
+  if (sop.fromStream) {
+    const d = DELIVERY[streamId];
+    return {
+      purpose: sop.purpose,
+      trigger: d.trigger,
+      materials: d.materials.slice(),
+      steps: d.steps.map((s) => ({ text: s.text, mins: s.mins })),
+      checks: d.checks.slice(),
+      mistakes: d.mistakes.slice(),
+    };
+  }
+  const body = {
+    purpose: sop.purpose,
+    trigger: sop.trigger,
+    materials: sop.materials.slice(),
+    steps: sop.steps.map((s) => ({ text: s.text, mins: s.mins })),
+    checks: sop.checks.slice(),
+    mistakes: sop.mistakes.slice(),
+  };
+  if (sop.perStream && sop.perStream.steps) {
+    Object.keys(sop.perStream.steps).forEach((i) => {
+      const extra = sop.perStream.steps[i](streamId);
+      body.steps[i] = { text: body.steps[i].text + " " + extra, mins: body.steps[i].mins };
+    });
+  }
+  return body;
+}
+
+const sopKey = (sop) => sop.id + "/" + store.stream;
+
+function rec(sop) {
+  const k = sopKey(sop);
+  if (!store.sop[k]) store.sop[k] = { body: null, status: "todo", reviewed: null, notes: "" };
+  return store.sop[k];
+}
+function body(sop) {
+  const r = rec(sop);
+  return r.body || defaultBody(sop, store.stream);
+}
+function editBody(sop) {
+  const r = rec(sop);
+  if (!r.body) r.body = defaultBody(sop, store.stream);
+  return r.body;
+}
+function isEdited(sop) { return !!rec(sop).body; }
+
+function nextReview(sop) {
+  const r = rec(sop);
+  return r.reviewed ? addDays(r.reviewed, 90) : null;
+}
+function reviewDue(sop) {
+  const r = rec(sop);
+  if (!r.reviewed) return false;
+  return daysBetween(r.reviewed, today()) >= 90;
+}
+function statusOf(sop) { return STATUSES.find((s) => s.id === rec(sop).status) || STATUSES[0]; }
+function liveCount() { return SOPS.filter((s) => rec(s).status === "live").length; }
+
+/* most documented SOP: live > tested > drafted, earliest in build order wins */
+function mostDocumented() {
+  const rank = { live: 3, tested: 2, drafted: 1, todo: 0 };
+  let best = null;
+  SOPS.forEach((s) => {
+    const r = rank[rec(s).status];
+    if (r > 0 && (!best || r > rank[rec(best).status])) best = s;
+  });
+  return best;
+}
+
+/* ===========================================================================
+   STAGE
+   =========================================================================== */
+
+function stageTicks(stage) {
+  const arr = store.stage[stage.id] || [];
+  return stage.chars.filter((_, i) => arr[i]).length;
+}
+
+function currentStage() {
+  // The highest stage whose characteristics are at least 60% ticked.
+  let out = STAGES[0];
+  STAGES.forEach((st) => {
+    if (stageTicks(st) / st.chars.length >= 0.6) out = st;
+  });
+  return out;
+}
+
+/* Built once. Re-rendering the cards on every tick would throw keyboard
+   focus off the checkbox the user just pressed space on. */
+const stageRefs = {};
+
+function buildStage() {
+  const box = $("stageCards");
+  box.textContent = "";
+  STAGES.forEach((st) => {
+    const card = el("div", { className: "stage-card" });
+    card.append(el("h3", { textContent: st.name }));
+    card.append(el("b", { className: "rng", textContent: st.range }));
+    card.append(el("p", { className: "sub", textContent: st.line, style: "margin-bottom:12px" }));
+
+    const ul = el("ul");
+    if (!store.stage[st.id]) store.stage[st.id] = [];
+    const arr = store.stage[st.id];
+    st.chars.forEach((c, i) => {
+      const cb = el("input", { type: "checkbox", checked: !!arr[i] });
+      cb.onchange = () => { arr[i] = cb.checked; save(); renderStage(); };
+      ul.append(el("li", {}, [el("label", { className: "inline" }, [cb, el("span", { textContent: c })])]));
+    });
+    card.append(ul);
+
+    const m = el("div", { className: "meter" });
+    const bar = el("i", { style: "width:0%" });
+    m.append(bar);
+    card.append(m);
+    const count = el("p", { className: "hint" });
+    card.append(count);
+    box.append(card);
+    stageRefs[st.id] = { card, bar, count };
+  });
+}
+
+function renderStage() {
+  const cur = currentStage();
+  const anyTicks = STAGES.some((s) => stageTicks(s) > 0);
+
+  STAGES.forEach((st) => {
+    const ref = stageRefs[st.id];
+    if (!ref) return;
+    const ticks = stageTicks(st);
+    ref.card.classList.toggle("on", anyTicks && st.id === cur.id);
+    ref.bar.style.width = Math.round((ticks / st.chars.length) * 100) + "%";
+    ref.count.textContent = ticks + " of " + st.chars.length + " true today";
+  });
+
+  /* verdict */
+  const v = $("stageVerdict");
+  v.textContent = "";
+  if (!anyTicks) {
+    v.append(el("div", { className: "empty" }, [
+      el("b", { textContent: "Nothing ticked yet" }),
+      el("span", { textContent: "Work down the three lists above. Tick what is true this week, not what you intend." }),
+    ]));
+  } else {
+    const idx = STAGES.indexOf(cur);
+    const next = STAGES[idx + 1];
+    v.append(el("p", {}, [
+      el("span", { className: "pill gold", textContent: cur.name }),
+      document.createTextNode(" "),
+      el("b", { textContent: cur.range }),
+    ]));
+    v.append(el("p", {}, [el("b", { textContent: "Primary focus: " }), document.createTextNode(cur.focus)]));
+    v.append(el("p", {}, [el("b", { textContent: "Trigger to the next stage: " }), document.createTextNode(cur.trigger)]));
+    if (next) {
+      const nt = stageTicks(next);
+      v.append(el("p", { className: "sub", style: "margin:0" , textContent:
+        next.name + " is " + nt + "/" + next.chars.length + " true. A stage is called when at least 60% of its characteristics hold — which is why income alone does not decide it." }));
+    } else {
+      v.append(el("p", { className: "sub", style: "margin:0", textContent:
+        "You are at the top of the book's ladder. From here the question changes from how much it earns to whether it runs, and could be sold, without you." }));
+    }
+  }
+
+  /* next up */
+  const nu = $("nextUp");
+  nu.textContent = "";
+  const pending = SOPS.filter((s) => rec(s).status !== "live");
+  if (!pending.length) {
+    nu.append(el("p", { className: "note green", textContent:
+      "All six procedures are live for " + curStream().name + ". Next: keep them alive — each one wants a review every 90 days, and the Drafter tab tracks when each is due." }));
+  } else {
+    const first = pending[0];
+    nu.append(el("p", { className: "note" }, [
+      el("b", { textContent: "Build next: SOP #" + first.n + " — " + first.name + ". " }),
+      document.createTextNode(first.when + " · " + first.mins + " to write. " + (first.fromStream ? DELIVERY[store.stream].trigger : first.trigger)),
+    ]));
+    const ul = el("ul", { className: "tight", style: "margin-top:14px" });
+    pending.slice(1).forEach((s) => {
+      ul.append(el("li", {}, [
+        el("b", { textContent: "#" + s.n + " " + s.name }),
+        document.createTextNode(" — " + s.when + " · " + s.mins),
+      ]));
+    });
+    if (pending.length > 1) nu.append(ul);
+    nu.append(el("p", { className: "sub", style: "margin:0", textContent:
+      liveCount() + " of 6 live for " + curStream().name + "." }));
+  }
+  $("sopCount").textContent = liveCount() + "/6";
+}
+
+/* ===========================================================================
+   SOP LIBRARY
+   =========================================================================== */
+
+function renderSopList() {
+  const box = $("sopList");
+  box.textContent = "";
+  SOPS.forEach((sop) => {
+    const st = statusOf(sop);
+    const row = el("button", { type: "button", className: "sop-row" });
+    row.setAttribute("aria-current", String(store.openSop === sop.id));
+    row.append(el("span", { className: "num", textContent: String(sop.n) }));
+    const mid = el("span", { style: "flex:1 1 220px" });
+    mid.append(el("span", { className: "nm", textContent: sop.name }));
+    mid.append(el("span", { className: "mt", textContent: sop.when + " · " + sop.mins + " to write" + (isEdited(sop) ? " · edited" : "") }));
+    row.append(mid);
+    if (reviewDue(sop)) row.append(el("span", { className: "pill red", textContent: "Review due" }));
+    row.append(el("span", { className: "pill " + st.cls, textContent: st.label }));
+    row.onclick = () => {
+      store.openSop = store.openSop === sop.id ? null : sop.id;
+      save(); renderSopList(); renderSopDetail();
+      if (store.openSop) {
+        const d = $("sopDetail").firstElementChild;
+        if (d) d.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    };
+    box.append(row);
+  });
+  $("sopCount").textContent = liveCount() + "/6";
+}
+
+/* generic editable line list (materials, checks, mistakes) */
+function lineList(items, onChange, placeholder) {
+  const wrap = el("div");
+  const refocus = (idx, btn) => {
+    const row = wrap.querySelectorAll(".line-item")[idx];
+    if (!row) return;
+    const bs = row.querySelectorAll(".ctl button");
+    /* the button that moved the item may now be disabled at the end of the
+       list — fall back to its neighbour so the keyboard lands somewhere */
+    const b = bs[btn] && !bs[btn].disabled ? bs[btn] : Array.from(bs).find((x) => !x.disabled);
+    if (b) b.focus();
+  };
+  const draw = () => {
+    wrap.textContent = "";
+    items.forEach((txt, i) => {
+      const row = el("div", { className: "line-item" });
+      const ta = el("textarea", { value: txt, rows: 2, "aria-label": placeholder + " " + (i + 1) });
+      ta.oninput = () => { items[i] = ta.value; onChange(); };
+      const ctl = el("div", { className: "ctl no-print" });
+      const up = el("button", { type: "button", className: "icon", textContent: "↑", title: "Move up" });
+      up.disabled = i === 0;
+      up.onclick = () => { items.splice(i - 1, 0, items.splice(i, 1)[0]); onChange(); draw(); refocus(i - 1, 0); };
+      const dn = el("button", { type: "button", className: "icon", textContent: "↓", title: "Move down" });
+      dn.disabled = i === items.length - 1;
+      dn.onclick = () => { items.splice(i + 1, 0, items.splice(i, 1)[0]); onChange(); draw(); refocus(i + 1, 1); };
+      const rm = el("button", { type: "button", className: "icon", textContent: "✕", title: "Remove" });
+      rm.onclick = () => { items.splice(i, 1); onChange(); draw(); };
+      ctl.append(up, dn, rm);
+      row.append(ta, ctl);
+      wrap.append(row);
+    });
+    const add = el("button", { type: "button", className: "sm no-print", textContent: "+ Add", style: "margin-top:10px" });
+    add.onclick = () => { items.push(""); onChange(); draw(); };
+    wrap.append(add);
+  };
+  draw();
+  return wrap;
+}
+
+function stepList(steps, onChange) {
+  const wrap = el("div", { className: "steps" });
+  /* keep the keyboard on the button that just moved, not on nothing */
+  const refocus = (idx, btn) => {
+    const row = wrap.querySelectorAll(".step")[idx];
+    if (!row) return;
+    const bs = row.querySelectorAll(".ctl button");
+    const b = bs[btn] && !bs[btn].disabled ? bs[btn] : Array.from(bs).find((x) => !x.disabled);
+    if (b) b.focus();
+  };
+  const draw = () => {
+    wrap.textContent = "";
+    steps.forEach((s, i) => {
+      const row = el("div", { className: "step" });
+      row.append(el("div", { className: "idx", textContent: (i + 1) + "." }));
+      const ta = el("textarea", { value: s.text, rows: 2, "aria-label": "Step " + (i + 1) });
+      ta.oninput = () => { s.text = ta.value; onChange(); };
+      row.append(ta);
+      const mw = el("div", { className: "mins" });
+      const mi = el("input", { type: "number", min: "0", step: "5", value: s.mins == null ? "" : String(s.mins), placeholder: "min", "aria-label": "Minutes for step " + (i + 1) });
+      mi.oninput = () => { s.mins = mi.value === "" ? null : Math.max(0, parseInt(mi.value, 10) || 0); onChange(); drawTotal(); };
+      mw.append(mi);
+      row.append(mw);
+      const ctl = el("div", { className: "ctl no-print" });
+      const up = el("button", { type: "button", className: "icon", textContent: "↑", title: "Move up" });
+      up.disabled = i === 0;
+      up.onclick = () => { steps.splice(i - 1, 0, steps.splice(i, 1)[0]); onChange(); draw(); refocus(i - 1, 0); };
+      const dn = el("button", { type: "button", className: "icon", textContent: "↓", title: "Move down" });
+      dn.disabled = i === steps.length - 1;
+      dn.onclick = () => { steps.splice(i + 1, 0, steps.splice(i, 1)[0]); onChange(); draw(); refocus(i + 1, 1); };
+      const rm = el("button", { type: "button", className: "icon", textContent: "✕", title: "Remove step" });
+      rm.onclick = () => { steps.splice(i, 1); onChange(); draw(); };
+      ctl.append(up, dn, rm);
+      row.append(ctl);
+      wrap.append(row);
+    });
+    const bar = el("div", { className: "row", style: "margin-top:12px" });
+    const add = el("button", { type: "button", className: "sm no-print", textContent: "+ Add step" });
+    add.onclick = () => { steps.push({ text: "", mins: null }); onChange(); draw(); };
+    bar.append(add);
+    bar.append(el("span", { className: "spacer" }));
+    bar.append(el("span", { className: "hint step-total", style: "margin:0" }));
+    wrap.append(bar);
+    drawTotal();
+  };
+  const drawTotal = () => {
+    const t = wrap.querySelector(".step-total");
+    if (!t) return;
+    const total = steps.reduce((a, s) => a + (s.mins || 0), 0);
+    t.textContent = total ? "Total: " + fmtMins(total) + " per run" : "";
+  };
+  draw();
+  return wrap;
+}
+
+function renderSopDetail() {
+  const host = $("sopDetail");
+  host.textContent = "";
+  const sop = SOPS.find((s) => s.id === store.openSop);
+  if (!sop) return;
+  const r = rec(sop);
+  const b = body(sop);
+  const s = curStream();
+  let resetBtn = null;
+  const touch = () => {
+    save();
+    renderSopList();
+    if (resetBtn && resetBtn.disabled && isEdited(sop)) {
+      resetBtn.disabled = false;
+      resetBtn.title = "Discard your edits to this procedure";
+    }
+  };
+
+  const card = el("div", { className: "card" });
+
+  /* header */
+  const head = el("div", { className: "row", style: "margin-bottom:14px" });
+  const h = el("div");
+  h.append(el("h2", { textContent: "SOP #" + sop.n + " — " + sop.name }));
+  h.append(el("p", { className: "sub", style: "margin:4px 0 0", textContent: s.name + " · " + s.ch + " · build " + sop.when.toLowerCase() + " · " + sop.mins + " to write" }));
+  head.append(h);
+  head.append(el("span", { className: "spacer" }));
+  const closeBtn = el("button", { type: "button", className: "ghost no-print", textContent: "✕ Close" });
+  closeBtn.onclick = () => { store.openSop = null; save(); renderSopList(); renderSopDetail(); };
+  head.append(closeBtn);
+  card.append(head);
+
+  /* status row */
+  const bar = el("div", { className: "row no-print", style: "margin-bottom:18px" });
+  const grp = el("div", { className: "chips", role: "group", "aria-label": "Status" });
+  STATUSES.forEach((st, si) => {
+    const bt = el("button", { type: "button", className: "chip", textContent: st.label });
+    bt.setAttribute("aria-pressed", String(r.status === st.id));
+    bt.onclick = () => {
+      r.status = st.id;
+      if (st.id !== "todo" && !r.reviewed) r.reviewed = today();
+      save(); renderSopList(); renderSopDetail(); renderStage(); renderReviewTable(); renderDelegation();
+      const again = $("sopDetail").querySelectorAll(".chips .chip")[si];
+      if (again) again.focus();
+    };
+    grp.append(bt);
+  });
+  bar.append(grp);
+  bar.append(el("span", { className: "spacer" }));
+  const rv = el("button", { type: "button", className: "sm", textContent: "✓ Reviewed today" });
+  rv.onclick = () => { r.reviewed = today(); save(); renderSopDetail(); renderSopList(); renderReviewTable(); toast("Next review due " + addDays(today(), 90)); };
+  bar.append(rv);
+  card.append(bar);
+
+  const meta = el("p", { className: "sub" });
+  if (r.reviewed) {
+    const nxt = nextReview(sop);
+    meta.textContent = "Last reviewed " + r.reviewed + " · next review due " + nxt + (reviewDue(sop) ? " — overdue" : "");
+  } else {
+    meta.textContent = "Not yet reviewed. Chapter 15 asks for a review every 90 days; the clock starts when you first mark this drafted.";
+  }
+  card.append(meta);
+
+  /* purpose / trigger */
+  const g = el("div", { className: "grid-2", style: "margin-bottom:18px" });
+  const pf = el("fieldset");
+  pf.append(el("legend", { textContent: "Purpose" }));
+  const pta = el("textarea", { value: b.purpose, rows: 3, "aria-label": "Purpose" });
+  pta.oninput = () => { editBody(sop).purpose = pta.value; touch(); };
+  pf.append(pta);
+  pf.append(el("p", { className: "hint", textContent: "Why this exists. One or two sentences, written so a stranger understands the point of the task." }));
+  const tf = el("fieldset");
+  tf.append(el("legend", { textContent: "Trigger" }));
+  const tta = el("textarea", { value: b.trigger, rows: 3, "aria-label": "Trigger" });
+  tta.oninput = () => { editBody(sop).trigger = tta.value; touch(); };
+  tf.append(tta);
+  tf.append(el("p", { className: "hint", textContent: "When this gets done. A specific event or a named day — never \"as needed\"." }));
+  g.append(pf, tf);
+  card.append(g);
+
+  /* materials */
+  card.append(el("h3", { style: "font-size:14px;margin-bottom:8px", textContent: "Materials needed" }));
+  card.append(lineList(b.materials, () => { editBody(sop).materials = b.materials; touch(); }, "Material"));
+
+  /* steps */
+  card.append(el("h3", { style: "font-size:14px;margin:22px 0 4px", textContent: "Steps" }));
+  card.append(el("p", { className: "sub", textContent: "Numbered sequentially and written for someone doing this for the first time. Minutes are optional — but a step nobody has timed is a step nobody has run." }));
+  card.append(stepList(b.steps, () => { editBody(sop).steps = b.steps; touch(); }));
+
+  /* checks */
+  card.append(el("h3", { style: "font-size:14px;margin:22px 0 8px", textContent: "Quality checks" }));
+  card.append(lineList(b.checks, () => { editBody(sop).checks = b.checks; touch(); }, "Check"));
+
+  /* mistakes */
+  card.append(el("h3", { style: "font-size:14px;margin:22px 0 8px", textContent: "Common mistakes to avoid" }));
+  card.append(lineList(b.mistakes, () => { editBody(sop).mistakes = b.mistakes; touch(); }, "Mistake"));
+
+  /* notes */
+  card.append(el("h3", { style: "font-size:14px;margin:22px 0 8px", textContent: "Notes" }));
+  const nta = el("textarea", { value: r.notes, rows: 3, placeholder: "Client-specific exceptions, tools, anything that bit you once.", "aria-label": "Notes" });
+  nta.oninput = () => { r.notes = nta.value; save(); };
+  card.append(nta);
+
+  /* actions */
+  const acts = el("div", { className: "row no-print", style: "margin-top:20px" });
+  const cp = el("button", { type: "button", className: "primary", textContent: "📋 Copy as Markdown" });
+  cp.onclick = () => copyText(sopMarkdown(sop), "SOP copied as Markdown");
+  const dl = el("button", { type: "button", textContent: "⬇ Download" });
+  dl.onclick = () => download("sop-" + sop.n + "-" + sop.id + "-" + store.stream + ".md", sopMarkdown(sop));
+  const pr = el("button", { type: "button", textContent: "🖨 Print" });
+  pr.onclick = () => window.print();
+  acts.append(cp, dl, pr);
+  acts.append(el("span", { className: "spacer" }));
+  resetBtn = el("button", { type: "button", className: "danger", textContent: "↺ Reset to the book's version" });
+  resetBtn.disabled = !isEdited(sop);
+  resetBtn.title = resetBtn.disabled ? "This procedure is still the book's version" : "Discard your edits to this procedure";
+  resetBtn.onclick = () => {
+    r.body = null; save(); renderSopDetail(); renderSopList();
+    toast("Reset to the book's default");
+  };
+  acts.append(resetBtn);
+  card.append(acts);
+
+  host.append(card);
+}
+
+function sopMarkdown(sop) {
+  const b = body(sop);
+  const r = rec(sop);
+  const s = curStream();
+  const L = [];
+  L.push("## SOP #" + sop.n + " — " + sop.name);
+  L.push("");
+  L.push("**Service line:** " + s.name + " (income stream " + s.stream + ", " + s.ch + ")  ");
+  L.push("**Status:** " + statusOf(sop).label + "  ");
+  L.push("**Last reviewed:** " + (r.reviewed || "—") + "  ");
+  L.push("**Next review:** " + (nextReview(sop) || "—"));
+  L.push("");
+  L.push("**Purpose.** " + b.purpose);
+  L.push("");
+  L.push("**Trigger.** " + b.trigger);
+  L.push("");
+  L.push("**Materials needed**");
+  b.materials.forEach((m) => L.push("- " + m));
+  L.push("");
+  L.push("**Steps**");
+  b.steps.forEach((st, i) => L.push((i + 1) + ". " + st.text + (st.mins ? "  _(" + st.mins + " min)_" : "")));
+  const total = b.steps.reduce((a, x) => a + (x.mins || 0), 0);
+  if (total) L.push("", "_Total: " + fmtMins(total) + " per run._");
+  L.push("");
+  L.push("**Quality checks**");
+  b.checks.forEach((c) => L.push("- [ ] " + c));
+  L.push("");
+  L.push("**Common mistakes to avoid**");
+  b.mistakes.forEach((m) => L.push("- " + m));
+  if (r.notes.trim()) { L.push("", "**Notes**", "", r.notes.trim()); }
+  L.push("");
+  return L.join("\n");
+}
+
+function manualMarkdown() {
+  const s = curStream();
+  const cur = currentStage();
+  const L = [];
+  L.push("# Operations manual — " + s.name);
+  L.push("");
+  L.push("Income stream " + s.stream + " · " + s.ch + " · generated " + today());
+  L.push("");
+  L.push("Stage: " + cur.name + " (" + cur.range + "). Primary focus: " + cur.focus);
+  L.push("");
+  L.push("Procedures live: " + liveCount() + " of 6.");
+  L.push("");
+  L.push("Built from the SOP framework in Chapter 15 of *The AI Income Blueprint* by Hassan Mohammed, with delivery workflows from Chapters 6, 8, 9 and 11.");
+  L.push("");
+  L.push("---");
+  L.push("");
+  SOPS.forEach((sop) => { L.push(sopMarkdown(sop)); L.push("---"); L.push(""); });
+  return L.join("\n");
+}
+
+$("manualBtn").onclick = () => download("operations-manual-" + store.stream + ".md", manualMarkdown());
+
+/* ===========================================================================
+   DRAFTER
+   =========================================================================== */
+
+function draftPrompt() {
+  const d = store.drafter;
+  const role = d.role.trim() || "[type of AI income earner]";
+  const task = d.task.trim() || "[task name]";
+  let p = "You are a business operations specialist. I am a " + role + ".\n" +
+          "I need a Standard Operating Procedure for the task of " + task + ".\n" +
+          "The SOP should include: purpose, trigger (when this is done), materials needed,\n" +
+          "step-by-step instructions numbered sequentially, quality check criteria,\n" +
+          "and common mistakes to avoid. Write for someone doing this for the first time.";
+  if (d.tools.trim()) p += "\n\nThe tools I use for this task are: " + d.tools.trim() + ". Reference them by name in the steps.";
+  if (d.std.trim())   p += "\n\nMy quality standard is: " + d.std.trim() + ". Build the quality checks around it.";
+  p += "\n\nEstimate a time in minutes for each step. Do not invent steps that require tools I have not named.";
+  return p;
+}
+
+function renderDrafter() {
+  const d = store.drafter;
+  setVal("dfRole", d.role);
+  setVal("dfTask", d.task);
+  setVal("dfTools", d.tools);
+  setVal("dfStd", d.std);
+  setVal("dfGaps", d.gaps);
+  $("dfOut").textContent = draftPrompt();
+
+  const proc = $("dfProcess");
+  proc.textContent = "";
+  SOP_PROCESS.forEach((p) => {
+    const row = el("div", { className: "line-item", style: "gap:13px" });
+    row.append(el("span", { className: "pill", textContent: "Step " + p.n, style: "flex:none" }));
+    const t = el("div");
+    t.append(el("b", { textContent: p.t }));
+    t.append(el("p", { className: "sub", style: "margin:3px 0 0", textContent: p.d }));
+    row.append(t);
+    proc.append(row);
+  });
+}
+
+["dfRole", "dfTask", "dfTools", "dfStd"].forEach((id) => {
+  const key = id.slice(2).toLowerCase();
+  $(id).oninput = () => { store.drafter[key] = $(id).value; save(); $("dfOut").textContent = draftPrompt(); };
+});
+$("dfGaps").oninput = () => { store.drafter.gaps = $("dfGaps").value; save(); };
+$("dfCopy").onclick = $("dfCopy2").onclick = () => copyText(draftPrompt(), "Prompt copied");
+$("dfDl").onclick = () => download("sop-drafting-prompt.txt", draftPrompt());
+$("dfLoad").onclick = () => {
+  const sop = SOPS.find((s) => s.id === store.openSop) || SOPS.filter((s) => rec(s).status !== "live")[0] || SOPS[0];
+  store.drafter.role = curStream().role;
+  store.drafter.task = sop.name.toLowerCase();
+  save(); renderDrafter();
+  toast("Filled from SOP #" + sop.n + " — " + sop.name);
+};
+
+function renderReviewTable() {
+  const host = $("reviewTable");
+  host.textContent = "";
+  const t = el("table");
+  const thead = el("thead");
+  thead.append(el("tr", {}, ["SOP", "Status", "Last reviewed", "Next review", ""].map((h) => el("th", { textContent: h }))));
+  t.append(thead);
+  const tb = el("tbody");
+  SOPS.forEach((sop) => {
+    const r = rec(sop);
+    const tr = el("tr", { className: reviewDue(sop) ? "hi" : "" });
+    tr.append(el("td", {}, [el("b", { textContent: "#" + sop.n + " " + sop.name })]));
+    tr.append(el("td", {}, [el("span", { className: "pill " + statusOf(sop).cls, textContent: statusOf(sop).label })]));
+    tr.append(el("td", { textContent: r.reviewed || "—" }));
+    tr.append(el("td", { textContent: nextReview(sop) || "—" }));
+    const td = el("td");
+    if (r.reviewed) {
+      const days = 90 - daysBetween(r.reviewed, today());
+      td.textContent = days <= 0 ? "Overdue by " + Math.abs(days) + " days" : days + " days to go";
+      if (days <= 0) td.append(el("span", {}, []));
+    } else {
+      td.textContent = "—";
+    }
+    tr.append(td);
+    tb.append(tr);
+  });
+  t.append(tb);
+  host.append(t);
+  host.append(el("p", { className: "sub", style: "margin:14px 0 0", textContent: "Service line: " + curStream().name + ". Each stream keeps its own procedures and its own review dates." }));
+}
+
+/* ===========================================================================
+   DELEGATION
+   =========================================================================== */
+
+/* Built once — see buildStage for why. */
+function buildDelegation() {
+  const v = store.va;
+
+  const bd = $("delegBoard");
+  bd.textContent = "";
+  DELEGATION.forEach((col) => {
+    const c = el("div", { className: "col" + (col.id === "never" ? " never" : "") });
+    c.append(el("h3", { textContent: col.title }));
+    c.append(el("div", { className: "when", textContent: col.when }));
+    const ul = el("ul");
+    col.items.forEach((it, i) => {
+      const li = el("li");
+      if (col.id === "never") {
+        li.textContent = it;
+      } else {
+        const k = col.id + ":" + i;
+        const cb = el("input", { type: "checkbox", checked: !!v.done[k] });
+        cb.onchange = () => { v.done[k] = cb.checked; save(); renderDelegation(); };
+        li.append(el("label", { className: "inline" }, [cb, el("span", { textContent: it })]));
+      }
+      ul.append(li);
+    });
+    c.append(ul);
+    if (col.id === "never") {
+      c.append(el("p", { className: "hint", style: "margin-top:10px", textContent: "This is where your expertise earns its premium. Protect it." }));
+    }
+    bd.append(c);
+  });
+
+  const pt = $("vaPlatforms");
+  pt.textContent = "";
+  const t = el("table");
+  const th = el("thead");
+  th.append(el("tr", {}, [el("th", { textContent: "Platform" }), el("th", { textContent: "What it gives you" })]));
+  t.append(th);
+  const tb = el("tbody");
+  VA_PLATFORMS.forEach((p) => tb.append(el("tr", {}, [el("td", {}, [el("b", { textContent: p[0] })]), el("td", { textContent: p[1] })])));
+  t.append(tb);
+  pt.append(t);
+
+  const lf = $("vaLookFor");
+  lf.textContent = "";
+  VA_LOOKFOR.forEach((x) => lf.append(el("li", { textContent: x })));
+
+  const hs = $("vaHireSteps");
+  hs.textContent = "";
+  const ol = el("ol", { className: "tight" });
+  VA_HIRE.forEach((x) => ol.append(el("li", { textContent: x })));
+  hs.append(ol);
+}
+
+function renderDelegation() {
+  const v = store.va;
+  setVal("vaMrr", v.mrr);
+  setVal("vaHrs", v.hrs);
+  $("vaTurn").checked = !!v.turn;
+
+  const mrr = num(v.mrr), hrs = num(v.hrs);
+  const sig = [mrr >= 3000, hrs > 5, !!v.turn];
+  const hit = sig.filter(Boolean).length;
+
+  const vv = $("vaVerdict");
+  vv.textContent = "";
+  const lines = el("ul", { className: "tight" });
+  lines.append(el("li", {}, [
+    el("b", { textContent: sig[0] ? "✓ " : "· " }),
+    document.createTextNode(sig[0]
+      ? "At " + money(mrr) + "/month, a VA at $150–$300/month is a 5–10% reinvestment that should free capacity to grow income 30–50%."
+      : (mrr ? "At " + money(mrr) + "/month you are " + money(3000 - mrr) + " short of the $3,000 threshold. A VA now is cost the business cannot yet carry." : "Enter your monthly income to test signal 1.")),
+  ]));
+  lines.append(el("li", {}, [
+    el("b", { textContent: sig[1] ? "✓ " : "· " }),
+    document.createTextNode(sig[1]
+      ? hrs + " hours a month on work that does not require your expertise. At your own effective rate that time is worth more than a VA costs."
+      : (hrs ? hrs + " hours a month of delegatable work — under the 5-hour threshold. Not yet worth the management overhead." : "Enter your monthly admin hours to test signal 2.")),
+  ]));
+  lines.append(el("li", {}, [
+    el("b", { textContent: sig[2] ? "✓ " : "· " }),
+    document.createTextNode(sig[2]
+      ? "You are turning work away. Every declined client is lost revenue that freed capacity recovers."
+      : "You are not yet turning work away."),
+  ]));
+  vv.append(lines);
+
+  const msg = hit === 0 ? ["grey", "Not yet — and that is the correct answer at this stage.", "Build the SOPs first. Chapter 15 is explicit that a VA is only cheap once the work is documented; without SOPs you are not hiring help, you are hiring a second job explaining things."]
+    : hit === 1 ? ["gold", "One signal. Look, do not leap.", "Start writing SOP #6, the VA training documentation, and get your most frequent task fully documented. When the second signal lands you will be ready in days rather than months."]
+    : ["green", hit + " of 3 signals. Hire.", "Run a paid three-hour trial on your most documented SOP. Start with the fully process-dependent tasks below, and never move quality control sign-off across the line."];
+  const box = el("div", { className: "note " + (msg[0] === "green" ? "green" : msg[0] === "grey" ? "plain" : ""), style: "margin-top:14px" });
+  box.append(el("b", { textContent: msg[1] + " " }));
+  box.append(document.createTextNode(msg[2]));
+  vv.append(box);
+
+  /* board tallies */
+  let documented = 0, delegable = 0;
+  DELEGATION.forEach((col) => {
+    if (col.id === "never") return;
+    col.items.forEach((_, i) => {
+      delegable++;
+      if (v.done[col.id + ":" + i]) documented++;
+    });
+  });
+  $("delegCount").textContent = documented + " of " + delegable + " delegable tasks are documented well enough to hand over. Anything unticked is a task you will end up explaining live, repeatedly.";
+
+  const md = mostDocumented();
+  $("trialSop").textContent = md
+    ? "SOP #" + md.n + " — " + md.name + " (" + statusOf(md).label.toLowerCase() + ")."
+    : "Nothing yet. Mark a procedure drafted, tested or live in the SOP Library and it will appear here.";
+
+  /* micro-agency maths */
+  const mm = $("vaMath");
+  mm.textContent = "";
+  const vaCost = 250;               // $10–15/hr, ~20 hrs/month per 5 clients
+  const freed = 12;                 // 10–15 hours/month freed
+  const st = el("div", { className: "stat" });
+  st.append(el("div", {}, [el("b", { textContent: "$200–$300" }), el("span", { textContent: "VA cost per month" })]));
+  st.append(el("div", {}, [el("b", { textContent: "10–15 hrs" }), el("span", { textContent: "freed per month" })]));
+  st.append(el("div", {}, [el("b", { textContent: "2–3" }), el("span", { textContent: "extra clients that buys" })]));
+  st.append(el("div", {}, [el("b", { textContent: "+$1,000–$1,500" }), el("span", { textContent: "monthly income, same hours" })]));
+  mm.append(st);
+  const p = el("p", { className: "sub", style: "margin-top:14px" });
+  if (mrr >= 3000) {
+    const pct = Math.round((vaCost / mrr) * 100);
+    p.textContent = "At " + money(mrr) + "/month, " + money(vaCost) + " of VA cost is " + pct + "% of revenue — and the first additional client covers it outright. You keep strategy, client communication and quality control; the VA takes scheduling, template production and report compilation.";
+  } else {
+    p.textContent = "The arithmetic above assumes a VA at $10–$15/hour for roughly 20 hours a month per five clients. Enter your monthly income above to see it against your own numbers.";
+  }
+  mm.append(p);
+  mm.append(el("p", { className: "sub", style: "margin:8px 0 0", textContent:
+    "Chapter 8 puts the solo ceiling at eight to ten clients before onboarding and communication start crowding out the work that produces results. The other route past that ceiling is not more clients but fewer: five at $900 beats eight at $400, and is a better business." }));
+}
+
+["vaMrr", "vaHrs"].forEach((id) => {
+  $(id).oninput = () => { store.va[id === "vaMrr" ? "mrr" : "hrs"] = $(id).value; save(); renderDelegation(); renderPricing(); };
+});
+$("vaTurn").onchange = () => { store.va.turn = $("vaTurn").checked; save(); renderDelegation(); };
+
+/* ===========================================================================
+   PRICING
+   =========================================================================== */
+
+/* Built once — the checkbox list and the MRR inputs must survive a re-render. */
+function buildPricing() {
+  const p = store.price;
+
+  const rs = $("rateSignals");
+  rs.textContent = "";
+  RATE_SIGNALS.forEach((sg, i) => {
+    const wrap = el("div", { className: "line-item" });
+    const cb = el("input", { type: "checkbox", checked: !!p.signals[i] });
+    cb.onchange = () => { p.signals[i] = cb.checked; save(); renderPricing(); };
+    const t = el("div");
+    t.append(el("label", { className: "inline" }, [cb, el("b", { textContent: sg.t })]));
+    t.append(el("p", { className: "sub", style: "margin:3px 0 0 25px", textContent: sg.d }));
+    wrap.append(t);
+    rs.append(wrap);
+  });
+
+  const pt = $("prodTable");
+  pt.textContent = "";
+  const t2 = el("table");
+  const th = el("thead");
+  th.append(el("tr", {}, ["Bespoke (Hustler)", "Productised (Operator)", "Impact"].map((h) => el("th", { textContent: h }))));
+  t2.append(th);
+  const tb2 = el("tbody");
+  PRODUCTISE.forEach((r) => tb2.append(el("tr", {}, r.map((c, i) => el("td", {}, [i === 1 ? el("b", { textContent: c }) : document.createTextNode(c)])))));
+  t2.append(tb2);
+  pt.append(t2);
+
+  const mt = $("mrrTable");
+  mt.textContent = "";
+  const t3 = el("table");
+  const th3 = el("thead");
+  th3.append(el("tr", {}, ["Period", "Book target", "Your MRR", "Status", "What it means"].map((h) => el("th", { textContent: h }))));
+  t3.append(th3);
+  const tb3 = el("tbody");
+  MRR_TARGETS.forEach((band, i) => {
+    const tr = el("tr");
+    tr.append(el("td", {}, [el("b", { textContent: band.label })]));
+    tr.append(el("td", { textContent: money(band.lo) + "–" + money(band.hi) + (i === MRR_TARGETS.length - 1 ? "+" : "") }));
+    const td = el("td");
+    const inp = el("input", { type: "number", min: "0", step: "100", value: store.mrr[i] || "", placeholder: "—", "aria-label": "Your MRR for " + band.label, style: "max-width:130px" });
+    inp.oninput = () => { store.mrr[i] = inp.value; save(); updateMrrStatus(); };
+    td.append(inp);
+    tr.append(td);
+    tr.append(el("td", { className: "mrr-status" }));
+    tr.append(el("td", { textContent: band.note }));
+    tb3.append(tr);
+  });
+  t3.append(tb3);
+  mt.append(t3);
+}
+
+function renderPricing() {
+  const p = store.price;
+  setVal("pvOutcome", p.outcome);
+  setVal("pvPct", p.pct);
+  setVal("pvLow", p.low);
+  setVal("pvHigh", p.high);
+  $("pvPctVal").textContent = p.pct + "% of the outcome value";
+
+  const outcome = num(p.outcome), lo = num(p.low), hi = num(p.high);
+  const fromValue = outcome * (p.pct / 100);
+  const topThird = hi > lo ? lo + (hi - lo) * (2 / 3) : hi || lo;
+
+  const res = $("pvResult");
+  res.textContent = "";
+  if (!outcome && !hi) {
+    res.append(el("div", { className: "empty" }, [
+      el("b", { textContent: "Two numbers needed" }),
+      el("span", { textContent: "The outcome value and the market range. Neither works alone — the book's instruction is to use whichever is higher." }),
+    ]));
+  } else {
+    const rate = Math.max(fromValue, topThird);
+    const wins = fromValue >= topThird ? "outcome value" : "market rate";
+    res.append(el("div", { className: "stat" }, [
+      el("div", {}, [el("b", { textContent: rate ? money(rate) : "—" }), el("span", { textContent: "per month" })]),
+      el("div", {}, [el("b", { textContent: rate ? money(rate * 3) + "–" + money(rate * 5) : "—" }), el("span", { textContent: "project fee (3–5×)" })]),
+    ]));
+    const tbl = el("table", { style: "margin-top:16px" });
+    const tb = el("tbody");
+    const row = (a, b2, hiRow) => {
+      const tr = el("tr", { className: hiRow ? "hi" : "" });
+      tr.append(el("td", { textContent: a }));
+      tr.append(el("td", {}, [el("b", { textContent: b2 })]));
+      tb.append(tr);
+    };
+    row("Number 1 · outcome value", outcome ? money(outcome) + "/month" : "—");
+    row("Your share at " + p.pct + "%", fromValue ? money(fromValue) : "—", fromValue >= topThird && fromValue > 0);
+    row("Number 2 · market range", hi ? money(lo) + "–" + money(hi) : "—");
+    row("Top third of market", topThird ? money(topThird) : "—", topThird > fromValue);
+    tbl.append(tb);
+    res.append(tbl);
+    if (rate) {
+      res.append(el("p", { className: "note", style: "margin-top:16px" }, [
+        el("b", { textContent: "Number 3 · your rate: " + money(rate) + "/month. " }),
+        document.createTextNode("The " + wins + " wins here. Anchor every sales conversation in Number 1: \"this recovers roughly " + money(outcome || 0) + " a month for you, and costs " + money(rate) + ".\""),
+      ]));
+    }
+  }
+
+  /* rate signals */
+  const n = p.signals.filter(Boolean).length;
+  const rvd = $("rateVerdict");
+  rvd.textContent = "";
+  if (n === 0) {
+    rvd.append(el("p", { className: "sub", style: "margin:0", textContent: "No signals ticked. Revisit this after your next three client conversations — the signals show up in how clients respond, not in how you feel about the number." }));
+  } else {
+    const box = el("div", { className: "note" });
+    box.append(el("b", { textContent: n + " of 4 signals. Raise your rate. " }));
+    box.append(document.createTextNode("For new clients: from today, in a 20–30% increment. For existing clients: use the expansion message below rather than an announcement. Three 25% increases compound to 95%."));
+    rvd.append(box);
+    const ol = el("ol", { className: "tight", style: "margin-top:14px" });
+    RATE_RULES.forEach((r) => ol.append(el("li", {}, [el("b", { textContent: r[0] + ". " }), document.createTextNode(r[1])])));
+    rvd.append(ol);
+  }
+
+  /* rate increase message */
+  const ri = store.raise;
+  setVal("riOld", ri.old); setVal("riNew", ri.nw); setVal("riAdd", ri.add);
+  const oldR = num(ri.old), newR = num(ri.nw);
+  const add = ri.add.trim() || "[the new deliverable]";
+  $("riOut").textContent =
+    "I'm restructuring my services next quarter.\n\n" +
+    "Your current service moves from " + (oldR ? money(oldR) : "$[current]") + " to " + (newR ? money(newR) : "$[new]") + " per month, and I'm adding " +
+    add + " to what you receive.\n\n" +
+    "Everything else stays exactly as it is, and the new rate starts from [date]. Happy to walk you through it on a call if that's easier.";
+  const rc = $("riCheck");
+  rc.textContent = "";
+  if (oldR && newR) {
+    const pct = Math.round(((newR - oldR) / oldR) * 100);
+    const ok = pct >= 20 && pct <= 30;
+    rc.append(el("p", { className: "note " + (ok ? "green" : "plain"), style: "margin:0" }, [
+      el("b", { textContent: pct + "% increase. " }),
+      document.createTextNode(ok
+        ? "Inside the book's 20–30% band — large enough to matter, small enough to be invisible to most clients."
+        : pct < 20
+          ? "Below the 20–30% band. Not wrong, but you will need to do this again sooner; the admin cost of an increase is the same whatever its size."
+          : "Above the 30% band. A jump this size reads as a repositioning rather than an adjustment, so it needs a repositioned offer to match — or split it across two increases."),
+    ]));
+  }
+
+  /* productisation */
+  const pd = store.prod;
+  ["Bespoke", "Name", "Incl", "Price", "When", "Outcome"].forEach((k) => setVal("pd" + k, pd[k.toLowerCase()] || ""));
+  $("pdOut").textContent = pd.name || pd.incl || pd.price
+    ? (pd.name || "[package name]") + "\n" +
+      (pd.outcome ? "\n" + pd.outcome + "\n" : "") +
+      "\nWhat you get: " + (pd.incl || "[exactly what is included]") +
+      "\nInvestment: " + (pd.price || "[fixed price]") +
+      "\nDelivery: " + (pd.when || "[delivery window]") +
+      "\n\nNo scoping call, no custom quote — this is the package, this is the price, and this is when it lands."
+    : "Fill the fields above and the pitch assembles here.\n\nThe move is to stop saying " + (pd.bespoke || "\"I offer [service]\"") + " and start naming a thing with a price on it. \"This is exactly what you get, this is what it costs, and this is when it will be done\" converts measurably better than \"let me quote you based on your requirements\".";
+
+  /* MRR */
+  updateMrrStatus();
+
+  const ms = $("mrrStreams");
+  ms.textContent = "";
+  const t4 = el("table");
+  const th4 = el("thead");
+  th4.append(el("tr", {}, ["Income stream", "Path to recurring revenue", "Typical MRR"].map((h) => el("th", { textContent: h }))));
+  t4.append(th4);
+  const tb4 = el("tbody");
+  MRR_STREAMS.forEach((r) => {
+    const on = STREAMS.some((s) => s.id === store.stream && r[0].startsWith(s.stream));
+    tb4.append(el("tr", { className: on ? "hi" : "" }, r.map((c) => el("td", { textContent: c }))));
+  });
+  t4.append(tb4);
+  ms.append(t4);
+}
+
+function updateMrrStatus() {
+  const cells = document.querySelectorAll("#mrrTable .mrr-status");
+  let latest = null, latestBand = null;
+  MRR_TARGETS.forEach((band, i) => {
+    const cell = cells[i];
+    if (!cell) return;
+    cell.textContent = "";
+    const v = store.mrr[i];
+    if (v === undefined || v === "") return;
+    const n = num(v);
+    latest = n; latestBand = band;
+    const cls = n >= band.hi ? "green" : n >= band.lo ? "gold" : "red";
+    const label = n >= band.hi ? "Above band" : n >= band.lo ? "On track" : "Below band";
+    cell.append(el("span", { className: "pill " + cls, textContent: label }));
+  });
+  const note = $("mrrNote");
+  if (latest === null) {
+    note.textContent = "Enter what you actually booked in recurring revenue for any period. Plot the line somewhere you will see it monthly — a rising MRR line, even a slow one, is the clearest evidence the business is working.";
+  } else {
+    note.textContent = "Latest entry: " + money(latest) + " against a " + money(latestBand.lo) + "–" + money(latestBand.hi) +
+      " target for " + latestBand.label.toLowerCase() + ". " + latestBand.note +
+      " MRR is the number that most directly tracks the move from Hustler to Operator to Owner.";
+  }
+}
+
+$("pvOutcome").oninput = () => { store.price.outcome = $("pvOutcome").value; save(); renderPricing(); };
+$("pvPct").oninput = () => { store.price.pct = parseInt($("pvPct").value, 10); save(); renderPricing(); };
+$("pvLow").oninput = () => { store.price.low = $("pvLow").value; save(); renderPricing(); };
+$("pvHigh").oninput = () => { store.price.high = $("pvHigh").value; save(); renderPricing(); };
+$("riOld").oninput = () => { store.raise.old = $("riOld").value; save(); renderPricing(); };
+$("riNew").oninput = () => { store.raise.nw = $("riNew").value; save(); renderPricing(); };
+$("riAdd").oninput = () => { store.raise.add = $("riAdd").value; save(); renderPricing(); };
+$("riCopy").onclick = () => copyText($("riOut").textContent, "Message copied");
+["pdBespoke", "pdName", "pdIncl", "pdPrice", "pdWhen", "pdOutcome"].forEach((id) => {
+  $(id).oninput = () => { store.prod[id.slice(2).toLowerCase()] = $(id).value; save(); renderPricing(); };
+});
+$("pdCopy").onclick = () => copyText($("pdOut").textContent, "Pitch copied");
+
+/* ===========================================================================
+   CLIENT PACK
+   =========================================================================== */
+
+function questionnaireText() {
+  const q = QUESTIONNAIRE[store.stream];
+  const L = [q.title, "=".repeat(q.title.length), "", q.sub, ""];
+  q.sections.forEach((s) => {
+    L.push("");
+    L.push(s.t);
+    L.push("-".repeat(s.t.length));
+    s.qs.forEach((x, i) => { L.push((i + 1) + ". " + x); L.push(""); });
+    if (s.signal) L.push("[ Opportunity signal: " + s.signal + " ]", "");
+  });
+  return L.join("\n");
+}
+
+function renderPack() {
+  const q = QUESTIONNAIRE[store.stream];
+  $("qTitle").textContent = q.title;
+  $("qSub").textContent = q.sub;
+
+  const host = $("questionnaire");
+  host.textContent = "";
+  q.sections.forEach((s) => {
+    const d = el("details", { open: true });
+    d.append(el("summary", {}, [el("b", { textContent: s.t })]));
+    const ol = el("ol", { className: "tight", style: "margin-top:10px" });
+    s.qs.forEach((x) => ol.append(el("li", { textContent: x })));
+    d.append(ol);
+    if (s.signal) d.append(el("p", { className: "note", style: "margin-top:6px" }, [
+      el("b", { textContent: "Opportunity signal: " }), document.createTextNode(s.signal),
+    ]));
+    host.append(d);
+  });
+
+  const ag = $("agreeList");
+  ag.textContent = "";
+  AGREEMENT.forEach((c, i) => {
+    const row = el("div", { className: "line-item" });
+    const cb = el("input", { type: "checkbox", checked: !!store.pack.agree[i] });
+    cb.onchange = () => { store.pack.agree[i] = cb.checked; save(); };
+    const t = el("div");
+    t.append(el("label", { className: "inline" }, [cb, el("b", { textContent: c[0] })]));
+    t.append(el("p", { className: "sub", style: "margin:3px 0 0 25px", textContent: c[1] }));
+    row.append(t);
+    ag.append(row);
+  });
+
+  const iv = $("invList");
+  iv.textContent = "";
+  INVOICE.forEach((c, i) => {
+    const row = el("div", { className: "line-item" });
+    const cb = el("input", { type: "checkbox", checked: !!store.pack.inv[i] });
+    cb.onchange = () => { store.pack.inv[i] = cb.checked; save(); };
+    row.append(el("label", { className: "inline" }, [cb, el("span", { textContent: c })]));
+    iv.append(row);
+  });
+
+  const rt = $("retention");
+  rt.textContent = "";
+  RETENTION.forEach((r, i) => {
+    const d = el("div", { className: "line-item", style: "gap:13px" });
+    d.append(el("span", { className: "pill gold", textContent: String(i + 1), style: "flex:none" }));
+    const t = el("div");
+    t.append(el("b", { textContent: r.t }));
+    t.append(el("p", { className: "sub", style: "margin:3px 0 0", textContent: r.d }));
+    d.append(t);
+    rt.append(d);
+  });
+
+  $("scRate").value = store.pack.rate || "";
+  renderScope();
+}
+
+function renderScope() {
+  const rate = (store.pack.rate || "").trim() || "[your rate]";
+  $("scOut").textContent =
+    "Happy to add that — it falls outside our current package, so I'll add it to your next invoice at " + rate +
+    ", or we can fold it into an upgraded package if this is becoming a regular need. Which would you prefer?\n\n" +
+    "— The fix upstream is precision: define the deliverables exactly in the service agreement. Each request is minor; collectively they can double your production time.";
+}
+
+$("scRate").oninput = () => { store.pack.rate = $("scRate").value; save(); renderScope(); };
+$("scCopy").onclick = () => copyText($("scOut").textContent.split("\n\n—")[0], "Response copied");
+$("qCopy").onclick = () => copyText(questionnaireText(), "Questionnaire copied");
+$("qDl").onclick = () => download("intake-questionnaire-" + store.stream + ".txt", questionnaireText());
+
+/* ===========================================================================
+   BACKUP / RESET
+   =========================================================================== */
+
+function backupJson() {
+  return JSON.stringify({ app: "The Agency Operations System", exported: new Date().toISOString(), data: store }, null, 2);
+}
+$("exportAllBtn").onclick = () => download("agency-operations-backup-" + today() + ".json", backupJson());
+$("resetAllBtn").onclick = () => {
+  if (!confirm("Clear every SOP edit, answer and status stored in this browser?\n\nA backup file downloads first.")) return;
+  download("agency-operations-backup-" + today() + ".json", backupJson());
+  const theme = store.theme;
+  store = DEFAULTS();
+  store.theme = theme;
+  try { localStorage.removeItem(STORE_KEY); } catch (e) { /* ignore */ }
+  save();
+  renderAll();
+  toast("Cleared — the book's defaults are back");
+};
+
+/* ===========================================================================
+   BOOT
+   =========================================================================== */
+
+function renderAll() {
+  applyTheme();
+  renderStreamChips();
+  buildStage();
+  buildDelegation();
+  buildPricing();
+  renderStage();
+  renderSopList();
+  renderSopDetail();
+  renderDrafter();
+  renderReviewTable();
+  renderDelegation();
+  renderPricing();
+  renderPack();
+}
+
+load();
+renderAll();
+</script>
+</body>
+</html>
