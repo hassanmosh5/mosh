@@ -1,0 +1,2837 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Automation Kits — build, price and sell business automation systems</title>
+<meta name="description" content="An offline console for selling AI automation services to local businesses: the Business Efficiency Audit, 10 automation templates, a proposal builder, value-based pricing and the SOP system.">
+<script>
+  // Set the theme before first paint so there is no flash.
+  try {
+    var t = localStorage.getItem('automation-kits.theme');
+    if (t !== 'light' && t !== 'dark') {
+      t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) { /* storage unavailable — stay on the light default */ }
+</script>
+<style>
+/* ---------------------------------------------------------------- tokens */
+:root {
+  --bg:        #f4f6fb;
+  --bg-grad:   radial-gradient(1200px 600px at 15% -10%, #e6ecff 0%, transparent 60%),
+               radial-gradient(900px 500px at 100% 0%, #ffeede 0%, transparent 55%);
+  --panel:     #ffffff;
+  --panel-2:   #f7f9fd;
+  --panel-3:   #eef2fa;
+  --line:      #d9e0ee;
+  --line-soft: #e8edf7;
+  --text:      #16203a;
+  --text-2:    #3c4767;
+  --muted:     #6a7591;
+  --accent:    #3d4ee0;
+  --accent-2:  #eaecff;
+  --accent-in: #ffffff;
+  --amber:     #b46a00;
+  --amber-bg:  #fdf1dd;
+  --ok:        #197a4b;
+  --ok-bg:     #e2f5ea;
+  --warn:      #a8560a;
+  --danger:    #b4232f;
+  --danger-bg: #fdecec;
+  --shadow:    0 1px 2px rgba(20,30,60,.06), 0 8px 24px rgba(20,30,60,.06);
+  --shadow-lg: 0 2px 6px rgba(20,30,60,.08), 0 18px 44px rgba(20,30,60,.12);
+  --radius:    14px;
+  --radius-sm: 9px;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+html[data-theme="dark"] {
+  --bg:        #0d1220;
+  --bg-grad:   radial-gradient(1200px 600px at 15% -10%, #17204a 0%, transparent 60%),
+               radial-gradient(900px 500px at 100% 0%, #2a1f13 0%, transparent 55%);
+  --panel:     #151c2f;
+  --panel-2:   #1a2237;
+  --panel-3:   #202942;
+  --line:      #2c3550;
+  --line-soft: #232c45;
+  --text:      #e8ecf7;
+  --text-2:    #c3cbe0;
+  --muted:     #8e99b6;
+  --accent:    #8b9cff;
+  --accent-2:  #232d5c;
+  --accent-in: #0d1220;
+  --amber:     #f0b866;
+  --amber-bg:  #33270f;
+  --ok:        #6cd39b;
+  --ok-bg:     #10301f;
+  --warn:      #e5a86a;
+  --danger:    #ff8b8b;
+  --danger-bg: #3a1a1c;
+  --shadow:    0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.32);
+  --shadow-lg: 0 2px 6px rgba(0,0,0,.45), 0 18px 44px rgba(0,0,0,.45);
+}
+
+/* ------------------------------------------------------------------ base */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg-grad), var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-text-size-adjust: 100%;
+}
+h1, h2, h3, h4 { line-height: 1.25; margin: 0 0 .5em; font-weight: 700; letter-spacing: -.011em; }
+h1 { font-size: 1.5rem; }
+h2 { font-size: 1.25rem; }
+h3 { font-size: 1.02rem; }
+h4 { font-size: .92rem; }
+p { margin: 0 0 .85em; }
+a { color: var(--accent); }
+small { font-size: .82rem; }
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---------------------------------------------------------------- header */
+.masthead {
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--panel) 78%, transparent);
+  backdrop-filter: blur(10px);
+  position: sticky; top: 0; z-index: 40;
+}
+.masthead-inner {
+  display: flex; align-items: center; gap: 16px;
+  padding: 12px 20px; max-width: 1120px; margin: 0 auto;
+  flex-wrap: wrap;
+}
+.brand { display: flex; align-items: center; gap: 11px; margin-right: auto; min-width: 0; }
+.brand-mark {
+  width: 38px; height: 38px; flex: none; border-radius: 11px;
+  background: linear-gradient(150deg, var(--accent), #7d5bff 70%);
+  color: #fff; display: grid; place-items: center; font-size: 19px;
+  box-shadow: var(--shadow);
+}
+.brand-text { min-width: 0; }
+.brand h1 { font-size: 1.03rem; margin: 0; }
+.brand p { margin: 0; font-size: .77rem; color: var(--muted); }
+.tools { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* --------------------------------------------------------------- buttons */
+button { font: inherit; color: inherit; }
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid var(--line); background: var(--panel); color: var(--text-2);
+  border-radius: 999px; padding: 7px 14px; font-size: .84rem; font-weight: 600;
+  cursor: pointer; transition: background .14s, border-color .14s, transform .14s;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--panel-3); border-color: var(--muted); }
+.btn:active { transform: translateY(1px); }
+.btn-primary {
+  background: var(--accent); border-color: var(--accent); color: var(--accent-in);
+}
+.btn-primary:hover { background: color-mix(in srgb, var(--accent) 85%, #000); border-color: transparent; }
+.btn-danger { color: var(--danger); }
+.btn-sm { padding: 4px 10px; font-size: .78rem; }
+.btn[aria-pressed="true"] { background: var(--accent-2); border-color: var(--accent); color: var(--accent); }
+
+/* ------------------------------------------------------------ context bar */
+.context {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 14px 16px; margin: 20px 0 18px;
+  display: grid; gap: 14px;
+  grid-template-columns: minmax(180px, 1.2fr) minmax(200px, 1.4fr) minmax(140px, .8fr) auto;
+  align-items: end;
+}
+@media (max-width: 820px) { .context { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .context { grid-template-columns: 1fr; } }
+.field { display: grid; gap: 5px; min-width: 0; }
+.field > label, .field > .label {
+  font-size: .74rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--muted);
+}
+input[type="text"], input[type="number"], input[type="date"], select, textarea {
+  font: inherit; font-size: .92rem; color: var(--text);
+  background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: 8px 10px; width: 100%;
+}
+textarea { resize: vertical; min-height: 68px; line-height: 1.5; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { border-color: var(--accent); }
+/* Provenance chips sitting under a form control wrap; the inline ones do not. */
+.field .src { white-space: normal; line-height: 1.4; padding: 3px 9px; }
+.context-stat {
+  text-align: right; font-size: .8rem; color: var(--muted);
+  border-left: 1px solid var(--line-soft); padding-left: 14px;
+}
+.context-stat strong { display: block; font-size: 1.3rem; color: var(--text); line-height: 1.2; }
+@media (max-width: 820px) { .context-stat { text-align: left; border-left: 0; padding-left: 0; } }
+
+/* ------------------------------------------------------------------ tabs */
+.tabbar { position: sticky; top: 63px; z-index: 30; padding: 8px 0 4px;
+  background: linear-gradient(var(--bg) 62%, transparent); }
+[role="tablist"] { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+[role="tab"] {
+  border: 1px solid var(--line); background: var(--panel); color: var(--text-2);
+  border-radius: 999px; padding: 8px 15px; font-size: .87rem; font-weight: 600;
+  cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 7px;
+  transition: background .14s, color .14s, border-color .14s;
+}
+[role="tab"]:hover { background: var(--panel-3); }
+[role="tab"][aria-selected="true"] {
+  background: var(--accent); border-color: var(--accent); color: var(--accent-in);
+  box-shadow: var(--shadow);
+}
+[role="tab"] .pip {
+  background: color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: 999px; padding: 0 7px; font-size: .74rem; font-variant-numeric: tabular-nums;
+}
+/* The masthead wraps to two rows on narrow screens, which would push the tab
+   bar's sticky offset out of alignment — so neither sticks down there. */
+@media (max-width: 720px) {
+  .masthead { position: static; }
+  .tabbar { top: 0; }
+}
+[role="tabpanel"] { padding: 18px 0 70px; }
+[role="tabpanel"][hidden] { display: none; }
+
+/* ----------------------------------------------------------------- cards */
+.card {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 18px 20px; margin-bottom: 16px;
+}
+.card > :last-child { margin-bottom: 0; }
+.card-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.card-head h2, .card-head h3 { margin: 0; }
+.card-head .spacer { margin-left: auto; }
+.lede { color: var(--text-2); max-width: 72ch; }
+.grid { display: grid; gap: 14px; }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.grid-4 { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+
+/* ----------------------------------------------------------------- chips */
+.src {
+  display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .03em;
+  color: var(--muted); background: var(--panel-3); border: 1px solid var(--line-soft);
+  border-radius: 999px; padding: 2px 9px; white-space: nowrap;
+}
+.tag {
+  display: inline-block; font-size: .74rem; font-weight: 600;
+  border-radius: 999px; padding: 2px 9px; border: 1px solid transparent;
+  background: var(--panel-3); color: var(--text-2);
+}
+.tag-accent { background: var(--accent-2); color: var(--accent); }
+.tag-ok     { background: var(--ok-bg); color: var(--ok); }
+.tag-amber  { background: var(--amber-bg); color: var(--amber); }
+.tag-danger { background: var(--danger-bg); color: var(--danger); }
+.tag-added  { background: var(--amber-bg); color: var(--amber); border-color: color-mix(in srgb, var(--amber) 35%, transparent); }
+
+/* ----------------------------------------------------------------- notes */
+.note {
+  border-left: 3px solid var(--accent); background: var(--panel-2);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 11px 14px; margin: 0 0 14px; font-size: .9rem; color: var(--text-2);
+}
+.note-amber { border-left-color: var(--amber); background: var(--amber-bg); color: var(--text-2); }
+.note > :last-child { margin-bottom: 0; }
+.quote {
+  border-left: 3px solid var(--amber); padding: 4px 0 4px 15px; margin: 0 0 14px;
+  font-style: italic; color: var(--text-2); max-width: 68ch;
+}
+
+/* --------------------------------------------------------------- fieldset */
+fieldset {
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 12px 14px 14px; margin: 0 0 12px; background: var(--panel-2);
+}
+legend { font-size: .9rem; font-weight: 700; padding: 0 6px; }
+.opts { display: grid; gap: 6px; margin-top: 4px; }
+.opt {
+  display: flex; gap: 10px; align-items: flex-start;
+  border: 1px solid var(--line-soft); background: var(--panel);
+  border-radius: var(--radius-sm); padding: 8px 11px; cursor: pointer;
+  font-size: .9rem; transition: border-color .12s, background .12s;
+}
+.opt:hover { border-color: var(--accent); }
+.opt input { margin: 3px 0 0; flex: none; accent-color: var(--accent); width: 16px; height: 16px; }
+.opt:has(input:checked) { border-color: var(--accent); background: var(--accent-2); }
+.opt-body { min-width: 0; }
+.opt-sig { display: block; font-size: .78rem; color: var(--muted); margin-top: 2px; }
+
+/* ---------------------------------------------------------------- tables */
+.table-scroll { overflow-x: auto; margin-bottom: 14px; }
+table { border-collapse: collapse; width: 100%; font-size: .88rem; }
+th, td { text-align: left; padding: 9px 11px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+th { font-size: .76rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; }
+tbody tr:hover { background: var(--panel-2); }
+tr.is-current { background: var(--accent-2) !important; }
+tr.is-current td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ------------------------------------------------------------ automations */
+.auto-card {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--panel); padding: 0; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.auto-card.is-picked { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.auto-top { display: flex; gap: 12px; padding: 13px 15px 10px; align-items: flex-start; }
+.auto-no {
+  width: 30px; height: 30px; flex: none; border-radius: 9px; display: grid; place-items: center;
+  background: var(--panel-3); color: var(--muted); font-weight: 700; font-size: .84rem;
+}
+.auto-card.is-picked .auto-no { background: var(--accent); color: var(--accent-in); }
+.auto-title { font-size: .97rem; font-weight: 700; margin: 0 0 3px; }
+.auto-flow { padding: 0 15px; display: grid; gap: 7px; font-size: .86rem; }
+.flow-row { display: grid; grid-template-columns: 78px 1fr; gap: 9px; }
+.flow-k { font-size: .73rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); padding-top: 2px; }
+.auto-foot {
+  margin-top: auto; padding: 11px 15px 13px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+}
+.rank-badge {
+  font-size: .74rem; font-weight: 700; border-radius: 999px; padding: 2px 9px;
+  background: var(--ok-bg); color: var(--ok);
+}
+.why { font-size: .82rem; color: var(--muted); padding: 0 15px 4px; }
+.why li { margin-bottom: 3px; }
+.why ul { margin: 4px 0 0; padding-left: 18px; }
+
+/* -------------------------------------------------------------- readouts */
+.readout {
+  background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: 12px 14px;
+}
+.readout dl { display: grid; grid-template-columns: 1fr auto; gap: 6px 14px; margin: 0; font-size: .9rem; }
+.readout dt { color: var(--text-2); }
+.readout dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.readout dd.big { font-size: 1.05rem; }
+.readout .rule { grid-column: 1 / -1; border-top: 1px solid var(--line); margin: 3px 0; }
+.stat {
+  background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: 11px 13px;
+}
+.stat b { display: block; font-size: 1.32rem; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.stat span { font-size: .78rem; color: var(--muted); }
+
+/* ---------------------------------------------------------------- output */
+.output {
+  font-family: var(--mono); font-size: .82rem; line-height: 1.62;
+  white-space: pre-wrap; word-break: break-word;
+  background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: 15px 17px; margin: 0;
+  max-height: 30rem; overflow: auto;
+}
+.bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+
+/* ------------------------------------------------------------- checklist */
+.checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.checklist li { margin: 0; }
+.check {
+  display: flex; gap: 10px; align-items: flex-start; cursor: pointer;
+  border: 1px solid var(--line-soft); background: var(--panel-2);
+  border-radius: var(--radius-sm); padding: 9px 12px; font-size: .89rem;
+}
+.check:hover { border-color: var(--accent); }
+.check input { margin: 3px 0 0; flex: none; accent-color: var(--accent); width: 16px; height: 16px; }
+.check:has(input:checked) { background: var(--ok-bg); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+.check:has(input:checked) .check-text { text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--ok) 60%, transparent); }
+.check-meta { display: block; font-size: .78rem; color: var(--muted); margin-top: 2px; text-decoration: none !important; }
+
+/* --------------------------------------------------------------- progress */
+.meter { height: 7px; border-radius: 999px; background: var(--panel-3); overflow: hidden; }
+.meter > i { display: block; height: 100%; background: var(--accent); border-radius: 999px; transition: width .3s; }
+.meter.ok > i { background: var(--ok); }
+
+/* ----------------------------------------------------------------- toast */
+#toasts {
+  position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
+  z-index: 90; display: grid; gap: 8px; justify-items: center; pointer-events: none;
+  width: min(92vw, 460px);
+}
+.toast {
+  background: var(--text); color: var(--bg); border-radius: 999px;
+  padding: 9px 18px; font-size: .87rem; font-weight: 600; box-shadow: var(--shadow-lg);
+  animation: rise .22s ease-out;
+}
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+
+/* ---------------------------------------------------------------- footer */
+.pagefoot {
+  border-top: 1px solid var(--line); margin-top: 30px; padding: 22px 0 40px;
+  font-size: .82rem; color: var(--muted);
+}
+.pagefoot p { max-width: 74ch; }
+
+/* ----------------------------------------------------------- empty state */
+.empty {
+  border: 1px dashed var(--line); border-radius: var(--radius);
+  padding: 26px 20px; text-align: center; color: var(--muted); font-size: .9rem;
+}
+
+/* ----------------------------------------------------------------- print */
+@media print {
+  body { background: #fff; color: #000; }
+  .masthead, .tabbar, .context, .pagefoot, #toasts, .bar, .no-print { display: none !important; }
+  [role="tabpanel"] { padding: 0; }
+  .card { border: 0; box-shadow: none; padding: 0; margin: 0 0 14px; }
+  .output { border: 0; background: #fff; max-height: none; font-size: 11pt; padding: 0; }
+  .print-only { display: block !important; }
+  a { color: #000; text-decoration: none; }
+}
+.print-only { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">⚙</div>
+      <div class="brand-text">
+        <h1>AI Automation Kits</h1>
+        <p>Chapters 9 &amp; 15 of <em>The AI Income Blueprint</em>, as a working console</p>
+      </div>
+    </div>
+    <div class="tools">
+      <button type="button" class="btn" id="themeBtn" aria-live="off">🌙 Dark</button>
+      <button type="button" class="btn" id="backupBtn" title="Download everything in this app as a JSON file">⬇ Back up</button>
+      <button type="button" class="btn btn-danger" id="clearBtn" title="Back up, then erase all saved data">🗑 Clear</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ------------------------------------------------------- context bar -->
+  <section class="context" aria-label="Engagement details">
+    <div class="field">
+      <label for="ctxClient">Client / prospect</label>
+      <input type="text" id="ctxClient" placeholder="e.g. Riverside Dental" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="ctxNiche">Niche <span class="src">Ch. 9, pp. 116–117</span></label>
+      <select id="ctxNiche"></select>
+    </div>
+    <div class="field">
+      <label for="ctxDate">Audit date</label>
+      <input type="date" id="ctxDate">
+    </div>
+    <div class="context-stat">
+      <strong id="ctxKitCount">0</strong>
+      automations in the kit
+    </div>
+  </section>
+
+  <!-- -------------------------------------------------------------- tabs -->
+  <div class="tabbar">
+    <div role="tablist" aria-label="Sections">
+      <button role="tab" id="tab-audit"    aria-controls="panel-audit"    aria-selected="true">🔍 Efficiency Audit <span class="pip" id="pipAudit">0/15</span></button>
+      <button role="tab" id="tab-kits"     aria-controls="panel-kits"     aria-selected="false" tabindex="-1">⚙ Automation Kits <span class="pip" id="pipKits">0</span></button>
+      <button role="tab" id="tab-proposal" aria-controls="panel-proposal" aria-selected="false" tabindex="-1">📄 Proposal</button>
+      <button role="tab" id="tab-pricing"  aria-controls="panel-pricing"  aria-selected="false" tabindex="-1">💰 Pricing &amp; ROI</button>
+      <button role="tab" id="tab-systems"  aria-controls="panel-systems"  aria-selected="false" tabindex="-1">📋 Systems &amp; SOPs</button>
+      <button role="tab" id="tab-playbook" aria-controls="panel-playbook" aria-selected="false" tabindex="-1">📖 Selling Playbook</button>
+    </div>
+  </div>
+
+  <main>
+    <!-- ================================================== EFFICIENCY AUDIT -->
+    <section role="tabpanel" id="panel-audit" aria-labelledby="tab-audit" tabindex="0">
+      <div class="card">
+        <div class="card-head">
+          <h2>The 30-Minute Business Efficiency Audit</h2>
+          <span class="src">Ch. 9, pp. 119–120</span>
+        </div>
+        <p class="lede">The book's audit is both the discovery process and the sales tool: a free
+        thirty-minute conversation that surfaces every automation opportunity in a client's business
+        and turns a generic pitch into an evidence-based proposal. Answer as the client answers.
+        Every option below is wired to the opportunity signals the book asks you to listen for, so
+        the audit builds the recommended kit as you go.</p>
+        <div class="note">
+          <strong>Offer the audit for free.</strong> It costs you thirty minutes and almost always
+          reveals two to four automations the client will pay to have built.
+          <span class="src">Ch. 9, p. 119</span>
+        </div>
+      </div>
+
+      <div id="auditSections"></div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>What the audit found</h2>
+          <span class="spacer"></span>
+          <button type="button" class="btn btn-sm" id="auditToKit">Send top matches to the kit →</button>
+        </div>
+        <div id="auditFindings"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Closing the audit</h3><span class="src">Ch. 9, p. 120</span></div>
+        <pre class="output" id="auditClose"></pre>
+        <div class="bar"><button type="button" class="btn btn-sm" data-copy="#auditClose">📋 Copy</button></div>
+      </div>
+    </section>
+
+    <!-- ==================================================== AUTOMATION KITS -->
+    <section role="tabpanel" id="panel-kits" aria-labelledby="tab-kits" tabindex="0" hidden>
+      <div class="card">
+        <div class="card-head">
+          <h2>10 proven automation templates</h2>
+          <span class="src">Ch. 9, pp. 120–123</span>
+        </div>
+        <p class="lede">These ten workflows cover the majority of local business automation needs, and
+        every one is buildable in Zapier without code. Pick the ones your audit justified — the
+        selection drives the proposal, the pricing and the tool list. The book's advice is to build
+        these as demonstration pieces <em>before</em> approaching clients, because showing a working
+        prototype closes sales that describing one does not.</p>
+        <div class="bar">
+          <span class="label" style="font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Package preset</span>
+          <button type="button" class="btn btn-sm" data-preset="starter">Starter (3)</button>
+          <button type="button" class="btn btn-sm" data-preset="full">Full system (6)</button>
+          <button type="button" class="btn btn-sm" data-preset="niche">This niche's opportunities</button>
+          <button type="button" class="btn btn-sm" data-preset="clear">Clear</button>
+        </div>
+      </div>
+
+      <div class="card" id="kitSummaryCard">
+        <div class="card-head"><h3>Your kit</h3><span class="spacer"></span><span class="src" id="kitBasis"></span></div>
+        <div id="kitSummary"></div>
+      </div>
+
+      <div class="grid grid-2" id="autoGrid"></div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card-head"><h3>The niche table</h3><span class="src">Ch. 9, pp. 116–117</span></div>
+        <p class="lede">Ranked by overall opportunity, based on pain severity and average deal size.
+        Your selected niche is highlighted, and its fee ranges are what the proposal quotes.</p>
+        <div class="table-scroll"><table id="nicheTable">
+          <thead><tr>
+            <th>Niche</th><th>Top automation opportunities</th>
+            <th class="num">Avg project fee</th><th class="num">Monthly retainer</th><th>Why it works</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- ========================================================== PROPOSAL -->
+    <section role="tabpanel" id="panel-proposal" aria-labelledby="tab-proposal" tabindex="0" hidden>
+      <div class="card no-print">
+        <div class="card-head">
+          <h2>The one-page proposal</h2>
+          <span class="src">Ch. 9, pp. 125 — Step 3</span>
+        </div>
+        <p class="lede">Specific, visual, value-anchored, and one page maximum. The five sections below
+        are the book's; the content is assembled from your audit answers, your kit and the ROI numbers.
+        Everything is editable — override anything the generator got wrong before you send it.</p>
+        <div class="grid grid-2">
+          <div class="field">
+            <label for="propBy">Your name / business</label>
+            <input type="text" id="propBy" placeholder="e.g. Sandra Okonkwo — Practice Automation" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="propContact">Your contact line</label>
+            <input type="text" id="propContact" placeholder="e.g. sandra@example.com · +00 000 000" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="propWeeks">Build time (weeks)</label>
+            <input type="number" id="propWeeks" min="1" max="12" step="1">
+          </div>
+          <div class="field">
+            <label for="propSendBy">Send by (the day you promised in the audit close)</label>
+            <input type="text" id="propSendBy" placeholder="e.g. Thursday" autocomplete="off">
+          </div>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <label for="propExtra">Extra problem-summary bullets (one per line, optional)</label>
+          <textarea id="propExtra" placeholder="Anything the owner said unprompted — the book calls these the highest-pain, easiest-sell items."></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <pre class="output" id="proposalOut"></pre>
+        <div class="bar no-print">
+          <button type="button" class="btn btn-primary btn-sm" data-copy="#proposalOut">📋 Copy proposal</button>
+          <button type="button" class="btn btn-sm" id="proposalDl">⬇ Download .md</button>
+          <button type="button" class="btn btn-sm" id="proposalPrint">🖨 Print</button>
+        </div>
+      </div>
+
+      <div class="card no-print">
+        <div class="card-head"><h3>Before you send it</h3><span class="src">Ch. 9, pp. 124–127</span></div>
+        <ul class="checklist" id="proposalChecks"></ul>
+      </div>
+    </section>
+
+    <!-- ==================================================== PRICING AND ROI -->
+    <section role="tabpanel" id="panel-pricing" aria-labelledby="tab-pricing" tabindex="0" hidden>
+      <div class="card">
+        <div class="card-head"><h2>The ROI calculation</h2><span class="src">Ch. 9, pp. 123–124</span></div>
+        <p class="lede">Price the project fee on the value delivered, not the hours invested. These are
+        the three value levers the book quantifies — missed enquiries, no-shows and staff time — with
+        its own worked figures as the defaults. Change them to the client's real numbers from the audit.</p>
+        <div id="roiForm" class="grid grid-2"></div>
+        <div class="grid grid-2" style="margin-top:14px">
+          <div class="readout" id="roiOut"></div>
+          <div class="note note-amber" id="roiNarrative"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Pricing your automation services</h3><span class="src">Ch. 9, p. 123</span></div>
+        <div class="table-scroll"><table id="offerTable">
+          <thead><tr><th>Offering</th><th>What's included</th><th class="num">Price range</th><th>Revenue type</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+        <p style="font-size:.88rem;color:var(--text-2)">The most profitable structure combines an upfront
+        project fee with a monthly retainer. A dental practice pays $1,200 for a Starter Automation Package
+        plus $200/month for maintenance: year-one revenue from that single client is $3,600; year two is
+        $2,400 in near-passive maintenance income.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>The Three-Number Value Pricing System</h3><span class="src">Ch. 15, pp. 224–225</span></div>
+        <p class="lede">Outcome Value × 5–15%, cross-referenced with the top third of market rates — use
+        whichever is higher, and anchor every sales conversation in Number 1.</p>
+        <div id="vpForm" class="grid grid-3"></div>
+        <div class="readout" id="vpOut" style="margin-top:14px"></div>
+      </div>
+    </section>
+
+    <!-- =================================================== SYSTEMS AND SOPS -->
+    <section role="tabpanel" id="panel-systems" aria-labelledby="tab-systems" tabindex="0" hidden>
+      <div class="card">
+        <div class="card-head"><h2>Which stage are you in?</h2><span class="src">Ch. 15, pp. 221–222</span></div>
+        <p class="lede">Hustler, Operator, Owner. The strategies that build one stage actively limit the
+        next if they are not replaced with systems. Tick everything that is true of your business today.</p>
+        <div class="grid grid-3" id="stageGrid"></div>
+        <div class="readout" id="stageOut" style="margin-top:14px"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>The AI-assisted SOP creation process</h3><span class="src">Ch. 15, pp. 225–226</span></div>
+        <p class="lede">An SOP is a documented, step-by-step description of a task — good enough that
+        someone who has never done it could follow it and produce a consistent result. Fill the two fields
+        and the book's SOP prompt is assembled below, ready to paste into ChatGPT or Claude.</p>
+        <div class="grid grid-2">
+          <div class="field">
+            <label for="sopEarner">You are a…</label>
+            <input type="text" id="sopEarner" list="sopEarnerList" placeholder="type of AI income earner" autocomplete="off">
+            <datalist id="sopEarnerList"></datalist>
+          </div>
+          <div class="field">
+            <label for="sopTask">The task</label>
+            <input type="text" id="sopTask" list="sopTaskList" placeholder="e.g. client onboarding workflow" autocomplete="off">
+            <datalist id="sopTaskList"></datalist>
+          </div>
+        </div>
+        <pre class="output" id="sopOut" style="margin-top:12px"></pre>
+        <div class="bar">
+          <button type="button" class="btn btn-primary btn-sm" data-copy="#sopOut">📋 Copy prompt</button>
+        </div>
+        <div class="note" style="margin-top:14px">
+          The AI draft will be 70–80% accurate. Your job is Step 3: correct the details that reflect your
+          actual workflow — your tools, your client preferences, your quality standards. Then Step 4: hand
+          it to someone else and watch where they get stuck. <span class="src">Ch. 15, p. 226</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Your first six SOPs, in order</h3><span class="src">Ch. 15, p. 226</span></div>
+        <ul class="checklist" id="sopChecks"></ul>
+        <div class="meter" id="sopMeter" style="margin-top:12px"><i style="width:0%"></i></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>MRR tracker</h3><span class="src">Ch. 15, pp. 232–233</span></div>
+        <p class="lede">Monthly Recurring Revenue is the single most important metric for AI income
+        business health. List your retainers; the app checks the total against the book's growth-target
+        framework and against the Chapter 9 income projections for automation services.</p>
+        <div id="mrrList"></div>
+        <div class="bar">
+          <button type="button" class="btn btn-sm" id="mrrAdd">+ Add a retainer</button>
+        </div>
+        <div class="grid grid-2" style="margin-top:14px">
+          <div class="readout" id="mrrOut"></div>
+          <div id="mrrBands"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Are you ready for a VA?</h3><span class="src">Ch. 15, pp. 229–231</span></div>
+        <ul class="checklist" id="vaChecks"></ul>
+        <div class="readout" id="vaOut" style="margin-top:12px"></div>
+        <div class="note note-amber" style="margin-top:12px">
+          <strong>Never delegate</strong> client strategy, creative direction, quality control sign-off,
+          pricing conversations, or any client-facing communication that requires your voice. These are
+          where your expertise earns its premium. <span class="src">Ch. 15, p. 230</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Productising the service</h3><span class="src">Ch. 15, pp. 231–232</span></div>
+        <p class="lede">Bespoke work quoted per project is the Hustler stage. A fixed package with a fixed
+        price is the Operator stage: faster to pitch, easier to compare, simpler to build repeatedly.</p>
+        <div class="table-scroll"><table id="prodTable">
+          <thead><tr><th>Bespoke service (Hustler)</th><th>Productised service (Operator)</th><th>Impact</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- ================================================== SELLING PLAYBOOK -->
+    <section role="tabpanel" id="panel-playbook" aria-labelledby="tab-playbook" tabindex="0" hidden>
+      <div class="card">
+        <div class="card-head"><h2>Audit to signed contract, in five steps</h2><span class="src">Ch. 9, pp. 124–126</span></div>
+        <p class="lede">Master this sequence and client acquisition becomes predictable rather than
+        haphazard. Each step prepares the next; skipping steps reduces conversion at every stage.</p>
+        <div id="stepList"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Step 1 — the outreach message</h3><span class="src">Ch. 9, p. 124</span></div>
+        <p class="lede">Approach target businesses with a specific, researched observation — not a generic
+        pitch. The free audit removes every barrier to saying yes: they are not committing to a purchase,
+        they are agreeing to a conversation.</p>
+        <div class="grid grid-3" id="outreachForm"></div>
+        <pre class="output" id="outreachOut" style="margin-top:12px"></pre>
+        <div class="bar"><button type="button" class="btn btn-primary btn-sm" data-copy="#outreachOut">📋 Copy message</button></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>The three objections, and the answers</h3><span class="src">Ch. 9, pp. 126–127</span></div>
+        <div id="objections"></div>
+        <div class="note note-amber">
+          Always return to the specific numbers from the audit. Abstract objections dissolve when
+          confronted with specific ROI data. <span class="src">Ch. 9, p. 127</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Mindset Shift #9 — you are a Time Recovery Specialist</h3><span class="src">Ch. 9, pp. 129–130</span></div>
+        <p class="lede">Business owners do not want automation. They want more time, fewer dropped leads,
+        lower no-show rates, and less administrative chaos. Automation is how you deliver those outcomes;
+        it is not the outcome itself.</p>
+        <div class="grid grid-2">
+          <div class="note" style="border-left-color:var(--danger)"><strong>STOP</strong> positioning
+          yourself as someone who builds automation or "does tech stuff". Technical positioning attracts
+          scepticism from non-technical owners and price comparison from other tech vendors.</div>
+          <div class="note" style="border-left-color:var(--ok)"><strong>START</strong> positioning yourself
+          as a Time Recovery Specialist: "I help <span id="msNiche">local</span> businesses recover 5–10 hours
+          of staff time per week by eliminating the manual follow-up work that nobody has time to do."</div>
+        </div>
+        <h4 style="margin-top:6px">The monthly report paragraph that renews retainers without a sales conversation</h4>
+        <div class="grid grid-4" id="reportForm"></div>
+        <pre class="output" id="reportOut" style="margin-top:12px"></pre>
+        <div class="bar"><button type="button" class="btn btn-primary btn-sm" data-copy="#reportOut">📋 Copy paragraph</button></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Realistic income projections</h3><span class="src">Ch. 9, pp. 127–128</span></div>
+        <div class="table-scroll"><table id="projTable">
+          <thead><tr><th>Stage</th><th class="num">Active clients</th><th>Typical project flow</th><th class="num">Monthly income</th><th class="num">Hours/week</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+        <h4>Earnings milestones</h4>
+        <div class="table-scroll"><table id="mileTable">
+          <thead><tr><th>When</th><th>What happens</th></tr></thead><tbody></tbody>
+        </table></div>
+        <div class="note">
+          This stream has a slower start than others but the highest income ceiling. Retainer income
+          compounds month-over-month as the project pipeline converts to MRR.
+          <span class="src">Ch. 9, p. 128</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>The tools</h3><span class="src">Ch. 9, pp. 117–119</span></div>
+        <p class="lede">Two platforms cover the vast majority of automation work. You do not need to master
+        both — start with one and add the second when client complexity requires it.</p>
+        <div class="grid grid-2" id="toolCards"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Case study — Sandra Okonkwo</h3><span class="src">Ch. 9, pp. 128–129</span></div>
+        <div id="caseStudy"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Your Chapter 9 action step</h3><span class="src">Ch. 9, p. 130</span></div>
+        <ul class="checklist" id="actionChecks"></ul>
+        <div class="meter" id="actionMeter" style="margin-top:12px"><i style="width:0%"></i></div>
+        <p style="margin-top:12px;font-size:.88rem;color:var(--text-2)">Goal: complete Parts A and B before
+        moving on. Having a working automation is the difference between describing a service and
+        demonstrating one — and demonstrations close sales that descriptions do not.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pagefoot">
+    <p><strong>Sources.</strong> Every figure, question, template and script in this app is transcribed from
+    <em>The AI Income Blueprint</em> by Hassan Mohammed — Chapter 9 (Income Stream #4: AI Automation Services
+    for Local Businesses) and Chapter 15 (From Side Income to Serious Business). Page references are the
+    book's own printed page numbers. Items this app added rather than transcribed are badged
+    <span class="tag tag-added">app-added</span>.</p>
+    <p>The income figures, fee ranges and conversion rates are the book's. As the book's own disclaimer
+    notes, they are ranges based on observed outcomes — not guarantees of results.</p>
+    <p>Everything you type is saved locally in this browser and never sent anywhere. This page makes no
+    network requests of any kind.</p>
+  </footer>
+</div>
+
+<div id="toasts" role="status" aria-live="polite" aria-atomic="false"></div>
+
+<script>
+'use strict';
+
+/* ==========================================================================
+   DATA — transcribed from THE AI INCOME BLUEPRINT, Ch. 9 and Ch. 15.
+   Page numbers are the book's own printed page numbers.
+   `added: true` marks anything this app introduced rather than transcribed.
+   ========================================================================== */
+
+/* The niche table — Ch. 9, pp. 116–117. `maps` links the book's listed
+   opportunities to the numbered automation templates they correspond to. */
+const NICHES = [
+  { id:'dental', name:'Dental / Medical Practices',
+    ops:'Appointment reminders, no-show follow-up, new patient onboarding, review requests',
+    fee:[800,2000], retainer:[200,400], maps:[2,5,4,3],
+    why:'High no-show cost; regulated communication needs' },
+  { id:'law', name:'Law Firms',
+    ops:'Lead intake, document request follow-up, client status updates, billing reminders',
+    fee:[1000,2500], retainer:[250,500], maps:[1,6,9],
+    why:'High hourly rate makes admin cost extremely painful' },
+  { id:'realestate', name:'Real Estate Agencies',
+    ops:'Lead nurture sequences, listing update notifications, buyer follow-up, review collection',
+    fee:[600,1500], retainer:[150,350], maps:[7,9,3],
+    why:'High-volume lead flow makes manual follow-up impossible' },
+  { id:'physio', name:'Physiotherapy / Allied Health',
+    ops:'Booking confirmations, session reminders, post-treatment follow-up, re-booking prompts',
+    fee:[500,1200], retainer:[150,300], maps:[2,4,5],
+    why:'No-show rate directly tied to revenue loss' },
+  { id:'gym', name:'Gyms / Fitness Studios',
+    ops:'Trial class follow-up, membership renewal reminders, class booking confirmations',
+    fee:[400,1000], retainer:[150,250], maps:[7,9,2],
+    why:'High member churn; retention automation high-value' },
+  { id:'accounting', name:'Accounting Firms',
+    ops:'Document collection reminders, deadline notifications, client onboarding, quarterly check-ins',
+    fee:[600,1500], retainer:[200,350], maps:[6,9,4],
+    why:'Seasonal workflow peaks make manual tasks acute' },
+  { id:'retail', name:'Independent Retailers',
+    ops:'Abandoned cart recovery, post-purchase follow-up, loyalty programme, review requests',
+    fee:[400,900], retainer:[100,200], maps:[7,4,9,3],
+    why:'E-commerce integration with Shopify/WooCommerce straightforward' },
+  { id:'salon', name:'Salons / Spas',
+    ops:'Appointment reminders, rebooking prompts, birthday offers, review requests',
+    fee:[300,700], retainer:[100,200], maps:[2,5,9,3],
+    why:'High rebooking value; low current automation adoption' }
+];
+
+/* The 10 proven automation templates — Ch. 9, pp. 120–123.
+   `hours` is the book's stated build time for the three worked examples
+   (pp. 114–115); for the rest it is this app's estimate, anchored to those
+   three and flagged with hoursSrc:'est'. */
+const AUTOMATIONS = [
+  { id:1, name:'Instant Lead Response System',
+    trigger:'New contact form submission (website, Facebook Lead Ads, Google Ads)',
+    action:'ChatGPT generates a personalised acknowledgement email from the form data, sends it automatically, and logs the lead in a Google Sheet',
+    result:'Lead receives a response within 60 seconds, day or night. No manual effort required.',
+    tools:['Zapier','ChatGPT integration','Gmail','Google Sheets'],
+    hours:[2,3], hoursSrc:'book', tier:'standard',
+    short:'Answers every new enquiry in under a minute, day or night.',
+    outcome:'No enquiry goes unanswered — including the ones that arrive at 9pm on a Sunday.' },
+  { id:2, name:'Appointment Reminder Sequence',
+    trigger:'New appointment booked in Calendly, Acuity, or your booking system',
+    action:'Confirmation email immediately → reminder email 48 hours before → SMS reminder 2 hours before',
+    result:'No-show rate reduction of 50–70%. Clients consistently cite this as the highest-value automation.',
+    tools:['Zapier','Calendly/Acuity','Gmail','Twilio'],
+    hours:[1.5,2], hoursSrc:'book', tier:'standard',
+    short:'A three-message reminder sequence that fires off every booking.',
+    outcome:'Half to two thirds of your current no-shows turn up instead.' },
+  { id:3, name:'Review Request Automation',
+    trigger:'Appointment marked as complete OR purchase recorded in the POS',
+    action:'24-hour delay → personalised thank-you plus a direct Google Review link, sent by email and/or SMS',
+    result:'Consistent review acquisition without manual effort. Google ranking improvement over 60–90 days.',
+    tools:['Zapier','Booking system/POS','Gmail','Twilio'],
+    hours:[1,2], hoursSrc:'book', tier:'simple',
+    short:'Asks every happy client for a Google review, 24 hours later.',
+    outcome:'Reviews accumulate without anyone having to remember to ask.' },
+  { id:4, name:'New Client Welcome Sequence',
+    trigger:'New client added to the CRM or booking system for the first time',
+    action:'Immediate welcome email with key information → Day 3 tips/resources email → Day 7 check-in email',
+    result:'Improved new client retention. Clients feel valued from day one without staff time investment.',
+    tools:['Zapier','CRM/booking system','Mailchimp or Gmail sequence'],
+    hours:[2,3], hoursSrc:'est', tier:'standard',
+    short:'A three-email welcome that runs itself for every new client.',
+    outcome:'Every new client gets the same strong first week, whoever is on shift.' },
+  { id:5, name:'No-Show Re-Engagement',
+    trigger:'Appointment status updated to "no-show" or "cancelled"',
+    action:'Wait 2 hours → send a personalised re-booking message with a direct booking link and an offer',
+    result:'Recovers 20–35% of missed appointments automatically. Zero staff involvement.',
+    tools:['Zapier','Booking system','Gmail','Twilio SMS (optional)'],
+    hours:[1,2], hoursSrc:'est', tier:'simple',
+    short:'Turns a missed appointment into a re-booking within two hours.',
+    outcome:'A fifth to a third of missed appointments come back onto the calendar.' },
+  { id:6, name:'Document Collection Reminder',
+    trigger:'New client onboarding task created OR document request sent (accountants, law firms)',
+    action:'Document not received in 48 hours → reminder; not received in 96 hours → second reminder plus a staff notification',
+    result:'Eliminates manual chasing of missing documents. Reduces onboarding bottlenecks by 60–80%.',
+    tools:['Zapier','Google Drive or Dropbox','Gmail','Slack/Teams notification'],
+    hours:[3,4], hoursSrc:'est', tier:'complex',
+    short:'Chases missing paperwork on a schedule so nobody has to.',
+    outcome:'Onboarding stops stalling on documents that were never followed up.' },
+  { id:7, name:'Lead Nurture Sequence',
+    trigger:'Prospect contacts the business but does not book or convert immediately',
+    action:'Added to a nurture sequence: Day 1 follow-up, Day 4 value content, Day 10 offer, Day 21 final touch',
+    result:'Converts 15–25% of previously lost leads without manual follow-up effort.',
+    tools:['Zapier','Google Sheets CRM','Gmail or Mailchimp'],
+    hours:[2,3], hoursSrc:'est', tier:'standard',
+    short:'A four-touch sequence for every lead that does not book straight away.',
+    outcome:'One in five of the leads you currently write off converts anyway.' },
+  { id:8, name:'Social Proof Collection System',
+    trigger:'A new 4–5 star review is detected on Google My Business',
+    action:'Auto-generate a thank-you reply draft for the owner to approve, and log the review in a tracking sheet',
+    result:'Consistent review response (which improves Google ranking) plus review tracking without manual monitoring.',
+    tools:['Zapier','Google My Business','Gmail','Google Sheets'],
+    hours:[2,3], hoursSrc:'est', tier:'standard',
+    short:'Every new review gets a reply drafted and logged automatically.',
+    outcome:'The review profile is answered and tracked without anyone watching it.' },
+  { id:9, name:'Recurring Client Check-In',
+    trigger:'Time-based trigger — monthly or quarterly, set per client type',
+    action:'Send a personalised check-in message asking about needs, satisfaction, or upcoming requirements',
+    result:'Proactive relationship maintenance without calendar management. Reduces client churn by 20–30%.',
+    tools:['Zapier scheduler','Gmail','ChatGPT personalisation (optional)'],
+    hours:[1,2], hoursSrc:'est', tier:'simple',
+    short:'Keeps in touch with every client on a schedule you set once.',
+    outcome:'Quiet clients get contacted before they drift away.' },
+  { id:10, name:'Internal Weekly Report',
+    trigger:'Time-based trigger — every Monday at 8 AM',
+    action:'Pull data from the booking system, Google Analytics and Google Sheets → compile into a summary → email the business owner',
+    result:'Owner receives key weekly metrics without manual compilation. Saves 30–60 min/week of staff time.',
+    tools:['Zapier','Relevant data sources','Gmail','ChatGPT summary (optional)'],
+    hours:[3,4], hoursSrc:'est', tier:'complex',
+    short:'A Monday-morning metrics email compiled from every system at once.',
+    outcome:'The weekly numbers arrive on their own instead of costing an hour.' }
+];
+
+/* The 30-Minute Business Efficiency Audit — Ch. 9, pp. 119–120.
+   Every question and every OPPORTUNITY SIGNAL below is the book's.
+   Options are this app's answer scale; each carries the weight and the
+   automations that answer implicates. */
+const AUDIT = [
+  { id:'s1', n:1, title:'Lead and Enquiry Management', minutes:10,
+    signal:'Any "we miss calls" or "we don\'t follow up" responses.',
+    questions:[
+      { id:'q1', type:'multi', text:'How do new leads currently contact you? (phone, website form, email, walk-in)',
+        options:[
+          { id:'phone', label:'Phone calls', w:1, maps:[1],
+            ev:'Enquiries arrive by phone, so every missed call is invisible and unrecoverable' },
+          { id:'form',  label:'Website contact form', w:2, maps:[1,7],
+            ev:'A website form is the cleanest possible trigger for an instant, automated response' },
+          { id:'email', label:'Email', w:1, maps:[1,7],
+            ev:'Email enquiries land in an inbox and wait for a human to notice them' },
+          { id:'ads',   label:'Facebook or Google Ads lead forms', w:2, maps:[1,7],
+            ev:'Paid lead forms are being bought and then answered manually — the most expensive leads to leave waiting' },
+          { id:'social',label:'Social media DMs', w:1, maps:[1],
+            ev:'Enquiries arrive through DMs, which nobody monitors consistently' },
+          { id:'walkin',label:'Walk-ins', w:0, maps:[] }
+        ] },
+      { id:'q2', type:'single', text:'What happens when a lead contacts you outside business hours?',
+        options:[
+          { id:'nothing', label:'Nothing — it waits until the next working day', w:3, maps:[1,7],
+            ev:'Out-of-hours enquiries wait until the next working day before anyone replies' },
+          { id:'voicemail', label:'Voicemail or an inbox nobody checks until morning', w:3, maps:[1],
+            ev:'Out-of-hours enquiries sit in a voicemail or inbox that is not checked until morning' },
+          { id:'generic', label:'A generic auto-reply goes out', w:1, maps:[1],
+            ev:'Out-of-hours enquiries get a generic auto-reply rather than a real answer' },
+          { id:'manual', label:'Someone answers manually most evenings', w:2, maps:[1],
+            ev:'Out-of-hours cover depends on a staff member volunteering their evening' },
+          { id:'auto', label:'An automated response already handles it', w:0, maps:[] }
+        ] },
+      { id:'q3', type:'single', text:'How long does it typically take to respond to a new enquiry?',
+        options:[
+          { id:'m5',   label:'Within 5 minutes', w:0, maps:[] },
+          { id:'hour', label:'Within an hour', w:1, maps:[1],
+            ev:'First response takes up to an hour, against a 5-minute window that lifts conversion by 400%' },
+          { id:'day',  label:'Same day', w:2, maps:[1],
+            ev:'First response takes most of a day, against a 5-minute window that lifts conversion by 400%' },
+          { id:'next', label:'Next day or later', w:3, maps:[1],
+            ev:'First response takes a day or more, against a 5-minute window that lifts conversion by 400%' },
+          { id:'vary', label:'It varies — nobody tracks it', w:3, maps:[1,10],
+            ev:'Response time varies and is not measured, so nobody knows what it is costing' }
+        ] },
+      { id:'q4', type:'single', text:"Do leads who don't convert immediately receive any follow-up?",
+        options:[
+          { id:'none',  label:'No follow-up at all', w:3, maps:[7],
+            ev:'Leads that do not book on first contact receive no follow-up and are simply lost' },
+          { id:'adhoc', label:'Occasionally, when somebody remembers', w:3, maps:[7],
+            ev:'Follow-up on unconverted leads happens only when somebody remembers' },
+          { id:'one',   label:'One follow-up, then we stop', w:2, maps:[7],
+            ev:'Unconverted leads get a single follow-up and nothing after it' },
+          { id:'seq',   label:'A documented follow-up sequence', w:0, maps:[] }
+        ] }
+    ] },
+
+  { id:'s2', n:2, title:'Appointment and Booking Management', minutes:8,
+    signal:'Phone-only booking, manual reminders, no-show rate above 10%.',
+    questions:[
+      { id:'q1', type:'single', text:'How do clients currently book appointments? Is it online or by phone?',
+        options:[
+          { id:'phone',  label:'Phone only', w:3, maps:[2,5],
+            ev:'Booking is phone-only, so nothing in the calendar can trigger a reminder' },
+          { id:'mostly', label:'Mostly phone, some online', w:2, maps:[2],
+            ev:'Most bookings are taken by phone, leaving reminders to be sent by hand' },
+          { id:'online', label:'Online booking tool (Calendly, Acuity, or similar)', w:1, maps:[2,3,4],
+            ev:'An online booking tool is already in place, which gives every appointment automation a reliable trigger' },
+          { id:'email',  label:'Email or DM back-and-forth', w:3, maps:[2,5],
+            ev:'Bookings are arranged over email or DMs, with no system holding the appointment' }
+        ] },
+      { id:'q2', type:'single', text:'Do clients receive automated appointment reminders?',
+        options:[
+          { id:'manual', label:'No — reminders are sent by hand', w:3, maps:[2],
+            ev:'Appointment reminders are sent by hand, every day, by a member of staff' },
+          { id:'none',   label:'No reminders at all', w:3, maps:[2],
+            ev:'No appointment reminders are sent at all' },
+          { id:'one',    label:'One automatic reminder', w:1, maps:[2],
+            ev:'A single automatic reminder goes out, with nothing closer to the appointment' },
+          { id:'full',   label:'A full automated sequence', w:0, maps:[] }
+        ] },
+      { id:'q3', type:'single', text:'What happens when a client needs to reschedule?',
+        options:[
+          { id:'phone', label:'They phone and staff move it manually', w:2, maps:[2,5],
+            ev:'Every reschedule costs staff time on the phone' },
+          { id:'email', label:'They reply to an email and somebody re-books them', w:2, maps:[2,5],
+            ev:'Rescheduling runs through a person reading and answering email' },
+          { id:'self',  label:'They self-serve through the booking link', w:0, maps:[] }
+        ] },
+      { id:'q4', type:'single', text:'How do you handle no-shows — is there a follow-up process?',
+        options:[
+          { id:'none',  label:'No follow-up — the slot is just lost', w:3, maps:[5],
+            ev:'A no-show is written off; nobody follows up and the slot is lost' },
+          { id:'adhoc', label:'Somebody calls when they have time', w:3, maps:[5],
+            ev:'No-show follow-up happens only when a staff member has a spare moment' },
+          { id:'manual',label:'A manual re-booking email', w:2, maps:[5],
+            ev:'No-show follow-up is a manual email somebody has to write' },
+          { id:'auto',  label:'An automatic re-booking sequence', w:0, maps:[] }
+        ] },
+      { id:'m1', type:'number', added:true, text:'Approximate no-show rate', suffix:'% of appointments',
+        min:0, max:100, step:1, placeholder:'15', roiKey:'noshow',
+        rule:{ over:10, w:3, maps:[2,5],
+          ev:'A no-show rate above the 10% mark the book flags as an automation signal' } }
+    ] },
+
+  { id:'s3', n:3, title:'Client Communication and Follow-Up', minutes:7,
+    signal:'Manual follow-up, inconsistent communication, no review process.',
+    questions:[
+      { id:'q1', type:'single', text:'After a client visit or purchase, do they receive any automated follow-up?',
+        options:[
+          { id:'none',   label:'Nothing at all', w:3, maps:[4,9],
+            ev:'Clients hear nothing after a visit or purchase' },
+          { id:'manual', label:'Sometimes, when somebody sends one manually', w:3, maps:[4],
+            ev:'Post-visit follow-up depends entirely on somebody remembering to send it' },
+          { id:'thanks', label:'An automatic thank-you, and nothing after', w:1, maps:[4,9],
+            ev:'A single automatic thank-you goes out, with no sequence behind it' },
+          { id:'seq',    label:'A full follow-up sequence', w:0, maps:[] }
+        ] },
+      { id:'q2', type:'single', text:'Do you have an email list? How often do you communicate with it?',
+        options:[
+          { id:'nolist', label:'No email list', w:2, maps:[4],
+            ev:'There is no email list, so every past client has to be re-acquired' },
+          { id:'unused', label:'A list exists but is never used', w:3, maps:[4,9],
+            ev:'An email list exists but has never been used' },
+          { id:'rare',   label:'Occasional sends when there is news', w:2, maps:[9],
+            ev:'The list is contacted only occasionally, when somebody has time to write' },
+          { id:'regular',label:'On a regular schedule', w:0, maps:[] }
+        ] },
+      { id:'q3', type:'single', text:'How do you currently request reviews from satisfied clients?',
+        options:[
+          { id:'never',  label:'We do not ask', w:3, maps:[3,8],
+            ev:'Nobody asks for reviews, so the review profile grows slower than competitors ranking above them' },
+          { id:'inperson',label:'Staff ask in person when they remember', w:3, maps:[3],
+            ev:'Review requests depend on a staff member remembering to ask at the counter' },
+          { id:'occasional',label:'An occasional manual email', w:2, maps:[3],
+            ev:'Review requests go out manually and inconsistently' },
+          { id:'auto',   label:'Automatically after every visit', w:0, maps:[] }
+        ] },
+      { id:'q4', type:'single', text:'Are there recurring communications you send manually every month?',
+        options:[
+          { id:'several',label:'Yes — several every month', w:3, maps:[9,10],
+            ev:'Several recurring communications are typed out by hand every month' },
+          { id:'few',    label:'One or two', w:2, maps:[9],
+            ev:'A couple of recurring messages are still sent manually each month' },
+          { id:'none',   label:'No', w:0, maps:[] }
+        ] }
+    ] },
+
+  { id:'s4', n:4, title:'Internal Operations', minutes:5,
+    signal:'Disconnected tools, recurring manual reports, data re-entry.',
+    questions:[
+      { id:'q1', type:'text', text:'What administrative tasks consume the most time for you or your staff?',
+        placeholder:'Write down what the owner actually says — these are direct automation candidates.',
+        w:2, maps:[10,6],
+        ev:'Named administrative tasks are absorbing staff hours every week' },
+      { id:'m1', type:'number', added:true, text:'Staff hours per week lost to those tasks', suffix:'hours/week',
+        min:0, max:80, step:0.5, placeholder:'6', roiKey:'adminHours',
+        rule:{ over:0, w:2, maps:[10,6],
+          ev:'Staff hours are going into repetitive administrative work every week' } },
+      { id:'q2', type:'single', text:'Are there reports or documents you produce manually on a recurring schedule?',
+        options:[
+          { id:'weekly', label:'Yes — weekly', w:3, maps:[10],
+            ev:'A recurring report is compiled by hand every week' },
+          { id:'monthly',label:'Yes — monthly', w:2, maps:[10],
+            ev:'A recurring report is compiled by hand every month' },
+          { id:'no',     label:'No', w:0, maps:[] }
+        ] },
+      { id:'q3', type:'single', text:'Do different tools (CRM, booking system, email) communicate with each other?',
+        options:[
+          { id:'none', label:'No — data is re-entered by hand', w:3, maps:[1,10],
+            ev:'The same data is re-entered by hand between systems that do not talk to each other' },
+          { id:'some', label:'Some of them do', w:2, maps:[10],
+            ev:'Only some systems are connected, so data still gets copied between the rest' },
+          { id:'yes',  label:'Yes, they are connected', w:0, maps:[] }
+        ] },
+      { id:'m2', type:'single', added:true, text:'Do you chase clients for documents, forms or information?',
+        options:[
+          { id:'constant', label:'Constantly — it holds up the work', w:3, maps:[6],
+            ev:'Chasing clients for documents is a standing task that delays delivery' },
+          { id:'sometimes',label:'Sometimes', w:2, maps:[6],
+            ev:'Missing client paperwork has to be chased by hand' },
+          { id:'no',       label:'Not really', w:0, maps:[] }
+        ] }
+    ] }
+];
+
+/* Pricing your automation services — Ch. 9, p. 123 */
+const OFFERS = [
+  { id:'single',    name:'Single Automation Build',        inc:'One complete automation workflow, tested and documented', price:'$300–$800', type:'One-time project fee', range:[300,800] },
+  { id:'starter',   name:'Starter Automation Package',     inc:'3 automations (typically lead response + reminder + review request)', price:'$800–$1,800', type:'One-time project fee', range:[800,1800] },
+  { id:'audit',     name:'Business Efficiency Audit',      inc:'30-min consultation + written report of opportunities + recommendations', price:'$0 (lead gen) or $150–$300', type:'One-time, or free for qualified prospects', range:[0,300] },
+  { id:'full',      name:'Full Automation System',         inc:'6–10 automations covering lead, booking and client lifecycle', price:'$1,500–$4,000', type:'One-time project fee', range:[1500,4000] },
+  { id:'maint',     name:'Monthly Maintenance Retainer',   inc:'Monitor automations, fix errors, minor updates, monthly report', price:'$100–$300/month', type:'Recurring monthly', range:[100,300] },
+  { id:'expansion', name:'Automation Expansion Retainer',  inc:'Add 1–2 new automations per month + maintenance', price:'$250–$500/month', type:'Recurring monthly', range:[250,500] },
+  { id:'annual',    name:'Annual Automation Partnership',  inc:'Full system build + 12 months maintenance + quarterly strategy review', price:'$3,000–$8,000', type:'Annual contract', range:[3000,8000] }
+];
+
+/* Three stages of AI income growth — Ch. 15, pp. 221–222 */
+const STAGES = [
+  { id:'hustler', name:'The Hustler', blurb:'Everything is manual, everything is new, and income depends on daily active effort.',
+    income:'$0–$2,000/month',
+    focus:'Delivering excellent work consistently; building your first testimonials and case studies',
+    next:'When you have 3+ consistent clients or sales and a clear, repeatable delivery workflow',
+    traits:[
+      'I personally execute every task: outreach, delivery, client communication, administration',
+      'No systems or templates yet — each client engagement starts from scratch',
+      'Income is directly proportional to hours worked',
+      'The primary skill I am building is the delivery capability itself',
+      'Clients are won one at a time through active, personalised outreach'
+    ] },
+  { id:'operator', name:'The Operator', blurb:'Systems are in place, delivery is efficient, and income grows without proportional hour growth.',
+    income:'$2,000–$6,000/month',
+    focus:'Building systems that allow the same quality at lower effort per client',
+    next:'When you are at capacity — turning down work or feeling stretched — and income is consistent',
+    traits:[
+      'Core delivery workflows are documented in SOPs and supported by prompt templates',
+      'Client onboarding is systematised: questionnaire, welcome pack, delivery schedule',
+      'Outreach is a documented, repeatable process rather than ad hoc effort',
+      'A growing library of reusable assets reduces rework',
+      'Rate increases have been implemented at least once',
+      'Referrals are beginning to supplement outbound acquisition'
+    ] },
+  { id:'owner', name:'The Owner', blurb:'The business runs with or without your daily active presence in specific tasks.',
+    income:'$6,000–$15,000+/month',
+    focus:'Building an operation that functions at quality without your direct involvement in every task',
+    next:'When passive income and referral income together exceed 30% of total monthly revenue',
+    traits:[
+      'A virtual assistant handles production, scheduling and administrative tasks',
+      'Passive income (products, content, automations) supplements active service income',
+      'Client acquisition is increasingly inbound — referral and content-driven',
+      'My time is concentrated on strategy, client relationships and high-value delivery',
+      'The business has value beyond my personal effort — it could be sold or delegated',
+      'Monthly income is predictable rather than variable'
+    ] }
+];
+
+/* Priority SOPs — Ch. 15, p. 226 */
+const SOPS = [
+  { id:'sop1', pri:'#1 — build first',  name:'Client onboarding workflow',                when:'Month 2, after first client',        time:'45–60 min' },
+  { id:'sop2', pri:'#2 — build second', name:'Core delivery workflow (your primary stream)', when:'Month 2, after first delivery',   time:'45–60 min' },
+  { id:'sop3', pri:'#3 — build third',  name:'Monthly client reporting',                  when:'Month 3, when first report is due',  time:'30–45 min' },
+  { id:'sop4', pri:'#4 — build fourth', name:'Outreach and follow-up sequence',           when:'Month 3, before any delegation',     time:'30–45 min' },
+  { id:'sop5', pri:'#5 — build fifth',  name:'New client proposal process',               when:'Month 4, once rate and package are stable', time:'30–45 min' },
+  { id:'sop6', pri:'#6 — when hiring',  name:'VA training documentation',                 when:'Before your first VA hire',          time:'60–90 min' }
+];
+
+/* MRR growth target framework — Ch. 15, pp. 232–233 */
+const MRR_BANDS = [
+  { months:'Month 1–3',   lo:0,    hi:500,   label:'Foundational. Every retainer or catalogue sale counts.' },
+  { months:'Month 4–6',   lo:500,  hi:1500,  label:'First real stability. Income is no longer entirely variable.' },
+  { months:'Month 7–9',   lo:1500, hi:3500,  label:'Confidence milestone. Income replacement becomes realistic.' },
+  { months:'Month 10–12', lo:3500, hi:6000,  label:'Business milestone. Growing faster than costs.' },
+  { months:'Month 13–18', lo:6000, hi:Infinity, label:'Owner stage. Systems doing significant heavy lifting.' }
+];
+
+/* Three signals you are ready to hire a VA — Ch. 15, pp. 229–230 */
+const VA_SIGNALS = [
+  { id:'va1', text:'I am consistently earning $3,000+/month',
+    meta:'A VA at $10–$15/hour for 15–20 hours/month costs $150–$300/month — a 5–10% reinvestment that should free capacity to grow income by 30–50%.' },
+  { id:'va2', text:'I spend more than 5 hours per month on administrative or repetitive tasks',
+    meta:'Scheduling, formatting, basic research, social scheduling, invoice tracking, spreadsheet maintenance, email sorting.' },
+  { id:'va3', text:'I am turning down work because of capacity',
+    meta:'Every declined client is lost revenue. A VA frees capacity for one more client, whose fee covers the VA and then grows net income.' }
+];
+
+/* Productisation — Ch. 15, pp. 231–232 */
+const PRODUCTISE = [
+  { from:'"I write content for businesses" — scope varies per client',
+    to:'The Content Engine: 8 posts/month + 1 newsletter, delivered on a fixed schedule, at a fixed rate',
+    impact:'Easier to sell, easier to deliver, easier to delegate' },
+  { from:'"I offer social media management" — varies by platform and volume',
+    to:'The Local Business Visibility Pack: FB + Instagram + Google Business, 16 posts/month, $550/month flat',
+    impact:'Removes scope negotiation; improves margins' },
+  { from:'"I build automation for clients" — quoted per project',
+    to:'The Practice Automation Starter: 3 automations (lead response + reminder + review), $1,200 flat, 2-week delivery',
+    impact:'Faster to pitch, easier to compare, simpler to build repeatedly' },
+  { from:'"I offer coaching" — sessions charged hourly',
+    to:'The 90-Day Career Clarity Programme: 12 sessions, workbook, weekly support, $2,200 flat',
+    impact:'Clients buy outcomes, not sessions; higher close rate' },
+  { from:'"I create digital products for clients" — custom per request',
+    to:'The Brand Canva Kit: 25 templates, 3 brand colour variations, 5-day delivery, $350 flat',
+    impact:'Systematised; can use a VA for production; scalable' }
+];
+
+/* The five-step selling process — Ch. 9, pp. 124–126 */
+const STEPS = [
+  { n:1, name:'Outreach — position as a problem solver, not a tech vendor',
+    body:'Approach target businesses with a specific, researched observation, not a generic pitch. The free audit removes every barrier to saying yes: they are not committing to a purchase, they are agreeing to a conversation.' },
+  { n:2, name:'The audit — listen, diagnose, quantify',
+    body:'Run the 30-minute Business Efficiency Audit and take detailed notes. Focus on recurring manual tasks (direct automation candidates), revenue-impacting inefficiencies (missed leads, no-shows, lost clients), and frustration points the owner mentions unprompted — highest pain is the easiest sell. Translate each pain point into an automation as you hear it.' },
+  { n:3, name:'The proposal — specific, visual, value-anchored',
+    body:'One page maximum: the problem summary, the proposed automations, the investment, the ROI calculation, and the next steps. Quantify everything you can from the audit.' },
+  { n:4, name:'The build — professional, documented, tested',
+    body:'Map the workflow on paper before opening Zapier. Build in test mode and run every input the client might generate, including blank fields and bounced emails. Document each automation on one page: what triggers it, what it does, what it connects, how to pause it. Run a live pilot for 48–72 hours. Deliver a 15–20 minute handover walkthrough by Zoom or Loom.' },
+  { n:5, name:'The maintenance retainer — turning projects into recurring income',
+    body:'Offer the retainer at the point of project completion, framed as essential rather than optional: platforms update, connections occasionally break, and an unmonitored failure is exactly the problem you were hired to prevent. $100–$300/month depending on complexity. Conversion from project completion to retainer is typically 60–80%.' }
+];
+
+/* The three objections — Ch. 9, pp. 126–127 */
+const OBJECTIONS = [
+  { q:'Is this complicated? Will I need to understand it?',
+    a:'Absolutely not — that\'s the point. Once I build and test it, the automation runs in the background without you needing to do anything. You\'ll receive a simple one-page overview showing what each one does and how to pause it if you ever need to. Most clients say they forget it\'s running — until they notice the results.' },
+  { q:'What if something breaks or stops working?',
+    a:'That\'s exactly what the maintenance retainer covers. In practice, automation platforms are highly stable — but when they do update, connections occasionally need refreshing. I monitor all client automations and fix any issues, typically within 24 hours of them occurring. Your operations never experience meaningful downtime.' },
+  { q:'We\'ve managed fine without this — why change now?',
+    a:'You\'ve managed — but let me reflect back what you told me earlier: [specific pain point from the audit]. The question isn\'t whether you can continue managing without it. The question is how much time and revenue you want to recover. Based on what you\'ve shared, the automations I\'m proposing would recover approximately [X hours/week] and an estimated $[Y]/month in leads or appointments. At what point does the investment stop making sense?' }
+];
+
+/* Income projections and milestones — Ch. 9, pp. 127–128 */
+const PROJECTIONS = [
+  { stage:'Starting out',   clients:'1–2',  flow:'1 project build + 0–1 retainers',              income:'$500–$2,000/mo',    hours:'15–25 hrs', lo:0,    hi:2000 },
+  { stage:'Early traction', clients:'3–4',  flow:'Mix of projects + growing retainer base',      income:'$2,000–$4,500/mo',  hours:'20–30 hrs', lo:2000, hi:4500 },
+  { stage:'Established',    clients:'5–7',  flow:'Majority on retainers + 1–2 new projects/month', income:'$3,500–$7,000/mo', hours:'25–35 hrs', lo:3500, hi:7000 },
+  { stage:'Scaled practice',clients:'8–12', flow:'Primarily retainer income + selective projects', income:'$5,000–$12,000/mo', hours:'25–30 hrs', lo:5000, hi:12000 }
+];
+const MILESTONES = [
+  { when:'Week 1–2', what:'Audit conversations booked. First proposal drafted.' },
+  { when:'Week 3–4', what:'First project signed. Build begins. ($500–$1,500 project fee)' },
+  { when:'Month 2',  what:'First project delivered. Retainer conversation had. Second project started.' },
+  { when:'Month 3',  what:'2–3 active clients. $1,500–$3,000/month. Workflow becoming efficient.' },
+  { when:'Month 6',  what:'4–6 clients. Growing retainer base. $3,000–$5,500/month.' },
+  { when:'Month 12', what:'6–10 clients. Majority on retainers. $4,500–$9,000/month.' }
+];
+
+/* The tools — Ch. 9, pp. 117–119 */
+const TOOLS = [
+  { name:'Zapier — the starting point', tag:'Start here',
+    rows:[['What it is','The most widely used no-code automation platform. Connects 6,000+ apps through a visual "if this, then that" trigger-action interface.'],
+          ['Learning curve','Low. A motivated learner can build their first working automation within two to three hours of first opening the platform.'],
+          ['Cost','Free tier (100 tasks/month, 5 automations). Paid from $19.99/month. Move clients to their own paid account post-build.'],
+          ['Best for','Straightforward trigger-action automations. Email and form integrations. CRM and booking connections. Google Workspace workflows.']],
+    tip:'Zapier has an AI assistant that builds automations from a plain-English description. Describe the workflow and it generates the structure — which dramatically reduces the learning curve for non-technical practitioners.' },
+  { name:'Make (formerly Integromat) — the power option', tag:'Add later',
+    rows:[['What it is','A more powerful and flexible platform, using a visual "scenario" interface with modules and routes. Supports complex multi-step workflows and conditional logic.'],
+          ['Learning curve','Medium. Steeper than Zapier but still entirely no-code. Add it after you have delivered 3–5 Zapier projects.'],
+          ['Cost','Free tier (1,000 operations/month). Paid from $9/month — significantly cheaper than Zapier at equivalent volume.'],
+          ['Best for','Complex multi-step workflows. Conditional branching. Higher-volume automations. Data transformation and formatting.']],
+    tip:'Once you can build the same automation in both platforms, you can charge a premium for Make projects due to their greater complexity — while the actual build time difference is often minimal.' },
+  { name:'The rest of the stack', tag:'Supporting',
+    rows:[['ChatGPT / Claude API','Connect AI text generation to your automations — personalised email responses, form-submission summaries, dynamic content. Native Zapier integration, no code.'],
+          ['Calendly / Acuity','The most common booking tools for professional service businesses. Booking events trigger automations natively.'],
+          ['Twilio','SMS sending for reminders and confirmations. Roughly $0.0075 per SMS — pass it on to the client as a transparent operating expense.'],
+          ['Google Sheets / Airtable','Lightweight CRM databases inside automations. Most local businesses have no CRM; a well-structured Sheet connected to their intake form is often enough.'],
+          ['Mailchimp / ActiveCampaign / ConvertKit','Email platforms that receive data from Zapier and trigger sequences from bookings, form submissions or purchases.']],
+    tip:'' }
+];
+
+/* Case study — Ch. 9, pp. 128–129 */
+const CASE_STUDY = [
+  ['Background','14 years managing front-of-house operations for medical and dental practices. Intimate knowledge of appointment systems, patient communication workflows, and the daily administrative friction of clinical businesses.'],
+  ['Starting position','Familiar with Calendly, Google Workspace and Mailchimp from her administrative roles. Zero experience with Zapier or automation.'],
+  ['Learning phase','Three weekends learning Zapier via free YouTube tutorials. Built 5 practice automations for hypothetical dental scenarios, and a portfolio of documented workflow examples.'],
+  ['First client','A 3-dentist practice losing 12–15 appointments/month to no-shows and missing all after-hours enquiries. Free audit → 4 opportunities identified → Starter Package proposed at $1,400 plus $220/month. Signed within 48 hours of receiving the proposal.'],
+  ['Months 1–3','Project delivered; referral collected to a sister practice. Month 3 income: $2,800.'],
+  ['Month 6','4 clients, 3 on retainers averaging $220/month, 1 active project. Monthly income: $4,100.'],
+  ['Month 12','7 clients, 6 on retainers, 1–2 projects/month. Monthly income: $6,800, working 22 hours/week.'],
+  ['Key lesson','Domain expertise turned Sandra from a technical service provider into a trusted industry specialist. She was not selling automations — she was selling a solution to problems she had personally managed for fourteen years.']
+];
+
+/* Chapter 9 action step — Ch. 9, p. 130 */
+const ACTION_STEPS = [
+  { id:'a1', text:'Part A — Create a free Zapier account and complete the built-in "Getting Started" tour', meta:'~20 minutes of the 90-minute Part A' },
+  { id:'a2', text:'Part A — Build one practice automation: new row in a Google Sheet → email yourself the row contents', meta:'This single exercise demonstrates the trigger-action logic behind all automation' },
+  { id:'a3', text:'Part B — Build Automation Template #1 as a working demonstration using your own accounts', meta:'Google Form or Typeform trigger → ChatGPT response → logged in a Google Sheet. 2–3 hours.' },
+  { id:'a4', text:'Part B — Test it with 3 different form submissions to confirm it works correctly', meta:'Test the edge cases too: blank fields, bounced emails' },
+  { id:'a5', text:'Part C — Write the one-page overview of what you built', meta:'What triggers it, what it does step by step, what a business gains, what it would cost to have you build it. 30 minutes.' },
+  { id:'a6', text:'Part D — Identify 5 local businesses in your target niche as audit prospects', meta:'Use Google Maps. Check: contact form? online booking? social media gone quiet? 20 minutes.' }
+];
+
+/* ==========================================================================
+   STATE, STORAGE, HELPERS
+   ========================================================================== */
+
+const KEY = 'automation-kits.v1';
+const THEME_KEY = 'automation-kits.theme';
+
+function defaults() {
+  return {
+    tab: 'audit',
+    ctx: { client:'', niche:'dental', date:'' },
+    audit: {},
+    kit: [],
+    quote: { fee:null, retainer:null },
+    proposal: { by:'', contact:'', weeks:null, sendBy:'', extra:'', checks:{} },
+    /* ROI defaults are the book's own worked figures where it states them;
+       the two it does not state are flagged in the UI as app-added. */
+    roi: { leads:8, leadValue:150, leadRecover:20,
+           appts:80, noshow:15, apptFee:150, noshowCut:60,
+           adminHours:6, staffCost:20 },
+    vp:  { outcome:1200, marketLo:150, marketHi:400, pct:10 },
+    stage: {},
+    sop: { earner:'AI automation consultant', task:'', done:{} },
+    mrr: [],
+    va: {},
+    outreach: { name:'', business:'', tool:'a contact form', industry:'' },
+    report: { enquiries:47, reminders:312, reviews:8, hours:6.2, appts:4 },
+    actions: {}
+  };
+}
+
+let S = defaults();
+let storageOK = true;
+
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    S = Object.assign(defaults(), saved);
+    // Merge one level deep so new fields in later versions still get defaults.
+    const d = defaults();
+    for (const k of ['ctx','quote','proposal','roi','vp','sop','outreach','report']) {
+      S[k] = Object.assign(d[k], saved[k] || {});
+    }
+  } catch (e) {
+    storageOK = false;
+  }
+}
+let saveTimer = null;
+function save() {
+  if (!storageOK) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try { localStorage.setItem(KEY, JSON.stringify(S)); }
+    catch (e) {
+      storageOK = false;
+      toast('Storage is unavailable — this session will not be saved');
+    }
+  }, 180);
+}
+
+/* -------------------------------------------------------------- shorthand */
+const $  = (sel, root) => (root || document).querySelector(sel);
+const $$ = (sel, root) => Array.prototype.slice.call((root || document).querySelectorAll(sel));
+
+function el(tag, attrs, children) {
+  const node = document.createElement(tag);
+  if (attrs) for (const k in attrs) {
+    const v = attrs[k];
+    if (v === null || v === undefined || v === false) continue;
+    if (k === 'class') node.className = v;
+    else if (k === 'text') node.textContent = v;
+    else if (k === 'html') node.innerHTML = v;
+    else if (k.slice(0, 2) === 'on') node.addEventListener(k.slice(2), v);
+    else node.setAttribute(k, v === true ? '' : v);
+  }
+  if (children) [].concat(children).forEach(c => {
+    if (c === null || c === undefined || c === false) return;
+    node.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+  });
+  return node;
+}
+function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+
+const money = n => '$' + Math.round(n).toLocaleString('en-US');
+const moneyRange = r => money(r[0]) + '–' + money(r[1]);
+const pct = n => Math.round(n) + '%';
+function round(n, to) { return Math.round(n / to) * to; }
+function clamp(n, lo, hi) { return Math.min(hi, Math.max(lo, n)); }
+function plural(n, one, many) { return n === 1 ? one : (many || one + 's'); }
+
+function niche() { return NICHES.find(n => n.id === S.ctx.niche) || NICHES[0]; }
+function auto(id) { return AUTOMATIONS.find(a => a.id === id); }
+function clientName() { return S.ctx.client.trim() || '[Business Name]'; }
+
+/* ------------------------------------------------------------------ toast */
+function toast(msg) {
+  const box = $('#toasts');
+  const t = el('div', { class:'toast', text:msg });
+  box.appendChild(t);
+  setTimeout(() => { t.remove(); }, 2600);
+}
+
+/* ------------------------------------------------------------- clipboard */
+function copyText(text) {
+  const done = () => toast('Copied to clipboard');
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(done, () => legacyCopy(text, done));
+  } else {
+    legacyCopy(text, done);
+  }
+}
+function legacyCopy(text, done) {
+  const ta = el('textarea', { });
+  ta.value = text;
+  ta.setAttribute('aria-hidden', 'true');
+  ta.style.cssText = 'position:fixed;top:-1000px;left:-1000px;opacity:0';
+  document.body.appendChild(ta);
+  ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  ta.remove();
+  ok ? done() : toast('Copy failed — select the text and copy manually');
+}
+function download(filename, text) {
+  const blob = new Blob([text], { type:'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = el('a', { href:url, download:filename });
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function slug(s) {
+  return (s || 'client').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'client';
+}
+function today() {
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+}
+function prettyDate(iso) {
+  if (!iso) return '';
+  const parts = iso.split('-');
+  if (parts.length !== 3) return iso;
+  const months = ['January','February','March','April','May','June','July',
+                  'August','September','October','November','December'];
+  const m = months[Number(parts[1]) - 1];
+  return m ? (Number(parts[2]) + ' ' + m + ' ' + parts[0]) : iso;
+}
+
+/* ==========================================================================
+   AUDIT SCORING
+   Each answered option contributes its weight to every automation it maps to,
+   and contributes its evidence line to the proposal's problem summary.
+   ========================================================================== */
+
+function auditKey(sec, q) { return sec.id + '.' + q.id; }
+
+function auditAnswered() {
+  let total = 0, done = 0;
+  AUDIT.forEach(sec => sec.questions.forEach(q => {
+    total++;
+    const v = S.audit[auditKey(sec, q)];
+    if (q.type === 'multi') { if (Array.isArray(v) && v.length) done++; }
+    else if (q.type === 'number') { if (v !== '' && v !== null && v !== undefined && !isNaN(Number(v))) done++; }
+    else if (v) done++;
+  }));
+  return { done, total };
+}
+
+/* Returns { scores: {id: n}, evidence: [{text, w, maps}], byAuto: {id:[ev]} } */
+function auditScore() {
+  const scores = {}, byAuto = {}, evidence = [];
+  AUTOMATIONS.forEach(a => { scores[a.id] = 0; byAuto[a.id] = []; });
+
+  const record = (w, maps, ev) => {
+    if (!maps || !maps.length) return;
+    if (ev) evidence.push({ text:ev, w:w, maps:maps });
+    maps.forEach(id => {
+      if (scores[id] === undefined) return;
+      scores[id] += w;
+      if (ev) byAuto[id].push(ev);
+    });
+  };
+
+  AUDIT.forEach(sec => sec.questions.forEach(q => {
+    const v = S.audit[auditKey(sec, q)];
+    if (v === undefined || v === null || v === '') return;
+    if (q.type === 'multi') {
+      (v || []).forEach(oid => {
+        const o = q.options.find(x => x.id === oid);
+        if (o && o.w > 0) record(o.w, o.maps, o.ev);
+      });
+    } else if (q.type === 'single') {
+      const o = q.options.find(x => x.id === v);
+      if (o && o.w > 0) record(o.w, o.maps, o.ev);
+    } else if (q.type === 'number') {
+      const num = Number(v);
+      if (!isNaN(num) && q.rule && num > q.rule.over) {
+        const unit = q.suffix ? (q.suffix.charAt(0) === '%' ? q.suffix : ' ' + q.suffix) : '';
+        record(q.rule.w, q.rule.maps, q.rule.ev + ' (' + num + unit + ')');
+      }
+    } else if (q.type === 'text') {
+      if (String(v).trim() && q.maps) record(q.w || 1, q.maps, q.ev + ': ' + String(v).trim());
+    }
+  }));
+
+  return { scores, byAuto, evidence };
+}
+
+/* Ranked automations: audit score first, then the niche table as a tiebreak. */
+function ranked() {
+  const { scores, byAuto } = auditScore();
+  const nicheMaps = niche().maps;
+  return AUTOMATIONS.map(a => {
+    const inNiche = nicheMaps.indexOf(a.id) !== -1;
+    const nicheBonus = inNiche ? 2 : 0;
+    return {
+      a: a,
+      score: scores[a.id] + nicheBonus,
+      auditScore: scores[a.id],
+      inNiche: inNiche,
+      why: byAuto[a.id].slice()
+    };
+  }).sort((x, y) => y.score - x.score || x.a.id - y.a.id);
+}
+
+/* ==========================================================================
+   PANEL — EFFICIENCY AUDIT
+   ========================================================================== */
+
+function renderAuditForm() {
+  const host = $('#auditSections');
+  clear(host);
+
+  AUDIT.forEach(sec => {
+    const card = el('div', { class:'card' });
+    card.appendChild(el('div', { class:'card-head' }, [
+      el('h3', { text:'Section ' + sec.n + ' — ' + sec.title }),
+      el('span', { class:'tag', text:sec.minutes + ' minutes' }),
+      el('span', { class:'spacer' }),
+      el('span', { class:'src', text:'Ch. 9, pp. 119–120' })
+    ]));
+
+    sec.questions.forEach(q => {
+      const key = auditKey(sec, q);
+      const fs = el('fieldset');
+      const legend = el('legend');
+      legend.appendChild(document.createTextNode(q.text + ' '));
+      if (q.added) legend.appendChild(el('span', { class:'tag tag-added', text:'app-added' }));
+      fs.appendChild(legend);
+
+      if (q.type === 'multi' || q.type === 'single') {
+        const wrap = el('div', { class:'opts' });
+        q.options.forEach(o => {
+          const id = 'in-' + key + '-' + o.id;
+          const input = el('input', {
+            type: q.type === 'multi' ? 'checkbox' : 'radio',
+            name: 'grp-' + key, id: id, value: o.id
+          });
+          if (q.type === 'multi') {
+            input.checked = Array.isArray(S.audit[key]) && S.audit[key].indexOf(o.id) !== -1;
+          } else {
+            input.checked = S.audit[key] === o.id;
+          }
+          input.addEventListener('change', () => {
+            if (q.type === 'multi') {
+              const cur = Array.isArray(S.audit[key]) ? S.audit[key].slice() : [];
+              const i = cur.indexOf(o.id);
+              if (input.checked && i === -1) cur.push(o.id);
+              if (!input.checked && i !== -1) cur.splice(i, 1);
+              S.audit[key] = cur;
+            } else {
+              S.audit[key] = o.id;
+            }
+            save();
+            afterAuditChange();
+          });
+          const body = el('div', { class:'opt-body' }, [
+            el('span', { text:o.label }),
+            o.w > 0 ? el('span', { class:'opt-sig', text:'signal · weight ' + o.w + ' → ' +
+              o.maps.map(m => '#' + m).join(' ') }) : null
+          ]);
+          wrap.appendChild(el('label', { class:'opt', for:id }, [input, body]));
+        });
+        fs.appendChild(wrap);
+
+      } else if (q.type === 'number') {
+        const input = el('input', {
+          type:'number', min:q.min, max:q.max, step:q.step,
+          placeholder:q.placeholder, id:'in-' + key,
+          style:'max-width:180px', value: S.audit[key] === undefined ? '' : S.audit[key]
+        });
+        input.addEventListener('input', () => {
+          S.audit[key] = input.value;
+          /* Measures the audit collects are the ROI calculator's inputs too —
+             ask once, use everywhere. */
+          if (q.roiKey) S.roi[q.roiKey] = input.value === '' ? 0 : Number(input.value);
+          save();
+          afterAuditChange();
+        });
+        fs.appendChild(el('div', { style:'display:flex;align-items:center;gap:9px;flex-wrap:wrap' }, [
+          input, el('span', { class:'src', text:q.suffix }),
+          q.roiKey ? el('span', { class:'src', text:'→ feeds the ROI calculation' }) : null
+        ]));
+
+      } else if (q.type === 'text') {
+        const ta = el('textarea', { id:'in-' + key, placeholder:q.placeholder });
+        ta.value = S.audit[key] || '';
+        ta.addEventListener('input', () => { S.audit[key] = ta.value; save(); afterAuditChange(); });
+        fs.appendChild(ta);
+      }
+      card.appendChild(fs);
+    });
+
+    /* Section notes + the book's opportunity signal */
+    const nKey = sec.id + '.notes';
+    const notesId = 'notes-' + sec.id;
+    const notes = el('textarea', { id:notesId,
+      placeholder:'Notes — quote the owner where you can. Their words become your proposal.' });
+    notes.value = S.audit[nKey] || '';
+    notes.addEventListener('input', () => { S.audit[nKey] = notes.value; save(); renderProposal(); });
+    card.appendChild(el('div', { class:'field' }, [
+      el('label', { text:'Notes — Section ' + sec.n, for:notesId }), notes
+    ]));
+    card.appendChild(el('div', { class:'note note-amber', style:'margin:12px 0 0' }, [
+      el('strong', { text:'Opportunity signal: ' }),
+      document.createTextNode(sec.signal)
+    ]));
+
+    host.appendChild(card);
+  });
+}
+
+function renderAuditFindings() {
+  const host = $('#auditFindings');
+  clear(host);
+  const rows = ranked().filter(r => r.auditScore > 0);
+  const { done, total } = auditAnswered();
+
+  if (!rows.length) {
+    host.appendChild(el('div', { class:'empty', text: done === 0
+      ? 'Nothing yet. Answer the audit above and the opportunities will rank themselves here.'
+      : 'Nothing flagged so far — every answer so far describes a process that is already automated.' }));
+    return;
+  }
+
+  host.appendChild(el('p', { class:'lede', text:
+    'Ranked by the weight of the signals in your answers. The niche table is deliberately excluded here — '
+    + 'this is what ' + clientName() + ' actually told you, not what the book expects of a '
+    + niche().name.toLowerCase() + ' practice.' }));
+
+  const list = el('div', { class:'grid', style:'gap:10px' });
+  rows.forEach((r, i) => {
+    const picked = S.kit.indexOf(r.a.id) !== -1;
+    const box = el('div', { class:'readout', style:'padding:12px 14px' });
+    box.appendChild(el('div', { style:'display:flex;gap:10px;align-items:baseline;flex-wrap:wrap' }, [
+      el('span', { class:'rank-badge', text:'#' + (i + 1) }),
+      el('strong', { text:'Automation ' + r.a.id + ' — ' + r.a.name }),
+      el('span', { class:'tag', text:'signal strength ' + r.auditScore }),
+      r.inNiche ? el('span', { class:'tag tag-accent', text:'listed for this niche' }) : null,
+      picked ? el('span', { class:'tag tag-ok', text:'in your kit' }) : null
+    ]));
+    const ul = el('ul', { style:'margin:8px 0 0;padding-left:18px;font-size:.87rem;color:var(--text-2)' });
+    r.why.forEach(w => ul.appendChild(el('li', { text:w })));
+    box.appendChild(ul);
+    list.appendChild(box);
+  });
+  host.appendChild(list);
+}
+
+function renderAuditClose() {
+  const rows = ranked().filter(r => r.auditScore > 0);
+  const n = rows.length;
+  const send = S.proposal.sendBy.trim() || '[day]';
+  $('#auditClose').textContent =
+    '"Based on what you\'ve shared, I can see ' + (n || '[X]') + ' clear automation '
+    + plural(n || 2, 'opportunity', 'opportunities') + '.\n'
+    + ' Let me put together a brief proposal showing exactly what I\'d build and\n'
+    + ' what time it would save you each month. Can I send that by ' + send + '?"';
+}
+
+function afterAuditChange() {
+  renderAuditFindings();
+  renderAuditClose();
+  renderKits();
+  renderPricing();
+  renderProposal();
+  renderPips();
+}
+
+/* ==========================================================================
+   PANEL — AUTOMATION KITS
+   ========================================================================== */
+
+function toggleKit(id) {
+  const i = S.kit.indexOf(id);
+  if (i === -1) S.kit.push(id); else S.kit.splice(i, 1);
+  S.kit.sort((a, b) => a - b);
+  save();
+  renderKits();
+  renderAuditFindings();
+  renderProposal();
+  renderPricing();
+  renderPips();
+}
+
+function kitHours() {
+  let lo = 0, hi = 0, estimated = 0;
+  S.kit.forEach(id => {
+    const a = auto(id);
+    if (!a) return;
+    lo += a.hours[0]; hi += a.hours[1];
+    if (a.hoursSrc === 'est') estimated++;
+  });
+  return { lo, hi, estimated };
+}
+
+/* Package band for a kit of this size — Ch. 9, p. 123 */
+function kitPackage() {
+  const n = S.kit.length;
+  if (n === 0) return null;
+  if (n === 1) return OFFERS.find(o => o.id === 'single');
+  if (n <= 3) return OFFERS.find(o => o.id === 'starter');
+  return OFFERS.find(o => o.id === 'full');
+}
+
+/* Suggested project fee: the overlap between the package band and this
+   niche's average project fee, falling back to the package band alone. */
+function suggestedFee() {
+  const pkg = kitPackage();
+  if (!pkg) return { value:0, basis:'No automations selected yet.' };
+  const nf = niche().fee;
+  const lo = Math.max(pkg.range[0], nf[0]);
+  const hi = Math.min(pkg.range[1], nf[1]);
+  if (lo <= hi) {
+    return { value: round((lo + hi) / 2, 50),
+      basis: 'Midpoint of where the ' + pkg.name + ' band (' + moneyRange(pkg.range)
+        + ') overlaps this niche\'s average project fee (' + moneyRange(nf) + ').' };
+  }
+  const above = pkg.range[0] > nf[1];
+  return { value: round((pkg.range[0] + pkg.range[1]) / 2, 50),
+    basis: 'Midpoint of the ' + pkg.name + ' band (' + moneyRange(pkg.range) + '). That sits '
+      + (above ? 'above' : 'below') + ' this niche\'s average project fee of ' + moneyRange(nf)
+      + ' — a kit this size is ' + (above ? 'larger' : 'smaller') + ' than the niche typically buys.' };
+}
+function suggestedRetainer() {
+  const nr = niche().retainer;
+  return { value: round((nr[0] + nr[1]) / 2, 25),
+    basis: 'Midpoint of this niche\'s monthly retainer range (' + moneyRange(nr) + ').' };
+}
+function quotedFee()      { return S.quote.fee      === null ? suggestedFee().value      : Number(S.quote.fee); }
+function quotedRetainer() { return S.quote.retainer === null ? suggestedRetainer().value : Number(S.quote.retainer); }
+
+/* Build weeks — anchored to the book's own productised package:
+   3 automations = 2-week delivery (Ch. 15, p. 231). */
+function suggestedWeeks() {
+  const n = S.kit.length;
+  if (!n) return 1;
+  return clamp(Math.round(n * 2 / 3), 1, 8);
+}
+function quotedWeeks() {
+  return S.proposal.weeks === null || S.proposal.weeks === '' ? suggestedWeeks() : Number(S.proposal.weeks);
+}
+
+/* The per-automation tool lists are the book's wording, which repeats itself
+   across templates ("Booking system", "Booking system/POS", "Calendly/Acuity").
+   The access list a client actually reads should name each system once. */
+const TOOL_CANON = {
+  'Zapier scheduler': 'Zapier',
+  'ChatGPT integration': 'ChatGPT (via Zapier)',
+  'ChatGPT personalisation (optional)': 'ChatGPT (via Zapier)',
+  'ChatGPT summary (optional)': 'ChatGPT (via Zapier)',
+  'Google Sheets CRM': 'Google Sheets',
+  'Calendly/Acuity': 'Booking system (Calendly / Acuity)',
+  'Booking system': 'Booking system (Calendly / Acuity)',
+  'Booking system/POS': 'Booking system (Calendly / Acuity) and POS',
+  'CRM/booking system': 'CRM or booking system',
+  'Twilio SMS (optional)': 'Twilio (SMS)',
+  'Twilio': 'Twilio (SMS)',
+  'Mailchimp or Gmail sequence': 'Mailchimp (or Gmail sequences)',
+  'Gmail or Mailchimp': 'Mailchimp (or Gmail sequences)',
+  'Slack/Teams notification': 'Slack or Teams',
+  'Relevant data sources': 'the data sources the weekly report pulls from'
+};
+function kitTools() {
+  const seen = [];
+  S.kit.forEach(id => (auto(id).tools || []).forEach(t => {
+    const name = TOOL_CANON[t] || t;
+    if (seen.indexOf(name) === -1) seen.push(name);
+  }));
+  /* "Booking system and POS" already covers the plain booking system. */
+  const both = 'Booking system (Calendly / Acuity) and POS';
+  if (seen.indexOf(both) !== -1) {
+    const i = seen.indexOf('Booking system (Calendly / Acuity)');
+    if (i !== -1) seen.splice(i, 1);
+  }
+  return seen;
+}
+
+function renderKits() {
+  /* --- the ranked cards --- */
+  const grid = $('#autoGrid');
+  clear(grid);
+  const rows = ranked();
+  rows.forEach(r => {
+    const a = r.a;
+    const picked = S.kit.indexOf(a.id) !== -1;
+    const card = el('div', { class:'auto-card' + (picked ? ' is-picked' : '') });
+
+    card.appendChild(el('div', { class:'auto-top' }, [
+      el('div', { class:'auto-no', text:String(a.id) }),
+      el('div', { style:'min-width:0;flex:1' }, [
+        el('h3', { class:'auto-title', text:a.name }),
+        el('div', { style:'display:flex;gap:6px;flex-wrap:wrap' }, [
+          r.auditScore > 0 ? el('span', { class:'rank-badge', text:'audit signal ' + r.auditScore }) : null,
+          r.inNiche ? el('span', { class:'tag tag-accent', text:'listed for this niche' }) : null,
+          el('span', { class:'tag', text:a.hours[0] + '–' + a.hours[1] + ' h build' +
+            (a.hoursSrc === 'est' ? ' (est.)' : '') })
+        ])
+      ])
+    ]));
+
+    card.appendChild(el('div', { class:'auto-flow' }, [
+      el('div', { class:'flow-row' }, [el('div', { class:'flow-k', text:'Trigger' }), el('div', { text:a.trigger })]),
+      el('div', { class:'flow-row' }, [el('div', { class:'flow-k', text:'Action' }),  el('div', { text:a.action })]),
+      el('div', { class:'flow-row' }, [el('div', { class:'flow-k', text:'Result' }),  el('div', { text:a.result })]),
+      el('div', { class:'flow-row' }, [el('div', { class:'flow-k', text:'Tools' }),   el('div', { text:a.tools.join(' · ') })])
+    ]));
+
+    if (r.why.length) {
+      const why = el('div', { class:'why' }, [el('strong', { text:'Your audit said:' })]);
+      const ul = el('ul');
+      r.why.slice(0, 3).forEach(w => ul.appendChild(el('li', { text:w })));
+      why.appendChild(ul);
+      card.appendChild(why);
+    }
+
+    const btn = el('button', {
+      type:'button',
+      class:'btn btn-sm' + (picked ? ' btn-primary' : ''),
+      onclick: () => toggleKit(a.id)
+    }, [document.createTextNode(picked ? '✓ In the kit' : '+ Add to kit')]);
+    card.appendChild(el('div', { class:'auto-foot' }, [btn]));
+
+    grid.appendChild(card);
+  });
+
+  /* --- the kit summary --- */
+  const sum = $('#kitSummary');
+  clear(sum);
+  const pkg = kitPackage();
+  const h = kitHours();
+  const fee = suggestedFee(), ret = suggestedRetainer();
+
+  if (!S.kit.length) {
+    sum.appendChild(el('div', { class:'empty', text:
+      'No automations selected. Run the audit, or use a package preset above — the book\'s Starter '
+      + 'Package is lead response, appointment reminders and review requests.' }));
+  } else {
+    sum.appendChild(el('div', { class:'grid grid-4' }, [
+      el('div', { class:'stat' }, [el('b', { text:String(S.kit.length) }), el('span', { text:'automations' })]),
+      el('div', { class:'stat' }, [el('b', { text:h.lo + '–' + h.hi + ' h' }), el('span', { text:'estimated build time' })]),
+      el('div', { class:'stat' }, [el('b', { text:money(fee.value) }), el('span', { text:'suggested project fee' })]),
+      el('div', { class:'stat' }, [el('b', { text:money(ret.value) + '/mo' }), el('span', { text:'suggested retainer' })])
+    ]));
+    sum.appendChild(el('p', { style:'margin:12px 0 0;font-size:.87rem;color:var(--text-2)' }, [
+      el('strong', { text:pkg.name + '. ' }),
+      document.createTextNode(pkg.inc + ' — ' + pkg.price + ' · ' + pkg.type + '. ' + fee.basis)
+    ]));
+    if (h.estimated) {
+      sum.appendChild(el('p', { style:'margin:8px 0 0;font-size:.83rem;color:var(--muted)', text:
+        h.estimated + ' of the ' + S.kit.length + ' selected ' + plural(h.estimated, 'automation has', 'automations have')
+        + ' an estimated build time. The book states build times only for the three worked examples in '
+        + 'Chapter 9 (pp. 114–115); the rest are this app\'s estimates, anchored to those three.' }));
+    }
+    sum.appendChild(el('p', { style:'margin:8px 0 0;font-size:.87rem' }, [
+      el('strong', { text:'Tools the client must give you access to: ' }),
+      document.createTextNode(kitTools().join(', '))
+    ]));
+  }
+  $('#kitBasis').textContent = 'Ch. 9, pp. 116–117 · 123';
+  $('#ctxKitCount').textContent = String(S.kit.length);
+
+  /* --- the niche table --- */
+  const tb = $('#nicheTable tbody');
+  clear(tb);
+  NICHES.forEach(n => {
+    const tr = el('tr', { class: n.id === S.ctx.niche ? 'is-current' : '' }, [
+      el('td', {}, [el('strong', { text:n.name })]),
+      el('td', { text:n.ops }),
+      el('td', { class:'num', text:moneyRange(n.fee) }),
+      el('td', { class:'num', text:moneyRange(n.retainer) + '/mo' }),
+      el('td', { text:n.why })
+    ]);
+    tb.appendChild(tr);
+  });
+}
+
+/* ==========================================================================
+   ROI  —  Ch. 9, pp. 123–124
+   ========================================================================== */
+
+const WEEKS_PER_MONTH = 4.33;
+
+function roi() {
+  const r = S.roi;
+  const num = v => (isNaN(Number(v)) ? 0 : Number(v));
+  const leadsRecovered = num(r.leads) * num(r.leadRecover) / 100;
+  const leadValue      = leadsRecovered * num(r.leadValue);
+  const noShows        = num(r.appts) * num(r.noshow) / 100;
+  const apptsRecovered = noShows * num(r.noshowCut) / 100;
+  const apptValue      = apptsRecovered * num(r.apptFee);
+  const hoursSaved     = num(r.adminHours) * WEEKS_PER_MONTH;
+  const timeValue      = hoursSaved * num(r.staffCost);
+  const revenue        = leadValue + apptValue;
+  const fee            = quotedFee();
+  const paybackMonths  = revenue > 0 ? fee / revenue : Infinity;
+  return { leadsRecovered, leadValue, noShows, apptsRecovered, apptValue,
+           hoursSaved, timeValue, revenue, total: revenue + timeValue,
+           fee, paybackMonths, paybackWeeks: paybackMonths * WEEKS_PER_MONTH };
+}
+
+function numField(label, obj, key, opts) {
+  opts = opts || {};
+  const id = 'nf-' + (opts.ns || 'x') + '-' + key;
+  const input = el('input', {
+    type:'number', min:opts.min, max:opts.max, step:opts.step || 1,
+    value: obj[key], id:id
+  });
+  input.addEventListener('input', () => {
+    obj[key] = input.value === '' ? '' : Number(input.value);
+    save();
+    if (opts.on) opts.on();
+  });
+  const lab = el('label', { for:id });
+  lab.appendChild(document.createTextNode(label + ' '));
+  if (opts.added) lab.appendChild(el('span', { class:'tag tag-added', text:'app-added' }));
+  const field = el('div', { class:'field' }, [lab, input]);
+  if (opts.note) field.appendChild(el('span', { class:'src', text:opts.note }));
+  return field;
+}
+
+function renderPricing() {
+  /* ------------------------------------------------------------ ROI form */
+  const form = $('#roiForm');
+  if (!form.dataset.built) {
+    const on = () => { renderPricing(); renderProposal(); };
+    const ns = 'roi';
+    form.appendChild(numField('Missed / unanswered enquiries per month', S.roi, 'leads',
+      { min:0, on, ns, note:'Book\'s proposal example: 5–10 leads/month not followed up (p. 125)' }));
+    form.appendChild(numField('Value of one converted enquiry ($)', S.roi, 'leadValue',
+      { min:0, on, ns, note:'Book uses $150 per consultation (p. 124)' }));
+    form.appendChild(numField('Share of those enquiries recovered (%)', S.roi, 'leadRecover',
+      { min:0, max:100, on, ns, note:'Lead nurture converts 15–25% of previously lost leads (p. 122)' }));
+    form.appendChild(numField('Appointments per month', S.roi, 'appts',
+      { min:0, on, ns, added:true, note:'Take this from the client\'s booking system' }));
+    form.appendChild(numField('No-show rate (%)', S.roi, 'noshow',
+      { min:0, max:100, on, ns, note:'From audit Section 2. Book\'s proposal example: approximately 15% (p. 125)' }));
+    form.appendChild(numField('Fee per appointment ($)', S.roi, 'apptFee',
+      { min:0, on, ns, note:'Book\'s dental example: $150 (p. 124)' }));
+    form.appendChild(numField('No-show reduction (%)', S.roi, 'noshowCut',
+      { min:0, max:100, on, ns, note:'Automation #2 delivers 50–70% (p. 121)' }));
+    form.appendChild(numField('Staff hours per week on manual tasks', S.roi, 'adminHours',
+      { min:0, step:0.5, on, ns, note:'From audit Section 4. Book\'s report example: 6.2 hours saved (p. 130)' }));
+    form.appendChild(numField('Cost of one staff hour ($)', S.roi, 'staffCost',
+      { min:0, on, ns, added:true, note:'The book gives no figure for this — use the client\'s real cost' }));
+    form.dataset.built = '1';
+  }
+  /* The audit writes into S.roi as well, so re-sync the inputs on every render. */
+  Object.keys(S.roi).forEach(k => {
+    const node = $('#nf-roi-' + k);
+    if (node && document.activeElement !== node && String(node.value) !== String(S.roi[k])) {
+      node.value = S.roi[k];
+    }
+  });
+
+  const R = roi();
+  const out = $('#roiOut');
+  clear(out);
+  const dl = el('dl');
+  const row = (k, v, big) => {
+    dl.appendChild(el('dt', { text:k }));
+    dl.appendChild(el('dd', { class: big ? 'big' : '', text:v }));
+  };
+  row('Enquiries recovered', R.leadsRecovered.toFixed(1) + '/mo');
+  row('…worth', money(R.leadValue) + '/mo');
+  row('No-shows per month', R.noShows.toFixed(1));
+  row('Appointments recovered', R.apptsRecovered.toFixed(1) + '/mo');
+  row('…worth', money(R.apptValue) + '/mo');
+  dl.appendChild(el('div', { class:'rule' }));
+  row('Recovered revenue', money(R.revenue) + '/mo', true);
+  row('Staff time recovered', R.hoursSaved.toFixed(1) + ' h/mo');
+  row('…notionally worth', money(R.timeValue) + '/mo');
+  dl.appendChild(el('div', { class:'rule' }));
+  row('Your project fee', money(R.fee));
+  row('Payback period', R.paybackMonths === Infinity ? '—'
+      : (R.paybackWeeks < 9 ? Math.max(1, Math.round(R.paybackWeeks)) + ' ' + plural(Math.round(R.paybackWeeks), 'week')
+                            : R.paybackMonths.toFixed(1) + ' months'), true);
+  out.appendChild(dl);
+  out.appendChild(el('p', { style:'margin:10px 0 0;font-size:.8rem;color:var(--muted)', text:
+    'Recovered revenue counts leads and appointments only — the same two levers the book\'s proposal ROI '
+    + 'line uses. Staff time is reported separately, because the book quantifies hours saved but never '
+    + 'puts an hourly cost on them.' }));
+
+  const nar = $('#roiNarrative');
+  clear(nar);
+  nar.appendChild(el('strong', { text:'The line for the proposal: ' }));
+  nar.appendChild(document.createTextNode(roiSentence()));
+
+  /* --------------------------------------------------------- offer table */
+  const tb = $('#offerTable tbody');
+  clear(tb);
+  const pkg = kitPackage();
+  OFFERS.forEach(o => {
+    tb.appendChild(el('tr', { class: pkg && pkg.id === o.id ? 'is-current' : '' }, [
+      el('td', {}, [el('strong', { text:o.name })]),
+      el('td', { text:o.inc }),
+      el('td', { class:'num', text:o.price }),
+      el('td', { text:o.type })
+    ]));
+  });
+
+  /* ------------------------------------------------- value pricing system */
+  const vp = $('#vpForm');
+  if (!vp.dataset.built) {
+    const on = () => renderPricing();
+    const ns = 'vp';
+    vp.appendChild(numField('① Outcome value ($/month)', S.vp, 'outcome', { min:0, on, ns,
+      note:'What the outcome is worth to the client each month' }));
+    vp.appendChild(numField('② Market rate — low ($/mo)', S.vp, 'marketLo', { min:0, on, ns,
+      note:'From 5 competitors or equivalent services' }));
+    vp.appendChild(numField('② Market rate — high ($/mo)', S.vp, 'marketHi', { min:0, on, ns }));
+    vp.appendChild(numField('③ Percentage of outcome value (5–15%)', S.vp, 'pct', { min:1, max:100, on, ns,
+      note:'The book\'s multiplier band' }));
+    const btn = el('button', { type:'button', class:'btn btn-sm', style:'align-self:end',
+      onclick: () => {
+        S.vp.outcome = Math.round(roi().total);
+        save();
+        renderPricing();
+        toast('Outcome value set from your ROI total');
+      } }, [document.createTextNode('↑ Use my ROI total')]);
+    vp.appendChild(el('div', { class:'field' }, [el('span', { class:'label', text:'Shortcut' }), btn]));
+    vp.dataset.built = '1';
+  }
+  Object.keys(S.vp).forEach(k => {
+    const node = $('#nf-vp-' + k);
+    if (node && document.activeElement !== node && String(node.value) !== String(S.vp[k])) {
+      node.value = S.vp[k];
+    }
+  });
+
+  const v = S.vp;
+  const byPct = Number(v.outcome) * Number(v.pct) / 100;
+  const span = Number(v.marketHi) - Number(v.marketLo);
+  const topThirdLo = Number(v.marketLo) + span * 2 / 3;
+  const rate = Math.max(byPct, topThirdLo);
+  const usedPct = byPct >= topThirdLo;
+  const vpOut = $('#vpOut');
+  clear(vpOut);
+  const dl2 = el('dl');
+  const row2 = (k, val, big) => {
+    dl2.appendChild(el('dt', { text:k }));
+    dl2.appendChild(el('dd', { class: big ? 'big' : '', text:val }));
+  };
+  row2('① Outcome value', money(v.outcome) + '/mo');
+  row2('③ Outcome value × ' + v.pct + '%', money(byPct) + '/mo');
+  row2('② Market rate range', moneyRange([v.marketLo, v.marketHi]) + '/mo');
+  row2('② Top third of market', money(topThirdLo) + '–' + money(v.marketHi) + '/mo');
+  dl2.appendChild(el('div', { class:'rule' }));
+  row2('Your retainer rate', money(round(rate, 25)) + '/mo', true);
+  row2('Project fee (3–5× first month)', money(round(rate * 3, 50)) + '–' + money(round(rate * 5, 50)), true);
+  vpOut.appendChild(dl2);
+  vpOut.appendChild(el('p', { style:'margin:10px 0 0;font-size:.83rem;color:var(--text-2)', text:
+    usedPct
+      ? 'The percentage of outcome value is the higher number here, so it sets the rate. Anchor every sales '
+        + 'conversation in Number 1 — what the outcome is worth to them.'
+      : 'The top third of the market rate is the higher number here, so it sets the rate — the book says to '
+        + 'use whichever is higher. Anchor the conversation in Number 1 regardless.' }));
+}
+
+function roiSentence() {
+  const R = roi();
+  if (R.revenue <= 0) return 'Fill in the value levers above and this sentence writes itself.';
+  const payback = R.paybackWeeks < 9
+    ? Math.max(1, Math.round(R.paybackWeeks)) + ' ' + plural(Math.round(R.paybackWeeks), 'week')
+    : R.paybackMonths.toFixed(1) + ' months';
+  return 'If these automations recover just ' + R.leadsRecovered.toFixed(1) + ' '
+    + plural(Math.round(R.leadsRecovered), 'enquiry', 'enquiries') + ' and reduce no-shows by '
+    + pct(S.roi.noshowCut) + ', the monthly value is approximately ' + money(R.revenue)
+    + ' — your investment pays back in ' + payback + '.';
+}
+
+/* ==========================================================================
+   PANEL — PROPOSAL
+   ========================================================================== */
+
+const PROPOSAL_CHECKS = [
+  { id:'p1', text:'The problem summary quotes the owner\'s own words from the audit',
+    meta:'Ch. 9, p. 125 — reflect back what you heard, and quantify where possible' },
+  { id:'p2', text:'Every number in the ROI section came from the audit, not from a guess',
+    meta:'Ch. 9, p. 127 — abstract objections dissolve when confronted with specific ROI data' },
+  { id:'p3', text:'It fits on one page',
+    meta:'Ch. 9, p. 125 — one page maximum' },
+  { id:'p4', text:'The maintenance retainer is framed as essential, not optional',
+    meta:'Ch. 9, p. 126 — an unmonitored broken automation is the problem you were hired to prevent' },
+  { id:'p5', text:'I have a working demonstration of at least one of these automations to show',
+    meta:'Ch. 9, p. 120 — demonstrations close sales that descriptions do not' },
+  { id:'p6', text:'It is priced on the value delivered, not the hours invested',
+    meta:'Ch. 9, p. 124' }
+];
+
+function problemBullets() {
+  const ev = auditScore().evidence.slice().sort((a, b) => b.w - a.w);
+  const seen = {}, out = [];
+  ev.forEach(e => {
+    if (seen[e.text]) return;
+    seen[e.text] = 1;
+    out.push(e.text);
+  });
+  const R = roi();
+  const quantified = [];
+  if (S.kit.indexOf(1) !== -1 || S.kit.indexOf(7) !== -1) {
+    quantified.push('Missed or unanswered enquiries: an estimated ' + S.roi.leads
+      + ' per month currently receive no timely follow-up');
+  }
+  if (S.kit.indexOf(2) !== -1 || S.kit.indexOf(5) !== -1) {
+    quantified.push('No-show rate of approximately ' + pct(S.roi.noshow) + ': '
+      + R.noShows.toFixed(0) + ' appointments/month at ' + money(S.roi.apptFee) + ' each — '
+      + money(R.noShows * S.roi.apptFee) + '/month in lost slots');
+  }
+  if (Number(S.roi.adminHours) > 0) {
+    quantified.push('Around ' + S.roi.adminHours + ' staff hours a week go into manual, repeatable admin — '
+      + R.hoursSaved.toFixed(0) + ' hours a month');
+  }
+  const extra = S.proposal.extra.split('\n').map(s => s.trim()).filter(Boolean);
+  return quantified.concat(out.slice(0, 4)).concat(extra);
+}
+
+function buildProposal() {
+  const L = [];
+  const by = S.proposal.by.trim();
+  const contact = S.proposal.contact.trim();
+  const fee = quotedFee(), ret = quotedRetainer(), weeks = quotedWeeks();
+  const R = roi();
+
+  L.push('AUTOMATION PROPOSAL');
+  L.push(clientName() + ' — ' + niche().name);
+  if (by) L.push('Prepared by ' + by + (contact ? '  ·  ' + contact : ''));
+  else if (contact) L.push(contact);
+  if (S.ctx.date) L.push('Audit date: ' + prettyDate(S.ctx.date));
+  L.push('');
+  L.push('1. THE PROBLEM SUMMARY');
+  L.push('Based on our conversation, here is what your current manual processes are costing:');
+  const bullets = problemBullets();
+  if (!bullets.length) {
+    L.push('   → [Run the Efficiency Audit — these bullets are written from the client\'s own answers]');
+  } else {
+    bullets.forEach(b => L.push('   → ' + b));
+  }
+  L.push('');
+  L.push('2. THE PROPOSED AUTOMATIONS');
+  if (!S.kit.length) {
+    L.push('   [No automations selected yet — pick them on the Automation Kits tab]');
+  } else {
+    S.kit.forEach((id, i) => {
+      const a = auto(id);
+      L.push('   ' + (i + 1) + '. ' + a.name + ' — ' + a.short);
+      L.push('      Outcome: ' + a.outcome);
+    });
+  }
+  L.push('');
+  L.push('3. THE INVESTMENT');
+  L.push('   Project fee:                  ' + money(fee));
+  L.push('   Optional monthly maintenance: ' + money(ret) + '/month');
+  L.push('   Estimated build time:         ' + weeks + ' ' + plural(weeks, 'week'));
+  L.push('');
+  L.push('4. THE ROI CALCULATION');
+  L.push('   ' + roiSentence());
+  if (R.hoursSaved > 0) {
+    L.push('   That is before the ' + R.hoursSaved.toFixed(0)
+      + ' hours a month of staff time these automations hand back to you.');
+  }
+  L.push('');
+  L.push('5. NEXT STEPS');
+  L.push('   To proceed, I need a 50% deposit (' + money(fee / 2) + ') and access to:');
+  L.push('   ' + (kitTools().length ? kitTools().join(', ') : '[tools list]') + '.');
+  L.push('   Build time is ' + weeks + ' ' + plural(weeks, 'week') + '. All automations are tested before handover.');
+  L.push('');
+  L.push('---');
+  L.push('Every automation is delivered with a one-page overview: what triggers it, what it does,');
+  L.push('what it connects, and how to pause it. Handover includes a 15–20 minute walkthrough.');
+  return L.join('\n');
+}
+
+function renderProposal() {
+  $('#proposalOut').textContent = buildProposal();
+  const wk = $('#propWeeks');
+  if (wk && document.activeElement !== wk) {
+    wk.value = quotedWeeks();
+    wk.placeholder = String(suggestedWeeks());
+  }
+  const checks = $('#proposalChecks');
+  if (!checks.dataset.built) {
+    PROPOSAL_CHECKS.forEach(c => checks.appendChild(checkItem(c, S.proposal.checks)));
+    checks.dataset.built = '1';
+  }
+}
+
+/* A reusable checklist item bound to a plain object of booleans. */
+function checkItem(item, store, onChange) {
+  const input = el('input', { type:'checkbox', id:'ck-' + item.id });
+  input.checked = !!store[item.id];
+  input.addEventListener('change', () => {
+    store[item.id] = input.checked;
+    save();
+    if (onChange) onChange();
+  });
+  const body = el('span', { class:'check-text' }, [
+    document.createTextNode(item.text),
+    item.meta ? el('span', { class:'check-meta', text:item.meta }) : null
+  ]);
+  return el('li', {}, [el('label', { class:'check', for:'ck-' + item.id }, [input, body])]);
+}
+
+/* ==========================================================================
+   PANEL — SYSTEMS AND SOPS  (Ch. 15)
+   ========================================================================== */
+
+function traitKey(stage, i) { return stage.id + '.' + i; }
+
+function renderStages() {
+  const grid = $('#stageGrid');
+  if (!grid.dataset.built) {
+    STAGES.forEach((st, si) => {
+      const card = el('div', { class:'readout' });
+      card.appendChild(el('div', { style:'display:flex;gap:8px;align-items:baseline;flex-wrap:wrap' }, [
+        el('h4', { style:'margin:0', text:'Stage ' + (si + 1) + ' — ' + st.name }),
+        el('span', { class:'tag tag-accent', text:st.income })
+      ]));
+      card.appendChild(el('p', { style:'margin:6px 0 10px;font-size:.87rem;color:var(--text-2)', text:st.blurb }));
+      const ul = el('ul', { class:'checklist' });
+      st.traits.forEach((t, i) => {
+        ul.appendChild(checkItem({ id:traitKey(st, i), text:t }, S.stage, renderStages));
+      });
+      card.appendChild(ul);
+      card.appendChild(el('p', { style:'margin:10px 0 0;font-size:.82rem;color:var(--muted)' }, [
+        el('strong', { text:'Focus: ' }), document.createTextNode(st.focus)
+      ]));
+      card.appendChild(el('p', { style:'margin:4px 0 0;font-size:.82rem;color:var(--muted)' }, [
+        el('strong', { text:'Trigger to next stage: ' }), document.createTextNode(st.next)
+      ]));
+      grid.appendChild(card);
+    });
+    grid.dataset.built = '1';
+  }
+
+  const matches = STAGES.map(st => {
+    const hit = st.traits.filter((t, i) => S.stage[traitKey(st, i)]).length;
+    return { st, hit, total:st.traits.length, ratio: hit / st.traits.length };
+  });
+  const out = $('#stageOut');
+  clear(out);
+  const any = matches.some(m => m.hit > 0);
+  if (!any) {
+    out.appendChild(el('p', { style:'margin:0;font-size:.9rem;color:var(--muted)', text:
+      'Tick the statements that are true today and this will name your stage — and the one thing that '
+      + 'moves you to the next one.' }));
+    return;
+  }
+  /* The furthest stage you substantially match (≥ 50% of its statements),
+     falling back to the strongest match. */
+  let current = null;
+  for (let i = matches.length - 1; i >= 0; i--) {
+    if (matches[i].ratio >= 0.5) { current = matches[i]; break; }
+  }
+  if (!current) current = matches.slice().sort((a, b) => b.ratio - a.ratio)[0];
+
+  out.appendChild(el('div', { style:'display:flex;gap:10px;align-items:baseline;flex-wrap:wrap' }, [
+    el('strong', { style:'font-size:1.05rem', text:'You are at ' + current.st.name }),
+    el('span', { class:'tag tag-accent', text:current.st.income }),
+    el('span', { class:'tag', text:current.hit + '/' + current.total + ' statements' })
+  ]));
+  const others = matches.filter(m => m !== current)
+    .map(m => m.st.name + ' ' + m.hit + '/' + m.total).join('  ·  ');
+  out.appendChild(el('p', { style:'margin:6px 0 0;font-size:.83rem;color:var(--muted)', text:'Also matching: ' + others }));
+  out.appendChild(el('p', { style:'margin:8px 0 0;font-size:.9rem' }, [
+    el('strong', { text:'Next: ' }), document.createTextNode(current.st.next)
+  ]));
+  out.appendChild(el('p', { style:'margin:6px 0 0;font-size:.9rem' }, [
+    el('strong', { text:'Focus now: ' }), document.createTextNode(current.st.focus)
+  ]));
+}
+
+const SOP_EARNERS = ['AI automation consultant','freelance writer','social media manager',
+  'prompt pack seller','AI-enhanced coach','content creator','digital product seller'];
+const SOP_TASKS = ['client onboarding workflow','core delivery workflow','monthly client reporting',
+  'outreach and follow-up sequence','new client proposal process','VA training documentation',
+  'automation build and testing','automation handover walkthrough'];
+
+function renderSop() {
+  const dlE = $('#sopEarnerList'), dlT = $('#sopTaskList');
+  if (!dlE.dataset.built) {
+    SOP_EARNERS.forEach(v => dlE.appendChild(el('option', { value:v })));
+    SOP_TASKS.forEach(v => dlT.appendChild(el('option', { value:v })));
+    dlE.dataset.built = dlT.dataset.built = '1';
+  }
+  const earner = S.sop.earner.trim() || '[type of AI income earner]';
+  const task = S.sop.task.trim() || '[task name]';
+  $('#sopOut').textContent =
+    '"You are a business operations specialist. I am a ' + earner + '.\n'
+    + ' I need a Standard Operating Procedure for the task of ' + task + '.\n'
+    + ' The SOP should include: purpose, trigger (when this is done), materials needed,\n'
+    + ' step-by-step instructions numbered sequentially, quality check criteria,\n'
+    + ' and common mistakes to avoid. Write for someone doing this for the first time."';
+
+  const list = $('#sopChecks');
+  if (!list.dataset.built) {
+    SOPS.forEach(s => {
+      list.appendChild(checkItem({
+        id: s.id,
+        text: s.pri + ' — ' + s.name,
+        meta: s.when + '  ·  ' + s.time + '  ·  click the task name to load it into the prompt above'
+      }, S.sop.done, renderSop));
+    });
+    /* Clicking a row's label also loads that task into the prompt builder. */
+    $$('.check-text', list).forEach((node, i) => {
+      node.addEventListener('click', () => {
+        S.sop.task = SOPS[i].name.replace(/ \(.*\)$/, '').toLowerCase();
+        $('#sopTask').value = S.sop.task;
+        save();
+        renderSop();
+      });
+    });
+    list.dataset.built = '1';
+  }
+  const done = SOPS.filter(s => S.sop.done[s.id]).length;
+  $('#sopMeter').firstElementChild.style.width = Math.round(done / SOPS.length * 100) + '%';
+  $('#sopMeter').classList.toggle('ok', done === SOPS.length);
+}
+
+function renderMrr() {
+  const host = $('#mrrList');
+  clear(host);
+  if (!S.mrr.length) {
+    host.appendChild(el('div', { class:'empty', text:
+      'No retainers listed yet. Add the ones you have — the book\'s point is that MRR is the number to '
+      + 'watch, not the project fees.' }));
+  } else {
+    S.mrr.forEach((r, i) => {
+      const name = el('input', { type:'text', value:r.name, placeholder:'Client name',
+        'aria-label':'Retainer ' + (i + 1) + ' — client name' });
+      /* Note: neither handler re-renders the row list — that would tear down the
+         input being typed into. Only the totals below depend on these values. */
+      name.addEventListener('input', () => { S.mrr[i].name = name.value; save(); });
+      const amt = el('input', { type:'number', min:0, step:25, value:r.amount, style:'max-width:130px',
+        'aria-label':'Retainer ' + (i + 1) + ' — monthly amount in dollars' });
+      amt.addEventListener('input', () => {
+        S.mrr[i].amount = amt.value === '' ? 0 : Number(amt.value);
+        save(); renderMrrTotals();
+      });
+      const del = el('button', { type:'button', class:'btn btn-sm btn-danger',
+        'aria-label':'Remove ' + (r.name || 'retainer'),
+        onclick: () => { S.mrr.splice(i, 1); save(); renderMrr(); } }, [document.createTextNode('✕')]);
+      host.appendChild(el('div', {
+        style:'display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap'
+      }, [name, amt, el('span', { class:'src', text:'$/month' }), del]));
+    });
+  }
+  renderMrrTotals();
+}
+
+function renderMrrTotals() {
+  const total = S.mrr.reduce((a, r) => a + (Number(r.amount) || 0), 0);
+  const out = $('#mrrOut');
+  clear(out);
+  const dl = el('dl');
+  const row = (k, v, big) => { dl.appendChild(el('dt', { text:k })); dl.appendChild(el('dd', { class:big ? 'big':'', text:v })); };
+  row('Retainers', String(S.mrr.length));
+  row('Monthly recurring revenue', money(total) + '/mo', true);
+  row('Annualised', money(total * 12) + '/yr');
+  out.appendChild(dl);
+
+  const band = MRR_BANDS.find(b => total >= b.lo && total < b.hi) || MRR_BANDS[0];
+  const proj = PROJECTIONS.find(p => total >= p.lo && total <= p.hi) || PROJECTIONS[0];
+  out.appendChild(el('p', { style:'margin:10px 0 0;font-size:.87rem' }, [
+    el('strong', { text:band.months + '. ' }), document.createTextNode(band.label)
+  ]));
+  out.appendChild(el('p', { style:'margin:6px 0 0;font-size:.83rem;color:var(--muted)', text:
+    'Against the Chapter 9 projections for automation services, MRR at this level sits in the "'
+    + proj.stage + '" band (' + proj.clients + ' active clients, ' + proj.income + ').' }));
+
+  const bands = $('#mrrBands');
+  clear(bands);
+  const tbl = el('table');
+  tbl.appendChild(el('thead', {}, [el('tr', {}, [
+    el('th', { text:'Months' }), el('th', { class:'num', text:'Target MRR' }), el('th', { text:'What it means' })
+  ])]));
+  const tb = el('tbody');
+  MRR_BANDS.forEach(b => {
+    tb.appendChild(el('tr', { class: b === band ? 'is-current' : '' }, [
+      el('td', { text:b.months }),
+      el('td', { class:'num', text: b.hi === Infinity ? money(b.lo) + '+' : money(b.lo) + '–' + money(b.hi) }),
+      el('td', { text:b.label })
+    ]));
+  });
+  tbl.appendChild(tb);
+  bands.appendChild(el('div', { class:'table-scroll' }, [tbl]));
+}
+
+function renderVa() {
+  const list = $('#vaChecks');
+  if (!list.dataset.built) {
+    VA_SIGNALS.forEach(s => list.appendChild(checkItem(s, S.va, renderVa)));
+    list.dataset.built = '1';
+  }
+  const hit = VA_SIGNALS.filter(s => S.va[s.id]).length;
+  const out = $('#vaOut');
+  clear(out);
+  const verdict = hit === 0
+    ? 'Not yet. None of the three signals is true, and a VA hired before them creates cost before the business can support it.'
+    : hit === 3
+      ? 'All three signals are true. The book\'s framing is that hiring late creates a ceiling that prevents income growth — start with a paid 3-hour trial task using your most documented SOP.'
+      : hit + ' of the 3 signals ' + plural(hit, 'is', 'are') + ' true. The book says hire when any of them holds — start with tasks that are fully documented in your SOPs and require no creative judgment.';
+  out.appendChild(el('p', { style:'margin:0;font-size:.92rem', text:verdict }));
+  if (hit > 0) {
+    out.appendChild(el('p', { style:'margin:8px 0 0;font-size:.85rem;color:var(--text-2)', text:
+      'Weeks 1–2, delegate the fully process-dependent work: social media scheduling, invoice tracking and '
+      + 'payment follow-up, basic research, formatting and uploading finished content, calendar management. '
+      + 'Month 2, with light training: first-pass editing, Canva customisation from your templates, client '
+      + 'communication templates, monthly report data compilation.' }));
+    const sopsDone = SOPS.filter(s => S.sop.done[s.id]).length;
+    out.appendChild(el('p', { style:'margin:8px 0 0;font-size:.85rem;color:var(--muted)', text:
+      sopsDone === 0
+        ? 'You have no SOPs marked complete yet. Priority #6 in the SOP list is VA training documentation, and the book puts it before the hire, not after.'
+        : 'You have ' + sopsDone + ' of ' + SOPS.length + ' priority SOPs built — those are the tasks you can hand over first.' }));
+  }
+}
+
+function renderProductise() {
+  const tb = $('#prodTable tbody');
+  if (tb.dataset.built) return;
+  PRODUCTISE.forEach(p => {
+    tb.appendChild(el('tr', {}, [
+      el('td', { text:p.from }),
+      el('td', {}, [el('strong', { text:p.to })]),
+      el('td', { text:p.impact })
+    ]));
+  });
+  tb.dataset.built = '1';
+}
+
+/* ==========================================================================
+   PANEL — SELLING PLAYBOOK  (Ch. 9)
+   ========================================================================== */
+
+function renderPlaybookStatic() {
+  const steps = $('#stepList');
+  if (!steps.dataset.built) {
+    STEPS.forEach(s => {
+      steps.appendChild(el('div', { class:'readout', style:'margin-bottom:10px' }, [
+        el('h4', { style:'margin:0 0 4px' }, [
+          el('span', { class:'tag tag-accent', text:'Step ' + s.n }),
+          document.createTextNode('  ' + s.name)
+        ]),
+        el('p', { style:'margin:0;font-size:.9rem;color:var(--text-2)', text:s.body })
+      ]));
+    });
+    steps.dataset.built = '1';
+  }
+
+  const obj = $('#objections');
+  if (!obj.dataset.built) {
+    OBJECTIONS.forEach((o, i) => {
+      obj.appendChild(el('div', { class:'readout', style:'margin-bottom:10px' }, [
+        el('h4', { style:'margin:0 0 6px', text:'Objection ' + (i + 1) + ': "' + o.q + '"' }),
+        el('p', { style:'margin:0;font-size:.9rem;color:var(--text-2)', text:'“' + o.a + '”' })
+      ]));
+    });
+    obj.dataset.built = '1';
+  }
+
+  const pt = $('#projTable tbody');
+  if (!pt.dataset.built) {
+    PROJECTIONS.forEach(p => {
+      pt.appendChild(el('tr', {}, [
+        el('td', {}, [el('strong', { text:p.stage })]),
+        el('td', { class:'num', text:p.clients }),
+        el('td', { text:p.flow }),
+        el('td', { class:'num', text:p.income }),
+        el('td', { class:'num', text:p.hours })
+      ]));
+    });
+    pt.dataset.built = '1';
+  }
+
+  const mt = $('#mileTable tbody');
+  if (!mt.dataset.built) {
+    MILESTONES.forEach(m => {
+      mt.appendChild(el('tr', {}, [el('td', {}, [el('strong', { text:m.when })]), el('td', { text:m.what })]));
+    });
+    mt.dataset.built = '1';
+  }
+
+  const tc = $('#toolCards');
+  if (!tc.dataset.built) {
+    TOOLS.forEach(t => {
+      const card = el('div', { class:'readout' });
+      card.appendChild(el('div', { style:'display:flex;gap:8px;align-items:baseline;flex-wrap:wrap' }, [
+        el('h4', { style:'margin:0', text:t.name }),
+        el('span', { class:'tag tag-amber', text:t.tag })
+      ]));
+      const dl = el('dl', { style:'grid-template-columns:1fr;gap:8px;margin-top:10px' });
+      t.rows.forEach(r => {
+        dl.appendChild(el('dt', {}, [el('strong', { text:r[0] })]));
+        dl.appendChild(el('dd', { style:'text-align:left;font-weight:400;color:var(--text-2)', text:r[1] }));
+      });
+      card.appendChild(dl);
+      if (t.tip) card.appendChild(el('p', { class:'note', style:'margin:10px 0 0' }, [
+        el('strong', { text:'Key tip. ' }), document.createTextNode(t.tip)
+      ]));
+      tc.appendChild(card);
+    });
+    tc.dataset.built = '1';
+  }
+
+  const cs = $('#caseStudy');
+  if (!cs.dataset.built) {
+    const dl = el('dl', { style:'grid-template-columns:150px 1fr;gap:8px 16px;margin:0;font-size:.9rem;display:grid' });
+    CASE_STUDY.forEach(r => {
+      dl.appendChild(el('dt', {}, [el('strong', { text:r[0] })]));
+      dl.appendChild(el('dd', { style:'margin:0;color:var(--text-2)', text:r[1] }));
+    });
+    cs.appendChild(dl);
+    cs.dataset.built = '1';
+  }
+
+  const ac = $('#actionChecks');
+  if (!ac.dataset.built) {
+    ACTION_STEPS.forEach(a => ac.appendChild(checkItem(a, S.actions, renderActionMeter)));
+    ac.dataset.built = '1';
+  }
+  renderActionMeter();
+}
+
+function renderActionMeter() {
+  const done = ACTION_STEPS.filter(a => S.actions[a.id]).length;
+  const m = $('#actionMeter');
+  m.firstElementChild.style.width = Math.round(done / ACTION_STEPS.length * 100) + '%';
+  m.classList.toggle('ok', done === ACTION_STEPS.length);
+}
+
+function renderOutreach() {
+  const form = $('#outreachForm');
+  if (!form.dataset.built) {
+    const mk = (label, key, ph) => {
+      const input = el('input', { type:'text', id:'or-' + key, placeholder:ph, autocomplete:'off' });
+      input.value = S.outreach[key];
+      input.addEventListener('input', () => { S.outreach[key] = input.value; save(); renderOutreach(); });
+      return el('div', { class:'field' }, [el('label', { for:'or-' + key, text:label }), input]);
+    };
+    form.appendChild(mk('Owner\'s first name', 'name', 'e.g. Marcus'));
+    form.appendChild(mk('Business name', 'business', 'e.g. Riverside Dental'));
+    form.appendChild(mk('What you noticed they use', 'tool', 'e.g. Calendly / a contact form / manual bookings'));
+    form.dataset.built = '1';
+  }
+  const o = S.outreach;
+  const name = o.name.trim() || '[Name]';
+  const biz = o.business.trim() || S.ctx.client.trim() || '[Business Name]';
+  const tool = o.tool.trim() || '[Calendly/a contact form/manual bookings]';
+  const ind = niche().name.replace(/ \/ /g, '/').toLowerCase();
+  $('#outreachOut').textContent =
+    'Hi ' + name + ', I noticed that ' + biz + ' is using ' + tool + '.\n'
+    + 'I specialise in building automated systems for ' + ind + ' businesses that eliminate the\n'
+    + 'manual follow-up work that eats into your day — things like responding to out-of-hours\n'
+    + 'enquiries, sending appointment reminders, and chasing missing documents.\n\n'
+    + 'I offer a free 30-minute efficiency audit that identifies exactly where your biggest\n'
+    + 'time losses are. Would it be worth having that conversation?';
+}
+
+function renderReport() {
+  const form = $('#reportForm');
+  if (!form.dataset.built) {
+    const on = () => renderReport();
+    const ns = 'rep';
+    form.appendChild(numField('After-hours enquiries handled', S.report, 'enquiries', { min:0, on, ns }));
+    form.appendChild(numField('Reminders sent', S.report, 'reminders', { min:0, on, ns }));
+    form.appendChild(numField('New reviews collected', S.report, 'reviews', { min:0, on, ns }));
+    form.appendChild(numField('Staff hours saved', S.report, 'hours', { min:0, step:0.1, on, ns }));
+    form.appendChild(numField('Appointments recovered', S.report, 'appts', { min:0, on, ns }));
+    form.dataset.built = '1';
+  }
+  const r = S.report;
+  $('#reportOut').textContent =
+    '"This month, your automations handled ' + r.enquiries + ' after-hours enquiries automatically,\n'
+    + ' sent ' + r.reminders + ' appointment reminders, and collected ' + r.reviews + ' new Google reviews.\n'
+    + ' Estimated staff time saved: ' + r.hours + ' hours. Estimated recovered appointments: ' + r.appts + '."';
+  $('#msNiche').textContent = niche().name.replace(/ \/ /g, '/').toLowerCase();
+}
+
+/* ==========================================================================
+   TABS, THEME, PERSISTENCE PLUMBING
+   ========================================================================== */
+
+const TABS = ['audit','kits','proposal','pricing','systems','playbook'];
+
+function selectTab(id, focus) {
+  TABS.forEach(t => {
+    const tab = $('#tab-' + t), panel = $('#panel-' + t);
+    const on = t === id;
+    tab.setAttribute('aria-selected', on ? 'true' : 'false');
+    tab.tabIndex = on ? 0 : -1;
+    panel.hidden = !on;
+  });
+  const changed = S.tab !== id;
+  S.tab = id;
+  save();
+  if (focus) $('#tab-' + id).focus();
+  /* A tab switch is a change of subject — start it at the top. */
+  if (changed && window.scrollY > 0) {
+    window.scrollTo({ top:0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
+}
+
+function wireTabs() {
+  TABS.forEach((t, i) => {
+    const tab = $('#tab-' + t);
+    tab.addEventListener('click', () => selectTab(t));
+    tab.addEventListener('keydown', e => {
+      let next = null;
+      if (e.key === 'ArrowRight') next = TABS[(i + 1) % TABS.length];
+      else if (e.key === 'ArrowLeft') next = TABS[(i - 1 + TABS.length) % TABS.length];
+      else if (e.key === 'Home') next = TABS[0];
+      else if (e.key === 'End') next = TABS[TABS.length - 1];
+      if (next) { e.preventDefault(); selectTab(next, true); }
+    });
+  });
+}
+
+function renderPips() {
+  const a = auditAnswered();
+  $('#pipAudit').textContent = a.done + '/' + a.total;
+  $('#pipKits').textContent = String(S.kit.length);
+  $('#ctxKitCount').textContent = String(S.kit.length);
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  $('#themeBtn').textContent = theme === 'dark' ? '☀ Light' : '🌙 Dark';
+  $('#themeBtn').setAttribute('aria-label', 'Switch to ' + (theme === 'dark' ? 'light' : 'dark') + ' theme');
+  try { localStorage.setItem(THEME_KEY, theme); } catch (e) { /* ignore */ }
+}
+
+function backupPayload() {
+  return JSON.stringify({
+    app: 'AI Automation Kits',
+    savedAt: new Date().toISOString(),
+    data: S
+  }, null, 2);
+}
+
+/* ==========================================================================
+   RENDER ALL / INIT
+   ========================================================================== */
+
+function renderAll() {
+  renderAuditFindings();
+  renderAuditClose();
+  renderKits();
+  renderProposal();
+  renderPricing();
+  renderStages();
+  renderSop();
+  renderMrr();
+  renderVa();
+  renderProductise();
+  renderPlaybookStatic();
+  renderOutreach();
+  renderReport();
+  renderPips();
+}
+
+function init() {
+  load();
+
+  /* theme */
+  const stored = (function () {
+    try { return localStorage.getItem(THEME_KEY); } catch (e) { return null; }
+  })();
+  const theme = (stored === 'light' || stored === 'dark') ? stored
+    : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  applyTheme(theme);
+  $('#themeBtn').addEventListener('click', () => {
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  /* context bar */
+  const sel = $('#ctxNiche');
+  NICHES.forEach(n => sel.appendChild(el('option', { value:n.id, text:n.name })));
+  sel.value = S.ctx.niche;
+  sel.addEventListener('change', () => {
+    S.ctx.niche = sel.value;
+    S.quote.fee = null;
+    S.quote.retainer = null;
+    save();
+    renderAll();
+  });
+
+  const client = $('#ctxClient');
+  client.value = S.ctx.client;
+  client.addEventListener('input', () => {
+    S.ctx.client = client.value;
+    save();
+    renderAuditFindings(); renderProposal(); renderOutreach();
+  });
+
+  const date = $('#ctxDate');
+  if (!S.ctx.date) S.ctx.date = today();
+  date.value = S.ctx.date;
+  date.addEventListener('input', () => { S.ctx.date = date.value; save(); renderProposal(); });
+
+  /* audit */
+  renderAuditForm();
+  $('#auditToKit').addEventListener('click', () => {
+    const picks = ranked().filter(r => r.auditScore > 0).slice(0, 6).map(r => r.a.id);
+    if (!picks.length) { toast('Answer the audit first — nothing is flagged yet'); return; }
+    S.kit = picks.sort((a, b) => a - b);
+    save();
+    renderAll();
+    toast(picks.length + ' ' + plural(picks.length, 'automation') + ' added to the kit');
+    selectTab('kits');
+  });
+
+  /* kit presets */
+  $$('[data-preset]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = btn.getAttribute('data-preset');
+      if (p === 'starter') S.kit = [1, 2, 3];
+      else if (p === 'full') S.kit = ranked().slice(0, 6).map(r => r.a.id).sort((a, b) => a - b);
+      else if (p === 'niche') S.kit = niche().maps.slice().sort((a, b) => a - b);
+      else S.kit = [];
+      save();
+      renderAll();
+      toast(S.kit.length ? S.kit.length + ' ' + plural(S.kit.length, 'automation') + ' selected' : 'Kit cleared');
+    });
+  });
+
+  /* proposal fields */
+  const bindText = (sel2, obj, key, after) => {
+    const node = $(sel2);
+    node.value = obj[key] === null || obj[key] === undefined ? '' : obj[key];
+    node.addEventListener('input', () => {
+      obj[key] = node.value;
+      save();
+      if (after) after();
+    });
+  };
+  bindText('#propBy', S.proposal, 'by', renderProposal);
+  bindText('#propContact', S.proposal, 'contact', renderProposal);
+  bindText('#propSendBy', S.proposal, 'sendBy', () => { renderProposal(); renderAuditClose(); });
+  bindText('#propExtra', S.proposal, 'extra', renderProposal);
+  const weeks = $('#propWeeks');
+  weeks.addEventListener('input', () => {
+    S.proposal.weeks = weeks.value === '' ? null : Number(weeks.value);
+    save();
+    renderProposal();
+  });
+
+  $('#proposalDl').addEventListener('click', () => {
+    download('automation-proposal-' + slug(S.ctx.client) + '.md', buildProposal());
+    toast('Proposal downloaded');
+  });
+  $('#proposalPrint').addEventListener('click', () => window.print());
+
+  /* SOP fields */
+  bindText('#sopEarner', S.sop, 'earner', renderSop);
+  bindText('#sopTask', S.sop, 'task', renderSop);
+  $('#mrrAdd').addEventListener('click', () => {
+    S.mrr.push({ name:'', amount: suggestedRetainer().value });
+    save();
+    renderMrr();
+  });
+
+  /* copy buttons */
+  $$('[data-copy]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = $(btn.getAttribute('data-copy'));
+      if (target) copyText(target.textContent);
+    });
+  });
+
+  /* backup / clear */
+  $('#backupBtn').addEventListener('click', () => {
+    download('automation-kits-backup-' + today() + '.json', backupPayload());
+    toast('Backup downloaded');
+  });
+  $('#clearBtn').addEventListener('click', () => {
+    if (!window.confirm('Erase everything saved in this app?\n\nA backup file downloads first.')) return;
+    download('automation-kits-backup-' + today() + '.json', backupPayload());
+    try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ }
+    S = defaults();
+    S.ctx.date = today();
+    /* Re-render from scratch: drop the built flags on containers we cache. */
+    ['#roiForm','#vpForm','#outreachForm','#reportForm','#proposalChecks','#stageGrid',
+     '#sopChecks','#vaChecks','#actionChecks'].forEach(s2 => {
+      const node = $(s2);
+      if (node) { clear(node); delete node.dataset.built; }
+    });
+    client.value = ''; sel.value = S.ctx.niche; date.value = S.ctx.date;
+    ['#propBy','#propContact','#propSendBy','#propExtra','#propWeeks','#sopEarner','#sopTask']
+      .forEach(s2 => { const n = $(s2); if (n) n.value = ''; });
+    $('#sopEarner').value = S.sop.earner;
+    renderAuditForm();
+    renderAll();
+    toast('Everything cleared');
+  });
+
+  /* first paint */
+  renderAll();
+  selectTab(TABS.indexOf(S.tab) === -1 ? 'audit' : S.tab);
+  wireTabs();
+
+  if (!storageOK) {
+    toast('Local storage is unavailable — nothing will be saved');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+</script>
+</body>
+</html>
