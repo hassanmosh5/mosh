@@ -1,0 +1,2905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Canva Template Library Builder</title>
+<meta name="description" content="Plan, spec and price a whole library of niche Canva template packs — brand kits, canvas sizes, per-template layout sheets, listing copy and a 90-day catalogue plan. Single file, fully offline.">
+<meta name="color-scheme" content="light dark">
+<style>
+/* ===========================================================================
+   THE CANVA TEMPLATE LIBRARY BUILDER
+   Single file. No external requests of any kind. Everything below is inline.
+   Design system shared with the other mini apps in this repo.
+   =========================================================================== */
+/* ===========================================================================
+   THE WEALTH IDEAS PROMPT GENERATOR
+   Single file. No external requests of any kind. Everything below is inline.
+   =========================================================================== */
+
+:root {
+  --ink:            #16161d;
+  --ink-2:          #414152;
+  --ink-3:          #6b6b80;
+  --bg:             #f6f5f2;
+  --surface:        #ffffff;
+  --surface-2:      #fbfaf7;
+  --line:           #e3e0d8;
+  --line-2:         #cfcbc0;
+  --gold:           #9a7413;
+  --gold-bg:        #fdf6e3;
+  --indigo:         #35357a;
+  --indigo-2:       #4a4aa0;
+  --indigo-bg:      #eeeefb;
+  --green:          #1d6b45;
+  --green-bg:       #e8f4ed;
+  --red:            #9d2f2f;
+  --shadow:         0 1px 2px rgba(20,20,35,.06), 0 8px 24px -12px rgba(20,20,35,.18);
+  --shadow-lg:      0 2px 4px rgba(20,20,35,.06), 0 24px 48px -20px rgba(20,20,35,.28);
+  --radius:         14px;
+  --radius-sm:      9px;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif: ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
+}
+
+html[data-theme="dark"] {
+  --ink:            #ece9e3;
+  --ink-2:          #b9b5ad;
+  --ink-3:          #8d8981;
+  --bg:             #14141a;
+  --surface:        #1c1c24;
+  --surface-2:      #22222c;
+  --line:           #30303c;
+  --line-2:         #43434f;
+  --gold:           #e0b64a;
+  --gold-bg:        #2b2413;
+  --indigo:         #a8a8f0;
+  --indigo-2:       #8f8fe0;
+  --indigo-bg:      #1f1f33;
+  --green:          #6fce9f;
+  --green-bg:       #16281f;
+  --red:            #e88b8b;
+  --shadow:         0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  --shadow-lg:      0 2px 4px rgba(0,0,0,.4), 0 24px 48px -20px rgba(0,0,0,.7);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --ink:            #ece9e3;
+    --ink-2:          #b9b5ad;
+    --ink-3:          #8d8981;
+    --bg:             #14141a;
+    --surface:        #1c1c24;
+    --surface-2:      #22222c;
+    --line:           #30303c;
+    --line-2:         #43434f;
+    --gold:           #e0b64a;
+    --gold-bg:        #2b2413;
+    --indigo:         #a8a8f0;
+    --indigo-2:       #8f8fe0;
+    --indigo-bg:      #1f1f33;
+    --green:          #6fce9f;
+    --green-bg:       #16281f;
+    --red:            #e88b8b;
+    --shadow:         0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+    --shadow-lg:      0 2px 4px rgba(0,0,0,.4), 0 24px 48px -20px rgba(0,0,0,.7);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { line-height: 1.25; margin: 0; font-weight: 650; letter-spacing: -.011em; }
+p { margin: 0 0 1em; }
+p:last-child { margin-bottom: 0; }
+a { color: var(--indigo); }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+
+/* ---------- top bar ---------- */
+
+.topbar {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.topbar .wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 62px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.brand { display: flex; align-items: baseline; gap: 10px; margin-right: auto; }
+.brand b { font-size: 17px; font-weight: 650; letter-spacing: -.02em; }
+.brand span { font-size: 12px; color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; }
+@media (max-width: 640px) { .brand span { display: none; } }
+
+/* ---------- buttons ---------- */
+
+button, .btn {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 550;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm);
+  padding: 8px 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: background .12s, border-color .12s, transform .12s;
+}
+button:hover, .btn:hover { background: var(--surface-2); border-color: var(--ink-3); }
+button:active { transform: translateY(1px); }
+button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visible,
+input:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--indigo-2);
+  outline-offset: 2px;
+}
+button.primary {
+  background: var(--indigo);
+  border-color: var(--indigo);
+  color: #fff;
+}
+html[data-theme="dark"] button.primary { color: #14141a; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) button.primary { color: #14141a; } }
+button.primary:hover { background: var(--indigo-2); border-color: var(--indigo-2); }
+button.gold {
+  background: var(--gold-bg);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+button.ghost { background: transparent; border-color: transparent; color: var(--ink-2); }
+button.ghost:hover { background: var(--surface-2); border-color: var(--line); }
+button.danger { color: var(--red); border-color: var(--line-2); }
+button.danger:hover { border-color: var(--red); }
+button[disabled] { opacity: .45; cursor: not-allowed; }
+button.sm { padding: 5px 10px; font-size: 13px; }
+
+/* ---------- tabs ---------- */
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  scrollbar-width: thin;
+}
+.tabs .wrap { display: flex; gap: 2px; }
+.tab {
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  border-bottom: 2.5px solid transparent;
+  padding: 12px 14px;
+  color: var(--ink-3);
+  font-weight: 550;
+  white-space: nowrap;
+  font-size: 14.5px;
+}
+.tab:hover { background: var(--surface-2); border-color: transparent; border-bottom-color: var(--line-2); }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--gold); }
+
+main { padding: 26px 0 80px; }
+.panel[hidden] { display: none; }
+
+/* ---------- cards ---------- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.card + .card { margin-top: 18px; }
+.card > h2 { font-size: 17px; margin-bottom: 4px; }
+.card > h2 + .sub { margin-top: 0; }
+.sub { color: var(--ink-3); font-size: 14px; margin: 0 0 16px; }
+
+.grid-2 { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 18px; }
+@media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 480px); gap: 18px; align-items: start; }
+@media (max-width: 1000px) { .split { grid-template-columns: 1fr; } }
+.sticky { position: sticky; top: 128px; }
+@media (max-width: 1000px) { .sticky { position: static; } }
+
+/* ---------- idea chips ---------- */
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 13.5px;
+  font-weight: 550;
+  color: var(--ink-2);
+}
+.chip[aria-pressed="true"] {
+  background: var(--indigo);
+  border-color: var(--indigo);
+  color: #fff;
+}
+html[data-theme="dark"] .chip[aria-pressed="true"] { color: #14141a; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) .chip[aria-pressed="true"] { color: #14141a; } }
+
+/* ---------- CLEAR fields ---------- */
+
+.field { border: 0; padding: 0; margin: 0 0 16px; }
+.field:last-child { margin-bottom: 0; }
+.field > legend {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0;
+  margin-bottom: 7px;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.letter {
+  display: inline-grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  border-radius: 6px;
+  background: var(--gold-bg);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  font: 650 12.5px/1 var(--mono);
+  flex: none;
+}
+.letter.plain { background: var(--indigo-bg); color: var(--indigo); border-color: var(--indigo-2); }
+.hint { font-size: 12.5px; color: var(--ink-3); margin: 5px 0 0; font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+select, textarea, input[type="text"], input[type="number"] {
+  font: inherit;
+  font-size: 14.5px;
+  width: 100%;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm);
+  padding: 9px 11px;
+}
+select { cursor: pointer; }
+textarea { resize: vertical; min-height: 62px; line-height: 1.55; }
+label.inline { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-2); cursor: pointer; }
+input[type="checkbox"], input[type="radio"] { width: 16px; height: 16px; accent-color: var(--indigo); flex: none; cursor: pointer; }
+
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.row.end { justify-content: flex-end; }
+.spacer { flex: 1 1 auto; }
+
+/* ---------- output ---------- */
+
+.output {
+  font: 13.5px/1.6 var(--mono);
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  max-height: 60vh;
+  overflow: auto;
+  margin: 0;
+  color: var(--ink);
+}
+.output .lbl { color: var(--gold); font-weight: 700; }
+.tokens { font-size: 12.5px; color: var(--ink-3); }
+
+/* ---------- misc ---------- */
+
+.pill {
+  display: inline-block;
+  font: 550 11.5px/1 var(--sans);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: var(--indigo-bg);
+  color: var(--indigo);
+  border: 1px solid transparent;
+}
+.pill.gold { background: var(--gold-bg); color: var(--gold); }
+.pill.green { background: var(--green-bg); color: var(--green); }
+
+.note {
+  background: var(--gold-bg);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-sm);
+  padding: 13px 15px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.note b { color: var(--ink); }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 9px 11px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); font-weight: 650; }
+tbody tr:last-child td { border-bottom: 0; }
+.scroll-x { overflow-x: auto; }
+
+ul.tight, ol.tight { margin: 0 0 1em; padding-left: 1.25em; }
+ul.tight li, ol.tight li { margin-bottom: .35em; }
+
+.stat { display: flex; gap: 22px; flex-wrap: wrap; }
+.stat > div { min-width: 88px; }
+.stat b { display: block; font: 650 24px/1.2 var(--sans); letter-spacing: -.02em; }
+.stat span { font-size: 12.5px; color: var(--ink-3); }
+
+.saved-item {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 13px 15px;
+  background: var(--surface-2);
+}
+.saved-item + .saved-item { margin-top: 10px; }
+.saved-item header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+.saved-item h3 { font-size: 14.5px; font-weight: 600; }
+.saved-item .meta { font-size: 12.5px; color: var(--ink-3); }
+.saved-item pre {
+  font: 12.5px/1.55 var(--mono);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 8px 0 0;
+  max-height: 220px;
+  overflow: auto;
+  color: var(--ink-2);
+}
+details > summary { cursor: pointer; font-size: 13.5px; color: var(--ink-2); }
+
+.empty { text-align: center; padding: 40px 20px; color: var(--ink-3); }
+.empty b { display: block; color: var(--ink-2); margin-bottom: 4px; }
+
+/* ---------- toast ---------- */
+
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 11px 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 550;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s, transform .18s;
+  z-index: 100;
+  max-width: calc(100vw - 40px);
+  text-align: center;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ---------- print ---------- */
+
+@media print {
+  .topbar, .tabs, .no-print { display: none !important; }
+  body { background: #fff; color: #000; }
+  .card { border: 0; box-shadow: none; padding: 0; }
+  .output { border: 1px solid #999; max-height: none; background: #fff; }
+  main { padding: 0; }
+}
+
+/* ---------- additions specific to this app ---------- */
+
+/* A <select> is as wide as its longest option, which inflates the min-content
+   width of its grid track. Every collapsed column below is minmax(0,1fr) so
+   the track can shrink past it rather than pushing the page sideways. */
+select { min-width: 0; }
+@media (max-width: 1000px) { .split  { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 900px)  { .grid-2 { grid-template-columns: minmax(0, 1fr); } }
+.split > div, .grid-2 > div { min-width: 0; }
+
+.swatches { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.swatch {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  width: 132px;
+  background: var(--surface-2);
+}
+.swatch .chipcolor { height: 46px; display: block; }
+.swatch .meta { padding: 7px 9px; }
+.swatch .meta b { display: block; font-size: 12.5px; font-weight: 600; }
+.swatch .meta code { font: 12px/1.4 var(--mono); color: var(--ink-3); }
+.swatch .meta span { display: block; font-size: 11.5px; color: var(--ink-3); margin-top: 2px; }
+
+.typeset { display: grid; gap: 10px; }
+.typeset > div {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 11px 13px;
+  background: var(--surface-2);
+}
+.typeset b { font-size: 14.5px; }
+.typeset span { display: block; font-size: 12.5px; color: var(--ink-3); }
+
+.sheet td.num { font: 650 13px/1.5 var(--mono); color: var(--ink-3); width: 34px; }
+.sheet td.size { font: 13px/1.5 var(--mono); white-space: nowrap; color: var(--ink-2); }
+.sheet .layout { display: block; font-size: 12.5px; color: var(--ink-3); margin-top: 3px; }
+
+.meter {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+.meter > i { display: block; height: 100%; background: var(--green); }
+.meter.warn > i { background: var(--gold); }
+.meter.bad > i { background: var(--red); }
+
+.checklist { list-style: none; margin: 0; padding: 0; }
+.checklist li { padding: 7px 0; border-bottom: 1px solid var(--line); }
+.checklist li:last-child { border-bottom: 0; }
+.checklist label { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; cursor: pointer; }
+.checklist label span { color: var(--ink-2); }
+.checklist input { margin-top: 3px; }
+
+.weeks { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+.week {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 11px 13px;
+  background: var(--surface-2);
+  font-size: 13.5px;
+}
+.week h4 { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); margin-bottom: 6px; }
+.week ol { margin: 0; padding-left: 1.15em; }
+.week li { margin-bottom: 3px; }
+
+.kv { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 4px 14px; font-size: 14px; }
+.kv dt { color: var(--ink-3); font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; padding-top: 2px; }
+.kv dd { margin: 0; color: var(--ink-2); }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <b>The Canva Template Library Builder</b>
+      <span>Catalogue Edition</span>
+    </div>
+    <button id="themeBtn" class="ghost" type="button" aria-label="Switch colour theme"><span id="themeIcon">◐</span> Theme</button>
+    <button id="exportAllBtn" class="ghost" type="button">⬇ Back up</button>
+    <button id="resetAllBtn" class="ghost danger" type="button">🗑 Clear</button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="wrap" role="tablist">
+    <button class="tab" role="tab" id="tab-pack"      aria-controls="panel-pack"      aria-selected="true">🎨 Pack Builder</button>
+    <button class="tab" role="tab" id="tab-catalogue" aria-controls="panel-catalogue" aria-selected="false">🗂 Catalogue Planner</button>
+    <button class="tab" role="tab" id="tab-validate"  aria-controls="panel-validate"  aria-selected="false">✅ Validate</button>
+    <button class="tab" role="tab" id="tab-sell"      aria-controls="panel-sell"      aria-selected="false">💰 Sell It</button>
+    <button class="tab" role="tab" id="tab-library"   aria-controls="panel-library"   aria-selected="false">📚 My Library <span id="libCount" class="tokens"></span></button>
+    <button class="tab" role="tab" id="tab-ref"       aria-controls="panel-ref"       aria-selected="false">📖 Reference</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =================================================================== -->
+<!-- PACK BUILDER                                                         -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-pack" role="tabpanel" aria-labelledby="tab-pack">
+
+  <div class="card no-print">
+    <h2>1 · Pick the buyer</h2>
+    <p class="sub">A pack is discovered by niche before it is judged by design. Every palette, font
+      pairing and template name below changes with this choice.</p>
+    <div class="chips" id="nicheChips"></div>
+    <p class="hint" id="nicheCount" style="margin-top:10px"></p>
+  </div>
+
+  <div class="split" style="margin-top:18px">
+    <div>
+      <div class="card no-print">
+        <h2>2 · Choose the pack</h2>
+        <p class="sub" id="packTypeSub">Each pack type carries its own canvas sizes, template
+          count and market price band.</p>
+
+        <fieldset class="field">
+          <legend><span class="letter">1</span> Pack type</legend>
+          <select id="packType"></select>
+          <p class="hint" id="packTypeHint"></p>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter">2</span> Templates in the pack</legend>
+          <select id="packSize"></select>
+          <p class="hint">The book's price table pays for the bundle, not the file: 5–10 templates
+            sit at $12–$27, 20+ at $27–$67.</p>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter plain">3</span> Angle</legend>
+          <select id="angle"></select>
+          <p class="hint">The angle rewrites the pack name, the promise and the listing copy.
+            It is what makes two packs of the same templates two products.</p>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter plain">4</span> Shop name <span class="hint" style="margin:0">for the licence page</span></legend>
+          <input type="text" id="shopName" placeholder="e.g. Northlight Studio" autocomplete="off">
+        </fieldset>
+
+        <fieldset class="field">
+          <legend><span class="letter plain">5</span> Include in the spec</legend>
+          <div class="row" style="gap:14px">
+            <label class="inline"><input type="checkbox" id="optBrand"> Brand kit sheet</label>
+            <label class="inline"><input type="checkbox" id="optLayout"> Per-template layout sheet</label>
+            <label class="inline"><input type="checkbox" id="optListing"> Listing copy + tags</label>
+            <label class="inline"><input type="checkbox" id="optPrice"> Tiered pricing</label>
+            <label class="inline"><input type="checkbox" id="optBrief"> AI design-brief prompt</label>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="card">
+        <h2>Brand kit</h2>
+        <p class="sub">Set these once in Canva (Brand Kit → colours, fonts) and every template in
+          the pack inherits them. This is what makes a pack look like a pack.</p>
+        <ul class="swatches" id="swatches"></ul>
+        <div class="typeset" id="typeset" style="margin-top:14px"></div>
+        <p class="hint" id="paletteWhy" style="margin-top:12px"></p>
+      </div>
+
+      <div class="card">
+        <h2>Build sheet</h2>
+        <p class="sub" id="sheetSub"></p>
+        <div class="scroll-x">
+          <table class="sheet">
+            <thead><tr><th></th><th>Template</th><th>Canvas</th></tr></thead>
+            <tbody id="sheetBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card sticky">
+        <div class="row" style="margin-bottom:10px">
+          <h2 style="margin:0" id="specName">Pack spec</h2>
+          <span class="spacer"></span>
+          <span class="pill gold" id="specPrice"></span>
+        </div>
+        <p class="sub" id="specPromise"></p>
+        <pre class="output" id="specOut"></pre>
+        <div class="row no-print" style="margin-top:14px">
+          <button class="primary" type="button" id="copySpec">📋 Copy spec</button>
+          <button type="button" id="saveSpec">💾 Save to library</button>
+          <button type="button" id="dlSpecMd">⬇ .md</button>
+          <button type="button" id="dlSpecTxt">⬇ .txt</button>
+          <span class="spacer"></span>
+          <button class="ghost sm" type="button" id="shuffleBtn" title="Pick a random niche + pack type">🎲</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<!-- CATALOGUE PLANNER                                                    -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-catalogue" role="tabpanel" aria-labelledby="tab-catalogue" hidden>
+
+  <div class="card no-print">
+    <h2>The library, not the pack</h2>
+    <p class="sub">Chapter 7's mindset shift: the first ten products are infrastructure, not income.
+      Income compounds between products 15 and 25. So set a catalogue target, not an income target
+      — then publish against it.</p>
+    <div class="grid-2">
+      <fieldset class="field">
+        <legend><span class="letter">1</span> Catalogue size</legend>
+        <select id="catSize">
+          <option value="12">12 packs — early traction ($300–$900/mo band)</option>
+          <option value="20" selected>20 packs — the book's 90-day target</option>
+          <option value="30">30 packs — established seller ($900–$3,000/mo band)</option>
+          <option value="40">40 packs — full catalogue ($2,000–$6,000+/mo band)</option>
+        </select>
+      </fieldset>
+      <fieldset class="field">
+        <legend><span class="letter">2</span> Publishing cadence</legend>
+        <select id="catCadence">
+          <option value="1">1 pack per week</option>
+          <option value="2" selected>2 packs per week (Denise Okafor's cadence)</option>
+          <option value="3">3 packs per week</option>
+        </select>
+      </fieldset>
+    </div>
+    <fieldset class="field">
+      <legend><span class="letter plain">3</span> Spread across</legend>
+      <div class="row" style="gap:14px">
+        <label class="inline"><input type="radio" name="catmode" id="catOneNiche" value="one" checked> One niche, many pack types</label>
+        <label class="inline"><input type="radio" name="catmode" id="catOneType" value="type"> One pack type, many niches</label>
+        <label class="inline"><input type="radio" name="catmode" id="catMixed" value="mixed"> Mixed</label>
+      </div>
+      <p class="hint">One niche is the book's recommendation for a first catalogue — a shop with a
+        single coherent aesthetic and audience outranks a scattered one, and every review you earn
+        lifts every other listing in the shop.</p>
+    </fieldset>
+  </div>
+
+  <div class="card">
+    <div class="row" style="margin-bottom:12px">
+      <h2 style="margin:0">Your library</h2>
+      <span class="spacer"></span>
+      <button class="ghost sm no-print" type="button" id="reshuffleCat">🎲 Reshuffle</button>
+    </div>
+    <div class="stat" id="catStats" style="margin-bottom:16px"></div>
+    <div class="scroll-x">
+      <table>
+        <thead><tr><th>#</th><th>Pack</th><th>Type</th><th>Templates</th><th>Price</th><th>Tier</th></tr></thead>
+        <tbody id="catBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Publishing schedule</h2>
+    <p class="sub" id="catScheduleSub"></p>
+    <div class="weeks" id="catWeeks"></div>
+  </div>
+
+  <div class="card">
+    <h2>Price ladder</h2>
+    <p class="sub">Chapter 7's upsell strategy: each product is an entry point, not an isolated sale.
+      The customer who climbs this ladder is worth 6–10× a single-purchase buyer, at no extra
+      acquisition cost.</p>
+    <div id="catLadder"></div>
+    <div class="row no-print" style="margin-top:16px">
+      <button class="primary" type="button" id="copyCat">📋 Copy plan</button>
+      <button type="button" id="dlCat">⬇ Download plan</button>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<!-- VALIDATE                                                             -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-validate" role="tabpanel" aria-labelledby="tab-validate" hidden>
+
+  <div class="card">
+    <h2>The 30-Minute Validation Method</h2>
+    <p class="sub">Chapter 7 names building-before-validating as the single most costly mistake in
+      this income stream. Run at least three of the six methods before you open Canva. Two or more
+      positive signals: build. Otherwise: change the niche, the angle, or the pack type — not the
+      design.</p>
+    <div class="note" style="margin-bottom:16px">
+      <b>Validating:</b> <span id="valSubject"></span>
+    </div>
+    <div class="scroll-x">
+      <table>
+        <thead><tr><th>Method</th><th>Do this</th><th>Signal</th></tr></thead>
+        <tbody id="valBody"></tbody>
+      </table>
+    </div>
+    <div class="row" style="margin-top:16px; align-items:flex-start">
+      <div style="flex:1 1 260px; min-width:220px">
+        <div class="meter" id="valMeter"><i style="width:0"></i></div>
+        <p class="hint" id="valVerdict" style="margin-top:8px"></p>
+      </div>
+      <button class="ghost sm no-print" type="button" id="valReset">Reset scores</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Search phrases to run</h2>
+    <p class="sub">Paste these straight into Etsy, Gumroad, Pinterest and Google Trends. They are
+      built from the niche and pack type you selected in the Pack Builder.</p>
+    <pre class="output" id="valQueries"></pre>
+    <div class="row no-print" style="margin-top:12px">
+      <button type="button" id="copyQueries">📋 Copy search phrases</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>The three criteria</h2>
+    <p class="sub">Applied together before a single hour is invested. All three must pass.</p>
+    <div class="grid-2" id="criteria"></div>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<!-- SELL IT                                                              -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-sell" role="tabpanel" aria-labelledby="tab-sell" hidden>
+
+  <div class="card">
+    <h2>Where Canva template packs sell</h2>
+    <p class="sub">Fees, traffic and buyer quality differ enough that the platform choice changes
+      the product. Rows are the book's platform table; the notes are what they mean for template
+      packs specifically.</p>
+    <div class="scroll-x">
+      <table>
+        <thead><tr><th>Platform</th><th>Fee</th><th>Traffic</th><th>For template packs</th></tr></thead>
+        <tbody id="platBody"></tbody>
+      </table>
+    </div>
+    <p class="hint" style="margin-top:12px">Recommended sequence: <b>Gumroad first</b> (zero cost,
+      simplest listing, validate fast) → <b>Etsy</b> once you have two or three positive reviews
+      (largest search traffic in this market, and the dominant platform for Canva templates) →
+      <b>Creative Market</b> or your own site once income is consistent.</p>
+  </div>
+
+  <div class="card">
+    <h2>Listing copy</h2>
+    <p class="sub">The five-paragraph description structure from Chapter 7's SEO section, filled in
+      from your pack. Edit the specifics — the structure is what ranks.</p>
+    <pre class="output" id="listingOut"></pre>
+    <div class="row no-print" style="margin-top:12px">
+      <button class="primary" type="button" id="copyListing">📋 Copy listing</button>
+      <button type="button" id="dlListing">⬇ Download</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Etsy tags</h2>
+    <p class="sub">Thirteen slots, all used, mixing broad terms with long-tail phrases. Etsy caps
+      each tag at 20 characters — every tag below already fits.</p>
+    <div class="chips" id="tagChips"></div>
+    <div class="row no-print" style="margin-top:14px">
+      <button type="button" id="copyTags">📋 Copy all 13 tags</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Pricing reference</h2>
+    <p class="sub">Chapter 7's complete pricing table. Price at the bottom of the band, then raise
+      as reviews accumulate — a $4 pack signals "made quickly"; the same pack at $17 signals
+      "designed professionally".</p>
+    <div class="scroll-x">
+      <table>
+        <thead><tr><th>Product type</th><th>Price range</th><th>Best platform</th><th>Notes</th></tr></thead>
+        <tbody id="priceBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Pre-launch checklist</h2>
+    <p class="sub">Fourteen steps. The one most sellers skip is <b>mockups</b> — Chapter 7 calls
+      product mockup images the single most important factor in conversion rate, and says this one
+      step can double it on an otherwise identical listing.</p>
+    <ul class="checklist" id="launchList"></ul>
+    <p class="hint" id="launchProgress" style="margin-top:12px"></p>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<!-- MY LIBRARY                                                           -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-library" role="tabpanel" aria-labelledby="tab-library" hidden>
+  <div class="card">
+    <div class="row" style="margin-bottom:12px">
+      <h2 style="margin:0">Saved packs</h2>
+      <span class="spacer"></span>
+      <button class="no-print" type="button" id="dlLibrary">⬇ Download all as one file</button>
+    </div>
+    <p class="sub" id="librarySub"></p>
+    <div class="stat" id="libStats" style="margin-bottom:18px"></div>
+    <div id="libraryList"></div>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<!-- REFERENCE                                                            -->
+<!-- =================================================================== -->
+<section class="panel" id="panel-ref" role="tabpanel" aria-labelledby="tab-ref" hidden>
+
+  <div class="card">
+    <h2>The eight-step creation workflow</h2>
+    <p class="sub">Chapter 7's workflow, with the Canva-specific detail filled in. Ninety minutes to
+      three hours per pack, against ten to twenty hours without AI assistance.</p>
+    <div class="scroll-x">
+      <table>
+        <thead><tr><th>Step</th><th>What you do</th><th>Time</th></tr></thead>
+        <tbody id="wfBody"></tbody>
+      </table>
+    </div>
+    <p class="hint" style="margin-top:12px">Step 6 is the one new sellers underinvest in. A mockup
+      showing the templates in use — on a phone, a laptop, a printed page — converts dramatically
+      better than a flat screenshot of the file.</p>
+  </div>
+
+  <div class="card">
+    <h2>Canvas size cheat sheet</h2>
+    <p class="sub">Every size this app uses, in one table. In Canva these are <b>Custom size</b>
+      values in pixels — preset names move around, pixel dimensions do not.</p>
+    <div class="scroll-x">
+      <table>
+        <thead><tr><th>Canvas</th><th>Pixels</th><th>Used by</th></tr></thead>
+        <tbody id="sizeBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Delivering a Canva template pack</h2>
+    <p class="sub">What the buyer actually receives, and why the instructions page matters more
+      than it looks.</p>
+    <ol class="tight" id="deliveryList"></ol>
+    <div class="note" style="margin-top:14px">
+      <b>Instant usability</b> is Chapter 7's third criterion: could a buyer open this and use it
+      productively within ten minutes? For a Canva pack that means a one-page PDF with the template
+      link, a two-line "how to edit" instruction, the font names, and the hex codes. It is fifteen
+      minutes of work and it is the difference between a five-star review and a refund request.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>The four most costly mistakes</h2>
+    <div class="grid-2" id="mistakes"></div>
+  </div>
+
+  <div class="card">
+    <h2>Realistic income milestones</h2>
+    <p class="sub">Chapter 7's projections for digital products, which assume consistent publishing
+      of one to two products per week and active listing optimisation. As the book's own disclaimer
+      notes, these are ranges based on observed outcomes — not guarantees of results.</p>
+    <div class="scroll-x">
+      <table>
+        <thead><tr><th>Stage</th><th>Catalogue</th><th>Avg price</th><th>Monthly income</th></tr></thead>
+        <tbody id="milestoneBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>About this app</h2>
+    <p>Everything here is drawn from <i>The AI Income Blueprint</i> — Chapter 7 (Income Stream #2:
+      Selling AI-Generated Digital Products) for the product types, validation method, pricing,
+      platforms, SEO and catalogue strategy; Chapter 4 for the Canva AI tool profile and the Bulk
+      Create technique; and Chapter 5 for the CLEAR-formula design-brief prompt.</p>
+    <p style="margin-bottom:0">This file is entirely self-contained. It makes no network requests,
+      loads no fonts, scripts, images or trackers, and sends nothing anywhere. Your saved packs live
+      in this browser's <code>localStorage</code> and nowhere else.</p>
+  </div>
+</section>
+
+</main>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+/* ---------------------------------------------------------------------------
+   CANVAS SIZES
+   Canva preset names move around between releases; pixel dimensions do not.
+   Every size below is entered in Canva as a Custom size in pixels.
+   --------------------------------------------------------------------------- */
+const SIZES = {
+  sq:      { w: 1080, h: 1080, label: "Instagram / square post" },
+  port:    { w: 1080, h: 1350, label: "Instagram portrait post (4:5)" },
+  story:   { w: 1080, h: 1920, label: "Instagram story / reel (9:16)" },
+  hl:      { w: 1080, h: 1920, label: "Story highlight cover", note: "artwork centred in the middle 500×500 — the rest is cropped by the circle" },
+  pin:     { w: 1000, h: 1500, label: "Pinterest pin (2:3)" },
+  pinTall: { w: 1000, h: 2100, label: "Tall Pinterest pin (infographic)" },
+  li:      { w: 1200, h: 1200, label: "LinkedIn square post" },
+  liDoc:   { w: 1080, h: 1350, label: "LinkedIn document carousel page" },
+  liBan:   { w: 1584, h: 396,  label: "LinkedIn profile banner" },
+  deck:    { w: 1920, h: 1080, label: "Presentation slide (16:9)" },
+  a4:      { w: 2480, h: 3508, label: "A4 at 300 dpi" },
+  letter:  { w: 2550, h: 3300, label: "US Letter at 300 dpi" },
+  card:    { w: 1050, h: 600,  label: "Business card, 3.5 × 2 in at 300 dpi" },
+  card57:  { w: 1500, h: 2100, label: "5 × 7 in card at 300 dpi" },
+  ebook:   { w: 1410, h: 2250, label: "E-book / Kindle cover" },
+  mock:    { w: 2000, h: 2000, label: "Listing image / mockup" },
+  email:   { w: 600,  h: 200,  label: "Email header" },
+  emailD:  { w: 600,  h: 80,   label: "Email section divider" },
+  ad:      { w: 1200, h: 628,  label: "Meta feed ad (landscape)" },
+  yt:      { w: 1280, h: 720,  label: "YouTube thumbnail" },
+  ytBan:   { w: 2560, h: 1440, label: "YouTube channel banner", note: "keep everything vital inside the centre 1546 × 423 safe area" },
+};
+
+/* ---------------------------------------------------------------------------
+   PACK TYPES
+   Each template carries the canvas it is built on, the job it does for the
+   buyer, and the layout structure that goes into the design brief. The layout
+   lines are what turn a list of names into something a designer — or an AI —
+   can actually build.
+   --------------------------------------------------------------------------- */
+const PACK_TYPES = [
+  {
+    id: "ig-post", name: "Instagram Post Pack", emoji: "📸",
+    blurb: "The highest-volume Canva pack category on Etsy. Every small business owner posts; almost none want to design.",
+    channel: "Instagram feed",
+    templates: [
+      { n: "Quote card",            s: "sq",   use: "Signature-look quote the buyer's audience will screenshot", layout: "Centred quote in heading face at 64–80 px, attribution beneath at 26 px, logo lock-up bottom centre, generous 120 px margins" },
+      { n: "Carousel cover",        s: "port", use: "Slide 1 — the hook that earns the swipe", layout: "Top-weighted headline in 3 lines max, 96 px, thin rule beneath, 'swipe →' cue bottom right, single image block filling the lower third" },
+      { n: "Carousel body slide",   s: "port", use: "Slides 2–9 — one idea per slide", layout: "Slide number top left, 44 px sub-head, 28 px body block capped at 45 words, footer rule with handle" },
+      { n: "Carousel close slide",  s: "port", use: "Final slide — save, follow, or click", layout: "Single centred call to action, 60 px, secondary line at 26 px, profile circle placeholder above" },
+      { n: "Tip / list post",       s: "sq",   use: "Five-point list — the most-saved format on the platform", layout: "Numbered rows on alternating tint bands, 34 px each, heading strip across the top at 20% canvas height" },
+      { n: "Before & after",        s: "sq",   use: "Proof, without a testimonial", layout: "Vertical 50/50 split, labels in accent pill top-left of each half, caption strip across the bottom" },
+      { n: "Testimonial card",      s: "sq",   use: "Social proof in the buyer's brand colours", layout: "Oversized opening quote mark in accent at 25% opacity, 38 px quote, name and role at 24 px, five-star row" },
+      { n: "Offer / promo post",    s: "sq",   use: "The post that actually sells something", layout: "Accent banner across the top third, offer headline 72 px, price or date line, CTA button shape bottom centre" },
+      { n: "Meet the owner",        s: "port", use: "The introduction post pinned to the top of the grid", layout: "Full-bleed portrait placeholder in the top 60%, name in heading face overlapping the image edge, three-line bio beneath" },
+      { n: "FAQ / myth-buster",     s: "sq",   use: "Objection handling disguised as content", layout: "Question in accent block top half, answer on base colour bottom half, hard horizontal split" },
+      { n: "Announcement",          s: "sq",   use: "New service, new hours, new location", layout: "Centred label pill, headline 68 px, supporting line 28 px, thin double rule frame inset 80 px" },
+      { n: "Grid filler / pattern", s: "sq",   use: "The tile that makes a nine-post grid look designed", layout: "Brand pattern or texture at full bleed, small centred mark, no copy" },
+    ],
+  },
+  {
+    id: "ig-story", name: "Instagram Story Pack", emoji: "📱",
+    blurb: "Stories expire in 24 hours, so buyers burn through templates faster than any other format — which is exactly why they re-buy.",
+    channel: "Instagram stories",
+    templates: [
+      { n: "Poll / this-or-that",   s: "story", use: "Engagement bait that feeds the algorithm", layout: "Question in the top 30%, two option blocks centred with a gap left for the native poll sticker, safe zones clear of the top and bottom 250 px" },
+      { n: "Link-sticker CTA",      s: "story", use: "The story that sends traffic somewhere", layout: "Headline centred at 40% height, arrow pointing to a reserved link-sticker zone at 65% height" },
+      { n: "Behind the scenes",     s: "story", use: "Photo-first story with a caption bar", layout: "Full-bleed photo placeholder, translucent brand bar across the lower third, 34 px caption" },
+      { n: "Testimonial story",     s: "story", use: "Reviews, reformatted vertically", layout: "Quote block on base colour with 100 px margins, star row above, name below, accent underline" },
+      { n: "Countdown",             s: "story", use: "Launch or event urgency", layout: "Big numeral in heading face at 220 px, label beneath, reserved countdown-sticker zone at 70% height" },
+      { n: "Q&A answer",            s: "story", use: "Answering the question box, on brand", layout: "Question in a rounded tinted card top third, answer text block beneath, handle bottom centre" },
+      { n: "New post alert",        s: "story", use: "Driving the story audience to the feed", layout: "Angled post-preview frame at centre with drop shadow, 'new post' label above, tap cue below" },
+      { n: "Offer story",           s: "story", use: "The direct sell", layout: "Accent full-bleed background, offer headline 90 px reversed out, price line, CTA button shape at 70% height" },
+      { n: "Weekly schedule",       s: "story", use: "Class times, opening hours, content schedule", layout: "Seven stacked rows with day label left, detail right, alternating tint" },
+      { n: "Cover / intro frame",   s: "story", use: "The first frame of every story sequence", layout: "Logo lock-up centred, single line of copy beneath at 32 px, brand texture at 8% opacity" },
+    ],
+  },
+  {
+    id: "highlights", name: "Story Highlight Cover Set", emoji: "⭕",
+    blurb: "The cheapest pack to make and one of the easiest to sell — a twelve-icon set is an impulse buy that pulls buyers into the rest of the shop.",
+    channel: "Instagram profile",
+    templates: [
+      { n: "About",     s: "hl", use: "Who this business is", layout: "Line-icon centred in the middle 500 × 500, 3 px stroke in the primary, base-colour field" },
+      { n: "Services",  s: "hl", use: "What they sell", layout: "Line-icon centred, same stroke weight and optical size as every other cover in the set" },
+      { n: "Pricing",   s: "hl", use: "The question everyone DMs", layout: "Line-icon centred, secondary-colour field for tonal variation across the row" },
+      { n: "Reviews",   s: "hl", use: "Social proof, one tap away", layout: "Star or quote icon centred, accent field" },
+      { n: "FAQ",       s: "hl", use: "Objection handling", layout: "Question-mark icon centred, base field" },
+      { n: "Book now",  s: "hl", use: "The one that converts", layout: "Calendar icon centred, accent field — the only accent cover, so it reads first" },
+      { n: "Contact",   s: "hl", use: "Phone, email, location", layout: "Envelope icon centred, base field" },
+      { n: "Team",      s: "hl", use: "The people behind it", layout: "Two-figure icon centred, secondary field" },
+      { n: "Gallery",   s: "hl", use: "Portfolio or product shots", layout: "Frame icon centred, base field" },
+      { n: "Tips",      s: "hl", use: "Value content", layout: "Lightbulb icon centred, secondary field" },
+      { n: "Offers",    s: "hl", use: "Promotions and seasonal deals", layout: "Tag icon centred, accent field" },
+      { n: "Blank",     s: "hl", use: "The one the buyer relabels themselves", layout: "Empty base field with a centred guide box and an editable text layer" },
+    ],
+  },
+  {
+    id: "pin", name: "Pinterest Pin Pack", emoji: "📌",
+    blurb: "Pinterest is a search engine, so pins keep working months after posting — buyers know this, and pay for packs that let them publish daily.",
+    channel: "Pinterest",
+    templates: [
+      { n: "Blog-post pin",     s: "pin",     use: "Driving traffic to an article", layout: "Title in heading face across the top 40% on a solid band, image placeholder below, URL strip at the base" },
+      { n: "Lead-magnet pin",   s: "pin",     use: "The freebie that builds the email list", layout: "Product mockup floated centre with shadow, 'free' pill top left, benefit line beneath, CTA bar bottom" },
+      { n: "Listicle pin",      s: "pin",     use: "Numbered posts, the format Pinterest rewards", layout: "Numeral in the accent at 180 px top left, title wrapping beside it, three-item preview list below" },
+      { n: "Product pin",       s: "pin",     use: "Selling a physical or digital product", layout: "Photo at full bleed top 65%, price pill overlapping the seam, product name and shop line beneath" },
+      { n: "Infographic pin",   s: "pinTall", use: "The most-saved pin format there is", layout: "Five stacked numbered sections with alternating tint bands, 60 px section heads, 28 px body, footer branding" },
+      { n: "Quote pin",         s: "pin",     use: "Pure brand reach", layout: "Centred quote at 62 px on a textured field, thin rule above and below, handle bottom centre" },
+      { n: "Video pin cover",   s: "pin",     use: "The still frame that earns the play", layout: "Full-bleed still placeholder, translucent scrim over the lower half, three-line hook reversed out" },
+      { n: "Comparison pin",    s: "pin",     use: "This vs. that — high save rate", layout: "Vertical split with a centre divider rule, label pill on each side, verdict strip across the bottom" },
+      { n: "Seasonal pin",      s: "pin",     use: "The listing that spikes four times a year", layout: "Seasonal motif frame inset 90 px, headline centred, date line beneath — motif swapped per season" },
+      { n: "Checklist pin",     s: "pin",     use: "Saveable, practical, endlessly repostable", layout: "Title band top, six tick rows at 34 px with accent tick marks, branded footer" },
+    ],
+  },
+  {
+    id: "li", name: "LinkedIn Content Pack", emoji: "💼",
+    blurb: "Professional buyers pay more per template than consumer buyers, and there are far fewer LinkedIn packs on the market than Instagram ones.",
+    channel: "LinkedIn",
+    templates: [
+      { n: "Profile banner",       s: "liBan", use: "The first impression on every profile view", layout: "Positioning line left-aligned, clear of the avatar circle overlap on the lower left, brand mark right, flat colour field" },
+      { n: "Square insight post",  s: "li",    use: "One idea, one image", layout: "Statement at 58 px in the top two-thirds, thin accent rule, name and title strip at the base" },
+      { n: "Data / stat post",     s: "li",    use: "The number that stops the scroll", layout: "Oversized figure at 200 px centred, source line beneath at 22 px, context sentence below the rule" },
+      { n: "Carousel cover",       s: "liDoc", use: "Slide 1 of the document post", layout: "Hook in 3 lines at 84 px, page count pill bottom left, swipe cue bottom right" },
+      { n: "Carousel body page",   s: "liDoc", use: "Slides 2–9", layout: "Section number top left, 46 px sub-head, 26 px body capped at 55 words, footer with name and handle" },
+      { n: "Carousel CTA page",    s: "liDoc", use: "The ask at the end", layout: "Headshot placeholder circle centred, one-line ask at 48 px, contact strip beneath" },
+      { n: "Testimonial post",     s: "li",    use: "Client proof for a B2B audience", layout: "Quote at 36 px with a left accent bar, client logo placeholder bottom left, name and role bottom right" },
+      { n: "Hiring / event card",  s: "li",    use: "Announcements that get shared", layout: "Label pill top, headline 62 px, three detail rows with icons, CTA line at the base" },
+    ],
+  },
+  {
+    id: "deck", name: "Presentation Deck", emoji: "🖥",
+    blurb: "Decks carry the highest perceived value of any Canva pack — a buyer compares them to hiring a designer for a pitch, not to a $7 planner.",
+    channel: "Pitches, workshops, webinars",
+    templates: [
+      { n: "Title slide",          s: "deck", use: "Deck open", layout: "Title left-aligned at 96 px in the left 60%, presenter and date beneath, image or colour field filling the right 40%" },
+      { n: "Agenda",               s: "deck", use: "What we'll cover", layout: "Numbered two-column list, 36 px, section rule between columns" },
+      { n: "Section divider",      s: "deck", use: "The breath between sections", layout: "Full-bleed accent field, section numeral at 240 px at 20% opacity behind a 72 px section title" },
+      { n: "Big statement",        s: "deck", use: "The one line they should remember", layout: "Single sentence centred at 88 px, 200 px margins, nothing else on the slide" },
+      { n: "Two column",           s: "deck", use: "Text beside an image", layout: "Copy block in the left half at 30 px, image placeholder filling the right half to the bleed" },
+      { n: "Three-up",             s: "deck", use: "Features, steps, pillars", layout: "Three equal cards with icon slot, 32 px head and 22 px body each, 60 px gutters" },
+      { n: "Bullet list",          s: "deck", use: "The workhorse slide", layout: "Slide title at 54 px, up to six rows at 30 px with accent markers, generous 1.6 line height" },
+      { n: "Data / chart",         s: "deck", use: "The evidence slide", layout: "Chart area occupying the left two-thirds, takeaway sentence in a tinted panel on the right third" },
+      { n: "Quote / testimonial",  s: "deck", use: "Borrowed credibility", layout: "Quote at 52 px centred, oversized quote mark in accent behind it, attribution beneath a short rule" },
+      { n: "Team / about",         s: "deck", use: "Who is doing the work", layout: "Row of four circular portrait placeholders, name at 26 px and role at 20 px under each" },
+      { n: "Pricing / packages",   s: "deck", use: "The money slide", layout: "Three price columns, middle column raised and outlined in the accent, feature ticks beneath each" },
+      { n: "Close / next steps",   s: "deck", use: "What happens now", layout: "Three numbered next-step rows, contact block at the base, brand mark bottom right" },
+    ],
+  },
+  {
+    id: "media-kit", name: "Media Kit", emoji: "📰",
+    blurb: "Creators and small brands need one every time they pitch. Sold as an editable multi-page document, it commands a document price, not a social-post price.",
+    channel: "Brand pitches, sponsorships",
+    templates: [
+      { n: "Cover",                s: "a4", use: "Name, photo, one-line positioning", layout: "Full-bleed portrait in the top 60%, name at 120 px overlapping the image edge, tagline and year beneath" },
+      { n: "About / story",        s: "a4", use: "Who they are in 150 words", layout: "Two-column text with a drop cap, pull-quote in the accent in the outer margin, portrait inset lower right" },
+      { n: "Audience & stats",     s: "a4", use: "The page the brand actually reads", layout: "Four stat tiles across the top with figures at 90 px, demographic bar rows beneath, platform icon row at the base" },
+      { n: "Services & rates",     s: "a4", use: "What can be bought", layout: "Three package cards stacked, each with a deliverable list and a from-price right-aligned" },
+      { n: "Past collaborations",  s: "a4", use: "Proof", layout: "Six logo placeholder cells in a 3 × 2 grid, one case-study strip beneath with a result figure" },
+      { n: "Contact / CTA",        s: "a4", use: "How to book them", layout: "Accent field with reversed-out contact rows, social handles, and a booking line at 44 px" },
+    ],
+  },
+  {
+    id: "pricing", name: "Pricing & Services Guide", emoji: "💷",
+    blurb: "The single most requested document in service businesses. Buyers send it a dozen times a week, which is why they will pay a document price for it.",
+    channel: "Client enquiries",
+    templates: [
+      { n: "Cover",             s: "a4", use: "Business name, service year, one promise", layout: "Centred title block at 110 px on a colour field, thin double-rule frame inset 200 px" },
+      { n: "Welcome letter",    s: "a4", use: "Warmth before numbers", layout: "Single column at 30 px with 400 px margins, signature placeholder at the base, portrait inset top right" },
+      { n: "How it works",      s: "a4", use: "The process, in four steps", layout: "Vertical timeline with numbered nodes down the left, step title and 40-word description right of each" },
+      { n: "Packages & pricing", s: "a4", use: "The page they skipped ahead to", layout: "Three package blocks, each with an inclusion list and price, the middle one tinted in the accent" },
+      { n: "FAQ",               s: "a4", use: "The five questions that delay every booking", layout: "Question at 32 px in the heading face, answer at 24 px beneath, hairline rule between pairs" },
+      { n: "Next steps",        s: "a4", use: "Removing the last bit of friction", layout: "Three numbered steps across the page, booking link block at the base in the accent" },
+    ],
+  },
+  {
+    id: "proposal", name: "Client Proposal Pack", emoji: "📄",
+    blurb: "A proposal template saves a freelancer several hours per pitch. That maths is easy to put in a listing, and easy for a buyer to justify.",
+    channel: "New business",
+    templates: [
+      { n: "Cover",                  s: "a4", use: "Client name, project, date", layout: "Client name at 80 px, project title at 120 px beneath, prepared-by block bottom left, brand field right" },
+      { n: "Executive summary",      s: "a4", use: "The whole proposal in 120 words", layout: "Single column with a tinted panel behind, three outcome bullets at the base in the accent" },
+      { n: "The problem",            s: "a4", use: "Proving you listened", layout: "Three problem statements as stacked cards, each with a one-line consequence beneath in the ink at 60% opacity" },
+      { n: "Proposed scope",         s: "a4", use: "Exactly what is being bought", layout: "Deliverable table with columns for item, detail and quantity, alternating row tints" },
+      { n: "Timeline",               s: "a4", use: "When it happens", layout: "Horizontal phase bar across the top, four phase columns beneath with milestone bullets" },
+      { n: "Investment",             s: "a4", use: "The number, framed", layout: "Line-item table, total in a boxed accent panel bottom right, payment-schedule note beneath" },
+      { n: "Terms & assumptions",    s: "a4", use: "The page that prevents scope creep", layout: "Two-column small-type layout at 20 px, numbered clauses, hairline rules" },
+      { n: "Acceptance",             s: "a4", use: "The signature that closes it", layout: "Two signature blocks side by side with name, date and rule, accepted-by note beneath" },
+    ],
+  },
+  {
+    id: "lead-magnet", name: "Lead Magnet Pack", emoji: "🧲",
+    blurb: "Everyone with an email list needs one, and most abandon the project at the design step. This pack is the reason they finish it.",
+    channel: "Email list building",
+    templates: [
+      { n: "Cover",            s: "letter", use: "The image used on the opt-in page", layout: "Title at 100 px in the upper third, subtitle beneath, brand field or photo filling the lower half" },
+      { n: "Welcome page",     s: "letter", use: "What this is and how to use it", layout: "Single column at 28 px, 'how to use this' box tinted in the secondary, 300 px margins" },
+      { n: "Teaching page",    s: "letter", use: "The content itself", layout: "Section head at 46 px, body at 26 px, callout box in the outer margin for the key point" },
+      { n: "Worksheet",        s: "letter", use: "The page that makes it feel like a product", layout: "Prompt lines with generous 60 px rule spacing, section headers, fillable text-field placeholders" },
+      { n: "Checklist",        s: "letter", use: "The most-printed page in any freebie", layout: "Two columns of tick rows at 26 px, section dividers, accent tick boxes at 32 px" },
+      { n: "Tracker / table",  s: "letter", use: "A reason to keep the file", layout: "Seven-column grid with a tinted header row, 30 rows at 60 px, totals strip at the base" },
+      { n: "Resource list",    s: "letter", use: "Links and tools, credibility by association", layout: "Grouped link rows with category heads, one-line descriptions in the ink at 60% opacity" },
+      { n: "Next-step CTA",    s: "letter", use: "Converting the reader into a buyer", layout: "Accent full-bleed field, offer at 60 px reversed out, three benefit ticks, booking line at the base" },
+    ],
+  },
+  {
+    id: "ebook", name: "E-book Cover & Interior Pack", emoji: "📕",
+    blurb: "Sold to the enormous population of people writing an e-book who cannot design one. Cover variants plus interior pages is the combination that justifies the bundle price.",
+    channel: "Self-published digital products",
+    templates: [
+      { n: "Cover — type-led",    s: "ebook", use: "Cover variant 1", layout: "Title at 150 px filling the upper half, author at 44 px at the base, flat accent field, no imagery" },
+      { n: "Cover — photo-led",   s: "ebook", use: "Cover variant 2", layout: "Full-bleed photo with a scrim over the lower 40%, title reversed out at 130 px, author beneath" },
+      { n: "Cover — framed",      s: "ebook", use: "Cover variant 3", layout: "Inset double-rule frame at 120 px, centred title stack, small mark at the top of the frame" },
+      { n: "Title page",          s: "ebook", use: "Interior open", layout: "Centred title at 90 px, author beneath, publisher line at the base, 200 px margins" },
+      { n: "Contents",            s: "ebook", use: "The page that signals structure", layout: "Chapter rows with leader dots to right-aligned page numbers, section groups in the accent" },
+      { n: "Chapter opener",      s: "ebook", use: "Repeated at every chapter", layout: "Chapter numeral at 160 px at 15% opacity behind a 64 px chapter title, first paragraph with a drop cap" },
+      { n: "Body page",           s: "ebook", use: "The workhorse", layout: "Single column at 26 px with 1.65 line height, running head, folio at the base, pull-quote style defined" },
+      { n: "3D mockup frame",     s: "mock",  use: "The listing image", layout: "Angled book mockup placeholder centred on a brand-tinted field, title strip beneath at 40 px" },
+    ],
+  },
+  {
+    id: "stationery", name: "Business Card & Stationery Set", emoji: "🗂",
+    blurb: "The pack that turns a social-media buyer into a whole-brand buyer. Print-ready sizes with bleed are the differentiator most listings do not offer.",
+    channel: "Print",
+    templates: [
+      { n: "Business card — front", s: "card",   use: "Name, role, mark", layout: "Mark centred or top left, name at 44 px, role at 26 px, 3 mm bleed and a 4 mm safe margin marked on the canvas" },
+      { n: "Business card — back",  s: "card",   use: "Contact details or a full-bleed mark", layout: "Either three contact rows at 24 px, or the mark reversed out of an accent field" },
+      { n: "Letterhead",            s: "a4",     use: "Quotes, letters, invoices", layout: "Header band at 12% canvas height with mark and contact strip, body area with defined margins, footer rule" },
+      { n: "Thank-you card",        s: "card57", use: "The insert that earns reviews", layout: "Centred message at 46 px, mark above, handwriting-face accent line beneath, inset frame" },
+      { n: "Price / service card",  s: "card57", use: "Handed out at markets and events", layout: "Service rows with right-aligned prices, header band, QR placeholder bottom right" },
+      { n: "Email signature",       s: "email",  use: "The daily-use asset", layout: "Two-column lock-up: mark and portrait left at 120 px, name, role and three contact rows right at 18 px" },
+    ],
+  },
+  {
+    id: "email", name: "Email Header & Newsletter Pack", emoji: "✉️",
+    blurb: "Low competition and a professional buyer. Newsletter senders need a new header every week, which makes this pack habit-forming.",
+    channel: "Email marketing",
+    templates: [
+      { n: "Main header",          s: "email",  use: "Top of every send", layout: "Publication name at 46 px centred, issue number and date beneath at 16 px, hairline rule at the base" },
+      { n: "Welcome header",       s: "email",  use: "First email in the sequence", layout: "Accent field, greeting reversed out at 44 px, small mark left" },
+      { n: "Section divider",      s: "emailD", use: "Between blocks", layout: "Centred label in caps at 16 px with letterspacing, rules either side to the margins" },
+      { n: "Offer banner",         s: "email",  use: "The promotional send", layout: "Split field: offer copy left at 34 px, price or code right in an accent block" },
+      { n: "Blog-roundup header",  s: "email",  use: "Curation sends", layout: "Three thumbnail placeholders in a row with a label strip above" },
+      { n: "Event / webinar banner", s: "email", use: "Registration drives", layout: "Date block left in an accent square, event title and time right at 30 px" },
+      { n: "Footer block",         s: "email",  use: "Sign-off and social", layout: "Mark centred, social icon row beneath, address and unsubscribe line at 14 px in the ink at 55% opacity" },
+      { n: "Featured-product strip", s: "email", use: "The line item that sells", layout: "Product image square left, name, one-line description and price right, CTA text link at the base" },
+    ],
+  },
+  {
+    id: "ad", name: "Meta Ad Creative Pack", emoji: "🎯",
+    blurb: "Advertisers burn creative fast and test in sets. A pack that gives them variants of one idea is worth more than a pack of unrelated designs.",
+    channel: "Facebook & Instagram ads",
+    templates: [
+      { n: "Feed ad — offer",       s: "ad",    use: "The direct-response workhorse", layout: "Product or portrait right 45%, headline left at 54 px, offer pill in the accent, CTA line at the base — text kept under 20% of the canvas area" },
+      { n: "Feed ad — testimonial", s: "ad",    use: "Proof-led variant", layout: "Quote left at 38 px with star row, customer portrait circle right, brand strip at the base" },
+      { n: "Feed ad — problem",     s: "ad",    use: "Pain-led variant", layout: "Question headline reversed out of a full accent field, single supporting line, CTA button shape bottom left" },
+      { n: "Square ad — product",   s: "sq",    use: "The placement Meta serves most", layout: "Product centred on a brand field with a soft shadow, price pill top right, CTA bar across the base" },
+      { n: "Square ad — carousel card", s: "sq", use: "One card of a multi-card ad", layout: "Numbered card, single benefit at 44 px, image placeholder in the lower half, consistent footer" },
+      { n: "Story ad",              s: "story", use: "Full-screen vertical placement", layout: "Hook in the top 25% clear of the UI, visual centre, CTA at 70% height above the swipe-up zone" },
+      { n: "Retargeting ad",        s: "sq",    use: "For people who already visited", layout: "'Still thinking about it?' headline, product thumbnail, incentive pill in the accent, CTA at the base" },
+      { n: "Lead-magnet ad",        s: "ad",    use: "Top-of-funnel opt-in", layout: "Freebie mockup floated left with a shadow, benefit stack right at 34 px, 'free' flash in the accent" },
+    ],
+  },
+  {
+    id: "yt", name: "YouTube Thumbnail Pack", emoji: "▶️",
+    blurb: "Thumbnails decide whether a video is watched, and creators know it. High willingness to pay, and a buyer who publishes weekly forever.",
+    channel: "YouTube",
+    templates: [
+      { n: "Face + text",        s: "yt",    use: "The highest-click-rate format", layout: "Cut-out portrait right 40%, three-word hook left at 130 px with a heavy outline, accent block behind the type" },
+      { n: "Number / listicle",  s: "yt",    use: "'7 things…' videos", layout: "Numeral at 260 px left, topic words right stacked in three lines, contrasting keyword in the accent" },
+      { n: "Versus",             s: "yt",    use: "Comparison videos", layout: "Diagonal split with an image well each side, 'vs' badge centred at 90 px, labels beneath each side" },
+      { n: "Tutorial / how-to",  s: "yt",    use: "Search-driven videos", layout: "Screenshot placeholder filling the frame, translucent brand bar across the lower third, step label top left" },
+      { n: "Question hook",      s: "yt",    use: "Curiosity-led videos", layout: "Question reversed out of a full accent field at 110 px, small portrait circle bottom right" },
+      { n: "Result / proof",     s: "yt",    use: "Case-study videos", layout: "Big result figure at 200 px with an arrow motif, context line beneath, portrait cut-out left" },
+      { n: "Podcast episode",    s: "yt",    use: "Long-form and interviews", layout: "Two portrait circles overlapping centre, guest name beneath at 60 px, episode number pill top left" },
+      { n: "Series template",    s: "yt",    use: "Consistent branding across a run", layout: "Fixed series badge top left, episode number right, title area centre with locked type sizes" },
+      { n: "Shorts cover",       s: "story", use: "Vertical short-form", layout: "Hook in the top 30% clear of the title overlay, subject centre, brand mark bottom" },
+      { n: "Channel banner",     s: "ytBan", use: "The profile asset", layout: "Channel name and upload schedule centred inside the 1546 × 423 safe area, brand field bleeding to the full canvas" },
+    ],
+  },
+  {
+    id: "planner", name: "Printable Planner Pack", emoji: "🗓",
+    blurb: "The highest-volume category on Etsy with strong seasonal spikes. Sold as a Canva template rather than a flat PDF, it becomes editable — and worth more.",
+    channel: "Print at home / tablet",
+    templates: [
+      { n: "Cover",             s: "letter", use: "The listing image and the first page", layout: "Title at 120 px centred, year or season beneath, inset frame at 200 px, brand field" },
+      { n: "Yearly overview",   s: "letter", use: "Twelve months at a glance", layout: "Twelve mini month grids in a 3 × 4 arrangement, month names at 22 px, weekend columns tinted" },
+      { n: "Monthly spread",    s: "letter", use: "The most-used page", layout: "Seven-column grid with a tinted header row, notes column on the right at 20% width, month title at 80 px" },
+      { n: "Weekly spread",     s: "letter", use: "The page that gets printed 52 times", layout: "Seven day blocks with rule lines, priorities panel top right, notes strip at the base" },
+      { n: "Daily page",        s: "letter", use: "Time-blocked days", layout: "Hourly rows from 06:00 to 21:00 at 55 px each on the left two-thirds, top-three-tasks panel and water/mood row right" },
+      { n: "Goal planner",      s: "letter", use: "The page that sells the pack", layout: "Goal statement box at the top, why-it-matters block, milestone rows with target dates, obstacles panel" },
+      { n: "Habit tracker",     s: "letter", use: "The most-shared page on Pinterest", layout: "Habit rows down the left at 34 px, 31 numbered day columns, circular tick cells, streak total column right" },
+      { n: "Budget / expenses", s: "letter", use: "High-demand crossover page", layout: "Income block top, category rows with budget and actual columns, difference column in the accent, total strip at the base" },
+      { n: "Meal planner",      s: "letter", use: "The family-organisation buyer", layout: "Seven day rows × three meal columns, shopping-list panel down the right at 30% width" },
+      { n: "Notes / dot grid",  s: "letter", use: "The page that makes it a system", layout: "Dot grid at 5 mm spacing with a header strip and a date line, margins matched to the rest of the pack" },
+    ],
+  },
+  {
+    id: "flyer", name: "Flyer & Poster Pack", emoji: "📢",
+    blurb: "Local businesses still print. A flyer pack sold with both print and social sizes covers the whole job, which is what justifies the bundle price.",
+    channel: "Print & local marketing",
+    templates: [
+      { n: "Event flyer",        s: "a4",    use: "The main print piece", layout: "Headline at 180 px in the top third, date and time block in the accent, detail rows and contact strip at the base, 3 mm bleed marked" },
+      { n: "Offer flyer",        s: "a4",    use: "Promotions and openings", layout: "Offer figure at 260 px centred, terms line beneath at 20 px, tear-off contact strip at the base" },
+      { n: "Poster",             s: "a4",    use: "Window and noticeboard", layout: "Type-led full-bleed composition readable at three metres — headline over 200 px, one supporting line, mark at the base" },
+      { n: "Social version",     s: "port",  use: "The same design, resized", layout: "Same hierarchy rebuilt at 4:5 with margins reduced to 80 px — built with Canva's Resize so the pair stays in sync" },
+      { n: "Story version",      s: "story", use: "The vertical cut", layout: "Headline in the top 40%, detail block centre, CTA at 70% height clear of the UI zones" },
+      { n: "Door-hanger / A5",   s: "card57", use: "Hyper-local distribution", layout: "Compact vertical hierarchy, single offer, QR placeholder and phone number at the base" },
+    ],
+  },
+  {
+    id: "brand-kit", name: "Complete Brand Starter Kit", emoji: "💎",
+    blurb: "The premium bundle. Twenty-plus templates across every surface a small business touches — the listing that anchors the whole shop's price ladder.",
+    channel: "Everything",
+    bundle: true,
+    templates: [
+      { n: "Brand guide — colours",  s: "a4",     use: "The page that makes it feel professional", layout: "Five colour blocks at 400 px with hex, RGB and usage note beneath each" },
+      { n: "Brand guide — type",     s: "a4",     use: "Font system on one page", layout: "Type ladder from 120 px down to 18 px with named roles and pairing rules" },
+      { n: "Logo lock-up sheet",     s: "a4",     use: "Primary, stacked, and mark-only", layout: "Three lock-up variants on tinted fields with clear-space rules marked in multiples of the mark height" },
+      { n: "Instagram quote post",   s: "sq",     use: "Social surface", layout: "Centred quote at 72 px, mark at the base, brand margins at 120 px" },
+      { n: "Instagram carousel cover", s: "port", use: "Social surface", layout: "Hook at 96 px top-weighted, swipe cue bottom right" },
+      { n: "Instagram carousel body", s: "port",  use: "Social surface", layout: "Slide number, 44 px sub-head, 28 px body block" },
+      { n: "Instagram promo post",   s: "sq",     use: "Social surface", layout: "Accent banner top third, offer at 72 px, CTA shape at the base" },
+      { n: "Story — offer",          s: "story",  use: "Social surface", layout: "Accent field, 90 px headline, CTA at 70% height" },
+      { n: "Story — testimonial",    s: "story",  use: "Social surface", layout: "Quote block with 100 px margins, star row, name beneath" },
+      { n: "Highlight covers ×6",    s: "hl",     use: "Profile surface", layout: "Line icons centred in the middle 500 × 500, one stroke weight across all six" },
+      { n: "Pinterest pin",          s: "pin",    use: "Search surface", layout: "Title band top 40%, image below, URL strip at the base" },
+      { n: "LinkedIn banner",        s: "liBan",  use: "Professional surface", layout: "Positioning line clear of the avatar overlap, mark right" },
+      { n: "Email header",           s: "email",  use: "Owned-audience surface", layout: "Publication name at 46 px centred, hairline rule at the base" },
+      { n: "Email signature",        s: "email",  use: "Owned-audience surface", layout: "Mark and portrait left, name, role and contact rows right" },
+      { n: "Business card ×2",       s: "card",   use: "Print surface", layout: "Front and back with 3 mm bleed and 4 mm safe margins marked" },
+      { n: "Letterhead",             s: "a4",     use: "Print surface", layout: "Header band, defined body margins, footer rule" },
+      { n: "Thank-you card",         s: "card57", use: "Print surface", layout: "Centred message at 46 px, mark above, inset frame" },
+      { n: "Pricing guide ×3",       s: "a4",     use: "Sales surface", layout: "Cover, packages page and next-steps page sharing one grid" },
+      { n: "Proposal cover",         s: "a4",     use: "Sales surface", layout: "Client name at 80 px, project title at 120 px, prepared-by block" },
+      { n: "Lead-magnet cover",      s: "letter", use: "List-building surface", layout: "Title at 100 px upper third, brand field lower half" },
+      { n: "Lead-magnet worksheet",  s: "letter", use: "List-building surface", layout: "Prompt lines at 60 px spacing, section heads, fillable placeholders" },
+      { n: "Presentation title",     s: "deck",   use: "Speaking surface", layout: "Title left 60% at 96 px, image field right 40%" },
+      { n: "Presentation content",   s: "deck",   use: "Speaking surface", layout: "54 px slide title, six 30 px rows with accent markers" },
+      { n: "Listing mockup frame",   s: "mock",   use: "The seller's own listing image", layout: "Device or print mockup placeholder centred on a brand-tinted field, title strip beneath" },
+    ],
+  },
+];
+
+/* ---------------------------------------------------------------------------
+   ANGLES
+   The same templates sold three ways are three products. The angle rewrites
+   the name, the promise, the styling note and the search terms — it is the
+   cheapest way to grow a catalogue without designing anything new.
+   --------------------------------------------------------------------------- */
+const ANGLES = [
+  { id: "minimal",  frag: "Minimalist",   name: "Minimalist / clean",
+    promise: "Nothing to delete before it looks right — white space, one accent, and type doing the work.",
+    styling: "Base colour dominant, accent used once per template, no textures, 40% larger margins than the grid minimum, type ladder reduced to three sizes.",
+    tags: ["minimalist", "clean", "modern"] },
+  { id: "luxe",     frag: "Luxury",       name: "Luxury / editorial",
+    promise: "Reads like a magazine spread, not a social template — the look small brands pay agencies for.",
+    styling: "Serif headings at generous tracking, hairline rules, deep margins, photography treated with a warm neutral wash, accent reserved for the smallest elements.",
+    tags: ["luxury", "elegant", "editorial"] },
+  { id: "bold",     frag: "Bold",         name: "Bold & high-contrast",
+    promise: "Built to stop a thumb mid-scroll — heavy type, hard colour, no timidity.",
+    styling: "Display face at maximum weight, full-bleed accent fields, reversed-out type, contrast ratios pushed to the edge of the palette.",
+    tags: ["bold", "modern", "colorful"] },
+  { id: "warm",     frag: "Warm & Earthy", name: "Warm & organic",
+    promise: "The soft, human look that converts for wellness, handmade and lifestyle audiences.",
+    styling: "Muted earth tones, rounded corners at 24 px, subtle paper texture at 6% opacity, hand-drawn accent marks, photography warmed.",
+    tags: ["boho", "earthy", "neutral"] },
+  { id: "playful",  frag: "Playful",      name: "Playful & bright",
+    promise: "Friendly, high-energy, and impossible to mistake for a corporate template.",
+    styling: "Full-saturation accent used liberally, rounded geometric face, sticker-style shapes, 15° rotations on badges, generous colour blocking.",
+    tags: ["colorful", "fun", "cute"] },
+  { id: "seasonal", frag: "Seasonal",     name: "Seasonal edition",
+    promise: "The same system, re-skinned for the season the buyer is planning right now.",
+    styling: "Seasonal motif set swapped into the accent layer, palette shifted two steps warmer or cooler, everything else identical to the core pack.",
+    tags: ["seasonal", "holiday", "christmas"] },
+  { id: "starter",  frag: "Starter",      name: "Starter / beginner-friendly",
+    promise: "For the buyer who has never opened Canva — every layer named, every step written down.",
+    styling: "Every layer and page named in plain English, editable text marked with placeholder copy, a how-to page built into the file itself, no locked groups.",
+    tags: ["beginner", "easy edit", "diy"] },
+  { id: "premium",  frag: "Complete",     name: "Premium bundle",
+    promise: "Every surface covered in one purchase — the listing that anchors the top of the price ladder.",
+    styling: "Full brand system applied across every canvas size, brand-guide pages included, mockup frames supplied for the buyer's own marketing.",
+    tags: ["bundle", "brand kit", "complete"] },
+];
+
+/* ---------------------------------------------------------------------------
+   NICHES
+   Chapter 7's first two criteria are a specific problem and a describable
+   buyer. Each entry below carries both, plus the brand system the pack is
+   built on — palette, type pairing, content pillars and the search terms the
+   listing has to rank for.
+   --------------------------------------------------------------------------- */
+const NICHES = [
+  {
+    id: "wellness", short: "Wellness coaches", name: "Holistic wellness coaches",
+    buyer: "A solo holistic health or wellness coach with 1,000–10,000 followers who posts to attract discovery calls.",
+    problem: "She posts inconsistently because designing each graphic takes forty minutes she does not have between clients.",
+    pillars: ["Client transformation stories", "Myth-busting around nutrition and stress", "Ritual and routine content", "Programme and discovery-call offers", "Behind-the-practice moments"],
+    palette: [
+      { h: "#F7F3EC", n: "Oat", r: "Base" },
+      { h: "#2F3A33", n: "Deep Fern", r: "Ink" },
+      { h: "#7C9473", n: "Sage", r: "Primary" },
+      { h: "#C8B6A6", n: "Clay", r: "Secondary" },
+      { h: "#D9A47F", n: "Terracotta", r: "Accent" },
+    ],
+    fonts: { heading: "Cormorant Garamond", body: "Montserrat", accent: "Sacramento" },
+    keywords: ["wellness coach templates", "holistic instagram templates", "health coach canva", "wellness social media"],
+    seasonal: "January (new-year resets) and September (back-to-routine) are the two spikes.",
+  },
+  {
+    id: "realestate", short: "Real estate", name: "Real estate agents",
+    buyer: "An individual agent or two-person team marketing 3–15 listings a year in one metro area.",
+    problem: "Every listing needs six graphics in twenty-four hours and the brokerage's template library is generic and dated.",
+    pillars: ["Just listed / just sold", "Open house announcements", "Market statistics", "Buyer and seller tips", "Agent introduction and testimonials"],
+    palette: [
+      { h: "#F4F4F2", n: "Bone", r: "Base" },
+      { h: "#12212E", n: "Harbour Ink", r: "Ink" },
+      { h: "#1B3A5B", n: "Deep Navy", r: "Primary" },
+      { h: "#8C9BA5", n: "Slate", r: "Secondary" },
+      { h: "#B08D57", n: "Brass", r: "Accent" },
+    ],
+    fonts: { heading: "Prata", body: "Karla", accent: "League Spartan" },
+    keywords: ["real estate templates", "realtor instagram", "just listed template", "open house flyer"],
+    seasonal: "Spring listing season, March to June, is when this niche buys.",
+  },
+  {
+    id: "dental", short: "Dental practices", name: "Dental & orthodontic practices",
+    buyer: "A practice manager at a single-location dental or ortho practice who runs the social accounts alongside everything else.",
+    problem: "Clinical content has to look reassuring and professional, and nothing on the free template shelf does.",
+    pillars: ["Treatment explainers", "Patient before-and-after", "Appointment and reminder posts", "Meet-the-team", "Oral-health tips"],
+    palette: [
+      { h: "#F6FAFB", n: "Clinic White", r: "Base" },
+      { h: "#16303B", n: "Deep Teal", r: "Ink" },
+      { h: "#2F9BAF", n: "Aqua", r: "Primary" },
+      { h: "#BFE3E9", n: "Mint", r: "Secondary" },
+      { h: "#F2C14E", n: "Sunbeam", r: "Accent" },
+    ],
+    fonts: { heading: "Poppins", body: "Nunito Sans", accent: "Poppins" },
+    keywords: ["dental social media", "dentist instagram templates", "dental office canva", "orthodontic marketing"],
+    seasonal: "New-year insurance-reset campaigns in January, and back-to-school check-ups in August.",
+  },
+  {
+    id: "fitness", short: "Fitness coaches", name: "Personal trainers & fitness coaches",
+    buyer: "An online or in-person coach selling 8–12 week programmes to a following they built themselves.",
+    problem: "Programme launches need a dozen coordinated assets in a week, and every launch starts from a blank canvas.",
+    pillars: ["Workout of the day", "Client results", "Programme launch and countdown", "Form and technique tips", "Nutrition myth-busting"],
+    palette: [
+      { h: "#F2F3F5", n: "Fog", r: "Base" },
+      { h: "#111318", n: "Graphite", r: "Ink" },
+      { h: "#DC3B2E", n: "Ignite", r: "Primary" },
+      { h: "#1F2933", n: "Iron", r: "Secondary" },
+      { h: "#C6F24E", n: "Volt", r: "Accent" },
+    ],
+    fonts: { heading: "Anton", body: "Archivo", accent: "Bebas Neue" },
+    keywords: ["fitness instagram templates", "personal trainer canva", "gym social media", "workout templates"],
+    seasonal: "January and late April (summer-body campaigns) carry the volume.",
+  },
+  {
+    id: "photography", short: "Photographers", name: "Wedding & portrait photographers",
+    buyer: "A photographer shooting 15–30 weddings a year who markets almost entirely on Instagram and Pinterest.",
+    problem: "Her work is beautiful and her marketing graphics are not, and the mismatch costs her enquiries.",
+    pillars: ["Recent session galleries", "Booking and availability", "Client experience and process", "Pricing guide teasers", "Vendor love and features"],
+    palette: [
+      { h: "#FBF9F6", n: "Ivory", r: "Base" },
+      { h: "#33302C", n: "Umber", r: "Ink" },
+      { h: "#A8927D", n: "Sand", r: "Primary" },
+      { h: "#6E6A63", n: "Stone", r: "Secondary" },
+      { h: "#D8C3B2", n: "Blush Sand", r: "Accent" },
+    ],
+    fonts: { heading: "Cormorant Garamond", body: "Josefin Sans", accent: "Great Vibes" },
+    keywords: ["photographer templates", "wedding photographer canva", "photography pricing guide", "photographer instagram"],
+    seasonal: "Booking season runs November to February for the following summer.",
+  },
+  {
+    id: "interiors", short: "Interior design", name: "Interior designers & home stagers",
+    buyer: "A designer or stager with a portfolio-driven business and a Pinterest presence that outperforms her website.",
+    problem: "Project reveals deserve editorial layouts, and she is building them one text box at a time.",
+    pillars: ["Project reveals and before-and-after", "Mood-board and material stories", "Design tips and sourcing", "Service and process explainers", "Client testimonials"],
+    palette: [
+      { h: "#F3F0EA", n: "Limestone", r: "Base" },
+      { h: "#23241F", n: "Charred Oak", r: "Ink" },
+      { h: "#6B705C", n: "Olive", r: "Primary" },
+      { h: "#A5A58D", n: "Lichen", r: "Secondary" },
+      { h: "#B98B62", n: "Walnut", r: "Accent" },
+    ],
+    fonts: { heading: "Marcellus", body: "Work Sans", accent: "Marcellus" },
+    keywords: ["interior design templates", "home staging canva", "design studio instagram", "mood board template"],
+    seasonal: "Spring refresh (March–May) and the pre-Christmas styling rush.",
+  },
+  {
+    id: "va", short: "VAs & OBMs", name: "Virtual assistants & online business managers",
+    buyer: "A VA or OBM selling retainer packages to coaches and course creators, marketing on Instagram and in Facebook groups.",
+    problem: "She sells organisation and efficiency, so a scrappy feed actively undermines the offer.",
+    pillars: ["Service and package explainers", "Client wins and time saved", "Systems and tool tips", "Availability and openings", "Day-in-the-life"],
+    palette: [
+      { h: "#F7F5FF", n: "Lilac Mist", r: "Base" },
+      { h: "#1E1B2E", n: "Ink Violet", r: "Ink" },
+      { h: "#6C5CE7", n: "Iris", r: "Primary" },
+      { h: "#A29BFE", n: "Periwinkle", r: "Secondary" },
+      { h: "#FFD166", n: "Marigold", r: "Accent" },
+    ],
+    fonts: { heading: "Poppins", body: "DM Sans", accent: "Poppins" },
+    keywords: ["virtual assistant templates", "va instagram canva", "obm social media", "service provider templates"],
+    seasonal: "January and September, when clients rebuild their teams.",
+  },
+  {
+    id: "finance", short: "Financial coaches", name: "Financial coaches & bookkeepers",
+    buyer: "A bookkeeper or money coach serving small businesses, who needs to look trustworthy before anything else.",
+    problem: "Financial content must feel credible, and bright template packs make it look like a side hustle.",
+    pillars: ["Money myth-busting", "Deadline and compliance reminders", "Client savings stories", "Service explainers", "Simple financial literacy"],
+    palette: [
+      { h: "#F5F7F6", n: "Paper", r: "Base" },
+      { h: "#10231C", n: "Pine Ink", r: "Ink" },
+      { h: "#0F5132", n: "Ledger Green", r: "Primary" },
+      { h: "#C9D6CF", n: "Eucalyptus", r: "Secondary" },
+      { h: "#C8A415", n: "Gold Leaf", r: "Accent" },
+    ],
+    fonts: { heading: "Libre Baskerville", body: "Karla", accent: "League Spartan" },
+    keywords: ["bookkeeper templates", "finance coach canva", "accountant social media", "money coach instagram"],
+    seasonal: "Tax-deadline months and the start of each financial year.",
+  },
+  {
+    id: "therapy", short: "Therapists", name: "Therapists & counsellors in private practice",
+    buyer: "A private-practice therapist building a waitlist through educational content rather than advertising.",
+    problem: "Her content must be calm, ethical and clearly not clinical advice — and generic templates get the tone wrong.",
+    pillars: ["Psychoeducation", "Coping skills and grounding", "Practice updates and availability", "Myths about therapy", "Gentle seasonal check-ins"],
+    palette: [
+      { h: "#F8F6F3", n: "Warm Paper", r: "Base" },
+      { h: "#2A2E35", n: "Slate Ink", r: "Ink" },
+      { h: "#6D8B9E", n: "Harbour Blue", r: "Primary" },
+      { h: "#C3CFD3", n: "Mist", r: "Secondary" },
+      { h: "#D9B08C", n: "Warm Clay", r: "Accent" },
+    ],
+    fonts: { heading: "Lora", body: "Nunito Sans", accent: "Lora" },
+    keywords: ["therapist templates", "counselor instagram canva", "mental health templates", "private practice social"],
+    seasonal: "Mental Health Awareness months and the January and September intake waves.",
+  },
+  {
+    id: "nutrition", short: "Nutritionists", name: "Nutritionists & dietitians",
+    buyer: "A registered nutritionist selling 1:1 plans and small-group programmes, competing with unqualified influencers.",
+    problem: "Evidence-based content loses to prettier misinformation, and she has no design time to close the gap.",
+    pillars: ["Recipe and meal ideas", "Evidence vs. fad", "Client outcomes", "Programme and consultation offers", "Grocery and prep guides"],
+    palette: [
+      { h: "#FCFBF4", n: "Cream", r: "Base" },
+      { h: "#22301F", n: "Kale Ink", r: "Ink" },
+      { h: "#8FB339", n: "Fresh Green", r: "Primary" },
+      { h: "#DDE8B9", n: "Sprout", r: "Secondary" },
+      { h: "#EF8354", n: "Apricot", r: "Accent" },
+    ],
+    fonts: { heading: "Quicksand", body: "Nunito Sans", accent: "Quicksand" },
+    keywords: ["nutritionist templates", "dietitian instagram", "meal plan template canva", "nutrition social media"],
+    seasonal: "January, and the pre-summer window from April to June.",
+  },
+  {
+    id: "beauty", short: "Salons & beauty", name: "Hair salons & beauty studios",
+    buyer: "A salon owner or independent stylist whose bookings come almost entirely from Instagram.",
+    problem: "Price lists, opening hours and promotions change constantly and each change means a new graphic.",
+    pillars: ["Transformation before-and-after", "Price list and service menu", "Booking availability", "Product and aftercare", "Team and chair rental"],
+    palette: [
+      { h: "#FDF7F5", n: "Petal", r: "Base" },
+      { h: "#241C1E", n: "Espresso", r: "Ink" },
+      { h: "#C08497", n: "Rosewood", r: "Primary" },
+      { h: "#E8C4C0", n: "Blush", r: "Secondary" },
+      { h: "#C9A227", n: "Antique Gold", r: "Accent" },
+    ],
+    fonts: { heading: "Playfair Display", body: "Raleway", accent: "Sacramento" },
+    keywords: ["salon templates", "hair stylist instagram", "beauty price list canva", "salon social media"],
+    seasonal: "Party season from October to December, and wedding season in spring.",
+  },
+  {
+    id: "cafe", short: "Cafés", name: "Coffee shops & cafés",
+    buyer: "An independent café owner posting specials and opening hours between shifts.",
+    problem: "The daily special needs a graphic every day, and the phone is the only design tool available at 6 a.m.",
+    pillars: ["Daily specials and new drinks", "Opening hours and holiday changes", "Behind the bar", "Loyalty and offers", "Events and live music"],
+    palette: [
+      { h: "#F5EFE6", n: "Oat Milk", r: "Base" },
+      { h: "#2B1B12", n: "Roast", r: "Ink" },
+      { h: "#7B4B2A", n: "Cinnamon", r: "Primary" },
+      { h: "#A8763E", n: "Crema", r: "Secondary" },
+      { h: "#3F5E4E", n: "Bay Leaf", r: "Accent" },
+    ],
+    fonts: { heading: "Bebas Neue", body: "Karla", accent: "Sacramento" },
+    keywords: ["cafe templates", "coffee shop instagram", "restaurant social media", "menu template canva"],
+    seasonal: "Pumpkin-spice autumn and the Christmas drinks menu are the two big pushes.",
+  },
+  {
+    id: "etsyseller", short: "Etsy sellers", name: "Etsy sellers & handmade shops",
+    buyer: "A handmade or print-on-demand seller with 50–500 sales who markets on Instagram and Pinterest.",
+    problem: "Listing photos are only half the job; the promotional graphics around them are what drive outside traffic.",
+    pillars: ["New product drops", "Behind the making", "Customer photos and reviews", "Sale and shipping announcements", "Gift guides"],
+    palette: [
+      { h: "#FFF9F2", n: "Linen", r: "Base" },
+      { h: "#2E2A26", n: "Bark", r: "Ink" },
+      { h: "#D97757", n: "Terracotta", r: "Primary" },
+      { h: "#E9C46A", n: "Honey", r: "Secondary" },
+      { h: "#6A8E7F", n: "Sea Glass", r: "Accent" },
+    ],
+    fonts: { heading: "Josefin Sans", body: "Karla", accent: "Sacramento" },
+    keywords: ["etsy seller templates", "small shop instagram", "product launch templates", "handmade business canva"],
+    seasonal: "Q4 is the whole year for this buyer — sell them the Christmas pack in September.",
+  },
+  {
+    id: "lifecoach", short: "Life coaches", name: "Life & mindset coaches",
+    buyer: "A certified coach selling 1:1 packages and group programmes, marketing through daily posts and stories.",
+    problem: "Coaching is invisible, so every post has to make an intangible service feel concrete and premium.",
+    pillars: ["Mindset reframes", "Client breakthroughs", "Programme and call bookings", "Journal prompts", "Personal story"],
+    palette: [
+      { h: "#FBF7F4", n: "Shell", r: "Base" },
+      { h: "#1F1B24", n: "Deep Plum", r: "Ink" },
+      { h: "#6B4E71", n: "Amethyst", r: "Primary" },
+      { h: "#D8C7DD", n: "Wisteria", r: "Secondary" },
+      { h: "#E8A87C", n: "Peach", r: "Accent" },
+    ],
+    fonts: { heading: "Playfair Display", body: "Montserrat", accent: "Sacramento" },
+    keywords: ["life coach templates", "mindset coach instagram", "coaching canva templates", "coach social media"],
+    seasonal: "January goal-setting and the September reset.",
+  },
+  {
+    id: "consultant", short: "Consultants", name: "Business consultants & agencies",
+    buyer: "An independent consultant or two-person agency pitching mid-sized businesses on LinkedIn.",
+    problem: "Every pitch needs a deck and a proposal that look like a firm three times the size produced them.",
+    pillars: ["Frameworks and models", "Client results with numbers", "Industry commentary", "Service and engagement models", "Speaking and events"],
+    palette: [
+      { h: "#F4F5F7", n: "Concrete", r: "Base" },
+      { h: "#0E1726", n: "Midnight", r: "Ink" },
+      { h: "#1F4E79", n: "Corporate Blue", r: "Primary" },
+      { h: "#9AA5B1", n: "Steel", r: "Secondary" },
+      { h: "#E07A5F", n: "Signal", r: "Accent" },
+    ],
+    fonts: { heading: "Archivo", body: "Work Sans", accent: "Archivo" },
+    keywords: ["consultant templates", "pitch deck canva", "proposal template", "linkedin carousel templates"],
+    seasonal: "Budget-planning season, September to November, is when proposals fly.",
+  },
+  {
+    id: "yoga", short: "Yoga studios", name: "Yoga & pilates studios",
+    buyer: "A studio owner or independent teacher filling classes, workshops and the occasional retreat.",
+    problem: "Timetables change weekly and workshops sell on a two-week runway, so the design work never stops.",
+    pillars: ["Weekly timetable", "Workshop and retreat launches", "Teacher spotlights", "Pose and breath education", "Membership offers"],
+    palette: [
+      { h: "#F6F1EA", n: "Sandstone", r: "Base" },
+      { h: "#2C2A26", n: "Earth Ink", r: "Ink" },
+      { h: "#B07D62", n: "Clay", r: "Primary" },
+      { h: "#D6CCC2", n: "Driftwood", r: "Secondary" },
+      { h: "#7D8B74", n: "Sage Shadow", r: "Accent" },
+    ],
+    fonts: { heading: "Cormorant Garamond", body: "Josefin Sans", accent: "Cormorant Garamond" },
+    keywords: ["yoga studio templates", "yoga instagram canva", "class schedule template", "pilates social media"],
+    seasonal: "January intake and the spring retreat-booking window.",
+  },
+  {
+    id: "homeschool", short: "Homeschool & preschool", name: "Homeschool & preschool educators",
+    buyer: "A homeschooling parent or preschool owner selling or sharing learning resources.",
+    problem: "Resources need to look joyful and printable, and building each worksheet from scratch eats the teaching time.",
+    pillars: ["Weekly learning plans", "Printable activities", "Curriculum and routine tips", "Seasonal units", "Parent encouragement"],
+    palette: [
+      { h: "#FFFDF7", n: "Chalk", r: "Base" },
+      { h: "#2B2D42", n: "Ink Navy", r: "Ink" },
+      { h: "#F4A261", n: "Crayon Orange", r: "Primary" },
+      { h: "#2A9D8F", n: "Teal", r: "Secondary" },
+      { h: "#E76F51", n: "Coral", r: "Accent" },
+    ],
+    fonts: { heading: "Quicksand", body: "Nunito Sans", accent: "Quicksand" },
+    keywords: ["homeschool templates", "teacher printables canva", "preschool planner", "kids activity templates"],
+    seasonal: "August back-to-school is three months of demand in six weeks.",
+  },
+  {
+    id: "medspa", short: "Med spas", name: "Med spas & aestheticians",
+    buyer: "A clinic owner or solo aesthetician selling treatments where trust and taste decide the booking.",
+    problem: "Treatment marketing has to look expensive and clinical at once, and free templates read as neither.",
+    pillars: ["Treatment explainers", "Before-and-after results", "Membership and package offers", "Aftercare guidance", "Practitioner credentials"],
+    palette: [
+      { h: "#FAF7F5", n: "Porcelain", r: "Base" },
+      { h: "#1F1E1D", n: "Onyx", r: "Ink" },
+      { h: "#C0A98E", n: "Champagne", r: "Primary" },
+      { h: "#E5DDD5", n: "Silk", r: "Secondary" },
+      { h: "#6E7F76", n: "Eucalyptus", r: "Accent" },
+    ],
+    fonts: { heading: "Cormorant Garamond", body: "Montserrat", accent: "Marcellus" },
+    keywords: ["med spa templates", "aesthetician instagram", "clinic social media canva", "beauty clinic templates"],
+    seasonal: "Pre-wedding spring and the pre-party autumn run-up.",
+  },
+  {
+    id: "homeservices", short: "Home services", name: "Landscaping & home services",
+    buyer: "A trades or landscaping business owner who wins work locally and posts from the van.",
+    problem: "Job photos are the whole marketing asset, and nothing frames them so they look like a business rather than a phone roll.",
+    pillars: ["Job before-and-after", "Seasonal service reminders", "Quote and booking offers", "Team and equipment", "Local reviews"],
+    palette: [
+      { h: "#F3F4F1", n: "Site White", r: "Base" },
+      { h: "#1A1C18", n: "Asphalt", r: "Ink" },
+      { h: "#2D6A4F", n: "Field Green", r: "Primary" },
+      { h: "#40916C", n: "Meadow", r: "Secondary" },
+      { h: "#F2B705", n: "Hi-Vis Yellow", r: "Accent" },
+    ],
+    fonts: { heading: "Oswald", body: "Work Sans", accent: "Anton" },
+    keywords: ["landscaping templates", "contractor social media", "home services flyer", "trades instagram canva"],
+    seasonal: "Spring is the entire booking year for landscaping; autumn for roofing and gutters.",
+  },
+  {
+    id: "coursecreator", short: "Course creators", name: "Online course creators",
+    buyer: "A creator selling a $200–$2,000 course through launches to an email list and a small social following.",
+    problem: "A launch needs thirty coordinated assets across five channels in two weeks, every single time.",
+    pillars: ["Launch and cart-open sequences", "Student results", "Free workshop and webinar promotion", "Curriculum teasers", "Objection handling"],
+    palette: [
+      { h: "#F7F8FC", n: "Cloud", r: "Base" },
+      { h: "#14142B", n: "Ink Indigo", r: "Ink" },
+      { h: "#4C5FD5", n: "Electric Indigo", r: "Primary" },
+      { h: "#B8C0FF", n: "Periwinkle", r: "Secondary" },
+      { h: "#FFB703", n: "Amber", r: "Accent" },
+    ],
+    fonts: { heading: "Poppins", body: "DM Sans", accent: "Poppins" },
+    keywords: ["course launch templates", "webinar slides canva", "online course instagram", "creator templates"],
+    seasonal: "January and September launch windows dominate.",
+  },
+  {
+    id: "petcare", short: "Pet services", name: "Pet groomers & pet services",
+    buyer: "A groomer, sitter or trainer whose entire client base found them through local social posts.",
+    problem: "Cute photos carry the account, but pricing, availability and policy posts all need to look consistent with them.",
+    pillars: ["Groom transformations", "Booking availability", "Pet-care tips", "Service and price list", "Client pet features"],
+    palette: [
+      { h: "#FFF8F0", n: "Milk", r: "Base" },
+      { h: "#33261D", n: "Cocoa", r: "Ink" },
+      { h: "#E07A5F", n: "Rust", r: "Primary" },
+      { h: "#81B29A", n: "Mint Leaf", r: "Secondary" },
+      { h: "#F2CC8F", n: "Biscuit", r: "Accent" },
+    ],
+    fonts: { heading: "Quicksand", body: "Nunito Sans", accent: "Sacramento" },
+    keywords: ["pet business templates", "dog groomer instagram", "pet sitter canva", "pet care social media"],
+    seasonal: "Summer holiday boarding and the pre-Christmas grooming rush.",
+  },
+  {
+    id: "legal", short: "Solo attorneys", name: "Solo attorneys & small law firms",
+    buyer: "A solo practitioner or small firm marketing plain-English legal education to attract consultations.",
+    problem: "Legal content must look authoritative and compliant, and there is almost nothing on the template market that does.",
+    pillars: ["Plain-English legal explainers", "Know-your-rights content", "Consultation offers", "Case-type overviews", "Firm credentials"],
+    palette: [
+      { h: "#F5F4F0", n: "Parchment", r: "Base" },
+      { h: "#101418", n: "Ink Black", r: "Ink" },
+      { h: "#253C57", n: "Counsel Navy", r: "Primary" },
+      { h: "#8A8F98", n: "Pewter", r: "Secondary" },
+      { h: "#96762E", n: "Statute Gold", r: "Accent" },
+    ],
+    fonts: { heading: "Libre Baskerville", body: "Karla", accent: "Marcellus" },
+    keywords: ["law firm templates", "attorney instagram canva", "legal social media", "lawyer marketing templates"],
+    seasonal: "Steady year-round; January brings the estate-planning and divorce enquiry spike.",
+  },
+  {
+    id: "travel", short: "Travel & tours", name: "Travel agents & tour operators",
+    buyer: "An independent travel adviser or small tour operator selling itineraries through social and email.",
+    problem: "Itineraries and offers change weekly and each one needs a set of graphics that sell the destination.",
+    pillars: ["Destination spotlights", "Itinerary and package offers", "Travel tips and packing", "Client trip photos", "Deadline and deposit reminders"],
+    palette: [
+      { h: "#F5F9F8", n: "Sea Foam", r: "Base" },
+      { h: "#0B2B33", n: "Deep Lagoon", r: "Ink" },
+      { h: "#1B7A8C", n: "Lagoon", r: "Primary" },
+      { h: "#F4D06F", n: "Sun", r: "Secondary" },
+      { h: "#E76F51", n: "Sunset", r: "Accent" },
+    ],
+    fonts: { heading: "Prata", body: "Raleway", accent: "Sacramento" },
+    keywords: ["travel agent templates", "tour operator instagram", "itinerary template canva", "travel social media"],
+    seasonal: "January booking season and the pre-summer window from March to May.",
+  },
+  {
+    id: "nonprofit", short: "Non-profits", name: "Non-profits & community organisations",
+    buyer: "A one-person communications role at a small charity, running campaigns on no design budget.",
+    problem: "Appeals, events and impact reports all need to look coordinated, and every hour spent designing is an hour not spent fundraising.",
+    pillars: ["Impact and outcome reporting", "Appeal and donation drives", "Volunteer recruitment", "Event promotion", "Beneficiary stories"],
+    palette: [
+      { h: "#FAF9F6", n: "Paper", r: "Base" },
+      { h: "#1D2321", n: "Ink", r: "Ink" },
+      { h: "#2A6F97", n: "Trust Blue", r: "Primary" },
+      { h: "#89C2D9", n: "Sky", r: "Secondary" },
+      { h: "#F4A259", n: "Warm Orange", r: "Accent" },
+    ],
+    fonts: { heading: "Montserrat", body: "Karla", accent: "Montserrat" },
+    keywords: ["nonprofit templates", "charity social media canva", "fundraising templates", "impact report template"],
+    seasonal: "Giving Tuesday and the December appeal are the two moments that matter.",
+  },
+];
+
+/* ---------------------------------------------------------------------------
+   REFERENCE TABLES — all from Chapter 7 unless noted
+   --------------------------------------------------------------------------- */
+
+const PLATFORMS = [
+  { name: "Etsy", fee: "6.5% + $0.20 listing", traffic: "High — 120M buyers",
+    note: "The dominant marketplace for Canva templates. SEO-driven discovery means a well-tagged listing keeps selling with no marketing. Deliver as a PDF containing the template link." },
+  { name: "Gumroad", fee: "10% free plan / 0% on $10-a-month plan", traffic: "Medium",
+    note: "Simplest possible listing and zero cost to start — the book's recommended first platform. Best for validating a pack before investing in an Etsy listing." },
+  { name: "Payhip", fee: "5% free / 0% on the $29-a-month plan", traffic: "Medium",
+    note: "Strong built-in affiliate tools, which matter for template packs because other creators in the niche will happily promote them." },
+  { name: "Creative Market", fee: "No listing fee; 70% royalty", traffic: "High — creative buyers",
+    note: "The highest buyer quality and the highest design bar. Worth adding once your packs can stand next to professional studio work." },
+  { name: "Stan Store", fee: "$29/month flat", traffic: "Medium-high",
+    note: "All-in-one products, bookings and links. Suits sellers who also coach or take clients in the same niche as their templates." },
+  { name: "Your own site", fee: "Hosting + Stripe fees only", traffic: "You build it",
+    note: "Maximum margin and a direct customer relationship, but no discovery. Add it once the catalogue is producing consistent income." },
+];
+
+const PRICE_TABLE = [
+  { t: "Canva template pack (5–10 templates)", p: "$12–$27", pl: "Etsy, Creative Market", n: "Bundling is what lifts perceived value above a single file" },
+  { t: "Full template bundle (20+)", p: "$27–$67", pl: "Etsy, Gumroad", n: "Best margin in the category; needs strong presentation to earn it" },
+  { t: "Notion template (single)", p: "$7–$17", pl: "Etsy, Gumroad", n: "Easy impulse buy, high volume — a good entry product beneath a Canva bundle" },
+  { t: "Printable planner / tracker", p: "$5–$12", pl: "Etsy", n: "High volume, low price point, strong seasonal spikes" },
+  { t: "Prompt pack (20–50 prompts)", p: "$9–$37", pl: "Gumroad, Payhip", n: "Rising demand, low competition — pairs naturally with a template pack" },
+  { t: "Workbook / guide", p: "$17–$47", pl: "Gumroad, Payhip, Etsy", n: "High perceived value, lower volume" },
+  { t: "Swipe file / resource library", p: "$27–$97", pl: "Gumroad, Payhip", n: "Premium positioning for a specialist professional audience" },
+];
+
+const WORKFLOW = [
+  { s: "Step 1", a: "Validate the idea", d: "Run at least three of the six validation methods on the exact niche + pack-type phrase. Do not open Canva until two return positive.", t: "30–45 min" },
+  { s: "Step 2", a: "Define the pack scope", d: "Lock the template list, canvas sizes and the layout structure for each one — the build sheet this app generates is that document.", t: "20 min" },
+  { s: "Step 3", a: "Generate the copy with AI", d: "Draft every headline, placeholder line, section label and instruction page with a CLEAR prompt. Placeholder copy that reads like real copy is what makes a template look designed.", t: "30–60 min" },
+  { s: "Step 4", a: "Design in Canva", d: "Set the Brand Kit first, build one template completely, then duplicate it as the base for the rest. Magic Design for first-pass layouts; Bulk Create to populate variants.", t: "45–90 min" },
+  { s: "Step 5", a: "Review and enrich", d: "Apply your own knowledge of the niche — fix the generic language, correct anything inaccurate, and remove the template that does not earn its place.", t: "20–30 min" },
+  { s: "Step 6", a: "Generate listing assets", d: "Mockups showing the templates in use — on a phone, a laptop, a printed page. The book calls this the single biggest conversion factor and the most skipped step.", t: "20–30 min" },
+  { s: "Step 7", a: "Write the listing copy", d: "Title, five-paragraph description and all thirteen tags, built from the keywords the validation step proved people search.", t: "20 min" },
+  { s: "Step 8", a: "Publish and optimise", d: "Upload, complete every SEO field, set the price at the bottom of the band, publish — then raise the price as reviews accumulate.", t: "15–20 min" },
+];
+
+const VALIDATION = [
+  { m: "Etsy search test", d: "Search the exact pack phrase on Etsy. Count listings with reviews, and top sellers with 100+ reviews.", s: "50+ listings with reviews = demand proven. Many listings, no reviews = uncertain; refine the niche angle." },
+  { m: "Google Trends", d: "Search the keyword on trends.google.com and look at the 12-month trajectory.", s: "Upward or stable = proceed. Sharply declining = skip or reframe." },
+  { m: "Gumroad discovery", d: "Search the topic on Gumroad. Note bestseller badges and review counts.", s: "Products with 50+ sales confirm digital-product buyers exist for this topic." },
+  { m: "Pinterest search", d: "Search the topic on Pinterest and look at what the results are.", s: "Heavy template/product pin presence = buyers actively searching. Mostly blog content = an opportunity to be first." },
+  { m: "Reddit / Facebook groups", d: "Find where this buyer gathers and search for questions about the problem.", s: "The same question asked repeatedly = strong product-market fit, straight from the buyer." },
+  { m: "Pre-sell test", d: "List the pack before it exists. If three people pay, build it.", s: "The most reliable method there is — it eliminates build-before-verify risk entirely." },
+];
+
+const CRITERIA = [
+  { n: "1 · Specific problem", d: "One clearly defined problem for one clearly defined buyer.",
+    bad: "\"Social media templates for small businesses\"", good: "\"Instagram post templates for holistic wellness coaches who post three times a week\"" },
+  { n: "2 · Clear audience", d: "You can describe the buyer in one sentence, and 10,000+ of them are searching on your platform right now.",
+    bad: "\"Anyone who uses Canva\"", good: "\"Solo wellness coaches with 1,000–10,000 followers selling discovery calls\"" },
+  { n: "3 · Instant usability", d: "Could the buyer open this and use it productively within ten minutes?",
+    bad: "A pack with unnamed layers, missing fonts, and no instructions", good: "A pack with a one-page instructions PDF, named pages, and every font free in Canva" },
+];
+
+const MISTAKES = [
+  { n: "Building without validating", d: "Spending ten-plus hours designing before confirming demand exists.", fix: "Always run the 30-Minute Validation Method first. It is the highest-ROI thirty minutes in this income stream." },
+  { n: "One-product shops", d: "Listing one or two packs and expecting meaningful income.", fix: "Treat the first ten packs as catalogue infrastructure. Income compounds between products 15 and 25." },
+  { n: "Pricing at the floor", d: "A $4 pack signals that it was made quickly and the creator does not back it.", fix: "Price at the bottom of the market band — not below it — then raise as reviews accumulate." },
+  { n: "Skipping the mockups", d: "A flat screenshot of the file instead of the product shown in use.", fix: "Thirty minutes of mockup work can double the conversion rate of an otherwise identical listing." },
+];
+
+const MILESTONES = [
+  { st: "Starting out", cat: "1–5 packs", price: "$7–$27", income: "$50–$300/month", key: "Building reviews and SEO" },
+  { st: "Early traction", cat: "6–15 packs", price: "$12–$47", income: "$300–$900/month", key: "Catalogue momentum building" },
+  { st: "Established seller", cat: "16–40 packs", price: "$15–$67", income: "$900–$3,000/month", key: "SEO compounding; repeat buyers" },
+  { st: "Full catalogue", cat: "40+ packs", price: "Mixed", income: "$2,000–$6,000+/month", key: "Passive with minimal maintenance" },
+];
+
+const DELIVERY = [
+  "Build the pack in one Canva design, one template per page, and name every page exactly as it appears on your build sheet.",
+  "Share → Template link. This gives the buyer their own editable copy and leaves your original untouched — never share an edit link.",
+  "Put that link on a one-page PDF along with the fonts used, the five hex codes, and a two-line \"how to edit\" instruction. This PDF is the file the buyer downloads.",
+  "Use only fonts and elements available on Canva's free tier, or state plainly in the listing which items need Canva Pro. Mismatched fonts are the single most common cause of refund requests.",
+  "Add a licence line: personal and commercial use by the buyer, no resale or redistribution of the templates themselves.",
+  "Generate three to five mockup images — the templates on a phone, on a laptop, printed on a desk — as the listing gallery.",
+  "Keep a master copy of the design. Every future seasonal or angle variant starts as a duplicate of it, which is how a catalogue gets built without new design work.",
+];
+
+const LAUNCH_STEPS = [
+  "Validation returned two or more positive signals",
+  "Every template built at the exact canvas size on the build sheet",
+  "Brand Kit set — five colours and the type pairing applied consistently",
+  "Every page named to match the build sheet",
+  "All fonts checked as free-tier, or Pro requirements stated in the listing",
+  "Placeholder copy written as real copy, not \"Lorem ipsum\"",
+  "Template link generated and tested in a logged-out browser",
+  "One-page instructions PDF written (link, fonts, hex codes, how to edit)",
+  "Licence line included in the PDF",
+  "Three to five mockup images generated — the step that doubles conversion",
+  "Listing title leads with the most specific searchable keyword",
+  "Five-paragraph description written",
+  "All thirteen tag slots used, mixing broad and long-tail",
+  "Price set at the bottom of the band, with a plan to raise it after five reviews",
+];
+
+/* ---------------------------------------------------------------------------
+   TAG SEEDS — Etsy caps a tag at 20 characters, so every candidate below is
+   already inside that limit. Anything longer is filtered out at build time.
+   --------------------------------------------------------------------------- */
+const PACK_TAGS = {
+  "ig-post":     ["instagram template", "social media pack", "instagram posts"],
+  "ig-story":    ["instagram story", "story templates", "reels template"],
+  "highlights":  ["highlight covers", "instagram icons", "story highlights"],
+  "pin":         ["pinterest template", "pinterest pins", "pin templates"],
+  "li":          ["linkedin template", "linkedin carousel", "linkedin banner"],
+  "deck":        ["presentation", "pitch deck", "slide template"],
+  "media-kit":   ["media kit", "press kit template", "influencer kit"],
+  "pricing":     ["pricing guide", "services guide", "price list template"],
+  "proposal":    ["proposal template", "client proposal", "business proposal"],
+  "lead-magnet": ["lead magnet", "freebie template", "opt in template"],
+  "ebook":       ["ebook template", "ebook cover", "book cover template"],
+  "stationery":  ["business card", "stationery set", "letterhead template"],
+  "email":       ["email header", "newsletter design", "email template"],
+  "ad":          ["facebook ad", "ad templates", "instagram ad"],
+  "yt":          ["youtube thumbnail", "thumbnail template", "youtube template"],
+  "planner":     ["printable planner", "planner template", "weekly planner"],
+  "flyer":       ["flyer template", "poster template", "event flyer"],
+  "brand-kit":   ["brand kit", "branding template", "brand bundle"],
+};
+
+/* Deep enough that thirteen unique tags survive deduplication for every
+   niche / pack type / angle combination — the pool is checked at build time. */
+const GENERIC_TAGS = [
+  "canva template", "editable template", "small business", "diy branding",
+  "digital download", "marketing kit", "social media kit", "instant download",
+  "template bundle", "content templates", "branding kit", "canva pack",
+  "business templates", "marketing templates", "digital templates",
+];
+
+/* ---------------------------------------------------------------------------
+   STATE
+   --------------------------------------------------------------------------- */
+const STORE_KEY = "canva-template-library-builder/v1";
+const $ = (id) => document.getElementById(id);
+const el = (tag, props) => Object.assign(document.createElement(tag), props || {});
+
+const DEFAULT_OPTS = { brand: true, layout: true, listing: true, price: true, brief: false };
+
+let store = {
+  theme: null,
+  niche: 0,
+  type: "ig-post",
+  size: null,
+  angle: "minimal",
+  shop: "",
+  opts: Object.assign({}, DEFAULT_OPTS),
+  library: [],
+  cat: { size: "20", cadence: "2", mode: "one", offset: 0 },
+  val: {},
+  launch: [],
+};
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      store = Object.assign(store, parsed);
+      store.opts = Object.assign({}, DEFAULT_OPTS, parsed.opts || {});
+      store.cat = Object.assign(store.cat, parsed.cat || {});
+    }
+  } catch (e) { /* private mode, file:// restrictions — carry on in memory */ }
+}
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) { /* ignore */ }
+}
+
+/* ---------- small helpers ---------- */
+
+let toastTimer;
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
+}
+
+function copyText(text, okMsg) {
+  const done = () => toast(okMsg || "Copied to clipboard");
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+function fallbackCopy(text, done) {
+  const ta = el("textarea", { value: text });
+  ta.setAttribute("aria-hidden", "true");
+  ta.style.cssText = "position:fixed;top:-1000px;opacity:0";
+  document.body.append(ta);
+  ta.select();
+  try { document.execCommand("copy"); done(); }
+  catch (e) { toast("Copy failed — select the text and copy manually"); }
+  ta.remove();
+}
+
+function download(filename, text) {
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = el("a", { href: url, download: filename });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  toast("Downloaded " + filename);
+}
+
+const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 70);
+const today = () => new Date().toISOString().slice(0, 10);
+const sizeOf = (id) => SIZES[id];
+const dims = (id) => { const s = SIZES[id]; return s.w + " × " + s.h + " px"; };
+
+/* ---------- theme ---------- */
+
+function applyTheme() {
+  const t = store.theme;
+  if (t) document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+  $("themeIcon").textContent = t === "dark" ? "●" : t === "light" ? "○" : "◐";
+}
+$("themeBtn").onclick = () => {
+  store.theme = store.theme === "light" ? "dark" : store.theme === "dark" ? null : "light";
+  applyTheme(); save();
+  toast(store.theme ? store.theme[0].toUpperCase() + store.theme.slice(1) + " theme" : "Following your system theme");
+};
+
+/* ---------- tabs ---------- */
+
+const tabs = Array.from(document.querySelectorAll(".tab"));
+tabs.forEach((tab) => {
+  tab.onclick = () => selectTab(tab);
+  tab.onkeydown = (e) => {
+    const i = tabs.indexOf(tab);
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      e.preventDefault();
+      const next = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+      next.focus(); selectTab(next);
+    }
+  };
+});
+function selectTab(tab) {
+  tabs.forEach((t) => {
+    const on = t === tab;
+    t.setAttribute("aria-selected", String(on));
+    $(t.getAttribute("aria-controls")).hidden = !on;
+  });
+}
+
+/* ===========================================================================
+   DERIVED PACK
+   =========================================================================== */
+
+function niche() { return NICHES[store.niche] || NICHES[0]; }
+function packType() { return PACK_TYPES.find((p) => p.id === store.type) || PACK_TYPES[0]; }
+function angle() { return ANGLES.find((a) => a.id === store.angle) || ANGLES[0]; }
+
+function sizeOptions(pt) {
+  const total = pt.templates.length;
+  const opts = [4, 5, 6, 8, 10, 12, 15, 20].filter((n) => n < total);
+  opts.push(total);
+  return opts;
+}
+function packCount() {
+  const pt = packType();
+  const opts = sizeOptions(pt);
+  const n = parseInt(store.size, 10);
+  return opts.includes(n) ? n : opts[opts.length - 1];
+}
+function packTemplates() { return packType().templates.slice(0, packCount()); }
+
+/* The book prices 5–10 templates at $12–$27 and 20+ at $27–$67. The two bands
+   between those are interpolated from them, and labelled as such in the spec. */
+function priceBand(n) {
+  if (n <= 4)  return { lo: 9,  hi: 17, src: "interpolated" };
+  if (n <= 10) return { lo: 12, hi: 27, src: "book" };
+  if (n < 20)  return { lo: 19, hi: 39, src: "interpolated" };
+  return { lo: 27, hi: 67, src: "book" };
+}
+const bandLabel = (b) => "$" + b.lo + "–$" + b.hi;
+
+function packName() {
+  return angle().frag + " " + packType().name + " — " + niche().name;
+}
+function packPromise() {
+  const nc = niche(), pt = packType(), an = angle();
+  return an.promise + " " + packCount() + " templates for " + nc.short.toLowerCase() +
+    ", sized for " + pt.channel + ".";
+}
+
+/* ===========================================================================
+   PACK BUILDER — rendering
+   =========================================================================== */
+
+function renderNicheChips() {
+  const box = $("nicheChips");
+  box.textContent = "";
+  NICHES.forEach((n, i) => {
+    const b = el("button", { type: "button", className: "chip", textContent: n.short, title: n.name });
+    b.setAttribute("aria-pressed", String(i === store.niche));
+    b.onclick = () => { store.niche = i; save(); renderNicheChips(); renderAll(); };
+    box.append(b);
+  });
+  $("nicheCount").textContent = NICHES.length + " niches × " + PACK_TYPES.length + " pack types × " +
+    ANGLES.length + " angles = " + (NICHES.length * PACK_TYPES.length * ANGLES.length).toLocaleString() +
+    " distinct listings, before a single template is redesigned.";
+}
+
+function fillTypeSelect() {
+  const sel = $("packType");
+  sel.textContent = "";
+  PACK_TYPES.forEach((p) => {
+    sel.append(el("option", { value: p.id, textContent: p.emoji + "  " + p.name + " (" + p.templates.length + ")" }));
+  });
+  sel.value = store.type;
+}
+
+function fillSizeSelect() {
+  const sel = $("packSize");
+  const pt = packType();
+  const opts = sizeOptions(pt);
+  const chosen = packCount();
+  sel.textContent = "";
+  opts.forEach((n) => {
+    const b = priceBand(n);
+    sel.append(el("option", {
+      value: String(n),
+      textContent: n + " templates — " + bandLabel(b) + (n === pt.templates.length ? "  (the full pack)" : ""),
+    }));
+  });
+  sel.value = String(chosen);
+}
+
+function fillAngleSelect() {
+  const sel = $("angle");
+  sel.textContent = "";
+  ANGLES.forEach((a) => sel.append(el("option", { value: a.id, textContent: a.name })));
+  sel.value = store.angle;
+}
+
+function renderSwatches() {
+  const box = $("swatches");
+  box.textContent = "";
+  niche().palette.forEach((c) => {
+    const li = el("li", { className: "swatch" });
+    const sw = el("span", { className: "chipcolor" });
+    sw.style.background = c.h;
+    const meta = el("div", { className: "meta" });
+    meta.append(el("b", { textContent: c.n }), el("code", { textContent: c.h }), el("span", { textContent: c.r }));
+    li.append(sw, meta);
+    box.append(li);
+  });
+
+  const f = niche().fonts;
+  const ts = $("typeset");
+  ts.textContent = "";
+  [
+    ["Headings", f.heading, "Titles, headlines, big statements"],
+    ["Body", f.body, "Paragraphs, labels, captions, UI text"],
+    ["Accent", f.accent, "One element per template, never a paragraph"],
+  ].forEach(([role, font, use]) => {
+    const d = el("div");
+    d.append(el("b", { textContent: role + " · " + font }), el("span", { textContent: use }));
+    ts.append(d);
+  });
+
+  $("paletteWhy").textContent = "Why this palette: " + niche().problem +
+    " The base carries every canvas, the ink is the only text colour, the primary owns the brand furniture, " +
+    "the secondary fills tinted panels, and the accent appears once per template — which is what stops a pack looking busy. " +
+    angle().styling;
+}
+
+function renderSheet() {
+  const body = $("sheetBody");
+  const list = packTemplates();
+  body.textContent = "";
+  list.forEach((t, i) => {
+    const tr = el("tr");
+    tr.append(el("td", { className: "num", textContent: String(i + 1).padStart(2, "0") }));
+    const td = el("td");
+    td.append(el("b", { textContent: t.n }));
+    td.append(el("span", { className: "layout", textContent: t.use + " — " + t.layout }));
+    tr.append(td);
+    const sz = el("td", { className: "size" });
+    sz.append(el("b", { textContent: dims(t.s) }));
+    sz.append(el("span", { className: "layout", textContent: SIZES[t.s].label + (SIZES[t.s].note ? " · " + SIZES[t.s].note : "") }));
+    tr.append(sz);
+    body.append(tr);
+  });
+
+  const sizes = new Set(list.map((t) => t.s));
+  $("sheetSub").textContent = list.length + " templates across " + sizes.size +
+    (sizes.size === 1 ? " canvas size" : " canvas sizes") +
+    ". In Canva each of these is a Custom size in pixels — build one template fully, then duplicate it as the base for the rest.";
+  $("packTypeHint").textContent = packType().blurb;
+}
+
+/* ---------- the spec document ---------- */
+
+function listingTitle() {
+  const nc = niche(), pt = packType();
+  return titleCase(nc.short) + " " + pt.name + " — " + packCount() +
+    " Editable Canva Templates, " + angle().frag + " Design";
+}
+function titleCase(s) {
+  return s.replace(/\w[^\s-]*/g, (w) => (["and", "or", "for", "the", "in", "of", "&"].includes(w.toLowerCase()) ? w.toLowerCase() : w[0].toUpperCase() + w.slice(1)));
+}
+
+function buildTags() {
+  const nc = niche(), pt = packType(), an = angle();
+  const pool = []
+    .concat(PACK_TAGS[pt.id] || [])
+    .concat(nc.keywords)
+    .concat(an.tags)
+    .concat([nc.short.toLowerCase() + " canva", nc.short.toLowerCase() + " pack"])
+    .concat(GENERIC_TAGS)
+    .map((t) => t.toLowerCase().trim())
+    .filter((t) => t.length <= 20);
+  const out = [];
+  pool.forEach((t) => { if (!out.includes(t) && out.length < 13) out.push(t); });
+  return out;
+}
+
+function listingCopy() {
+  const nc = niche(), pt = packType(), an = angle(), n = packCount(), b = priceBand(n);
+  const L = [];
+  L.push("TITLE");
+  L.push(listingTitle());
+  L.push("");
+  L.push("DESCRIPTION");
+  L.push("");
+  L.push("1 · WHAT THIS IS");
+  L.push(n + " editable Canva templates built for " + nc.name.toLowerCase() + ". " +
+    "Every template opens in your free Canva account, takes your own colours and photos in a couple of clicks, " +
+    "and is already built at the exact canvas size it needs — no resizing, no guesswork, no design skills required. " +
+    "Made for: " + pt.channel + ".");
+  L.push("");
+  L.push("2 · THE PROBLEM IT SOLVES");
+  L.push(cap(nc.problem) + " This pack removes the blank canvas. " + an.promise);
+  L.push("");
+  L.push("3 · WHAT'S INCLUDED");
+  packTemplates().forEach((t, i) => L.push("  " + String(i + 1).padStart(2, "0") + ". " + t.n + " — " + dims(t.s) + " · " + t.use));
+  L.push("  + A one-page instructions PDF with the template link, fonts and hex codes");
+  L.push("  + The full five-colour palette and font pairing, ready to load into your Canva Brand Kit");
+  L.push("");
+  L.push("4 · TECHNICAL DETAILS");
+  L.push("  Format: Canva template link (delivered inside a PDF after purchase)");
+  L.push("  Works with: the free Canva plan — a Canva account is required");
+  L.push("  Fonts: " + nc.fonts.heading + ", " + nc.fonts.body + ", " + nc.fonts.accent + " — all available in Canva");
+  L.push("  Canvas sizes: " + Array.from(new Set(packTemplates().map((t) => dims(t.s)))).join(", "));
+  L.push("  Delivery: instant download. Nothing is posted — this is a digital product.");
+  L.push("  Licence: personal and commercial use in your own business. Templates may not be resold or redistributed.");
+  L.push("");
+  L.push("5 · FAQ");
+  L.push("  Do I need Canva Pro?  No. Everything in this pack works on the free plan.");
+  L.push("  Can I change the colours and fonts?  Yes — every element is editable, and the palette is included so you can swap it for your own.");
+  L.push("  Will this work on my phone?  Yes, in the Canva app, though editing is easier on a laptop.");
+  L.push("  Can I use these for client work?  Yes, for your own business and your clients' content. You may not resell the templates themselves.");
+  L.push("  What if I've never used Canva?  The included instructions page takes you from the link to your first edited template in under ten minutes.");
+  L.push("");
+  L.push("TAGS (13 slots, all used)");
+  L.push(buildTags().join(", "));
+  L.push("");
+  L.push("PRICE");
+  L.push("List at $" + b.lo + " — the bottom of the " + bandLabel(b) + " band — and raise it after five positive reviews.");
+  return L.join("\n");
+}
+
+const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+function designBrief() {
+  const nc = niche(), pt = packType(), an = angle();
+  return [
+    "R — ROLE",
+    "You are a graphic designer who specialises in Canva template products for small businesses.",
+    "",
+    "C — CONTEXT",
+    "I am building a Canva template pack called \"" + packName() + "\" to sell as a digital product.",
+    "The buyer is: " + nc.buyer,
+    "Their problem is: " + nc.problem,
+    "The pack's visual angle is " + an.name.toLowerCase() + " — " + an.styling,
+    "",
+    "A — AUDIENCE",
+    "The design specifications will be read by me as I build the templates in Canva, so they must be",
+    "concrete enough to execute without further decisions.",
+    "",
+    "TASK",
+    "Write the full design specification for each of the " + packCount() + " templates listed below.",
+    "For each one give: the exact element hierarchy top to bottom, the type sizes in pixels, which of",
+    "the five palette colours goes where, the margin and gutter values, and one line of placeholder",
+    "copy written as real copy for this buyer — never Lorem ipsum.",
+    "",
+    "The palette: " + nc.palette.map((c) => c.n + " " + c.h + " (" + c.r + ")").join(", "),
+    "The type pairing: " + nc.fonts.heading + " for headings, " + nc.fonts.body + " for body, " + nc.fonts.accent + " for accents.",
+    "",
+    "The templates:",
+  ].concat(packTemplates().map((t, i) => "  " + (i + 1) + ". " + t.n + " — " + dims(t.s) + " — " + t.use))
+   .concat([
+    "",
+    "L — LENGTH & FORMAT",
+    "One block per template, 120–180 words each, under a numbered heading. No preamble, no summary.",
+    "",
+    "E — EXAMPLE",
+    "Match this level of specificity: \"Headline in " + nc.fonts.heading + " at 96 px, " + nc.palette[1].h +
+    ", left-aligned, top margin 120 px; accent rule 4 px in " + nc.palette[4].h + " directly beneath.\"",
+    "",
+    "RULES",
+    "Ask me any clarifying questions before you begin. Invent no statistics. Use only fonts available in",
+    "Canva. Keep every layout buildable by someone with no design training.",
+  ]).join("\n");
+}
+
+function buildSpec() {
+  const nc = niche(), pt = packType(), an = angle(), n = packCount(), b = priceBand(n);
+  const o = store.opts;
+  const L = [];
+
+  L.push("# " + packName());
+  L.push("");
+  L.push("> " + packPromise());
+  L.push("");
+  L.push("| | |");
+  L.push("|---|---|");
+  L.push("| **Buyer** | " + nc.buyer + " |");
+  L.push("| **Problem it solves** | " + cap(nc.problem) + " |");
+  L.push("| **Pack type** | " + pt.name + " · " + pt.channel + " |");
+  L.push("| **Templates** | " + n + " |");
+  L.push("| **Price band** | " + bandLabel(b) + (b.src === "book" ? " (Chapter 7 pricing table)" : " (interpolated between the table's 5–10 and 20+ bands)") + " |");
+  L.push("| **List at** | $" + b.lo + ", raised after five reviews |");
+  L.push("| **Platforms** | Gumroad first, then Etsy, then Creative Market |");
+  L.push("| **Seasonality** | " + nc.seasonal + " |");
+  if (store.shop.trim()) L.push("| **Shop** | " + store.shop.trim() + " |");
+  L.push("");
+
+  if (o.brand) {
+    L.push("## Brand kit");
+    L.push("");
+    L.push("Set these once in Canva (Brand Kit → colours and fonts) before building anything. Every");
+    L.push("template in the pack inherits them, which is what makes a pack read as a pack.");
+    L.push("");
+    L.push("| Colour | Hex | Role | Used for |");
+    L.push("|---|---|---|---|");
+    const uses = {
+      Base: "every canvas background",
+      Ink: "all body and heading text",
+      Primary: "brand furniture — bars, rules, icons, fills",
+      Secondary: "tinted panels and alternating rows",
+      Accent: "exactly one element per template",
+    };
+    nc.palette.forEach((c) => L.push("| " + c.n + " | `" + c.h + "` | " + c.r + " | " + (uses[c.r] || "") + " |"));
+    L.push("");
+    L.push("**Type pairing** — all three are available in Canva:");
+    L.push("");
+    L.push("- Headings: **" + nc.fonts.heading + "**");
+    L.push("- Body: **" + nc.fonts.body + "**");
+    L.push("- Accent: **" + nc.fonts.accent + "** — one element per template, never a paragraph");
+    L.push("");
+    L.push("**Styling angle — " + an.name + ":** " + an.styling);
+    L.push("");
+    L.push("**Content pillars** the placeholder copy should speak to:");
+    L.push("");
+    nc.pillars.forEach((p) => L.push("- " + p));
+    L.push("");
+  }
+
+  L.push("## Build sheet");
+  L.push("");
+  L.push("Every canvas below is entered in Canva as a **Custom size** in pixels. Build template 01");
+  L.push("completely, then duplicate it as the base for the rest — that is where the time saving is.");
+  L.push("");
+  if (o.layout) {
+    L.push("| # | Template | Canvas | Job | Layout |");
+    L.push("|---|---|---|---|---|");
+    packTemplates().forEach((t, i) => {
+      L.push("| " + String(i + 1).padStart(2, "0") + " | " + t.n + " | " + dims(t.s) + " | " + t.use + " | " + t.layout + " |");
+    });
+  } else {
+    L.push("| # | Template | Canvas | Job |");
+    L.push("|---|---|---|---|");
+    packTemplates().forEach((t, i) => {
+      L.push("| " + String(i + 1).padStart(2, "0") + " | " + t.n + " | " + dims(t.s) + " | " + t.use + " |");
+    });
+  }
+  L.push("");
+  const sizeList = Array.from(new Set(packTemplates().map((t) => t.s)));
+  L.push("**Canvas sizes in this pack:** " + sizeList.map((s) => dims(s) + " (" + SIZES[s].label + ")").join("; ") + ".");
+  const noted = sizeList.filter((s) => SIZES[s].note);
+  if (noted.length) {
+    L.push("");
+    noted.forEach((s) => L.push("- **" + SIZES[s].label + "** — " + SIZES[s].note));
+  }
+  L.push("");
+
+  L.push("## Build order");
+  L.push("");
+  WORKFLOW.forEach((w) => L.push("**" + w.s + " · " + w.a + "** _(" + w.t + ")_ — " + w.d));
+  L.push("");
+  L.push("**Bulk Create** (Canva Pro) is the multiplier on this pack: build one template, paste a");
+  L.push("spreadsheet of " + n + " sets of copy, and Canva populates every variant at once. The book");
+  L.push("names it one of the most underused income-generating features in the tool.");
+  L.push("");
+
+  L.push("## Delivery");
+  L.push("");
+  DELIVERY.forEach((d, i) => L.push(String(i + 1) + ". " + d));
+  L.push("");
+
+  if (o.price) {
+    L.push("## Price ladder");
+    L.push("");
+    L.push("| Tier | Offer | Price |");
+    L.push("|---|---|---|");
+    L.push("| Entry | A 5-template starter cut of this pack | $" + Math.max(9, b.lo - 5) + " |");
+    L.push("| Core | This pack, " + n + " templates | $" + b.lo + " |");
+    L.push("| Plus | This pack + a 3-minute Loom walkthrough | $" + Math.round((b.lo + b.hi) / 2) + " |");
+    L.push("| Bundle | This pack + the matching " + otherPackName() + " | $" + b.hi + " |");
+    L.push("");
+    L.push("The middle tier almost always sells the most, and the presence of the top tier is what");
+    L.push("makes it feel like exceptional value.");
+    L.push("");
+  }
+
+  if (o.listing) {
+    L.push("## Listing");
+    L.push("");
+    L.push("```");
+    L.push(listingCopy());
+    L.push("```");
+    L.push("");
+  }
+
+  if (o.brief) {
+    L.push("## AI design-brief prompt");
+    L.push("");
+    L.push("Paste into ChatGPT or Claude to generate the full per-template design specification.");
+    L.push("");
+    L.push("```");
+    L.push(designBrief());
+    L.push("```");
+    L.push("");
+  }
+
+  L.push("---");
+  L.push("");
+  L.push("Spec generated " + today() + (store.shop.trim() ? " for " + store.shop.trim() : "") +
+    " with the Canva Template Library Builder, from *The AI Income Blueprint*, Chapter 7.");
+  L.push("Price bands and income figures are the book's, and as its own disclaimer notes, they are");
+  L.push("ranges based on observed outcomes — not guarantees of results.");
+  return L.join("\n");
+}
+
+function otherPackName() {
+  const i = PACK_TYPES.findIndex((p) => p.id === store.type);
+  return PACK_TYPES[(i + 1) % PACK_TYPES.length].name;
+}
+
+function renderSpec() {
+  const b = priceBand(packCount());
+  $("specName").textContent = packName();
+  $("specPrice").textContent = bandLabel(b);
+  $("specPromise").textContent = packPromise();
+  $("specOut").textContent = buildSpec();
+}
+
+/* ---------- pack builder wiring ---------- */
+
+$("packType").onchange = (e) => { store.type = e.target.value; store.size = null; save(); fillSizeSelect(); renderAll(); };
+$("packSize").onchange = (e) => { store.size = e.target.value; save(); renderAll(); };
+$("angle").onchange = (e) => { store.angle = e.target.value; save(); renderAll(); };
+$("shopName").oninput = (e) => { store.shop = e.target.value; save(); renderSpec(); };
+[["optBrand", "brand"], ["optLayout", "layout"], ["optListing", "listing"], ["optPrice", "price"], ["optBrief", "brief"]]
+  .forEach(([id, key]) => {
+    $(id).onchange = (e) => { store.opts[key] = e.target.checked; save(); renderSpec(); };
+  });
+
+$("copySpec").onclick = () => copyText(buildSpec(), "Pack spec copied");
+$("dlSpecMd").onclick = () => download(slug(packName()) + ".md", buildSpec());
+$("dlSpecTxt").onclick = () => download(slug(packName()) + ".txt", buildSpec());
+$("saveSpec").onclick = () => {
+  const entry = {
+    id: Date.now(),
+    name: packName(),
+    niche: niche().short,
+    type: packType().name,
+    count: packCount(),
+    price: bandLabel(priceBand(packCount())),
+    date: today(),
+    spec: buildSpec(),
+  };
+  if (store.library.some((x) => x.name === entry.name && x.count === entry.count)) {
+    toast("That pack is already in your library");
+    return;
+  }
+  store.library.unshift(entry);
+  save();
+  renderLibrary();
+  toast("Saved — " + store.library.length + " pack" + (store.library.length === 1 ? "" : "s") + " in your library");
+};
+$("shuffleBtn").onclick = () => {
+  store.niche = Math.floor(Math.random() * NICHES.length);
+  store.type = PACK_TYPES[Math.floor(Math.random() * PACK_TYPES.length)].id;
+  store.angle = ANGLES[Math.floor(Math.random() * ANGLES.length)].id;
+  store.size = null;
+  save();
+  renderNicheChips(); fillTypeSelect(); fillSizeSelect(); fillAngleSelect(); renderAll();
+  toast(packName());
+};
+
+/* ===========================================================================
+   CATALOGUE PLANNER
+   =========================================================================== */
+
+function catalogue() {
+  const n = parseInt(store.cat.size, 10);
+  const mode = store.cat.mode;
+  const off = store.cat.offset;
+  const rows = [];
+  for (let i = 0; i < n; i++) {
+    let nc, pt;
+    if (mode === "one") {
+      nc = niche();
+      pt = PACK_TYPES[(i + off) % PACK_TYPES.length];
+    } else if (mode === "type") {
+      nc = NICHES[(i + off) % NICHES.length];
+      pt = packType();
+    } else {
+      nc = NICHES[(store.niche + i + off) % NICHES.length];
+      pt = PACK_TYPES[(i * 3 + off) % PACK_TYPES.length];
+    }
+    const an = ANGLES[(i + off) % ANGLES.length];
+    const count = Math.min(pt.templates.length, i % 3 === 2 ? pt.templates.length : 10);
+    const band = priceBand(count);
+    rows.push({
+      name: an.frag + " " + pt.name + " — " + nc.short,
+      type: pt.name,
+      niche: nc.short,
+      count,
+      price: "$" + band.lo,
+      band,
+      tier: count >= 16 ? "Premium" : count >= 9 ? "Mid" : "Entry",
+    });
+  }
+  return rows;
+}
+
+function renderCatalogue() {
+  const rows = catalogue();
+  const cadence = parseInt(store.cat.cadence, 10);
+  const weeks = Math.ceil(rows.length / cadence);
+  const body = $("catBody");
+  body.textContent = "";
+  rows.forEach((r, i) => {
+    const tr = el("tr");
+    [String(i + 1).padStart(2, "0"), r.name, r.type, String(r.count), r.price, r.tier].forEach((v, j) => {
+      tr.append(el("td", { textContent: v, className: j === 0 ? "num" : "" }));
+    });
+    body.append(tr);
+  });
+
+  const ms = rows.length >= 40 ? MILESTONES[3] : rows.length >= 16 ? MILESTONES[2] : rows.length >= 6 ? MILESTONES[1] : MILESTONES[0];
+  const stats = $("catStats");
+  stats.textContent = "";
+  [
+    [String(rows.length), "packs"],
+    [String(weeks), weeks === 1 ? "week to publish" : "weeks to publish"],
+    [String(new Set(rows.map((r) => r.type)).size), "pack types"],
+    [String(new Set(rows.map((r) => r.niche)).size), "niches"],
+    [ms.income.replace("/month", ""), "per month at this size"],
+  ].forEach(([b, s]) => {
+    const d = el("div");
+    d.append(el("b", { textContent: b }), el("span", { textContent: s }));
+    stats.append(d);
+  });
+
+  $("catScheduleSub").textContent = "At " + cadence + " pack" + (cadence === 1 ? "" : "s") +
+    " a week that is " + weeks + " week" + (weeks === 1 ? "" : "s") + " — roughly " +
+    Math.round(weeks / 4.35) + " month" + (Math.round(weeks / 4.35) === 1 ? "" : "s") +
+    ". Denise Okafor's twelve-month result in the book came from two products a week and no advertising at all.";
+
+  const wk = $("catWeeks");
+  wk.textContent = "";
+  for (let w = 0; w < weeks; w++) {
+    const div = el("div", { className: "week" });
+    div.append(el("h4", { textContent: "Week " + (w + 1) }));
+    const ol = el("ol");
+    rows.slice(w * cadence, w * cadence + cadence).forEach((r) => ol.append(el("li", { textContent: r.name })));
+    div.append(ol);
+    wk.append(div);
+  }
+
+  const ladder = $("catLadder");
+  ladder.textContent = "";
+  const nc = niche();
+  [
+    ["Entry — $9–$17", "A single small pack, five templates, high discoverability", "Generates reviews, builds trust, introduces the buyer to the shop"],
+    ["Mid — $27–$47", "A full pack of 10–15 templates, shown as an automatic upsell after the entry purchase", "Captures buyers who want the complete solution"],
+    ["Premium — $47–$67", "The Complete Brand Starter Kit — every surface covered in one purchase", "Maximum revenue per customer; positions you as the authority in " + nc.short.toLowerCase()],
+    ["Service — $200–$500", "You customise the pack to the buyer's brand", "Converts product buyers into service clients; the highest-margin offering"],
+  ].forEach(([t, offer, goal]) => {
+    const item = el("div", { className: "saved-item" });
+    const h = el("header");
+    h.append(el("h3", { textContent: t }));
+    item.append(h);
+    item.append(el("p", { textContent: offer, style: "margin:0 0 4px" }));
+    item.append(el("p", { className: "meta", textContent: "Goal: " + goal }));
+    ladder.append(item);
+  });
+}
+
+function catalogueDoc() {
+  const rows = catalogue();
+  const cadence = parseInt(store.cat.cadence, 10);
+  const weeks = Math.ceil(rows.length / cadence);
+  const L = [];
+  L.push("# Catalogue plan — " + rows.length + " Canva template packs");
+  L.push("");
+  L.push("Cadence: " + cadence + " per week · " + weeks + " weeks · spread: " +
+    (store.cat.mode === "one" ? "one niche (" + niche().name + "), many pack types"
+      : store.cat.mode === "type" ? "one pack type (" + packType().name + "), many niches"
+      : "mixed"));
+  L.push("");
+  L.push("Set a catalogue target, not an income target. The first ten packs are infrastructure —");
+  L.push("income compounds between products 15 and 25.");
+  L.push("");
+  L.push("| # | Pack | Templates | List at | Tier |");
+  L.push("|---|---|---|---|---|");
+  rows.forEach((r, i) => L.push("| " + String(i + 1).padStart(2, "0") + " | " + r.name + " | " + r.count + " | " + r.price + " | " + r.tier + " |"));
+  L.push("");
+  L.push("## Publishing schedule");
+  L.push("");
+  for (let w = 0; w < weeks; w++) {
+    L.push("**Week " + (w + 1) + "** — " + rows.slice(w * cadence, w * cadence + cadence).map((r) => r.name).join("; "));
+  }
+  L.push("");
+  L.push("## Price ladder");
+  L.push("");
+  L.push("- **Entry $9–$17** — a five-template starter pack. Goal: reviews and trust.");
+  L.push("- **Mid $27–$47** — the full pack, shown as an upsell after the entry purchase.");
+  L.push("- **Premium $47–$67** — the Complete Brand Starter Kit.");
+  L.push("- **Service $200–$500** — you customise the pack to the buyer's brand.");
+  L.push("");
+  L.push("A customer who climbs this ladder is worth 6–10× a single-purchase buyer, at no extra");
+  L.push("acquisition cost.");
+  L.push("");
+  L.push("Generated " + today() + " with the Canva Template Library Builder.");
+  return L.join("\n");
+}
+
+$("catSize").onchange = (e) => { store.cat.size = e.target.value; save(); renderCatalogue(); };
+$("catCadence").onchange = (e) => { store.cat.cadence = e.target.value; save(); renderCatalogue(); };
+["catOneNiche", "catOneType", "catMixed"].forEach((id) => {
+  $(id).onchange = (e) => { if (e.target.checked) { store.cat.mode = e.target.value; save(); renderCatalogue(); } };
+});
+$("reshuffleCat").onclick = () => { store.cat.offset = (store.cat.offset + 1) % 24; save(); renderCatalogue(); toast("Catalogue reshuffled"); };
+$("copyCat").onclick = () => copyText(catalogueDoc(), "Catalogue plan copied");
+$("dlCat").onclick = () => download("catalogue-plan-" + today() + ".md", catalogueDoc());
+
+/* ===========================================================================
+   VALIDATE
+   =========================================================================== */
+
+function valSubject() {
+  return "“" + niche().short.toLowerCase() + " " + packType().name.toLowerCase() + "” — " + packName();
+}
+
+function renderValidate() {
+  $("valSubject").textContent = valSubject();
+
+  const body = $("valBody");
+  body.textContent = "";
+  VALIDATION.forEach((v, i) => {
+    const tr = el("tr");
+    tr.append(el("td", { textContent: v.m }));
+    tr.append(el("td", { textContent: v.d }));
+    const td = el("td");
+    td.append(el("div", { textContent: v.s, className: "tokens", style: "margin-bottom:7px" }));
+    const row = el("div", { className: "row no-print", style: "gap:6px" });
+    [["Positive", 2], ["Weak", 1], ["Not run", 0]].forEach(([label, score]) => {
+      const b = el("button", { type: "button", className: "chip", textContent: label });
+      b.setAttribute("aria-pressed", String((store.val[i] || 0) === score));
+      b.onclick = () => { store.val[i] = score; save(); renderValidate(); };
+      row.append(b);
+    });
+    td.append(row);
+    tr.append(td);
+    body.append(tr);
+  });
+
+  const scores = VALIDATION.map((_, i) => store.val[i] || 0);
+  const run = scores.filter((s) => s > 0).length;
+  const positive = scores.filter((s) => s === 2).length;
+  const meter = $("valMeter");
+  const bar = meter.querySelector("i");
+  let pct, cls, verdict;
+  if (run < 3) {
+    pct = (run / 3) * 60;
+    cls = "meter warn";
+    verdict = run + " of the six methods run. The book asks for at least three before you build anything — " +
+      (3 - run) + " to go.";
+  } else if (positive >= 2) {
+    pct = Math.min(100, 60 + positive * 10);
+    cls = "meter";
+    verdict = run + " methods run, " + positive + " positive. Proceed to creation with confidence.";
+  } else {
+    pct = 35;
+    cls = "meter bad";
+    verdict = run + " methods run but only " + positive + " positive. Refine the concept before building — " +
+      "change the niche, the angle or the pack type. Do not redesign; the design is not the problem.";
+  }
+  meter.className = cls;
+  bar.style.width = pct + "%";
+  $("valVerdict").textContent = verdict;
+
+  const nc = niche(), pt = packType();
+  const q = [
+    "ETSY — search each of these and count listings with reviews:",
+    "  " + nc.short.toLowerCase() + " " + pt.name.toLowerCase(),
+    "  " + nc.keywords[0],
+    "  " + (nc.keywords[1] || nc.keywords[0]),
+    "",
+    "GOOGLE TRENDS — 12-month trajectory:",
+    "  " + nc.keywords[0],
+    "  canva templates",
+    "",
+    "GUMROAD — bestseller badges and review counts:",
+    "  " + nc.short.toLowerCase() + " templates",
+    "  " + (nc.keywords[2] || nc.keywords[0]),
+    "",
+    "PINTEREST — product pins vs. blog content:",
+    "  " + nc.short.toLowerCase() + " " + pt.channel.toLowerCase() + " templates",
+    "",
+    "REDDIT / FACEBOOK GROUPS — find where this buyer gathers, then search:",
+    "  \"" + nc.problem.split(" ").slice(0, 8).join(" ") + "\"",
+    "  canva templates recommendation",
+    "",
+    "PRE-SELL — list it before it exists at $" + priceBand(packCount()).lo + ". Three buyers and you build it.",
+  ].join("\n");
+  $("valQueries").textContent = q;
+
+  const crit = $("criteria");
+  crit.textContent = "";
+  CRITERIA.forEach((c) => {
+    const box = el("div", { className: "saved-item" });
+    const h = el("header");
+    h.append(el("h3", { textContent: c.n }));
+    box.append(h);
+    box.append(el("p", { textContent: c.d, style: "margin:0 0 8px" }));
+    box.append(el("p", { className: "meta", textContent: "✗ " + c.bad, style: "margin:0 0 3px" }));
+    box.append(el("p", { className: "meta", textContent: "✓ " + c.good, style: "margin:0" }));
+    crit.append(box);
+  });
+}
+
+$("valReset").onclick = () => { store.val = {}; save(); renderValidate(); toast("Validation scores reset"); };
+$("copyQueries").onclick = () => copyText($("valQueries").textContent, "Search phrases copied");
+
+/* ===========================================================================
+   SELL IT
+   =========================================================================== */
+
+function renderSell() {
+  const pb = $("platBody");
+  pb.textContent = "";
+  PLATFORMS.forEach((p) => {
+    const tr = el("tr");
+    const nameTd = el("td");
+    nameTd.append(el("b", { textContent: p.name }));
+    tr.append(nameTd);
+    tr.append(el("td", { textContent: p.fee }));
+    tr.append(el("td", { textContent: p.traffic }));
+    tr.append(el("td", { textContent: p.note }));
+    pb.append(tr);
+  });
+
+  $("listingOut").textContent = listingCopy();
+
+  const tc = $("tagChips");
+  tc.textContent = "";
+  buildTags().forEach((t) => {
+    const b = el("button", { type: "button", className: "chip", textContent: t, title: t.length + " / 20 characters" });
+    b.onclick = () => copyText(t, "Tag copied: " + t);
+    tc.append(b);
+  });
+
+  const prb = $("priceBody");
+  prb.textContent = "";
+  PRICE_TABLE.forEach((r) => {
+    const tr = el("tr");
+    tr.append(el("td", { textContent: r.t }));
+    tr.append(el("td", { textContent: r.p }));
+    tr.append(el("td", { textContent: r.pl }));
+    tr.append(el("td", { textContent: r.n }));
+    prb.append(tr);
+  });
+
+  const ll = $("launchList");
+  ll.textContent = "";
+  LAUNCH_STEPS.forEach((step, i) => {
+    const li = el("li");
+    const lab = el("label");
+    const cb = el("input", { type: "checkbox", checked: store.launch.includes(i) });
+    cb.onchange = () => {
+      store.launch = cb.checked ? store.launch.concat(i) : store.launch.filter((x) => x !== i);
+      save(); renderLaunchProgress();
+    };
+    lab.append(cb, el("span", { textContent: step }));
+    li.append(lab);
+    ll.append(li);
+  });
+  renderLaunchProgress();
+}
+
+function renderLaunchProgress() {
+  const done = store.launch.length;
+  $("launchProgress").textContent = done + " of " + LAUNCH_STEPS.length + " done" +
+    (done === LAUNCH_STEPS.length ? " — publish it." : done >= 10 ? " — nearly there." : "");
+}
+
+$("copyListing").onclick = () => copyText(listingCopy(), "Listing copy copied");
+$("dlListing").onclick = () => download(slug(packName()) + "-listing.txt", listingCopy());
+$("copyTags").onclick = () => copyText(buildTags().join(", "), "All 13 tags copied");
+
+/* ===========================================================================
+   MY LIBRARY
+   =========================================================================== */
+
+function renderLibrary() {
+  const list = $("libraryList");
+  list.textContent = "";
+  $("libCount").textContent = store.library.length ? "(" + store.library.length + ")" : "";
+
+  const target = parseInt(store.cat.size, 10);
+  $("librarySub").textContent = store.library.length
+    ? "Specs saved in this browser. " + store.library.length + " of your " + target +
+      "-pack catalogue target — " + Math.max(0, target - store.library.length) + " to go."
+    : "Nothing saved yet.";
+
+  const stats = $("libStats");
+  stats.textContent = "";
+  if (store.library.length) {
+    const templates = store.library.reduce((a, x) => a + x.count, 0);
+    [
+      [String(store.library.length), "packs specced"],
+      [String(templates), "templates in total"],
+      [String(new Set(store.library.map((x) => x.niche)).size), "niches"],
+      [Math.round((store.library.length / target) * 100) + "%", "of catalogue target"],
+    ].forEach(([b, s]) => {
+      const d = el("div");
+      d.append(el("b", { textContent: b }), el("span", { textContent: s }));
+      stats.append(d);
+    });
+  }
+
+  if (!store.library.length) {
+    const e = el("div", { className: "empty" });
+    e.append(el("b", { textContent: "No packs saved yet" }));
+    e.append(el("div", { textContent: "Build one in the Pack Builder and press “Save to library”. The first ten are infrastructure, not income." }));
+    list.append(e);
+    return;
+  }
+
+  store.library.forEach((item) => {
+    const box = el("div", { className: "saved-item" });
+    const h = el("header");
+    h.append(el("h3", { textContent: item.name }));
+    h.append(el("span", { className: "pill gold", textContent: item.price }));
+    h.append(el("span", { className: "spacer", style: "flex:1" }));
+    const copyBtn = el("button", { type: "button", className: "sm ghost no-print", textContent: "📋" , title: "Copy this spec" });
+    copyBtn.onclick = () => copyText(item.spec, "Spec copied");
+    const dlBtn = el("button", { type: "button", className: "sm ghost no-print", textContent: "⬇", title: "Download this spec" });
+    dlBtn.onclick = () => download(slug(item.name) + ".md", item.spec);
+    const delBtn = el("button", { type: "button", className: "sm ghost danger no-print", textContent: "✕", title: "Remove from library" });
+    delBtn.onclick = () => {
+      store.library = store.library.filter((x) => x.id !== item.id);
+      save(); renderLibrary(); toast("Removed");
+    };
+    h.append(copyBtn, dlBtn, delBtn);
+    box.append(h);
+    box.append(el("div", { className: "meta", textContent: item.count + " templates · " + item.type + " · " + item.niche + " · saved " + item.date }));
+    const det = el("details");
+    det.append(el("summary", { textContent: "View spec" }));
+    det.append(el("pre", { textContent: item.spec }));
+    box.append(det);
+    list.append(box);
+  });
+}
+
+$("dlLibrary").onclick = () => {
+  if (!store.library.length) { toast("Nothing saved yet"); return; }
+  const L = ["# Canva template library — " + store.library.length + " pack specs", "", "Exported " + today() + ".", ""];
+  store.library.forEach((x, i) => {
+    L.push("", "<!-- ".concat(String(i + 1).padStart(2, "0"), " -->"), "", x.spec, "", "---");
+  });
+  download("canva-template-library-" + today() + ".md", L.join("\n"));
+};
+
+/* ===========================================================================
+   REFERENCE
+   =========================================================================== */
+
+function renderReference() {
+  const wf = $("wfBody");
+  wf.textContent = "";
+  WORKFLOW.forEach((w) => {
+    const tr = el("tr");
+    tr.append(el("td", { textContent: w.s }));
+    const td = el("td");
+    td.append(el("b", { textContent: w.a }));
+    td.append(el("span", { className: "layout", textContent: w.d }));
+    tr.append(td);
+    tr.append(el("td", { textContent: w.t, className: "size" }));
+    wf.append(tr);
+  });
+
+  const usedBy = {};
+  PACK_TYPES.forEach((p) => p.templates.forEach((t) => {
+    (usedBy[t.s] = usedBy[t.s] || new Set()).add(p.name);
+  }));
+  const sb = $("sizeBody");
+  sb.textContent = "";
+  Object.keys(SIZES).forEach((k) => {
+    const tr = el("tr");
+    const td = el("td");
+    td.append(el("b", { textContent: SIZES[k].label }));
+    if (SIZES[k].note) td.append(el("span", { className: "layout", textContent: SIZES[k].note }));
+    tr.append(td);
+    tr.append(el("td", { textContent: dims(k), className: "size" }));
+    const names = Array.from(usedBy[k] || []);
+    tr.append(el("td", { textContent: names.length ? names.slice(0, 3).join(", ") + (names.length > 3 ? " +" + (names.length - 3) + " more" : "") : "—" }));
+    sb.append(tr);
+  });
+
+  const dl = $("deliveryList");
+  dl.textContent = "";
+  DELIVERY.forEach((d) => dl.append(el("li", { textContent: d })));
+
+  const mk = $("mistakes");
+  mk.textContent = "";
+  MISTAKES.forEach((m) => {
+    const box = el("div", { className: "saved-item" });
+    const h = el("header");
+    h.append(el("h3", { textContent: m.n }));
+    box.append(h);
+    box.append(el("p", { textContent: m.d, style: "margin:0 0 8px" }));
+    box.append(el("p", { className: "meta", textContent: "Fix: " + m.fix, style: "margin:0" }));
+    mk.append(box);
+  });
+
+  const mb = $("milestoneBody");
+  mb.textContent = "";
+  MILESTONES.forEach((m) => {
+    const tr = el("tr");
+    tr.append(el("td", { textContent: m.st }));
+    tr.append(el("td", { textContent: m.cat }));
+    tr.append(el("td", { textContent: m.price }));
+    const td = el("td");
+    td.append(el("b", { textContent: m.income }));
+    td.append(el("span", { className: "layout", textContent: m.key }));
+    tr.append(td);
+    mb.append(tr);
+  });
+}
+
+/* ===========================================================================
+   BACK UP / CLEAR
+   =========================================================================== */
+
+$("exportAllBtn").onclick = () => {
+  download("canva-template-builder-backup-" + today() + ".json", JSON.stringify(store, null, 2));
+};
+$("resetAllBtn").onclick = () => {
+  if (!confirm("Clear everything saved in this browser — library, catalogue settings, validation scores and checklist?\n\nA backup file downloads first.")) return;
+  download("canva-template-builder-backup-" + today() + ".json", JSON.stringify(store, null, 2));
+  try { localStorage.removeItem(STORE_KEY); } catch (e) { /* ignore */ }
+  store.library = [];
+  store.val = {};
+  store.launch = [];
+  save();
+  renderLibrary(); renderValidate(); renderSell();
+  toast("Cleared — your backup has downloaded");
+};
+
+/* ===========================================================================
+   BOOT
+   =========================================================================== */
+
+function renderAll() {
+  renderSwatches();
+  renderSheet();
+  renderSpec();
+  renderCatalogue();
+  renderValidate();
+  renderSell();
+  renderLibrary();
+}
+
+function boot() {
+  load();
+  applyTheme();
+  if (!PACK_TYPES.some((p) => p.id === store.type)) store.type = PACK_TYPES[0].id;
+  if (!ANGLES.some((a) => a.id === store.angle)) store.angle = ANGLES[0].id;
+  if (store.niche < 0 || store.niche >= NICHES.length) store.niche = 0;
+
+  renderNicheChips();
+  fillTypeSelect();
+  fillSizeSelect();
+  fillAngleSelect();
+  $("shopName").value = store.shop || "";
+  $("optBrand").checked = store.opts.brand;
+  $("optLayout").checked = store.opts.layout;
+  $("optListing").checked = store.opts.listing;
+  $("optPrice").checked = store.opts.price;
+  $("optBrief").checked = store.opts.brief;
+  $("catSize").value = store.cat.size;
+  $("catCadence").value = store.cat.cadence;
+  $("catOneNiche").checked = store.cat.mode === "one";
+  $("catOneType").checked = store.cat.mode === "type";
+  $("catMixed").checked = store.cat.mode === "mixed";
+
+  renderReference();
+  renderAll();
+  selectTab(tabs[0]);
+}
+
+boot();
+</script>
+</body>
+</html>
