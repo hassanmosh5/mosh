@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Faceless YouTube Toolkits — Chapter 12 Edition</title>
+<meta name="description" content="Six working toolkits for a faceless YouTube channel: niche scorecard, the 10-step AI production workflow with its prompts, a Shorts engine, a five-layer monetisation stack calculator, the weekly consistency system, and the playbook. Single file, fully offline.">
+<meta name="color-scheme" content="light dark">
+<style>
+/* ===========================================================================
+   THE FACELESS YOUTUBE TOOLKITS
+   Single file. No external requests of any kind. Everything below is inline.
+   Grounded in Chapter 12 of THE AI INCOME BLUEPRINT (Income Stream #7:
+   Content Creation at Scale) and Appendix C prompts #31, #32 and #35.
+   =========================================================================== */
+
+:root {
+  --ink:            #16161d;
+  --ink-2:          #414152;
+  --ink-3:          #6b6b80;
+  --bg:             #f6f5f2;
+  --surface:        #ffffff;
+  --surface-2:      #fbfaf7;
+  --line:           #e3e0d8;
+  --line-2:         #cfcbc0;
+  --play:           #a32020;
+  --play-2:         #c23434;
+  --play-bg:        #fdeeee;
+  --indigo:         #35357a;
+  --indigo-2:       #4a4aa0;
+  --indigo-bg:      #eeeefb;
+  --green:          #1d6b45;
+  --green-bg:       #e8f4ed;
+  --gold:           #9a7413;
+  --gold-bg:        #fdf6e3;
+  --shadow:         0 1px 2px rgba(20,20,35,.06), 0 8px 24px -12px rgba(20,20,35,.18);
+  --shadow-lg:      0 2px 4px rgba(20,20,35,.06), 0 24px 48px -20px rgba(20,20,35,.28);
+  --radius:         14px;
+  --radius-sm:      9px;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif: ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
+}
+
+html[data-theme="dark"] {
+  --ink:            #ece9e3;
+  --ink-2:          #b9b5ad;
+  --ink-3:          #8d8981;
+  --bg:             #14141a;
+  --surface:        #1c1c24;
+  --surface-2:      #22222c;
+  --line:           #30303c;
+  --line-2:         #43434f;
+  --play:           #f08b8b;
+  --play-2:         #e06a6a;
+  --play-bg:        #2c1717;
+  --indigo:         #a8a8f0;
+  --indigo-2:       #8f8fe0;
+  --indigo-bg:      #1f1f33;
+  --green:          #6fce9f;
+  --green-bg:       #16281f;
+  --gold:           #e0b64a;
+  --gold-bg:        #2b2413;
+  --shadow:         0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  --shadow-lg:      0 2px 4px rgba(0,0,0,.4), 0 24px 48px -20px rgba(0,0,0,.7);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --ink:            #ece9e3;
+    --ink-2:          #b9b5ad;
+    --ink-3:          #8d8981;
+    --bg:             #14141a;
+    --surface:        #1c1c24;
+    --surface-2:      #22222c;
+    --line:           #30303c;
+    --line-2:         #43434f;
+    --play:           #f08b8b;
+    --play-2:         #e06a6a;
+    --play-bg:        #2c1717;
+    --indigo:         #a8a8f0;
+    --indigo-2:       #8f8fe0;
+    --indigo-bg:      #1f1f33;
+    --green:          #6fce9f;
+    --green-bg:       #16281f;
+    --gold:           #e0b64a;
+    --gold-bg:        #2b2413;
+    --shadow:         0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+    --shadow-lg:      0 2px 4px rgba(0,0,0,.4), 0 24px 48px -20px rgba(0,0,0,.7);
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { line-height: 1.25; margin: 0; font-weight: 650; letter-spacing: -.011em; }
+p { margin: 0 0 1em; }
+p:last-child { margin-bottom: 0; }
+a { color: var(--indigo); }
+small { font-size: 13px; }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+
+/* ---------- top bar ---------- */
+
+.topbar {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.topbar .wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 62px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.brand { margin-right: auto; display: flex; flex-direction: column; }
+.brand b { font-size: 17px; letter-spacing: -.02em; }
+.brand span { font-size: 12.5px; color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; }
+
+/* ---------- tabs ---------- */
+
+.tabs {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 62px;
+  z-index: 30;
+  overflow-x: auto;
+}
+.tabs .wrap { display: flex; gap: 4px; }
+.tab {
+  appearance: none;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 550;
+  color: var(--ink-3);
+  padding: 13px 12px 11px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"] { color: var(--play); border-bottom-color: var(--play); }
+
+/* ---------- panels & cards ---------- */
+
+main { padding: 26px 0 80px; }
+.panel[hidden] { display: none; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+}
+.card > h2 { font-size: 19px; margin-bottom: 4px; }
+.card > h2 + .sub { color: var(--ink-3); font-size: 14px; margin-bottom: 16px; }
+.sub { color: var(--ink-3); font-size: 14px; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 860px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .tabs { top: 0; position: static; }
+  .topbar { position: static; }
+}
+
+/* ---------- forms ---------- */
+
+label.field { display: block; margin-bottom: 14px; }
+label.field > span.lab {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 5px;
+}
+label.field > span.hint { display: block; font-size: 13px; color: var(--ink-3); margin-top: 5px; }
+
+input[type="text"], input[type="number"], select, textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm);
+  padding: 9px 11px;
+}
+textarea { min-height: 84px; resize: vertical; line-height: 1.5; }
+input:focus-visible, select:focus-visible, textarea:focus-visible,
+button:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--indigo-2);
+  outline-offset: 2px;
+}
+
+fieldset { border: 0; margin: 0 0 14px; padding: 0; }
+fieldset legend {
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 5px;
+  padding: 0;
+}
+
+button {
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  cursor: pointer;
+  border: 1px solid var(--line-2);
+  background: var(--surface-2);
+  color: var(--ink);
+}
+button:hover { border-color: var(--ink-3); }
+button.primary { background: var(--play); border-color: var(--play); color: #fff; }
+html[data-theme="dark"] button.primary { color: #1a0d0d; }
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) button.primary { color: #1a0d0d; }
+}
+button.primary:hover { background: var(--play-2); border-color: var(--play-2); }
+button.ghost { background: none; }
+button.danger { color: var(--play); }
+button.sm { font-size: 13px; padding: 5px 10px; }
+
+.btnrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+/* ---------- output blocks ---------- */
+
+.out {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  font-family: var(--mono);
+  font-size: 13.5px;
+  line-height: 1.62;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 10px;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  color: var(--ink-3);
+  background: var(--surface-2);
+  vertical-align: middle;
+}
+.tag.book   { color: var(--indigo); background: var(--indigo-bg); border-color: transparent; }
+.tag.built  { color: var(--gold);   background: var(--gold-bg);   border-color: transparent; }
+.tag.manual { color: var(--green);  background: var(--green-bg);  border-color: transparent; }
+
+.note {
+  border-left: 3px solid var(--line-2);
+  padding: 2px 0 2px 14px;
+  color: var(--ink-2);
+  font-size: 14.5px;
+  margin: 0 0 14px;
+}
+.note.warn { border-left-color: var(--play); }
+.note.good { border-left-color: var(--green); }
+.note.info { border-left-color: var(--indigo); }
+
+blockquote {
+  margin: 0 0 16px;
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  border-left: 3px solid var(--play);
+  padding-left: 16px;
+}
+
+/* ---------- tables ---------- */
+
+.tablewrap { overflow-x: auto; margin-bottom: 14px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); font-weight: 650; }
+tbody tr:hover { background: var(--surface-2); }
+tr.here { background: var(--gold-bg); }
+tr.here:hover { background: var(--gold-bg); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* ---------- score meter ---------- */
+
+.meter {
+  height: 12px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.meter > i {
+  display: block;
+  height: 100%;
+  background: var(--play);
+  transition: width .25s ease;
+}
+@media (prefers-reduced-motion: reduce) { .meter > i { transition: none; } }
+.meter.ok > i    { background: var(--gold); }
+.meter.good > i  { background: var(--green); }
+
+.verdict { font-size: 22px; font-weight: 680; letter-spacing: -.02em; margin: 12px 0 4px; }
+.bignum { font-size: 30px; font-weight: 700; letter-spacing: -.025em; font-variant-numeric: tabular-nums; }
+.stat { padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-2); }
+.stat .lab { font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); font-weight: 650; }
+
+/* ---------- checklists / steps ---------- */
+
+ul.checks { list-style: none; margin: 0 0 14px; padding: 0; }
+ul.checks li { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; border-bottom: 1px solid var(--line); }
+ul.checks li:last-child { border-bottom: 0; }
+ul.checks input[type="checkbox"] { margin-top: 4px; width: 17px; height: 17px; flex: none; accent-color: var(--play); }
+ul.checks label { flex: 1; cursor: pointer; }
+ul.checks .done { color: var(--ink-3); text-decoration: line-through; }
+
+.step {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.step > .head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 11px 14px;
+  flex-wrap: wrap;
+}
+.step > .head input[type="checkbox"] { width: 17px; height: 17px; flex: none; accent-color: var(--play); }
+.step > .head .n {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-3);
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  width: 24px; height: 24px;
+  display: grid; place-items: center;
+  flex: none;
+}
+.step > .head b { font-size: 15px; font-weight: 620; }
+.step > .head .time { margin-left: auto; font-size: 13px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.step > .body { padding: 0 14px 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+.step.done > .head b { color: var(--ink-3); text-decoration: line-through; }
+
+/* ---------- misc ---------- */
+
+.pillrow { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.pill {
+  font-size: 13px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  padding: 4px 11px;
+  background: var(--surface-2);
+  color: var(--ink-2);
+}
+.pill.on { background: var(--play-bg); border-color: transparent; color: var(--play); font-weight: 600; }
+
+hr.sep { border: 0; border-top: 1px solid var(--line); margin: 18px 0; }
+
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%) translateY(14px);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 550;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+  z-index: 90;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+@media (prefers-reduced-motion: reduce) { #toast { transition: none; } }
+
+footer.foot {
+  border-top: 1px solid var(--line);
+  padding: 24px 0 60px;
+  color: var(--ink-3);
+  font-size: 13.5px;
+}
+
+@media print {
+  .topbar, .tabs, .btnrow, #toast, footer.foot { display: none !important; }
+  .card { box-shadow: none; border-color: #ccc; break-inside: avoid; }
+  body { background: #fff; color: #000; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <b>The Faceless YouTube Toolkits</b>
+      <span>Income Stream #7 · Chapter 12</span>
+    </div>
+    <button id="themeBtn" class="ghost" type="button" aria-label="Switch colour theme"><span id="themeIcon">◐</span> Theme</button>
+    <button id="exportAllBtn" class="ghost" type="button">⬇ Back up</button>
+    <button id="resetAllBtn" class="ghost danger" type="button">🗑 Clear</button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Toolkits">
+  <div class="wrap" role="tablist">
+    <button class="tab" role="tab" id="tab-niche"  aria-controls="panel-niche"  aria-selected="true">🎯 Niche Scorecard</button>
+    <button class="tab" role="tab" id="tab-studio" aria-controls="panel-studio" aria-selected="false">🎬 Video Studio</button>
+    <button class="tab" role="tab" id="tab-shorts" aria-controls="panel-shorts" aria-selected="false">✂️ Shorts Engine</button>
+    <button class="tab" role="tab" id="tab-money"  aria-controls="panel-money"  aria-selected="false">💰 Monetisation Stack</button>
+    <button class="tab" role="tab" id="tab-system" aria-controls="panel-system" aria-selected="false">📅 Weekly System</button>
+    <button class="tab" role="tab" id="tab-play"   aria-controls="panel-play"   aria-selected="false">📖 Playbook</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =====================================================================
+     PANEL 1 — NICHE SCORECARD
+     ===================================================================== -->
+<section class="panel" id="panel-niche" role="tabpanel" aria-labelledby="tab-niche">
+
+  <div class="card">
+    <h2>Step 1: Niche selection — the most important decision</h2>
+    <p class="sub">Chapter 12 gives four criteria for a strong YouTube niche and three more for a monetisable
+      one. This scores your idea against all seven before you spend six months on it.</p>
+    <blockquote>“Niche specificity does not reduce your audience — it makes the right audience find you faster.”</blockquote>
+
+    <div class="grid-2">
+      <div>
+        <label class="field">
+          <span class="lab">Your channel niche</span>
+          <input type="text" id="nNiche" placeholder="e.g. Personal finance for first-generation professionals">
+          <span class="hint">Aiko Tanaka's channel was not “personal finance”. It was personal finance for people who are the first in their family to earn a professional salary.</span>
+        </label>
+
+        <label class="field">
+          <span class="lab">Who exactly is watching</span>
+          <input type="text" id="nAudience" placeholder="e.g. 25–35 year olds earning a professional salary with no family money guidance">
+        </label>
+
+        <label class="field">
+          <span class="lab">Advertiser value category</span>
+          <select id="nCategory"></select>
+          <span class="hint" id="nRpmHint"></span>
+        </label>
+
+        <label class="field">
+          <span class="lab">Is it search-driven or trend-driven?</span>
+          <select id="nSearch">
+            <option value="3">Mostly search — people type these questions in</option>
+            <option value="2">Mixed — some evergreen, some news-driven</option>
+            <option value="1">Mostly trend — driven by what's happening now</option>
+          </select>
+          <span class="hint">“How to invest your first $1,000” has enduring search volume; trending news topics do not.</span>
+        </label>
+
+        <label class="field">
+          <span class="lab">How many distinct video topics can you list right now?</span>
+          <input type="number" id="nDepth" min="0" max="500" step="1" value="0">
+          <span class="hint">The niche needs enough depth for 100+ videos — two or more years of weekly publishing.</span>
+        </label>
+      </div>
+
+      <div>
+        <label class="field">
+          <span class="lab">Your domain expertise in this niche</span>
+          <select id="nExpertise">
+            <option value="3">Direct professional background — I did this for a living</option>
+            <option value="2">Serious informed enthusiasm — years of study, no job title</option>
+            <option value="1">None yet — I'd be researching from scratch</option>
+          </select>
+          <span class="hint">The fastest-growing faceless channels are AI-assisted content directed by genuine expertise, not AI-generated content.</span>
+        </label>
+
+        <label class="field">
+          <span class="lab">Buyers exist, not just readers</span>
+          <select id="nBuyers">
+            <option value="3">Yes — this audience spends money on products or services here</option>
+            <option value="2">Some — they buy occasionally, low ticket</option>
+            <option value="1">No — plenty of interest, almost no spending</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span class="lab">Affiliate programmes with meaningful commissions</span>
+          <select id="nAffiliate">
+            <option value="3">Yes — $100+ products at 5–20% commission</option>
+            <option value="2">Some — low-ticket or thin commissions</option>
+            <option value="1">None I can find</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span class="lab">Search competition</span>
+          <select id="nCompetition">
+            <option value="3">Manageable — established channels have not claimed every topic</option>
+            <option value="2">Crowded but there are gaps</option>
+            <option value="1">Saturated — huge channels own every query</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span class="lab">Can you name the specific person you're making this for?</span>
+          <select id="nSpecific">
+            <option value="3">Yes — I could describe them in one sentence</option>
+            <option value="2">Roughly — a broad demographic</option>
+            <option value="1">No — anyone interested in the topic</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="btnrow">
+      <button type="button" class="primary" id="nSaveBtn">＋ Save this niche</button>
+      <button type="button" class="ghost" id="nClearBtn">Reset fields</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Verdict</h2>
+    <p class="sub" id="nSummary"></p>
+    <div class="meter" id="nMeter"><i style="width:0%"></i></div>
+    <div class="verdict" id="nVerdict">—</div>
+    <p id="nVerdictWhy" class="sub"></p>
+
+    <div class="grid-3" style="margin:16px 0">
+      <div class="stat"><div class="lab">RPM band</div><div class="bignum" id="nRpm">—</div><small class="sub">revenue per 1,000 views</small></div>
+      <div class="stat"><div class="lab">Ads at 50k views/month</div><div class="bignum" id="nAds">—</div><small class="sub">before the other four layers</small></div>
+      <div class="stat"><div class="lab">Score</div><div class="bignum" id="nScore">—</div><small class="sub">out of 21</small></div>
+    </div>
+
+    <h3 style="font-size:16px;margin-bottom:8px">What to fix before committing</h3>
+    <div id="nFlags"></div>
+  </div>
+
+  <div class="card" id="nSavedCard" hidden>
+    <h2>Saved niches</h2>
+    <p class="sub">Score two or three candidates, then commit to one. Chapter 12's fourth mistake is starting
+      several things at once.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Niche</th><th>Category</th><th class="num">RPM</th><th class="num">Score</th><th>Verdict</th><th></th></tr></thead>
+        <tbody id="nSavedBody"></tbody>
+      </table>
+    </div>
+    <div class="btnrow">
+      <button type="button" class="ghost sm" id="nExportBtn">⬇ Download comparison (.md)</button>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     PANEL 2 — VIDEO STUDIO
+     ===================================================================== -->
+<section class="panel" id="panel-studio" role="tabpanel" aria-labelledby="tab-studio" hidden>
+
+  <div class="card">
+    <h2>The AI-assisted video production workflow</h2>
+    <p class="sub">Ten steps, blank page to scheduled upload, in 2.5–4 hours. Fill the brief once and every
+      prompt in the workflow fills itself in.</p>
+
+    <div class="grid-2">
+      <div>
+        <label class="field">
+          <span class="lab">Niche</span>
+          <input type="text" id="sNiche" placeholder="Personal finance for first-generation professionals">
+          <span class="hint">Shared with the Niche Scorecard.</span>
+        </label>
+        <label class="field">
+          <span class="lab">Video topic</span>
+          <input type="text" id="sTopic" placeholder="How to invest your first $1,000">
+        </label>
+        <label class="field">
+          <span class="lab">Target audience</span>
+          <input type="text" id="sAudience" placeholder="25–35 year olds earning a professional salary with no family money guidance">
+        </label>
+      </div>
+      <div>
+        <label class="field">
+          <span class="lab">Channel format</span>
+          <select id="sFormat">
+            <option value="faceless">Faceless — voiceover over b-roll, screen recordings or AI visuals</option>
+            <option value="presenter-led">Presenter-led — you appear on camera</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="lab">Video length</span>
+          <select id="sLength"></select>
+          <span class="hint" id="sWordHint"></span>
+        </label>
+        <label class="field">
+          <span class="lab">Tone</span>
+          <input type="text" id="sTone" placeholder="Calm, plain-spoken, no hype">
+        </label>
+        <label class="field">
+          <span class="lab">Call to action</span>
+          <select id="sCta">
+            <option>subscribe</option>
+            <option>comment</option>
+            <option>link in description</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="btnrow">
+      <button type="button" class="primary" id="sDownloadBtn">⬇ Download the full production brief (.md)</button>
+      <button type="button" class="ghost" id="sResetChecksBtn">Reset step checkboxes</button>
+      <span class="sub" id="sProgress"></span>
+    </div>
+  </div>
+
+  <div id="sSteps"></div>
+
+  <div class="card">
+    <h2>Time check</h2>
+    <p class="sub" id="sTimeSummary"></p>
+    <div class="note info">At one video per week this is roughly 3–4 hours of focused weekly work. The
+      channel compounds from there: each video adds to the searchable library, and the same three to four
+      hours per week produces progressively more income as the catalogue grows.</div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     PANEL 3 — SHORTS ENGINE
+     ===================================================================== -->
+<section class="panel" id="panel-shorts" role="tabpanel" aria-labelledby="tab-shorts" hidden>
+
+  <div class="card">
+    <h2>Step 3: The Shorts acceleration strategy</h2>
+    <p class="sub">Videos under sixty seconds are the single most effective tool for accelerating new channel
+      growth. The platform promotes them to non-subscribers, which makes them the primary discovery
+      mechanism for a channel with a small audience.</p>
+
+    <div class="note good">Aiko Tanaka published three videos in months 1–3 and got 847 total views. She added
+      the Shorts strategy in month 4; one Short reached 18,000 views and the channel hit 340 subscribers.</div>
+
+    <label class="field" style="max-width:420px">
+      <span class="lab">Shorts to cut from this long-form video</span>
+      <select id="shCount">
+        <option value="2">2 Shorts — the chapter's minimum</option>
+        <option value="3" selected>3 Shorts — the chapter's maximum</option>
+      </select>
+      <span class="hint" id="shTime"></span>
+    </label>
+
+    <div class="btnrow">
+      <button type="button" class="primary" id="shCopyBtn">⧉ Copy the excerpt prompt</button>
+      <button type="button" class="ghost" id="shDownloadBtn">⬇ Download the Shorts plan (.md)</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>1. Find the excerpts <span class="tag built">built from the chapter</span></h2>
+    <p class="sub">The chapter's instruction is to use AI to identify the strongest thirty-second excerpt from
+      your script. This is that instruction written as a prompt.</p>
+    <div class="out" id="shExcerptPrompt"></div>
+  </div>
+
+  <div class="card">
+    <h2>2. Cut and post</h2>
+    <p class="sub">Fifteen to twenty minutes per Short. Clip the segment from the long-form video, add a
+      simple text overlay, post.</p>
+    <ul class="checks" id="shChecks"></ul>
+  </div>
+
+  <div class="card">
+    <h2>Repurpose beyond Shorts <span class="tag book">Appendix C · prompt #35</span></h2>
+    <p class="sub">One video is not one asset. This is the book's repurposing prompt, filled in with your topic.</p>
+    <label class="field" style="max-width:520px">
+      <span class="lab">Platforms to repurpose onto</span>
+      <input type="text" id="shPlatforms" value="LinkedIn, X, Instagram Reels, email newsletter">
+    </label>
+    <div class="out" id="shRepurposePrompt"></div>
+    <div class="btnrow"><button type="button" class="ghost sm" id="shCopyRepurpose">⧉ Copy</button></div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     PANEL 4 — MONETISATION STACK
+     ===================================================================== -->
+<section class="panel" id="panel-money" role="tabpanel" aria-labelledby="tab-money" hidden>
+
+  <div class="card">
+    <h2>The five-layer monetisation stack</h2>
+    <p class="sub">The most financially sophisticated creators do not rely on a single monetisation method.
+      The same content asset earns from four to six sources at once. Set your numbers; every layer is
+      calculated against the chapter's rate guides.</p>
+
+    <div class="grid-2">
+      <div>
+        <label class="field">
+          <span class="lab">Subscribers</span>
+          <input type="number" id="mSubs" min="0" step="100" value="10000">
+        </label>
+        <label class="field">
+          <span class="lab">Views per month</span>
+          <input type="number" id="mViews" min="0" step="1000" value="150000">
+        </label>
+        <label class="field">
+          <span class="lab">Niche RPM</span>
+          <select id="mCategory"></select>
+          <span class="hint" id="mRpmHint"></span>
+        </label>
+        <label class="field">
+          <span class="lab">Affiliate conversions per month</span>
+          <input type="number" id="mAffConv" min="0" step="1" value="6">
+        </label>
+        <label class="field">
+          <span class="lab">Average commission per conversion ($)</span>
+          <input type="number" id="mAffRate" min="0" step="5" value="60">
+          <span class="hint">Software referrals run $50–$200; financial products $50–$500.</span>
+        </label>
+      </div>
+      <div>
+        <label class="field">
+          <span class="lab">Sponsored videos per month</span>
+          <input type="number" id="mSponsorCount" min="0" max="30" step="1" value="1">
+        </label>
+        <label class="field">
+          <span class="lab">Sponsorship rate per video ($)</span>
+          <input type="number" id="mSponsorRate" min="0" step="50" value="500">
+          <span class="hint" id="mSponsorHint"></span>
+        </label>
+        <label class="field">
+          <span class="lab">Digital product — price ($) and units per month</span>
+          <div style="display:flex;gap:10px">
+            <input type="number" id="mProdPrice" min="0" step="1" value="27">
+            <input type="number" id="mProdUnits" min="0" step="1" value="10">
+          </div>
+          <span class="hint">Aiko launched “The First-Gen Finance Starter Pack” at $27 and sold 89 units in launch week.</span>
+        </label>
+        <label class="field">
+          <span class="lab">Members — count and monthly price ($)</span>
+          <div style="display:flex;gap:10px">
+            <input type="number" id="mMembers" min="0" step="1" value="0">
+            <input type="number" id="mMemberPrice" min="0" step="1" value="5">
+          </div>
+          <span class="hint">Channel memberships and Patreon run $3–$25/month.</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Your stack</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Layer</th><th>Basis</th><th class="num">Monthly</th><th class="num">Share</th></tr></thead>
+        <tbody id="mBody"></tbody>
+        <tfoot><tr><th>Total</th><th></th><th class="num" id="mTotal">—</th><th></th></tr></tfoot>
+      </table>
+    </div>
+    <div class="grid-3">
+      <div class="stat"><div class="lab">Per month</div><div class="bignum" id="mMonth">—</div></div>
+      <div class="stat"><div class="lab">Per year</div><div class="bignum" id="mYear">—</div></div>
+      <div class="stat"><div class="lab">Layers active</div><div class="bignum" id="mLayers">—</div><small class="sub">of 5</small></div>
+    </div>
+    <div id="mNotes" style="margin-top:16px"></div>
+  </div>
+
+  <div class="card">
+    <h2>The patience graph</h2>
+    <p class="sub">Faceless YouTube income, month by month, from the chapter. Pick where you are to see the
+      row you should be measuring yourself against.</p>
+    <label class="field" style="max-width:320px">
+      <span class="lab">Months since your first upload</span>
+      <input type="number" id="mMonthNo" min="0" max="60" step="1" value="1">
+    </label>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Month</th><th>YouTube (faceless)</th><th>What is actually happening</th></tr></thead>
+        <tbody id="mGraphBody"></tbody>
+      </table>
+    </div>
+    <div class="note warn">Months 1–6 will almost certainly produce minimal financial return for significant
+      effort. This is not a failure signal — it is the normal curve of a compounding asset. If you need income
+      within 30–90 days, start with Income Streams #1, #2 or #3 and layer content creation alongside them.</div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     PANEL 5 — WEEKLY SYSTEM
+     ===================================================================== -->
+<section class="panel" id="panel-system" role="tabpanel" aria-labelledby="tab-system" hidden>
+
+  <div class="card">
+    <h2>The weekly content production system</h2>
+    <p class="sub">The single biggest predictor of success is not talent or topic selection. It is consistency —
+      and the threat to consistency is friction, not motivation. Five sessions, 3.5–5 hours, every week.</p>
+    <div id="wDays"></div>
+    <div class="btnrow">
+      <button type="button" class="primary" id="wPublishBtn">✓ Published this week</button>
+      <button type="button" class="ghost" id="wResetWeekBtn">Reset the week</button>
+      <span class="sub" id="wWeekTime"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Asset count</h2>
+    <p class="sub">Mindset Shift #12: track your asset count — total published pieces — not your monthly income
+      in the first year. Set a goal of 50 published pieces before evaluating ROI.</p>
+    <div class="grid-3" style="margin-bottom:16px">
+      <div class="stat"><div class="lab">Long-form videos</div><div class="bignum" id="wLong">0</div></div>
+      <div class="stat"><div class="lab">Shorts</div><div class="bignum" id="wShort">0</div></div>
+      <div class="stat"><div class="lab">Weeks published</div><div class="bignum" id="wWeeks">0</div><small class="sub">24-week goal</small></div>
+    </div>
+
+    <div style="margin-bottom:6px" class="sub">Progress to 50 published pieces</div>
+    <div class="meter" id="wAssetMeter"><i style="width:0%"></i></div>
+    <p class="sub" style="margin-top:8px" id="wAssetLine"></p>
+
+    <div style="margin-bottom:6px" class="sub">Progress to the 24-week consistency goal</div>
+    <div class="meter" id="wWeekMeter"><i style="width:0%"></i></div>
+    <p class="sub" style="margin-top:8px" id="wWeekLine"></p>
+
+    <hr class="sep">
+    <div class="btnrow">
+      <button type="button" class="ghost sm" id="wAddLong">＋ Long-form</button>
+      <button type="button" class="ghost sm" id="wAddShort">＋ Short</button>
+      <button type="button" class="ghost sm" id="wSubLong">− Long-form</button>
+      <button type="button" class="ghost sm" id="wSubShort">− Short</button>
+      <button type="button" class="ghost sm danger" id="wResetCounts">Reset counts</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Publishing log</h2>
+    <p class="sub">Every entry is an asset on the balance sheet. A YouTube video published today has a
+      productive life of 5–10 years.</p>
+    <div class="grid-2">
+      <label class="field">
+        <span class="lab">Title</span>
+        <input type="text" id="wLogTitle" placeholder="How to invest your first $1,000">
+      </label>
+      <label class="field">
+        <span class="lab">Type</span>
+        <select id="wLogType">
+          <option value="long">Long-form video</option>
+          <option value="short">Short</option>
+        </select>
+      </label>
+    </div>
+    <div class="btnrow" style="margin-bottom:14px">
+      <button type="button" class="primary" id="wLogBtn">＋ Log it</button>
+      <button type="button" class="ghost sm" id="wLogExport">⬇ Download the log (.md)</button>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>#</th><th>Title</th><th>Type</th><th>Published</th><th></th></tr></thead>
+        <tbody id="wLogBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     PANEL 6 — PLAYBOOK
+     ===================================================================== -->
+<section class="panel" id="panel-play" role="tabpanel" aria-labelledby="tab-play" hidden>
+
+  <div class="card">
+    <h2>Is YouTube even your format?</h2>
+    <p class="sub">Chapter 12 covers three formats. The most common mistake is starting all three at once.
+      This is the chapter's decision framework — find your row before you commit.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>If you…</th><th>Best starting format</th><th>Why</th></tr></thead>
+        <tbody id="pDecisionBody"></tbody>
+      </table>
+    </div>
+    <div class="note info">YouTube has the highest long-term income ceiling — ads plus affiliate plus
+      sponsorship plus products, with the most pronounced compound growth. It also has the longest runway.
+      Newsletters reach the first dollar with a far smaller audience.</div>
+  </div>
+
+  <div class="card">
+    <h2>Advertiser value by niche</h2>
+    <p class="sub">A personal finance channel with 10,000 subscribers earns 3–5× the ad revenue of an
+      entertainment channel the same size. Choose a niche with high advertiser value rather than high interest.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Niche category</th><th class="num">RPM</th><th>Note</th></tr></thead>
+        <tbody id="pRpmBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>The tool stack</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Step</th><th>Tool</th><th>What it does here</th></tr></thead>
+        <tbody id="pToolBody"></tbody>
+      </table>
+    </div>
+    <p class="sub">ChatGPT/Claude, ElevenLabs and Descript are the chapter's primary tools for this stream.
+      CapCut and Patreon appear in the book's Tier 4 specialist tool directory.</p>
+  </div>
+
+  <div class="card">
+    <h2>The five most costly content creation mistakes</h2>
+    <div id="pMistakes"></div>
+  </div>
+
+  <div class="card">
+    <h2>Case study: Aiko Tanaka</h2>
+    <p class="sub">Former public librarian, camera-shy, no video editing experience → 22,400 subscribers.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Month</th><th>What happened</th><th class="num">Subscribers</th><th class="num">Monthly income</th></tr></thead>
+        <tbody id="pAikoBody"></tbody>
+      </table>
+    </div>
+    <div class="note good"><b>Key lesson:</b> the niche specificity — personal finance for first-generation
+      professionals rather than general personal finance — was the single most important decision she made.
+      In a category dominated by huge established channels, she found an underserved audience that resonated
+      with her content immediately and shared it within their communities.</div>
+  </div>
+
+  <div class="card">
+    <h2>Mindset Shift #12: you are building a media asset, not doing a job</h2>
+    <div class="grid-2">
+      <div class="note warn"><b>Stop:</b> evaluating content creation on a month-by-month income basis.</div>
+      <div class="note good"><b>Start:</b> evaluating it as an asset-building exercise with a 24-month investment horizon.</div>
+    </div>
+    <p>Every piece of content you publish is an asset entry on your balance sheet. A YouTube video published
+      today has a productive life of 5–10 years. The investor does not evaluate their stock portfolio on a
+      month-by-month basis; they evaluate it on its trajectory over time.</p>
+    <p style="margin-bottom:0">At 50 pieces of quality, niche-specific content, the income question almost
+      always answers itself.</p>
+  </div>
+
+  <div class="card">
+    <h2>About this file</h2>
+    <p>Six toolkits built from Chapter 12 of <i>The AI Income Blueprint</i> (Income Stream #7: Content
+      Creation at Scale) and prompts #31, #32 and #35 of Appendix C. Prompts are labelled by provenance:
+      <span class="tag book">from the book</span> is quoted with only your fields substituted,
+      <span class="tag built">built from the chapter</span> is assembled here from an instruction the chapter
+      gives in prose, and <span class="tag manual">manual</span> marks the steps the book insists you do
+      yourself.</p>
+    <p>The rates, RPM bands and income figures are the book's. As its own disclaimer notes, they are ranges
+      based on observed outcomes — not guarantees of results.</p>
+    <p style="margin-bottom:0">This file is entirely self-contained. It makes no network requests, loads no
+      fonts, scripts, images or trackers, and sends nothing anywhere. Everything you enter lives in this
+      browser's <code>localStorage</code> and nowhere else.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    The Faceless YouTube Toolkits · built from <i>The AI Income Blueprint</i>, Chapter 12 · works offline, forever.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* ===========================================================================
+   DATA — everything below comes from Chapter 12 and Appendix C of
+   THE AI INCOME BLUEPRINT. Figures are the book's own.
+   =========================================================================== */
+
+/* Advertiser value bands. The chapter names four high-value categories with
+   explicit RPMs; the overall range it quotes for the platform is $2–$30. */
+var CATEGORIES = [
+  { id: "finance",  name: "Personal finance",             low: 15, high: 30, score: 3, note: "The chapter's top band. 3–5× an entertainment channel of the same size." },
+  { id: "business", name: "Business and investing",       low: 12, high: 25, score: 3, note: "High advertiser competition for the same viewer." },
+  { id: "software", name: "Software and technology",      low: 10, high: 20, score: 3, note: "Pairs with the highest affiliate commissions ($50–$200 per referral)." },
+  { id: "health",   name: "Health and wellness",          low:  8, high: 15, score: 2, note: "Solid advertiser value; check niche-specific affiliate programmes." },
+  { id: "general",  name: "General interest, gaming, entertainment", low: 2, high: 5, score: 1, note: "High interest, low advertiser value — the trap the chapter warns about." }
+];
+
+/* Step 1 of the faceless playbook: the four niche criteria, plus the three
+   from the profitable niche formula the Chapter 12 action step applies. */
+var CRITERIA_FIXES = {
+  advertiser:  "Reframe toward the monetisable angle inside your topic. You can be passionate about a subject and still choose the corner of it advertisers pay for.",
+  search:      "Every video should target a specific search query. Search intent is the fastest source of new audience discovery — ignoring SEO in the first year is Mistake 3.",
+  depth:       "You need a topic with enough depth for 100+ videos — two or more years of weekly publishing. If you cannot list 30 topics today, the niche is too narrow.",
+  expertise:   "The faceless channels that grow fastest are AI-assisted content directed by genuine expertise. Pick the niche where your background is the differentiator.",
+  buyers:      "The audience must include people who spend money on products or services related to the topic. Readers without buyers cannot be monetised.",
+  affiliate:   "Check Amazon Associates, ShareASale, CJ Affiliate and niche-specific programmes. $100+ products at 5–20% commission beats a niche of free resources.",
+  competition: "Use Ubersuggest (free) or Ahrefs (paid) to confirm established sites have not already claimed every valuable keyword. Go narrower rather than louder.",
+  specific:    "Niche specificity does not reduce your audience — it makes the right audience find you faster. Name the person, not the demographic."
+};
+
+/* Video lengths. The chapter's script step: 1,200–1,800 words for an 8–12
+   minute video. Appendix C #31 uses 1,400 words for 10 minutes. */
+var LENGTHS = [
+  { min: 8,  words: 1200 },
+  { min: 10, words: 1400 },
+  { min: 12, words: 1800 }
+];
+
+/* The ten-step workflow, with the chapter's own tools and times. */
+var STEPS = [
+  {
+    n: 1, title: "Topic research", tool: "ChatGPT", time: 15, kind: "book",
+    what: "Identify high-search-volume, low-competition video topics in your niche.",
+    prompt: function (b) {
+      return "List 20 YouTube video topics for a " + b.niche + " channel that have high search volume and would appeal to " + b.audience + ". Focus on evergreen topics.";
+    }
+  },
+  {
+    n: 2, title: "Research brief", tool: "ChatGPT", time: 10, kind: "book",
+    what: "Generate a detailed research brief covering key facts, statistics and angles for the chosen topic.",
+    prompt: function (b) {
+      return "Create a comprehensive research brief for a YouTube video about " + b.topic + ". Include: key facts, statistics, common misconceptions, expert perspectives, and 3 compelling angles.";
+    }
+  },
+  {
+    n: 3, title: "Fact verification", tool: "Manual web search", time: 15, kind: "manual",
+    what: "Verify key claims and statistics from the AI brief using reliable sources.",
+    body: "Non-negotiable for credibility and accuracy. Open every statistic in the brief and find the primary source. Anything you cannot verify comes out of the script — a single fabricated statistic costs more trust than the video earns."
+  },
+  {
+    n: 4, title: "Script writing", tool: "Claude", time: 25, kind: "book",
+    what: "Write the full video script: hook, intro, main content, transitions, CTA.",
+    prompt: function (b) {
+      return "You are a YouTube scriptwriter specialising in " + b.niche + " content for a " + b.format + " channel. Write a complete " + b.minutes + "-minute video script (approximately " + b.words + " words) on the topic: " + b.topic + ". Target audience: " + b.audience + ". The script must include: a 30-second hook that creates immediate curiosity without clickbait, a clear promise statement, five main points with transitions between each, one concrete real-world example per point, and a CTA that directs viewers to " + b.cta + ". Tone: " + b.tone + ".\n\nUse only these verified research points:\n[PASTE YOUR VERIFIED RESEARCH BRIEF FROM STEP 3]";
+    }
+  },
+  {
+    n: 5, title: "Script refinement", tool: "Manual — Pass 2", time: 18, kind: "manual",
+    what: "Edit the script for your voice; add domain-specific insight and examples.",
+    body: "This is Pass 2 of the 3-Pass Method. Your expertise elevates a generic script:\n\n• Replace one AI example per point with something you have actually seen happen.\n• Cut every sentence that could appear on any channel in your niche.\n• Add the thing you know that the research brief did not contain.\n• Read the hook out loud. If it sounds like a press release, rewrite it."
+  },
+  {
+    n: 6, title: "Voiceover generation", tool: "ElevenLabs", time: 10, kind: "manual",
+    what: "Convert the script to natural-sounding narration.",
+    body: "Paste the script, select a voice, generate and download the audio file. The AI voiceover is what removes the camera-shyness barrier entirely — it is the reason the faceless format exists."
+  },
+  {
+    n: 7, title: "Video assembly", tool: "Descript or CapCut", time: 52, kind: "manual",
+    what: "Combine the voiceover with relevant b-roll, stock footage and screen recordings.",
+    body: "Text-based editing — you edit the transcript and the video follows. No technical video editing skills required. This is the longest step in the workflow; it is also the one that gets fastest with repetition."
+  },
+  {
+    n: 8, title: "Thumbnail creation", tool: "Canva AI", time: 15, kind: "built",
+    what: "Design a compelling thumbnail that drives clicks.",
+    prompt: function (b) {
+      return "You are a YouTube thumbnail strategist for a " + b.format + " " + b.niche + " channel. For a " + b.minutes + "-minute video titled around the topic: " + b.topic + ", targeting " + b.audience + ", give me: five thumbnail text overlays of no more than four words each that create curiosity without clickbait, the single image or visual concept to pair with each, and the highest-contrast colour pairing for each. Then name the one you would test first and say why in one sentence.";
+    },
+    body: "Then build it in Canva: high-contrast template, clear text, relevant image."
+  },
+  {
+    n: 9, title: "SEO optimisation", tool: "ChatGPT", time: 10, kind: "book",
+    what: "Write the title, description, tags and chapters.",
+    prompt: function (b) {
+      return "You are a YouTube SEO specialist. For a video about " + b.topic + " targeting " + b.audience + ", provide: three alternative video titles (each under 60 characters, leading with the primary keyword), a 300-word video description (keyword-rich, includes the primary keyword in the first sentence, lists key topics covered, and ends with a CTA), fifteen relevant tags (mix of broad and specific), a chapter breakdown (assuming a " + b.minutes + "-minute video), and a 150-character community post to share when the video goes live.";
+    }
+  },
+  {
+    n: 10, title: "Upload and schedule", tool: "YouTube Studio", time: 10, kind: "manual",
+    what: "Upload to YouTube, complete all fields, schedule for an optimal posting time.",
+    body: "Complete every field — title, description, tags, chapters, thumbnail, end screen. Then schedule it. Publishing on a schedule you set in advance is what turns a good week into a 52-week streak."
+  }
+];
+
+/* The weekly production system. */
+var WEEK = [
+  { id: "mon", day: "Monday",    name: "Content planning",   time: 30,  detail: "Use ChatGPT to generate 3–5 topic options for this week's content. Choose one. Create a brief outline or research prompt. Block time for Wednesday's production session." },
+  { id: "tue", day: "Tuesday",   name: "Research batch",     time: 30,  detail: "Use AI to compile the research brief for the chosen topic. Verify key facts manually. Save source links. The brief is ready for Wednesday." },
+  { id: "wed", day: "Wednesday", name: "Production session", time: 105, detail: "Full production: script + AI pass + expert enrichment + formatting. This is the core creative session. Protect it ruthlessly." },
+  { id: "thu", day: "Thursday",  name: "Polish and assets",  time: 45,  detail: "Thumbnail, title variations, social clips, cover image. SEO fields completed. Scheduled for Friday or Saturday publishing." },
+  { id: "fri", day: "Friday",    name: "Publish and seed",   time: 20,  detail: "Publish and share in one relevant community or post on LinkedIn. Review last week's performance metrics. Note what worked." }
+];
+
+/* The patience graph — faceless YouTube column. */
+var PATIENCE = [
+  { from: 1,  to: 3,  range: "$0",              what: "Building. Views are close to zero and that is the expected reading." },
+  { from: 4,  to: 6,  range: "$0–$100",         what: "Approaching monetisation: 1,000 subscribers + 4,000 watch hours." },
+  { from: 7,  to: 9,  range: "$100–$500",       what: "Search traffic building. Workflow tightening toward 3 hours per video." },
+  { from: 10, to: 12, range: "$300–$1,500",     what: "First sponsorship inquiries arrive around here." },
+  { from: 13, to: 18, range: "$800–$4,000",     what: "The stack starts compounding: ads + affiliates + sponsorships." },
+  { from: 19, to: 24, range: "$2,000–$8,000+",  what: "Full-time potential in a strong niche." }
+];
+
+/* The chapter's format decision framework. */
+var DECISION = [
+  ["Are uncomfortable on camera but have a clear knowledge niche", "Faceless YouTube channel", "Voiceover + stock footage eliminates the camera barrier; video has the highest income ceiling"],
+  ["Enjoy writing and have a specific professional audience", "Email newsletter", "Fastest path to a directly owned, engaged audience; sponsorship income is achievable at smaller scale"],
+  ["Have deep expertise in a specific topic area", "SEO blog", "Domain expertise is Google's most-rewarded quality signal; your knowledge advantage is the moat"],
+  ["Want the fastest path to income", "Newsletter (paid tier or sponsorships)", "Smaller audience required for the first dollar; sponsorships achievable at 1,000–5,000 subscribers"],
+  ["Want the highest long-term income ceiling", "YouTube", "Ad revenue + affiliate + sponsorship + products; compound growth most pronounced on video"],
+  ["Have specific product knowledge or reviews", "SEO blog with affiliate focus", "Product review content with genuine expertise converts at high affiliate commission rates"],
+  ["Are comfortable on camera and have a clear personality niche", "Talking-head YouTube or personal brand newsletter", "Personal brand creates the strongest loyalty and premium sponsorship rates"]
+];
+
+var MISTAKES = [
+  ["Choosing a niche you love over one that earns", "Passion is not enough. A niche must have buyers, advertisers and affiliate products.", "Apply the profitable niche formula before committing. If it fails any criterion, reframe — you can be passionate about a topic and still choose the monetisable angle within it."],
+  ["Prioritising production quality over publishing consistency", "Spending three weeks on one “perfect” video instead of publishing three imperfect ones.", "Publish on schedule, every week, regardless of how polished it feels. The algorithm rewards consistency. Your audience rewards consistency. Perfection can wait."],
+  ["Ignoring SEO in the first year", "Publishing content nobody searches for and hoping an audience discovers it organically.", "Every piece of content should target a specific search query. Search intent is the fastest source of new audience discovery."],
+  ["Starting three formats simultaneously", "Attempting YouTube + newsletter + blog at launch because “more channels = more income.”", "Master one format for 6 months. Build the consistency habit and workflow. Add a second format only after the first is generating meaningful traffic."],
+  ["Abandoning at month 3", "Quitting because three months of consistent publishing have produced minimal income.", "Month 3 is the trough of disillusionment. The creators earning $5,000/month at month 18 almost universally nearly quit at month 3. The only variable that separates them is the decision to continue."]
+];
+
+var TOOLS = [
+  ["Script research and SEO", "ChatGPT", "Research briefs, topic lists, titles, descriptions, tags and chapters"],
+  ["Script writing", "Claude", "The full 8–12 minute script from a verified brief, via a CLEAR prompt"],
+  ["Voiceover", "ElevenLabs", "Natural-sounding narration from the script in minutes — the camera barrier removed"],
+  ["Editing", "Descript", "Text-based audio/video editing; you edit the transcript and the video follows"],
+  ["Shorts editing", "CapCut", "Free and full-featured for Shorts and social video, no technical skills needed"],
+  ["Thumbnails", "Canva AI", "High-contrast templates with clear text overlays"],
+  ["Memberships", "Patreon", "Layer 5 of the stack — $3–$25/month from superfans"]
+];
+
+var AIKO = [
+  ["1–3",   "Published 3 videos. Zero subscribers from outside her network. Workflow rough but improving. Total views: 847.", "0", "$0"],
+  ["4",     "Added the YouTube Shorts strategy. One Short went modestly viral (18,000 views).", "340", "$0"],
+  ["5–6",   "Consistency paying off. Search traffic building. Crossed the monetisation threshold.", "1,200", "$47 first ad revenue"],
+  ["7–9",   "Refined the workflow to 3 hours per video. Published weekly. Added affiliate links for 3 financial tools.", "4,800", "$280"],
+  ["10–12", "First sponsorship inquiry — a budgeting app, $350 per video.", "9,200", "$820"],
+  ["18",    "Ads ($620) + affiliates ($480) + sponsorships ($740). Working ~12 hours a week on the channel.", "22,400", "$1,840"],
+  ["22",    "Launched “The First-Gen Finance Starter Pack” at $27. Sold 89 units in launch week.", "—", "$2,400+"]
+];
+
+/* ===========================================================================
+   STORE
+   =========================================================================== */
+
+var STORE_KEY = "faceless-youtube-toolkits.v1";
+
+var DEFAULTS = {
+  theme: null,
+  niche: { niche: "", audience: "", category: "finance", search: "3", depth: 0, expertise: "3", buyers: "3", affiliate: "3", competition: "3", specific: "3" },
+  saved: [],
+  studio: { topic: "", format: "faceless", length: 10, tone: "", cta: "subscribe", checks: {} },
+  shorts: { count: 3, platforms: "LinkedIn, X, Instagram Reels, email newsletter", checks: {} },
+  money: { subs: 10000, views: 150000, category: "finance", affConv: 6, affRate: 60, sponsorCount: 1, sponsorRate: 500, prodPrice: 27, prodUnits: 10, members: 0, memberPrice: 5, monthNo: 1 },
+  week: { checks: {}, weeks: 0, long: 0, short: 0, log: [] }
+};
+
+var store = loadStore();
+
+function loadStore() {
+  var base = JSON.parse(JSON.stringify(DEFAULTS));
+  try {
+    var raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return base;
+    var parsed = JSON.parse(raw);
+    Object.keys(base).forEach(function (k) {
+      if (parsed[k] === undefined || parsed[k] === null) return;
+      if (Array.isArray(base[k])) base[k] = parsed[k];
+      else if (typeof base[k] === "object") base[k] = Object.assign(base[k], parsed[k]);
+      else base[k] = parsed[k];
+    });
+  } catch (e) { /* corrupt or unavailable storage — carry on in memory */ }
+  return base;
+}
+
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) { /* in-memory only */ }
+}
+
+/* ===========================================================================
+   SMALL HELPERS
+   =========================================================================== */
+
+function el(id) { return document.getElementById(id); }
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+function money(n) {
+  return "$" + Math.round(n).toLocaleString("en-US");
+}
+function clampInt(v, lo, hi) {
+  var n = parseInt(v, 10);
+  if (isNaN(n)) n = lo;
+  return Math.max(lo, Math.min(hi, n));
+}
+function category(id) {
+  for (var i = 0; i < CATEGORIES.length; i++) if (CATEGORIES[i].id === id) return CATEGORIES[i];
+  return CATEGORIES[0];
+}
+function midRpm(c) { return (c.low + c.high) / 2; }
+
+var toastTimer = null;
+function toast(msg) {
+  var t = el("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2200);
+}
+
+function copyText(text, label) {
+  function fallback() {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    toast(ok ? (label || "Copied") : "Copy failed — select the text and copy manually");
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function () { toast(label || "Copied"); }, fallback);
+  } else {
+    fallback();
+  }
+}
+
+function download(name, text) {
+  var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  toast("Downloaded " + name);
+}
+
+function mins(total) {
+  var h = Math.floor(total / 60), m = total % 60;
+  if (h && m) return h + "h " + m + "m";
+  if (h) return h + "h";
+  return m + "m";
+}
+
+/* ===========================================================================
+   THEME
+   =========================================================================== */
+
+function applyTheme() {
+  if (store.theme) document.documentElement.setAttribute("data-theme", store.theme);
+  else document.documentElement.removeAttribute("data-theme");
+  el("themeIcon").textContent = store.theme === "dark" ? "●" : store.theme === "light" ? "○" : "◐";
+}
+
+el("themeBtn").addEventListener("click", function () {
+  store.theme = store.theme === "dark" ? "light" : store.theme === "light" ? null : "dark";
+  applyTheme();
+  save();
+  toast(store.theme ? store.theme.charAt(0).toUpperCase() + store.theme.slice(1) + " theme" : "Following your system theme");
+});
+
+/* ===========================================================================
+   TABS
+   =========================================================================== */
+
+var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+
+function selectTab(id) {
+  tabs.forEach(function (t) {
+    var on = t.id === id;
+    t.setAttribute("aria-selected", on ? "true" : "false");
+    el(t.getAttribute("aria-controls")).hidden = !on;
+  });
+}
+
+tabs.forEach(function (t, i) {
+  t.addEventListener("click", function () { selectTab(t.id); });
+  t.addEventListener("keydown", function (e) {
+    var d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    if (!d) return;
+    e.preventDefault();
+    var next = tabs[(i + d + tabs.length) % tabs.length];
+    next.focus();
+    selectTab(next.id);
+  });
+});
+
+/* ===========================================================================
+   TOOLKIT 1 — NICHE SCORECARD
+   =========================================================================== */
+
+var nFields = ["nNiche", "nAudience", "nCategory", "nSearch", "nDepth", "nExpertise", "nBuyers", "nAffiliate", "nCompetition", "nSpecific"];
+var nKeys   = ["niche", "audience", "category", "search", "depth", "expertise", "buyers", "affiliate", "competition", "specific"];
+
+function fillCategorySelect(sel) {
+  sel.innerHTML = CATEGORIES.map(function (c) {
+    return '<option value="' + c.id + '">' + esc(c.name) + " — $" + c.low + "–$" + c.high + " RPM</option>";
+  }).join("");
+}
+
+function depthScore(n) { return n >= 30 ? 3 : n >= 15 ? 2 : 1; }
+
+function nicheScore(n) {
+  var cat = category(n.category);
+  var parts = [
+    { key: "advertiser",  label: "High advertiser value",              score: cat.score },
+    { key: "search",      label: "Search-driven rather than trend-driven", score: parseInt(n.search, 10) },
+    { key: "depth",       label: "Deep enough for 100+ videos",        score: depthScore(n.depth) },
+    { key: "expertise",   label: "Your expertise creates differentiation", score: parseInt(n.expertise, 10) },
+    { key: "buyers",      label: "Buyers exist, not just viewers",     score: parseInt(n.buyers, 10) },
+    { key: "affiliate",   label: "Affiliate programmes with real commissions", score: parseInt(n.affiliate, 10) },
+    { key: "competition", label: "Manageable search competition",      score: parseInt(n.competition, 10) },
+    { key: "specific",    label: "Niche specificity",                  score: parseInt(n.specific, 10) }
+  ];
+  /* Advertiser value and specificity are the chapter's two most consequential
+     calls, so the total is out of 21 across 7 weighted criteria: the eight
+     dimensions above minus one, with specificity folded into the verdict. */
+  var core = parts.slice(0, 7);
+  var total = core.reduce(function (a, p) { return a + p.score; }, 0);
+  return { parts: parts, core: core, total: total, max: 21, cat: cat };
+}
+
+function renderNiche() {
+  var n = store.niche;
+  var r = nicheScore(n);
+  var pct = Math.round((r.total / r.max) * 100);
+
+  var meter = el("nMeter");
+  meter.className = "meter" + (r.total >= 18 ? " good" : r.total >= 14 ? " ok" : "");
+  meter.firstElementChild.style.width = pct + "%";
+
+  el("nScore").textContent = r.total + "/21";
+  el("nRpm").textContent = "$" + r.cat.low + "–$" + r.cat.high;
+  el("nAds").textContent = money((50000 / 1000) * midRpm(r.cat));
+  el("nRpmHint").textContent = r.cat.note;
+
+  var name = n.niche.trim();
+  el("nSummary").textContent = name
+    ? "Scoring “" + name + "”" + (n.audience.trim() ? " for " + n.audience.trim() : "") + "."
+    : "Name your niche above to score it.";
+
+  var verdict, why;
+  if (r.total >= 18) {
+    verdict = "Commit to it.";
+    why = "This clears the chapter's criteria. The next decision is not another niche — it is publishing the first video. Move to the Video Studio.";
+  } else if (r.total >= 14) {
+    verdict = "Reframe the angle, then commit.";
+    why = "The niche is workable but something below is dragging on it. You can be passionate about a topic and still choose the monetisable angle within it.";
+  } else {
+    verdict = "This niche will not pay you.";
+    why = "Too many criteria fail. Mistake 1 in the chapter is choosing a niche you love over one that earns — and it is the mistake that costs the most months.";
+  }
+  if (parseInt(n.specific, 10) < 3 && r.total >= 14) {
+    why += " Sharpen the specificity first: Aiko's channel was not “personal finance”, it was personal finance for first-generation professionals.";
+  }
+  el("nVerdict").textContent = verdict;
+  el("nVerdictWhy").textContent = why;
+
+  var weak = r.parts.filter(function (p) { return p.score < 3; });
+  el("nFlags").innerHTML = weak.length
+    ? weak.map(function (p) {
+        return '<div class="note ' + (p.score === 1 ? "warn" : "") + '"><b>' + esc(p.label) + "</b> — " + esc(CRITERIA_FIXES[p.key]) + "</div>";
+      }).join("")
+    : '<div class="note good">Nothing is flagged. Every criterion in the chapter scores full marks — publish.</div>';
+
+  renderSaved();
+}
+
+function readNiche() {
+  nFields.forEach(function (id, i) {
+    var node = el(id);
+    var key = nKeys[i];
+    store.niche[key] = node.type === "number" ? clampInt(node.value, 0, 500) : node.value;
+  });
+  /* the niche name is shared with the Video Studio */
+  el("sNiche").value = store.niche.niche;
+  el("sAudience").value = store.niche.audience;
+  el("mCategory").value = store.niche.category;
+  store.money.category = store.niche.category;
+  save();
+  renderNiche();
+  renderStudio();
+  renderShorts();
+  renderMoney();
+}
+
+function writeNicheFields() {
+  nFields.forEach(function (id, i) { el(id).value = store.niche[nKeys[i]]; });
+}
+
+function renderSaved() {
+  var card = el("nSavedCard");
+  if (!store.saved.length) { card.hidden = true; return; }
+  card.hidden = false;
+  el("nSavedBody").innerHTML = store.saved.map(function (s, i) {
+    return "<tr><td>" + esc(s.niche || "(unnamed)") + "</td><td>" + esc(category(s.category).name) +
+      '</td><td class="num">$' + category(s.category).low + "–$" + category(s.category).high +
+      '</td><td class="num">' + s.total + "/21</td><td>" + esc(s.verdict) +
+      '</td><td><button type="button" class="ghost sm" data-drop="' + i + '">Remove</button></td></tr>';
+  }).join("");
+  Array.prototype.forEach.call(el("nSavedBody").querySelectorAll("[data-drop]"), function (b) {
+    b.addEventListener("click", function () {
+      store.saved.splice(parseInt(b.getAttribute("data-drop"), 10), 1);
+      save();
+      renderSaved();
+      toast("Removed");
+    });
+  });
+}
+
+el("nSaveBtn").addEventListener("click", function () {
+  var n = store.niche;
+  if (!n.niche.trim()) { toast("Name the niche first"); el("nNiche").focus(); return; }
+  var r = nicheScore(n);
+  store.saved.push({
+    niche: n.niche.trim(),
+    category: n.category,
+    total: r.total,
+    verdict: el("nVerdict").textContent
+  });
+  save();
+  renderSaved();
+  toast("Saved — score another and compare");
+});
+
+el("nClearBtn").addEventListener("click", function () {
+  store.niche = JSON.parse(JSON.stringify(DEFAULTS.niche));
+  writeNicheFields();
+  save();
+  renderNiche();
+});
+
+el("nExportBtn").addEventListener("click", function () {
+  var out = "# Niche comparison — the faceless YouTube scorecard\n\n";
+  out += "Scored against Chapter 12 of *The AI Income Blueprint*: advertiser value, search-driven topics,\n";
+  out += "depth for 100+ videos, domain expertise, buyers, affiliate programmes, and search competition.\n\n";
+  out += "| Niche | Category | RPM | Score | Verdict |\n|---|---|---|---|---|\n";
+  store.saved.forEach(function (s) {
+    var c = category(s.category);
+    out += "| " + s.niche + " | " + c.name + " | $" + c.low + "–$" + c.high + " | " + s.total + "/21 | " + s.verdict + " |\n";
+  });
+  download("niche-comparison.md", out);
+});
+
+/* ===========================================================================
+   TOOLKIT 2 — VIDEO STUDIO
+   =========================================================================== */
+
+function brief() {
+  var s = store.studio;
+  var len = LENGTHS.filter(function (l) { return l.min === s.length; })[0] || LENGTHS[1];
+  return {
+    niche:    store.niche.niche.trim() || "[NICHE]",
+    topic:    s.topic.trim() || "[TOPIC]",
+    audience: store.niche.audience.trim() || "[AUDIENCE DESCRIPTION]",
+    format:   s.format,
+    minutes:  len.min,
+    words:    len.words.toLocaleString("en-US"),
+    tone:     s.tone.trim() || "[TONE]",
+    cta:      s.cta
+  };
+}
+
+function fillLengthSelect() {
+  el("sLength").innerHTML = LENGTHS.map(function (l) {
+    return '<option value="' + l.min + '">' + l.min + " minutes — approximately " + l.words.toLocaleString("en-US") + " words</option>";
+  }).join("");
+}
+
+function renderStudio() {
+  var s = store.studio;
+  var b = brief();
+
+  el("sWordHint").textContent = "The chapter's script step: 1,200–1,800 words for an 8–12 minute video.";
+
+  var totalTime = 0, doneTime = 0, doneCount = 0;
+
+  el("sSteps").innerHTML = STEPS.map(function (st) {
+    totalTime += st.time;
+    var done = !!s.checks[st.n];
+    if (done) { doneTime += st.time; doneCount++; }
+    var tag = st.kind === "book"
+      ? '<span class="tag book">from the book</span>'
+      : st.kind === "built"
+        ? '<span class="tag built">built from the chapter</span>'
+        : '<span class="tag manual">manual</span>';
+
+    var body = "";
+    if (st.prompt) {
+      body += '<div class="out" id="stepOut' + st.n + '">' + esc(st.prompt(b)) + "</div>";
+      body += '<div class="btnrow"><button type="button" class="ghost sm" data-copy="' + st.n + '">⧉ Copy prompt</button>' +
+              '<span class="sub">' + esc(st.tool) + "</span></div>";
+    }
+    if (st.body) {
+      body += (st.prompt ? '<hr class="sep">' : "") + '<div class="sub" style="white-space:pre-wrap">' + esc(st.body) + "</div>";
+    }
+
+    return '<div class="card step' + (done ? " done" : "") + '">' +
+      '<div class="head">' +
+        '<span class="n">' + st.n + "</span>" +
+        '<input type="checkbox" id="stepChk' + st.n + '" data-step="' + st.n + '"' + (done ? " checked" : "") + ' aria-label="Step ' + st.n + " complete: " + esc(st.title) + '">' +
+        "<b>" + esc(st.title) + "</b> " + tag +
+        '<span class="time">' + st.time + " min</span>" +
+      "</div>" +
+      '<div class="body"><p class="sub" style="margin-bottom:12px">' + esc(st.what) + "</p>" + body + "</div>" +
+    "</div>";
+  }).join("");
+
+  Array.prototype.forEach.call(el("sSteps").querySelectorAll("[data-step]"), function (chk) {
+    chk.addEventListener("change", function () {
+      var n = parseInt(chk.getAttribute("data-step"), 10);
+      if (chk.checked) store.studio.checks[n] = true; else delete store.studio.checks[n];
+      save();
+      renderStudio();
+    });
+  });
+  Array.prototype.forEach.call(el("sSteps").querySelectorAll("[data-copy]"), function (btn) {
+    btn.addEventListener("click", function () {
+      var n = parseInt(btn.getAttribute("data-copy"), 10);
+      copyText(el("stepOut" + n).textContent, "Step " + n + " prompt copied");
+    });
+  });
+
+  el("sProgress").textContent = doneCount + " of " + STEPS.length + " steps done";
+  el("sTimeSummary").textContent = "This workflow totals " + mins(totalTime) + " for one publication-ready video — the chapter's estimate is 2.5–4 hours. You have " +
+    mins(totalTime - doneTime) + " left on this one" + (doneCount ? " (" + mins(doneTime) + " done)" : "") + ".";
+}
+
+function readStudio() {
+  store.studio.topic = el("sTopic").value;
+  store.studio.format = el("sFormat").value;
+  store.studio.length = parseInt(el("sLength").value, 10);
+  store.studio.tone = el("sTone").value;
+  store.studio.cta = el("sCta").value;
+  store.niche.niche = el("sNiche").value;
+  store.niche.audience = el("sAudience").value;
+  el("nNiche").value = store.niche.niche;
+  el("nAudience").value = store.niche.audience;
+  save();
+  renderStudio();
+  renderShorts();
+  renderNiche();
+}
+
+el("sResetChecksBtn").addEventListener("click", function () {
+  store.studio.checks = {};
+  save();
+  renderStudio();
+  toast("Steps reset — next video");
+});
+
+el("sDownloadBtn").addEventListener("click", function () {
+  var b = brief();
+  var out = "# Production brief — " + b.topic + "\n\n";
+  out += "**Niche:** " + b.niche + "  \n**Audience:** " + b.audience + "  \n**Format:** " + b.format +
+         "  \n**Length:** " + b.minutes + " minutes (~" + b.words + " words)  \n**Tone:** " + b.tone +
+         "  \n**CTA:** " + b.cta + "\n\n";
+  out += "Workflow from Chapter 12 of *The AI Income Blueprint* — Income Stream #7.\n\n---\n\n";
+  STEPS.forEach(function (st) {
+    out += "## " + st.n + ". " + st.title + " — " + st.tool + " (" + st.time + " min)\n\n" + st.what + "\n\n";
+    if (st.prompt) out += "```\n" + st.prompt(b) + "\n```\n\n";
+    if (st.body) out += st.body + "\n\n";
+  });
+  var total = STEPS.reduce(function (a, s) { return a + s.time; }, 0);
+  out += "---\n\nTotal: " + mins(total) + ". At one video per week this is roughly 3–4 hours of focused weekly work.\n";
+  download("production-brief.md", out);
+});
+
+/* ===========================================================================
+   TOOLKIT 3 — SHORTS ENGINE
+   =========================================================================== */
+
+function shortsExcerptPrompt() {
+  var b = brief();
+  var count = store.shorts.count;
+  return "You are a short-form video editor for a " + b.format + " " + b.niche + " channel. Below is the full script of a " +
+    b.minutes + "-minute video about " + b.topic + ", for an audience of " + b.audience + ".\n\n" +
+    "Identify the " + count + " strongest thirty-second excerpts in this script to post as YouTube Shorts. For each one give me: " +
+    "the exact opening line, the exact closing line, why this segment stands alone without the rest of the video, " +
+    "a text overlay of no more than six words, and the one sentence of setup to add if the excerpt does not make sense cold. " +
+    "Choose segments that are useful or surprising on their own — not teasers for the long-form video.\n\n" +
+    "SCRIPT:\n[PASTE YOUR FINISHED SCRIPT]";
+}
+
+function shortsRepurposePrompt() {
+  var b = brief();
+  return "You are a content strategist. Create a repurposing plan for the following piece of content: a " +
+    b.minutes + "-minute " + b.format + " YouTube video about " + b.topic + " for an audience of " + b.audience +
+    ". The original format is VIDEO. Target platforms for repurposing: " + (store.shorts.platforms.trim() || "[LIST PLATFORMS]") +
+    ". For each platform, specify: the content format, the core angle or hook to use from the original, estimated production time with AI assistance, " +
+    "and which specific section of the original to draw from. Goal: maximum reach from one piece of original content with minimum additional production effort.";
+}
+
+function renderShorts() {
+  var count = store.shorts.count;
+  el("shCount").value = String(count);
+  el("shPlatforms").value = store.shorts.platforms;
+  el("shTime").textContent = "Fifteen to twenty minutes per Short — " + (count * 15) + "–" + (count * 20) +
+    " minutes on top of the long-form video.";
+  el("shExcerptPrompt").textContent = shortsExcerptPrompt();
+  el("shRepurposePrompt").textContent = shortsRepurposePrompt();
+
+  var items = [];
+  for (var i = 1; i <= count; i++) {
+    items.push({ id: "clip" + i, text: "Short " + i + ": clip the segment from the long-form video, add a simple text overlay, post it." });
+  }
+  items.push({ id: "cadence", text: "Space the Shorts across the days after the long-form video rather than posting them together." });
+  items.push({ id: "link",    text: "Point each Short at the long-form video — the Shorts feed reaches non-subscribers, the long-form video keeps them." });
+
+  el("shChecks").innerHTML = items.map(function (it) {
+    var done = !!store.shorts.checks[it.id];
+    return "<li><input type='checkbox' id='sh_" + it.id + "' data-sh='" + it.id + "'" + (done ? " checked" : "") + ">" +
+           "<label for='sh_" + it.id + "'" + (done ? " class='done'" : "") + ">" + esc(it.text) + "</label></li>";
+  }).join("");
+
+  Array.prototype.forEach.call(el("shChecks").querySelectorAll("[data-sh]"), function (chk) {
+    chk.addEventListener("change", function () {
+      var id = chk.getAttribute("data-sh");
+      if (chk.checked) store.shorts.checks[id] = true; else delete store.shorts.checks[id];
+      save();
+      renderShorts();
+    });
+  });
+}
+
+el("shCount").addEventListener("change", function () {
+  store.shorts.count = parseInt(el("shCount").value, 10);
+  save();
+  renderShorts();
+});
+el("shPlatforms").addEventListener("input", function () {
+  store.shorts.platforms = el("shPlatforms").value;
+  save();
+  el("shRepurposePrompt").textContent = shortsRepurposePrompt();
+});
+el("shCopyBtn").addEventListener("click", function () { copyText(shortsExcerptPrompt(), "Excerpt prompt copied"); });
+el("shCopyRepurpose").addEventListener("click", function () { copyText(shortsRepurposePrompt(), "Repurposing prompt copied"); });
+el("shDownloadBtn").addEventListener("click", function () {
+  var b = brief();
+  var out = "# Shorts plan — " + b.topic + "\n\n";
+  out += "For every long-form video, cut two to three Shorts from its strongest segments. Shorts are the primary\n";
+  out += "discovery mechanism for a channel with a small audience: the platform promotes them to non-subscribers.\n\n";
+  out += "**Shorts from this video:** " + store.shorts.count + " (" + (store.shorts.count * 15) + "–" + (store.shorts.count * 20) + " minutes)\n\n";
+  out += "## 1. Find the excerpts\n\n```\n" + shortsExcerptPrompt() + "\n```\n\n";
+  out += "## 2. Repurpose beyond Shorts\n\n```\n" + shortsRepurposePrompt() + "\n```\n";
+  download("shorts-plan.md", out);
+});
+
+/* ===========================================================================
+   TOOLKIT 4 — MONETISATION STACK
+   =========================================================================== */
+
+var mFields = ["mSubs", "mViews", "mCategory", "mAffConv", "mAffRate", "mSponsorCount", "mSponsorRate", "mProdPrice", "mProdUnits", "mMembers", "mMemberPrice", "mMonthNo"];
+var mKeys   = ["subs", "views", "category", "affConv", "affRate", "sponsorCount", "sponsorRate", "prodPrice", "prodUnits", "members", "memberPrice", "monthNo"];
+
+/* The chapter's sponsorship guide: $500–$5,000 per video at 10,000–100,000
+   subscribers, depending on niche and engagement. */
+function suggestedSponsorRate(subs) {
+  if (subs < 10000) return null;
+  var capped = Math.min(subs, 100000);
+  var t = (capped - 10000) / 90000;
+  var low = 500 + t * 2000;
+  var high = 1500 + t * 3500;
+  return { low: low, high: high };
+}
+
+function readMoney() {
+  mFields.forEach(function (id, i) {
+    var node = el(id);
+    store.money[mKeys[i]] = node.tagName === "SELECT" ? node.value : Math.max(0, parseFloat(node.value) || 0);
+  });
+  store.niche.category = store.money.category;
+  el("nCategory").value = store.money.category;
+  save();
+  renderMoney();
+  renderNiche();
+}
+
+function renderMoney() {
+  var m = store.money;
+  var cat = category(m.category);
+  var rpm = midRpm(cat);
+
+  el("mRpmHint").textContent = cat.name + ": $" + cat.low + "–$" + cat.high + " RPM. This calculator uses the midpoint, $" + rpm.toFixed(2) + ".";
+
+  var sugg = suggestedSponsorRate(m.subs);
+  el("mSponsorHint").textContent = sugg
+    ? "At " + Math.round(m.subs).toLocaleString("en-US") + " subscribers the chapter's guide is roughly " + money(sugg.low) + "–" + money(sugg.high) + " per sponsored video."
+    : "The chapter's $500–$5,000 range starts at 10,000 subscribers. Below that, expect nothing here yet.";
+
+  var monetised = m.subs >= 1000;
+  var ads = monetised ? (m.views / 1000) * rpm : 0;
+  var affiliate = m.affConv * m.affRate;
+  var sponsor = m.sponsorCount * m.sponsorRate;
+  var products = m.prodUnits * m.prodPrice;
+  var members = m.members * m.memberPrice;
+  var total = ads + affiliate + sponsor + products + members;
+
+  var rows = [
+    ["Layer 1 — Ad revenue (YouTube Partner Programme)", monetised
+      ? Math.round(m.views).toLocaleString("en-US") + " views ÷ 1,000 × $" + rpm.toFixed(2) + " RPM"
+      : "Locked — requires 1,000 subscribers + 4,000 watch hours", ads],
+    ["Layer 2 — Affiliate links (video descriptions)", m.affConv + " conversions × " + money(m.affRate), affiliate],
+    ["Layer 3 — Sponsored content", m.sponsorCount + " video" + (m.sponsorCount === 1 ? "" : "s") + " × " + money(m.sponsorRate), sponsor],
+    ["Layer 4 — Digital product sales", m.prodUnits + " × " + money(m.prodPrice), products],
+    ["Layer 5 — Channel memberships / Patreon", m.members + " members × " + money(m.memberPrice) + "/month", members]
+  ];
+
+  el("mBody").innerHTML = rows.map(function (r) {
+    var share = total > 0 ? Math.round((r[2] / total) * 100) : 0;
+    return "<tr><td>" + esc(r[0]) + "</td><td>" + esc(r[1]) + '</td><td class="num">' + money(r[2]) + '</td><td class="num">' + share + "%</td></tr>";
+  }).join("");
+
+  el("mTotal").textContent = money(total);
+  el("mMonth").textContent = money(total);
+  el("mYear").textContent = money(total * 12);
+  var active = rows.filter(function (r) { return r[2] > 0; }).length;
+  el("mLayers").textContent = String(active);
+
+  var notes = [];
+  if (!monetised) {
+    notes.push(['warn', "Layer 1 is locked. The YouTube Partner Programme requires 1,000 subscribers and 4,000 watch hours. Every other layer works before that threshold — affiliate links in descriptions work from your first video."]);
+  }
+  if (active <= 1) {
+    notes.push(['warn', "One layer is not a stack. The creators earning $5,000–$15,000/month build four to six revenue sources on the same content — that is the whole point of monetisation stacking."]);
+  } else if (active >= 4) {
+    notes.push(['good', active + " layers active. This is the shape the chapter describes: the same content asset earning from several sources at once."]);
+  }
+  if (m.subs >= 45000 && m.subs <= 55000) {
+    notes.push(['info', "The chapter's benchmark at 50,000 subscribers in a strong niche is $3,000–$10,000/month combined. You are at " + money(total) + "."]);
+  }
+  if (cat.id === "general" && ads > 0) {
+    notes.push(['warn', "General interest RPM is the low band. The same views in personal finance would earn " + money((m.views / 1000) * midRpm(category("finance"))) + " from ads alone."]);
+  }
+  el("mNotes").innerHTML = notes.map(function (n) { return '<div class="note ' + n[0] + '">' + esc(n[1]) + "</div>"; }).join("");
+
+  var monthNo = m.monthNo;
+  el("mGraphBody").innerHTML = PATIENCE.map(function (p) {
+    var here = monthNo >= p.from && monthNo <= p.to;
+    var label = p.from === p.to ? "Month " + p.from : "Months " + p.from + "–" + p.to;
+    return "<tr" + (here ? ' class="here"' : "") + "><td>" + label + (here ? " ← you" : "") + "</td><td>" + esc(p.range) + "/month</td><td>" + esc(p.what) + "</td></tr>";
+  }).join("");
+}
+
+/* ===========================================================================
+   TOOLKIT 5 — WEEKLY SYSTEM
+   =========================================================================== */
+
+function renderWeek() {
+  var w = store.week;
+
+  el("wDays").innerHTML = WEEK.map(function (d) {
+    var done = !!w.checks[d.id];
+    return '<div class="step' + (done ? " done" : "") + '">' +
+      '<div class="head">' +
+        "<input type='checkbox' data-day='" + d.id + "'" + (done ? " checked" : "") + " aria-label='" + esc(d.day + " session complete") + "'>" +
+        "<b>" + d.day + " — " + esc(d.name) + "</b>" +
+        '<span class="time">' + d.time + " min</span>" +
+      "</div>" +
+      '<div class="body"><p class="sub" style="margin:0">' + esc(d.detail) + "</p></div>" +
+    "</div>";
+  }).join("");
+
+  Array.prototype.forEach.call(el("wDays").querySelectorAll("[data-day]"), function (chk) {
+    chk.addEventListener("change", function () {
+      var id = chk.getAttribute("data-day");
+      if (chk.checked) store.week.checks[id] = true; else delete store.week.checks[id];
+      save();
+      renderWeek();
+    });
+  });
+
+  var totalWeek = WEEK.reduce(function (a, d) { return a + d.time; }, 0);
+  var doneWeek = WEEK.reduce(function (a, d) { return a + (w.checks[d.id] ? d.time : 0); }, 0);
+  el("wWeekTime").textContent = mins(doneWeek) + " of " + mins(totalWeek) + " this week (the chapter's range is 3.5–5 hours)";
+
+  el("wLong").textContent = w.long;
+  el("wShort").textContent = w.short;
+  el("wWeeks").textContent = w.weeks;
+
+  var assets = w.long + w.short;
+  var aPct = Math.min(100, Math.round((assets / 50) * 100));
+  var aMeter = el("wAssetMeter");
+  aMeter.className = "meter" + (assets >= 50 ? " good" : assets >= 25 ? " ok" : "");
+  aMeter.firstElementChild.style.width = aPct + "%";
+  el("wAssetLine").textContent = assets >= 50
+    ? assets + " pieces published. You have passed the 50-piece mark — now the income question is worth asking."
+    : assets + " of 50 published pieces. " + (50 - assets) + " to go before evaluating ROI.";
+
+  var wPct = Math.min(100, Math.round((w.weeks / 24) * 100));
+  var wMeter = el("wWeekMeter");
+  wMeter.className = "meter" + (w.weeks >= 24 ? " good" : w.weeks >= 12 ? " ok" : "");
+  wMeter.firstElementChild.style.width = wPct + "%";
+  el("wWeekLine").textContent = w.weeks >= 24
+    ? w.weeks + " weeks published. The 24-week consistency goal is met — this is the point the chapter says to evaluate."
+    : w.weeks + " of 24 weeks. " + (24 - w.weeks) + " weeks of publishing left on the goal." +
+      (w.weeks >= 10 && w.weeks <= 14 ? " Around here is the trough of disillusionment — the month-3 quitting point. Keep going." : "");
+
+  el("wLogBody").innerHTML = w.log.length
+    ? w.log.map(function (item, i) {
+        return "<tr><td>" + (i + 1) + "</td><td>" + esc(item.title) + "</td><td>" +
+          (item.type === "short" ? "Short" : "Long-form") + "</td><td>" + esc(item.date) +
+          '</td><td><button type="button" class="ghost sm" data-dellog="' + i + '">Remove</button></td></tr>';
+      }).join("")
+    : '<tr><td colspan="5" class="sub">Nothing logged yet. The first piece is the hardest; every subsequent one is easier.</td></tr>';
+
+  Array.prototype.forEach.call(el("wLogBody").querySelectorAll("[data-dellog]"), function (b) {
+    b.addEventListener("click", function () {
+      var i = parseInt(b.getAttribute("data-dellog"), 10);
+      var item = store.week.log[i];
+      if (item.type === "short") store.week.short = Math.max(0, store.week.short - 1);
+      else store.week.long = Math.max(0, store.week.long - 1);
+      store.week.log.splice(i, 1);
+      save();
+      renderWeek();
+      toast("Removed from the log");
+    });
+  });
+}
+
+el("wPublishBtn").addEventListener("click", function () {
+  store.week.weeks += 1;
+  store.week.checks = {};
+  save();
+  renderWeek();
+  toast("Week " + store.week.weeks + " logged — the streak is the asset");
+});
+el("wResetWeekBtn").addEventListener("click", function () {
+  store.week.checks = {};
+  save();
+  renderWeek();
+});
+el("wAddLong").addEventListener("click", function () { store.week.long += 1; save(); renderWeek(); });
+el("wAddShort").addEventListener("click", function () { store.week.short += 1; save(); renderWeek(); });
+el("wSubLong").addEventListener("click", function () { store.week.long = Math.max(0, store.week.long - 1); save(); renderWeek(); });
+el("wSubShort").addEventListener("click", function () { store.week.short = Math.max(0, store.week.short - 1); save(); renderWeek(); });
+el("wResetCounts").addEventListener("click", function () {
+  store.week.long = 0; store.week.short = 0; store.week.weeks = 0; store.week.log = [];
+  save();
+  renderWeek();
+  toast("Counts reset");
+});
+
+el("wLogBtn").addEventListener("click", function () {
+  var title = el("wLogTitle").value.trim();
+  if (!title) { toast("Give it a title first"); el("wLogTitle").focus(); return; }
+  var type = el("wLogType").value;
+  store.week.log.unshift({ title: title, type: type, date: new Date().toISOString().slice(0, 10) });
+  if (type === "short") store.week.short += 1; else store.week.long += 1;
+  el("wLogTitle").value = "";
+  save();
+  renderWeek();
+  toast("Logged — asset " + (store.week.long + store.week.short));
+});
+
+el("wLogExport").addEventListener("click", function () {
+  var w = store.week;
+  var out = "# Publishing log\n\n";
+  out += "**Long-form videos:** " + w.long + "  \n**Shorts:** " + w.short + "  \n**Total assets:** " + (w.long + w.short) +
+         " of 50  \n**Weeks published:** " + w.weeks + " of 24\n\n";
+  out += "| # | Title | Type | Published |\n|---|---|---|---|\n";
+  w.log.forEach(function (item, i) {
+    out += "| " + (i + 1) + " | " + item.title + " | " + (item.type === "short" ? "Short" : "Long-form") + " | " + item.date + " |\n";
+  });
+  out += "\nMindset Shift #12: track your asset count, not your monthly income, in year one.\n";
+  download("publishing-log.md", out);
+});
+
+/* ===========================================================================
+   TOOLKIT 6 — PLAYBOOK (static reference)
+   =========================================================================== */
+
+function renderPlaybook() {
+  el("pDecisionBody").innerHTML = DECISION.map(function (r) {
+    return "<tr><td>" + esc(r[0]) + "</td><td><b>" + esc(r[1]) + "</b></td><td>" + esc(r[2]) + "</td></tr>";
+  }).join("");
+
+  el("pRpmBody").innerHTML = CATEGORIES.map(function (c) {
+    return "<tr><td>" + esc(c.name) + '</td><td class="num">$' + c.low + "–$" + c.high + "</td><td>" + esc(c.note) + "</td></tr>";
+  }).join("");
+
+  el("pToolBody").innerHTML = TOOLS.map(function (t) {
+    return "<tr><td>" + esc(t[0]) + "</td><td><b>" + esc(t[1]) + "</b></td><td>" + esc(t[2]) + "</td></tr>";
+  }).join("");
+
+  el("pMistakes").innerHTML = MISTAKES.map(function (m, i) {
+    return '<div style="margin-bottom:16px"><h3 style="font-size:16px;margin-bottom:4px">Mistake ' + (i + 1) + ": " + esc(m[0]) + "</h3>" +
+      '<p class="sub" style="margin-bottom:6px">' + esc(m[1]) + "</p>" +
+      '<div class="note good"><b>Fix:</b> ' + esc(m[2]) + "</div></div>";
+  }).join("");
+
+  el("pAikoBody").innerHTML = AIKO.map(function (r) {
+    return "<tr><td>" + esc(r[0]) + "</td><td>" + esc(r[1]) + '</td><td class="num">' + esc(r[2]) + '</td><td class="num">' + esc(r[3]) + "</td></tr>";
+  }).join("");
+}
+
+/* ===========================================================================
+   BACKUP / CLEAR
+   =========================================================================== */
+
+el("exportAllBtn").addEventListener("click", function () {
+  download("faceless-youtube-toolkits-backup.json", JSON.stringify(store, null, 2));
+});
+
+el("resetAllBtn").addEventListener("click", function () {
+  if (!window.confirm("Clear everything — niche scores, production checklists, monetisation figures and the publishing log?\n\nA backup file downloads first.")) return;
+  download("faceless-youtube-toolkits-backup.json", JSON.stringify(store, null, 2));
+  try { localStorage.removeItem(STORE_KEY); } catch (e) { /* nothing to remove */ }
+  store = JSON.parse(JSON.stringify(DEFAULTS));
+  boot();
+  toast("Cleared — backup downloaded");
+});
+
+/* ===========================================================================
+   BOOT
+   =========================================================================== */
+
+function bindInputs(ids, handler) {
+  ids.forEach(function (id) {
+    var node = el(id);
+    node.addEventListener(node.tagName === "SELECT" ? "change" : "input", handler);
+  });
+}
+
+function boot() {
+  applyTheme();
+
+  fillCategorySelect(el("nCategory"));
+  fillCategorySelect(el("mCategory"));
+  fillLengthSelect();
+
+  writeNicheFields();
+  el("sNiche").value = store.niche.niche;
+  el("sAudience").value = store.niche.audience;
+  el("sTopic").value = store.studio.topic;
+  el("sFormat").value = store.studio.format;
+  el("sLength").value = String(store.studio.length);
+  el("sTone").value = store.studio.tone;
+  el("sCta").value = store.studio.cta;
+  mFields.forEach(function (id, i) { el(id).value = store.money[mKeys[i]]; });
+
+  renderNiche();
+  renderStudio();
+  renderShorts();
+  renderMoney();
+  renderWeek();
+  renderPlaybook();
+}
+
+bindInputs(nFields, readNiche);
+bindInputs(["sNiche", "sTopic", "sAudience", "sFormat", "sLength", "sTone", "sCta"], readStudio);
+bindInputs(mFields, readMoney);
+
+boot();
+</script>
+</body>
+</html>
