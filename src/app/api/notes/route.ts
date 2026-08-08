@@ -4,10 +4,33 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { isLessonAccessible } from "@/lib/entitlement";
 
-const schema = z.object({
+const createSchema = z.object({
   lessonId: z.string().min(1),
-  status: z.enum(["NOT_STARTED", "IN_PROGRESS", "COMPLETED"]),
+  body: z.string().min(1).max(5000),
 });
+
+export async function GET(request: Request) {
+  const session = await auth();
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const lessonId = searchParams.get("lessonId");
+  if (!lessonId) {
+    return NextResponse.json(
+      { error: "lessonId query param is required." },
+      { status: 400 }
+    );
+  }
+
+  const notes = await prisma.note.findMany({
+    where: { userId: session.user.id, lessonId },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return NextResponse.json({ notes });
+}
 
 export async function POST(request: Request) {
   const session = await auth();
@@ -16,12 +39,12 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json().catch(() => null);
-  const parsed = schema.safeParse(body);
+  const parsed = createSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const { lessonId, status } = parsed.data;
+  const { lessonId, body: noteBody } = parsed.data;
 
   const lesson = await prisma.lesson.findUnique({ where: { id: lessonId } });
   if (!lesson) {
@@ -35,21 +58,9 @@ export async function POST(request: Request) {
     );
   }
 
-  const progress = await prisma.lessonProgress.upsert({
-    where: {
-      userId_lessonId: { userId: session.user.id, lessonId },
-    },
-    update: {
-      status,
-      completedAt: status === "COMPLETED" ? new Date() : null,
-    },
-    create: {
-      userId: session.user.id,
-      lessonId,
-      status,
-      completedAt: status === "COMPLETED" ? new Date() : null,
-    },
+  const note = await prisma.note.create({
+    data: { userId: session.user.id, lessonId, body: noteBody },
   });
 
-  return NextResponse.json({ ok: true, progress });
+  return NextResponse.json({ note }, { status: 201 });
 }

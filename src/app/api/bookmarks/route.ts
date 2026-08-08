@@ -6,9 +6,9 @@ import { isLessonAccessible } from "@/lib/entitlement";
 
 const schema = z.object({
   lessonId: z.string().min(1),
-  status: z.enum(["NOT_STARTED", "IN_PROGRESS", "COMPLETED"]),
 });
 
+/** Toggles a bookmark for a lesson: creates it if missing, removes it if present. */
 export async function POST(request: Request) {
   const session = await auth();
   if (!session?.user) {
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const { lessonId, status } = parsed.data;
+  const { lessonId } = parsed.data;
 
   const lesson = await prisma.lesson.findUnique({ where: { id: lessonId } });
   if (!lesson) {
@@ -35,21 +35,17 @@ export async function POST(request: Request) {
     );
   }
 
-  const progress = await prisma.lessonProgress.upsert({
-    where: {
-      userId_lessonId: { userId: session.user.id, lessonId },
-    },
-    update: {
-      status,
-      completedAt: status === "COMPLETED" ? new Date() : null,
-    },
-    create: {
-      userId: session.user.id,
-      lessonId,
-      status,
-      completedAt: status === "COMPLETED" ? new Date() : null,
-    },
+  const existing = await prisma.bookmark.findUnique({
+    where: { userId_lessonId: { userId: session.user.id, lessonId } },
   });
 
-  return NextResponse.json({ ok: true, progress });
+  if (existing) {
+    await prisma.bookmark.delete({ where: { id: existing.id } });
+    return NextResponse.json({ bookmarked: false });
+  }
+
+  await prisma.bookmark.create({
+    data: { userId: session.user.id, lessonId },
+  });
+  return NextResponse.json({ bookmarked: true });
 }

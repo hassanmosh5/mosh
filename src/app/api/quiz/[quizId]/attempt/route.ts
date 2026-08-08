@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isLessonAccessible } from "@/lib/entitlement";
 
 const schema = z.object({
   answers: z.array(z.number().int().min(0)),
@@ -29,6 +30,13 @@ export async function POST(
   });
   if (!quiz) {
     return NextResponse.json({ error: "Quiz not found." }, { status: 404 });
+  }
+
+  if (!(await isLessonAccessible(session.user.id, quiz.lessonId))) {
+    return NextResponse.json(
+      { error: "You don't have access to this lesson yet." },
+      { status: 403 }
+    );
   }
 
   const { answers } = parsed.data;
