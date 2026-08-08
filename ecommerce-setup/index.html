@@ -1,0 +1,1885 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Store Setup Guides — Shopify &amp; E-Commerce</title>
+<meta name="description" content="Offline, single-file setup guides for launching a Shopify store: marketplace vs own store, an 11-step build checklist, digital / print-on-demand / physical tracks, a listing builder and a fee calculator.">
+<style>
+/* ---------- tokens ---------- */
+:root{
+  color-scheme: light dark;
+  --bg:#f6f8f7; --bg-2:#ffffff; --bg-3:#eef2f0;
+  --fg:#111917; --fg-2:#48564f; --fg-3:#6d7d75;
+  --line:#dbe3df; --line-2:#c3cec8;
+  --accent:#0f7b5f; --accent-2:#0b5f49; --accent-fg:#ffffff;
+  --accent-soft:#e2f2ec;
+  --warn:#8a5a00; --warn-soft:#fdf1dc; --warn-line:#e8d3a8;
+  --info:#1b5e8a; --info-soft:#e4f0f8; --info-line:#bcd9ea;
+  --good:#166534; --bad:#9b1c1c;
+  --radius:14px; --radius-sm:9px;
+  --shadow:0 1px 2px rgba(16,32,26,.05), 0 8px 24px rgba(16,32,26,.06);
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1513; --bg-2:#151f1c; --bg-3:#1c2825;
+    --fg:#e8efec; --fg-2:#a9b8b2; --fg-3:#87968f;
+    --line:#26332f; --line-2:#33443e;
+    --accent:#3fbf94; --accent-2:#63d3ad; --accent-fg:#04120d;
+    --accent-soft:#132b23;
+    --warn:#e0b25f; --warn-soft:#2b2313; --warn-line:#4a3c1c;
+    --info:#7fc0e6; --info-soft:#12242f; --info-line:#1e3c4d;
+    --good:#5fcf8b; --bad:#f08a8a;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1513; --bg-2:#151f1c; --bg-3:#1c2825;
+  --fg:#e8efec; --fg-2:#a9b8b2; --fg-3:#87968f;
+  --line:#26332f; --line-2:#33443e;
+  --accent:#3fbf94; --accent-2:#63d3ad; --accent-fg:#04120d;
+  --accent-soft:#132b23;
+  --warn:#e0b25f; --warn-soft:#2b2313; --warn-line:#4a3c1c;
+  --info:#7fc0e6; --info-soft:#12242f; --info-line:#1e3c4d;
+  --good:#5fcf8b; --bad:#f08a8a;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+}
+
+/* ---------- base ---------- */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font:16px/1.6 var(--sans);
+  padding-bottom:4rem;
+}
+h1,h2,h3,h4{line-height:1.25; margin:0 0 .5em}
+h1{font-size:1.5rem; letter-spacing:-.02em}
+h2{font-size:1.25rem; letter-spacing:-.01em}
+h3{font-size:1.05rem}
+h4{font-size:.95rem}
+p{margin:0 0 1em}
+ul,ol{margin:0 0 1em; padding-left:1.3em}
+li{margin:.3em 0}
+a{color:var(--accent); text-underline-offset:.15em}
+code{font-family:var(--mono); font-size:.9em; background:var(--bg-3); padding:.1em .35em; border-radius:5px}
+hr{border:0; border-top:1px solid var(--line); margin:2rem 0}
+small{font-size:.82rem}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:4px}
+.skip{position:absolute; left:-9999px; top:0; background:var(--accent); color:var(--accent-fg); padding:.6rem 1rem; z-index:50; border-radius:0 0 8px 0}
+.skip:focus{left:0}
+.wrap{max-width:1000px; margin:0 auto; padding:0 1rem}
+.muted{color:var(--fg-2)}
+.dim{color:var(--fg-3)}
+.nowrap{white-space:nowrap}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky; top:0; z-index:20;
+  background:color-mix(in srgb, var(--bg-2) 92%, transparent);
+  backdrop-filter:saturate(1.6) blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.topbar .wrap{display:flex; gap:.75rem; align-items:center; min-height:60px; flex-wrap:wrap; padding-top:.5rem; padding-bottom:.5rem}
+.brand{display:flex; align-items:center; gap:.6rem; margin-right:auto; min-width:0}
+.brand .mark{font-size:1.35rem; line-height:1}
+.brand strong{font-size:1rem; letter-spacing:-.01em; display:block}
+.brand span{display:block; font-size:.76rem; color:var(--fg-3); letter-spacing:.02em}
+.pill{
+  font-size:.78rem; padding:.3rem .6rem; border-radius:999px;
+  background:var(--accent-soft); color:var(--accent-2); border:1px solid transparent;
+  font-variant-numeric:tabular-nums; white-space:nowrap;
+}
+.btn{
+  font:inherit; font-size:.85rem; cursor:pointer;
+  background:var(--bg-2); color:var(--fg); border:1px solid var(--line-2);
+  padding:.42rem .7rem; border-radius:var(--radius-sm);
+  display:inline-flex; align-items:center; gap:.35rem;
+}
+.btn:hover{border-color:var(--accent); color:var(--accent-2)}
+.btn-primary{background:var(--accent); color:var(--accent-fg); border-color:var(--accent)}
+.btn-primary:hover{background:var(--accent-2); border-color:var(--accent-2); color:var(--accent-fg)}
+.btn-sm{font-size:.78rem; padding:.28rem .55rem}
+
+/* ---------- tabs ---------- */
+/* --topbar-h is measured in JS, so the tab bar stays pinned under the header
+   even when the header wraps to two or three rows on a narrow screen */
+.tabs{background:var(--bg-2); border-bottom:1px solid var(--line); position:sticky; top:var(--topbar-h,60px); z-index:19}
+.tabs .wrap{display:flex; gap:.15rem; overflow-x:auto; scrollbar-width:thin}
+.tab{
+  font:inherit; font-size:.9rem; cursor:pointer; white-space:nowrap;
+  background:none; border:0; border-bottom:2.5px solid transparent;
+  color:var(--fg-2); padding:.7rem .8rem;
+}
+.tab:hover{color:var(--fg)}
+.tab[aria-selected="true"]{color:var(--accent-2); border-bottom-color:var(--accent); font-weight:600}
+[role="tabpanel"]{padding-top:1.5rem}
+[role="tabpanel"][hidden]{display:none}
+
+/* ---------- cards ---------- */
+.card{
+  background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius);
+  padding:1.15rem 1.25rem; margin:0 0 1rem; box-shadow:var(--shadow);
+}
+.card > :last-child{margin-bottom:0}
+/* keep one reading measure across prose inside cards; tables and grids opt out */
+.card > p, .card > ul, .card > ol, .step-body > p, .note p, .gotcha p, .verdict p, .verdict ul{max-width:70ch}
+.lede{font-size:1.02rem; color:var(--fg-2)}
+.grid{display:grid; gap:1rem}
+@media(min-width:760px){ .grid-2{grid-template-columns:1fr 1fr} .grid-3{grid-template-columns:repeat(3,1fr)} }
+.note{
+  border-left:3px solid var(--info-line); background:var(--info-soft);
+  padding:.7rem .9rem; border-radius:0 var(--radius-sm) var(--radius-sm) 0; margin:1rem 0; font-size:.92rem;
+}
+.note strong{color:var(--info)}
+.gotcha{
+  border-left:3px solid var(--warn-line); background:var(--warn-soft);
+  padding:.7rem .9rem; border-radius:0 var(--radius-sm) var(--radius-sm) 0; margin:1rem 0; font-size:.92rem;
+}
+.gotcha strong{color:var(--warn)}
+.note > :last-child, .gotcha > :last-child{margin-bottom:0}
+
+/* ---------- checklist steps ---------- */
+.step{
+  background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius);
+  margin:0 0 .8rem; box-shadow:var(--shadow); overflow:hidden;
+}
+.step.done{border-color:var(--accent)}
+.step > summary{
+  cursor:pointer; padding:.9rem 1.1rem; display:flex; gap:.75rem; align-items:flex-start;
+  list-style:none; font-weight:600;
+}
+.step > summary::-webkit-details-marker{display:none}
+.step > summary:hover{background:var(--bg-3)}
+.step .num{
+  flex:0 0 auto; width:1.9rem; height:1.9rem; border-radius:999px;
+  background:var(--bg-3); color:var(--fg-2); display:grid; place-items:center;
+  font-size:.85rem; font-variant-numeric:tabular-nums; border:1px solid var(--line-2);
+}
+.step.done .num{background:var(--accent); color:var(--accent-fg); border-color:var(--accent)}
+.step .sum-body{flex:1 1 auto; min-width:0; font-weight:600}
+.step .sum-meta{display:block; font-weight:400; font-size:.8rem; color:var(--fg-3); margin-top:.15rem}
+.step .caret{flex:0 0 auto; color:var(--fg-3); transition:transform .18s ease}
+.step[open] .caret{transform:rotate(90deg)}
+.step-body{padding:0 1.1rem 1.1rem 1.1rem; border-top:1px solid var(--line)}
+.step-body > :first-child{margin-top:1rem}
+.checks{list-style:none; padding:0; margin:0 0 1rem}
+.checks li{margin:0; border-bottom:1px dashed var(--line)}
+.checks li:last-child{border-bottom:0}
+.checks label{display:flex; gap:.6rem; align-items:flex-start; padding:.5rem .1rem; cursor:pointer; font-size:.94rem}
+.checks input{margin-top:.28rem; width:1.05rem; height:1.05rem; accent-color:var(--accent); flex:0 0 auto}
+.checks input:checked + span{color:var(--fg-3); text-decoration:line-through}
+
+/* ---------- progress ---------- */
+.bar{height:8px; background:var(--bg-3); border-radius:999px; overflow:hidden; border:1px solid var(--line)}
+.bar > i{display:block; height:100%; background:var(--accent); width:0; transition:width .3s ease}
+.progress-row{display:flex; align-items:center; gap:.75rem; margin:0 0 1.2rem}
+.progress-row .bar{flex:1 1 auto}
+.progress-row output{font-size:.85rem; color:var(--fg-2); font-variant-numeric:tabular-nums; white-space:nowrap}
+
+/* ---------- tables ---------- */
+.table-scroll{overflow-x:auto; margin:0 0 1rem; border:1px solid var(--line); border-radius:var(--radius-sm)}
+table{border-collapse:collapse; width:100%; font-size:.9rem; min-width:520px}
+th,td{text-align:left; padding:.55rem .7rem; border-bottom:1px solid var(--line); vertical-align:top}
+thead th{background:var(--bg-3); font-size:.8rem; text-transform:uppercase; letter-spacing:.04em; color:var(--fg-2); position:sticky; top:0}
+tbody tr:last-child td{border-bottom:0}
+td.num, th.num{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+tr.best td{background:var(--accent-soft)}
+tr.best td:first-child::after{content:" ★"; color:var(--accent-2)}
+
+/* ---------- forms ---------- */
+fieldset{border:1px solid var(--line); border-radius:var(--radius-sm); padding:.8rem .9rem; margin:0 0 .9rem}
+legend{font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; color:var(--fg-3); padding:0 .35rem}
+label.field{display:block; margin:0 0 .75rem}
+label.field > span.lbl{display:block; font-size:.82rem; color:var(--fg-2); margin-bottom:.25rem; font-weight:600}
+input[type=text], input[type=number], select, textarea{
+  font:inherit; font-size:.93rem; width:100%;
+  background:var(--bg); color:var(--fg);
+  border:1px solid var(--line-2); border-radius:var(--radius-sm);
+  padding:.48rem .6rem;
+}
+textarea{min-height:5rem; resize:vertical}
+input[type=number]{font-variant-numeric:tabular-nums}
+select{cursor:pointer}
+.row{display:grid; gap:.75rem}
+@media(min-width:640px){ .row-2{grid-template-columns:1fr 1fr} .row-3{grid-template-columns:repeat(3,1fr)} }
+.counter{font-size:.76rem; color:var(--fg-3); font-variant-numeric:tabular-nums}
+.counter.over{color:var(--bad); font-weight:600}
+.counter.ok{color:var(--good)}
+.radios{display:flex; flex-wrap:wrap; gap:.4rem}
+.radios label{
+  display:inline-flex; align-items:center; gap:.4rem; font-size:.88rem;
+  border:1px solid var(--line-2); border-radius:999px; padding:.32rem .7rem; cursor:pointer;
+}
+.radios input{accent-color:var(--accent)}
+.radios label:has(input:checked){border-color:var(--accent); background:var(--accent-soft); color:var(--accent-2); font-weight:600}
+.toolbar{display:flex; flex-wrap:wrap; gap:.4rem; margin:0 0 .9rem}
+
+/* ---------- output ---------- */
+.out{
+  font-family:var(--mono); font-size:.83rem; line-height:1.55;
+  background:var(--bg-3); border:1px solid var(--line); border-radius:var(--radius-sm);
+  padding:.9rem 1rem; white-space:pre-wrap; word-break:break-word; max-height:32rem; overflow:auto;
+}
+
+/* ---------- quiz ---------- */
+.q{border-bottom:1px solid var(--line); padding:.7rem 0}
+.q:last-of-type{border-bottom:0}
+.q p{margin:0 0 .45rem; font-size:.94rem}
+.verdict{border-radius:var(--radius-sm); padding:1rem 1.1rem; border:1px solid var(--accent); background:var(--accent-soft)}
+.verdict h3{margin-top:0; color:var(--accent-2)}
+.verdict > :last-child{margin-bottom:0}
+
+/* ---------- misc ---------- */
+.tag{display:inline-block; font-size:.75rem; background:var(--bg-3); border:1px solid var(--line-2); border-radius:999px; padding:.12rem .55rem; margin:.15rem .2rem .15rem 0; color:var(--fg-2)}
+.kv{display:grid; grid-template-columns:auto 1fr; gap:.25rem .75rem; font-size:.88rem; margin:0 0 1rem}
+.kv dt{color:var(--fg-3)}
+.kv dd{margin:0}
+footer.site{border-top:1px solid var(--line); margin-top:3rem; padding-top:1.5rem; font-size:.85rem; color:var(--fg-3)}
+.toast{
+  position:fixed; left:50%; bottom:1.25rem; transform:translateX(-50%) translateY(150%);
+  background:var(--fg); color:var(--bg); padding:.6rem 1rem; border-radius:999px;
+  font-size:.87rem; z-index:60; transition:transform .25s ease; box-shadow:var(--shadow); max-width:90vw;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important}
+}
+@media print{
+  .topbar,.tabs,.toolbar,.toast,.skip,.btn{display:none !important}
+  body{background:#fff; color:#000; padding:0}
+  .card,.step{box-shadow:none; border-color:#bbb; break-inside:avoid}
+  [role="tabpanel"][hidden]{display:block !important}
+  .step-body{display:block !important}
+  .out{max-height:none; overflow:visible}
+  a[href^="http"]::after{content:" (" attr(href) ")"; font-size:.8em; color:#555}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">🏪</span>
+      <span>
+        <strong>Store Setup Guides</strong>
+        <span>Shopify &amp; e-commerce · offline · single file</span>
+      </span>
+    </div>
+    <span class="pill" id="globalProgress" title="Setup + launch checklist progress">0 / 0 done</span>
+    <button type="button" class="btn btn-sm" id="backupBtn" title="Download everything this app has saved">⬇ Back up</button>
+    <button type="button" class="btn btn-sm" id="clearBtn" title="Back up, then erase all saved data">🗑 Clear</button>
+    <button type="button" class="btn btn-sm" id="themeBtn" aria-live="polite">🌗 Theme</button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Guides">
+  <div class="wrap" role="tablist" id="tablist">
+    <button class="tab" role="tab" id="tab-choose"  aria-controls="panel-choose"  aria-selected="true"  tabindex="0">🧭 Choose</button>
+    <button class="tab" role="tab" id="tab-setup"   aria-controls="panel-setup"   aria-selected="false" tabindex="-1">🛠 Set Up</button>
+    <button class="tab" role="tab" id="tab-tracks"  aria-controls="panel-tracks"  aria-selected="false" tabindex="-1">📦 Product Tracks</button>
+    <button class="tab" role="tab" id="tab-listing" aria-controls="panel-listing" aria-selected="false" tabindex="-1">✍️ Listing Builder</button>
+    <button class="tab" role="tab" id="tab-launch"  aria-controls="panel-launch"  aria-selected="false" tabindex="-1">🚀 Launch</button>
+    <button class="tab" role="tab" id="tab-fees"    aria-controls="panel-fees"    aria-selected="false" tabindex="-1">📊 Fees &amp; Reference</button>
+  </div>
+</nav>
+
+<main id="main" class="wrap">
+
+<!-- ============================ CHOOSE ============================ -->
+<section id="panel-choose" role="tabpanel" aria-labelledby="tab-choose" tabindex="0">
+  <div class="card">
+    <h1>Do you actually need your own store yet?</h1>
+    <p class="lede">
+      <em>The AI Income Blueprint</em> gives a platform sequence — start on Gumroad, add Etsy once
+      you have a validated product and two to three reviews, then <strong>“add your own website
+      once you are generating consistent income and want to reduce platform fees and build a
+      direct customer relationship.”</strong> That last step is one line in the book. These guides
+      are that line, expanded: when to take it, and exactly how.
+    </p>
+    <p class="muted">
+      A marketplace rents you an audience. Your own store rents you nothing and gives you nothing —
+      you bring the traffic, and in exchange you keep the margin, the customer email list and the
+      brand. Opening one before you have traffic is the single most common way people spend
+      $39 a month to sell nothing.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Six questions</h2>
+    <p class="muted">Answer honestly. Nothing is sent anywhere; answers are saved in this browser only.</p>
+    <form id="quizForm">
+      <div id="quizQs"></div>
+      <div class="toolbar" style="margin-top:1rem">
+        <button type="button" class="btn btn-sm" id="quizReset">Reset answers</button>
+      </div>
+    </form>
+    <div id="quizVerdict" class="verdict" role="status" aria-live="polite" hidden></div>
+  </div>
+
+  <div class="card">
+    <h2>Break-even: when does a monthly plan beat a per-sale fee?</h2>
+    <p class="muted">
+      A marketplace takes a percentage forever. Your own store charges a fixed monthly fee plus a
+      smaller percentage. Below a certain monthly revenue the percentage is cheaper; above it, the
+      fixed fee is. That crossover is the only number that matters here.
+    </p>
+    <div class="row row-3">
+      <label class="field"><span class="lbl">Your monthly store revenue</span>
+        <input type="number" id="beRev" min="0" step="50" value="1000" inputmode="decimal"></label>
+      <label class="field"><span class="lbl">Average order value</span>
+        <input type="number" id="beAov" min="1" step="1" value="27" inputmode="decimal"></label>
+      <label class="field"><span class="lbl">Compare against</span>
+        <select id="beRival">
+          <option value="etsy">Etsy (6.5% + processing + listing fees)</option>
+          <option value="gumroad" selected>Gumroad (10% flat)</option>
+          <option value="payhip">Payhip free (5% + processing)</option>
+        </select></label>
+    </div>
+    <div id="beOut" class="note" role="status" aria-live="polite"></div>
+    <p class="dim"><small>Uses the rates on the <strong>Fees &amp; Reference</strong> tab — edit them there and this recalculates.</small></p>
+  </div>
+
+  <div class="card">
+    <h2>What each option is actually good at</h2>
+    <div class="table-scroll">
+      <table>
+        <caption class="dim" style="caption-side:bottom; text-align:left; padding:.5rem .7rem"><small>Marketplace rows summarise the book's Chapter 7 platform table; the Shopify row is this guide's addition.</small></caption>
+        <thead><tr><th>Route</th><th>You bring</th><th>They bring</th><th>Take it when…</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Gumroad</strong></td><td>The product, all traffic</td><td>Checkout, file delivery, a free tier</td><td>You have never sold anything. Fastest possible first sale.</td></tr>
+          <tr><td><strong>Etsy</strong></td><td>Listings + SEO effort</td><td>Search traffic at a scale you cannot replicate</td><td>Your product is visual and searchable, and you have reviews to earn.</td></tr>
+          <tr><td><strong>Payhip</strong></td><td>The product, all traffic</td><td>Checkout, EU VAT handling, affiliate tooling</td><td>You want affiliates selling for you and low fees on a free tier.</td></tr>
+          <tr><td><strong>Shopify</strong></td><td><em>Everything</em> — traffic, design, trust, support</td><td>Infrastructure that does not cap what you can build</td><td>You have repeat buyers, an email list, or a catalogue that has outgrown a single listing page.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="gotcha">
+      <p><strong>The trap.</strong> “I'll build the store first, then find customers” inverts the
+      order that works. Every route above except Shopify puts you in front of buyers on day one.
+      Shopify puts you in front of nobody on day one — it is a multiplier on traffic you already
+      have, and a multiplier on zero is zero.</p>
+    </div>
+    <div class="note">
+      <p><strong>You can run both.</strong> Nothing forces a choice. Keeping validated listings on
+      Etsy for discovery while your own store carries bundles, upsells and repeat buyers is the
+      normal end state, not a compromise. The book's sequence is <em>additive</em> — “add your own
+      website”, not “move to”.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ SET UP ============================ -->
+<section id="panel-setup" role="tabpanel" aria-labelledby="tab-setup" hidden tabindex="0">
+  <div class="card">
+    <h1>Build the store — 11 steps</h1>
+    <p class="lede">
+      In order. Each step assumes the one before it is done. Tick items as you go; everything is
+      saved in this browser. The whole sequence is roughly a focused day of work for a digital
+      product store, two to three days if you are shipping physical stock.
+    </p>
+    <div class="progress-row">
+      <div class="bar"><i id="setupBar"></i></div>
+      <output id="setupOut" for="setupBar">0 of 0</output>
+    </div>
+    <div class="toolbar">
+      <button type="button" class="btn btn-sm" id="setupExpand">Expand all</button>
+      <button type="button" class="btn btn-sm" id="setupCollapse">Collapse all</button>
+      <button type="button" class="btn btn-sm" id="setupExport">⬇ Export as Markdown</button>
+      <button type="button" class="btn btn-sm" id="setupReset">Reset ticks</button>
+    </div>
+  </div>
+  <div id="setupSteps"></div>
+</section>
+
+<!-- ============================ TRACKS ============================ -->
+<section id="panel-tracks" role="tabpanel" aria-labelledby="tab-tracks" hidden tabindex="0">
+  <div class="card">
+    <h1>Three product tracks</h1>
+    <p class="lede">
+      Almost every setting that differs between two Shopify stores traces back to one choice: are
+      you delivering a file, a printed item someone else makes, or a box you pack yourself? Pick
+      your track and configure only what it needs.
+    </p>
+    <div class="radios" role="group" aria-label="Choose a product track">
+      <label><input type="radio" name="track" value="digital" checked> 💾 Digital download</label>
+      <label><input type="radio" name="track" value="pod"> 🎨 Print-on-demand</label>
+      <label><input type="radio" name="track" value="physical"> 📦 Physical stock</label>
+    </div>
+  </div>
+  <div id="trackBody"></div>
+</section>
+
+<!-- ============================ LISTING ============================ -->
+<section id="panel-listing" role="tabpanel" aria-labelledby="tab-listing" hidden tabindex="0">
+  <div class="card">
+    <h1>Listing builder</h1>
+    <p class="lede">
+      The book's Chapter 7 gives a five-paragraph description structure for a marketplace listing.
+      This builds that structure for a Shopify product page, plus the SEO title and meta
+      description Shopify asks for separately, and the character limits each has to respect.
+    </p>
+  </div>
+
+  <div class="card">
+    <form id="listingForm">
+      <fieldset>
+        <legend>The product</legend>
+        <div class="row row-2">
+          <label class="field"><span class="lbl">Product type</span>
+            <select id="lType"></select></label>
+          <label class="field"><span class="lbl">Product name</span>
+            <input type="text" id="lName" placeholder="Freelance Designer Project Tracker" maxlength="120"></label>
+        </div>
+        <div class="row row-2">
+          <label class="field"><span class="lbl">Who it is for <span class="dim">(be specific — “freelance designers”, not “creatives”)</span></span>
+            <input type="text" id="lAudience" placeholder="freelance designers juggling 5+ clients" maxlength="120"></label>
+          <label class="field"><span class="lbl">The outcome they get</span>
+            <input type="text" id="lOutcome" placeholder="see every client, deadline and invoice on one screen" maxlength="160"></label>
+        </div>
+        <label class="field"><span class="lbl">The problem it removes</span>
+          <input type="text" id="lProblem" placeholder="deadlines living in six different places" maxlength="160"></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>What is inside</legend>
+        <label class="field"><span class="lbl">Components — one per line, be specific and countable</span>
+          <textarea id="lIncludes" rows="6"></textarea></label>
+        <div class="row row-2">
+          <label class="field"><span class="lbl">File formats / what they receive</span>
+            <input type="text" id="lFormats" maxlength="160"></label>
+          <label class="field"><span class="lbl">Requirements or compatibility</span>
+            <input type="text" id="lCompat" maxlength="160"></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Price &amp; keywords</legend>
+        <div class="row row-3">
+          <label class="field"><span class="lbl">Price</span>
+            <input type="number" id="lPrice" min="0" step="1" value="17" inputmode="decimal"></label>
+          <label class="field"><span class="lbl">Compare-at price <span class="dim">(optional)</span></span>
+            <input type="number" id="lCompare" min="0" step="1" placeholder="—" inputmode="decimal"></label>
+          <div class="field"><span class="lbl">Book's band for this type</span>
+            <div id="lBand" class="pill" style="display:inline-block"></div></div>
+        </div>
+        <label class="field"><span class="lbl">Keywords — comma separated. Mix broad terms with long-tail phrases.</span>
+          <input type="text" id="lKeywords" maxlength="300"></label>
+        <div id="lKeywordHints" class="dim" style="font-size:.85rem"></div>
+      </fieldset>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>SEO fields</h2>
+    <p class="muted">Shopify keeps these separate from the product title and description. Both get truncated in search results past the limits below.</p>
+    <label class="field"><span class="lbl">Page title <span class="counter" id="cTitle"></span></span>
+      <input type="text" id="oTitle" readonly></label>
+    <label class="field"><span class="lbl">Meta description <span class="counter" id="cMeta"></span></span>
+      <textarea id="oMeta" rows="3" readonly></textarea></label>
+    <label class="field"><span class="lbl">URL handle</span>
+      <input type="text" id="oHandle" readonly></label>
+    <div>
+      <span class="lbl" style="font-size:.82rem; color:var(--fg-2); font-weight:600">Tags</span>
+      <div id="oTags"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Product description</h2>
+    <div class="toolbar">
+      <button type="button" class="btn btn-sm btn-primary" id="lCopy">📋 Copy Markdown</button>
+      <button type="button" class="btn btn-sm" id="lCopyHtml">📋 Copy as HTML</button>
+      <button type="button" class="btn btn-sm" id="lDownload">⬇ Download .md</button>
+      <button type="button" class="btn btn-sm" id="lClear">Clear form</button>
+    </div>
+    <div class="out" id="lOut" aria-live="polite"></div>
+    <div class="note">
+      <p><strong>Paste target.</strong> Shopify's description editor accepts rich text — paste the
+      Markdown into a plain editor and format, or use “Copy as HTML” and paste into the editor's
+      <code>&lt;/&gt;</code> HTML view. Headings become <code>h3</code>, which is what most themes
+      style correctly inside a product description.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ LAUNCH ============================ -->
+<section id="panel-launch" role="tabpanel" aria-labelledby="tab-launch" hidden tabindex="0">
+  <div class="card">
+    <h1>Before you remove the password page</h1>
+    <p class="lede">
+      A store that takes money incorrectly is worse than a store that is not live. Work through
+      this once, in a browser you are not logged into the admin on, and on a phone.
+    </p>
+    <div class="progress-row">
+      <div class="bar"><i id="launchBar"></i></div>
+      <output id="launchOut" for="launchBar">0 of 0</output>
+    </div>
+    <div class="toolbar">
+      <button type="button" class="btn btn-sm" id="launchExport">⬇ Export as Markdown</button>
+      <button type="button" class="btn btn-sm" id="launchReset">Reset ticks</button>
+    </div>
+  </div>
+  <div id="launchGroups"></div>
+
+  <div class="card">
+    <h2>The first 90 days</h2>
+    <p class="muted">
+      The book is blunt that digital product income is non-linear and that the first ninety days
+      are slow — listings, reviews and platform SEO compound rather than pay out immediately. Your
+      own store is slower still, because you are also building the traffic. Plan for it.
+    </p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Window</th><th>The one job</th><th>What success looks like</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Days 1–30</strong></td><td>Get five real strangers through checkout</td><td>Five completed orders you did not personally know the buyer of. Every friction point they hit, fixed.</td></tr>
+          <tr><td><strong>Days 31–60</strong></td><td>One traffic source, done properly</td><td>A single channel — marketplace cross-sell, one social platform, or email — producing repeatable visits. Not four channels producing none.</td></tr>
+          <tr><td><strong>Days 61–90</strong></td><td>Second product + email capture</td><td>A second listing that an existing buyer would want, and a list you can email when you publish the third.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <p><strong>The one metric worth watching early.</strong> Not sessions. Not conversion rate —
+      at low traffic it is statistical noise. Watch <em>completed checkouts per week</em> and
+      <em>abandoned checkouts</em>. Abandoned checkouts with a real email in them are a bug report
+      about your checkout, and they are the cheapest sales you will ever recover.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FEES ============================ -->
+<section id="panel-fees" role="tabpanel" aria-labelledby="tab-fees" hidden tabindex="0">
+  <div class="card">
+    <h1>Fees &amp; reference</h1>
+    <div class="gotcha">
+      <p><strong>Read this before trusting a number on this page.</strong> Platform pricing changes,
+      differs by country, and differs between monthly and annual billing. Every rate below is an
+      <em>editable starting point</em>, not a quote. Check the current rate on each platform's own
+      pricing page and correct the fields — the comparison recalculates from whatever you enter,
+      and your edits are saved.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Your numbers</h2>
+    <div class="row row-2">
+      <label class="field"><span class="lbl">Monthly revenue</span>
+        <input type="number" id="fRev" min="0" step="50" value="1000" inputmode="decimal"></label>
+      <label class="field"><span class="lbl">Average order value</span>
+        <input type="number" id="fAov" min="1" step="1" value="27" inputmode="decimal"></label>
+    </div>
+    <p class="dim"><small>Orders per month is derived: revenue ÷ average order value.</small></p>
+  </div>
+
+  <div class="card">
+    <h2>Rates <span class="dim" style="font-weight:400; font-size:.8rem">— edit to match what you actually pay</span></h2>
+    <div class="table-scroll">
+      <table id="ratesTable">
+        <thead><tr>
+          <th>Platform</th>
+          <th class="num">Monthly</th>
+          <th class="num">% of sale</th>
+          <th class="num">Per order</th>
+          <th class="num">Per listing</th>
+        </tr></thead>
+        <tbody id="ratesBody"></tbody>
+      </table>
+    </div>
+    <label class="field" style="max-width:22rem"><span class="lbl">Listings you keep live <span class="dim">(affects Etsy only)</span></span>
+      <input type="number" id="fListings" min="0" step="1" value="10" inputmode="numeric"></label>
+    <div class="toolbar">
+      <button type="button" class="btn btn-sm" id="ratesReset">Restore defaults</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>What you keep</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr>
+          <th>Platform</th><th class="num">Fees / month</th><th class="num">You keep</th><th class="num">Effective rate</th>
+        </tr></thead>
+        <tbody id="compareBody"></tbody>
+      </table>
+    </div>
+    <p class="dim"><small>“Effective rate” is total fees as a percentage of revenue — the number to compare, because it folds the monthly fee and the per-order fee into one figure at your actual volume.</small></p>
+  </div>
+
+  <div class="card">
+    <h2>Notes on specific platforms</h2>
+    <div class="kv">
+      <dt>Shopify</dt>
+      <dd>Using <strong>Shopify Payments</strong> where it is available avoids the extra
+        transaction fee Shopify charges on third-party gateways. That fee is charged
+        <em>in addition</em> to whatever the third-party gateway itself charges — it is the most
+        commonly missed line in a Shopify cost estimate.</dd>
+      <dt>Etsy</dt>
+      <dd>Three separate fees stack: a listing fee per listing (which renews on a fixed cycle and
+        again on each sale), a transaction fee on the sale <em>including</em> the shipping you
+        charge, and payment processing. Offsite Ads fees may apply on top and are mandatory above
+        a revenue threshold.</dd>
+      <dt>Gumroad</dt>
+      <dd>The book's table lists a paid tier that removes the percentage fee. Gumroad has since
+        consolidated toward a single flat rate with no paid plan. Confirm the current terms before
+        planning around either figure — the default here is the flat rate.</dd>
+      <dt>Payhip</dt>
+      <dd>The free tier's percentage is charged on top of payment processing, since Payhip settles
+        through your own Stripe/PayPal account rather than paying you out itself.</dd>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Price bands by product type</h2>
+    <p class="muted">
+      From the book's Chapter 7 pricing reference. The instruction that comes with it: price at the
+      <em>bottom</em> of the band for your type and niche, then raise as reviews accumulate — a low
+      price reads as low confidence to a buyer who cannot inspect the product first.
+    </p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Product type</th><th>Band</th><th>Book's best platform</th><th>On your own store</th></tr></thead>
+        <tbody id="bandBody"></tbody>
+      </table>
+    </div>
+    <div class="note">
+      <p><strong>Tiering beats discounting.</strong> The book's observation is that the same product
+      offered at two or three price points outperforms a single price: the middle tier sells most,
+      and the premium tier exists to make the middle one feel like the sensible choice. On Shopify
+      that is one product with three variants, not three products.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Glossary</h2>
+    <dl class="kv" id="glossary"></dl>
+  </div>
+</section>
+
+<footer class="site wrap">
+  <p>
+    Companion to <strong><em>The AI Income Blueprint</em></strong> by Hassan Mohammed
+    (<code>books/THE_AI_INCOME_BLUEPRINT.pdf</code>). The book's platform sequence ends at
+    “add your own website”; these guides start there.
+  </p>
+  <p>
+    Fee figures, price bands and income ranges quoted from the book carry the book's own caveat —
+    they are ranges based on observed outcomes, not guarantees. Platform rates change; verify
+    before you plan around them. Nothing here is tax, legal or financial advice.
+  </p>
+  <p>No network requests. No analytics. Everything you type stays in this browser.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* =====================================================================
+   storage — degrades to in-memory when localStorage is unavailable
+   (private mode, file:// restrictions in some browsers)
+   ===================================================================== */
+var KEY = "storeSetupGuides.v1";
+var memory = {};
+var storageOk = (function(){
+  try { var k="__t"; localStorage.setItem(k,"1"); localStorage.removeItem(k); return true; }
+  catch(e){ return false; }
+})();
+var state = load();
+
+function load(){
+  if(!storageOk) return {};
+  try { return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; }
+  catch(e){ return {}; }
+}
+var saveTimer = null;
+function save(){
+  if(saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    if(!storageOk){ memory = state; return; }
+    try { localStorage.setItem(KEY, JSON.stringify(state)); }
+    catch(e){ storageOk = false; memory = state; }
+  }, 200);
+}
+function get(path, fallback){
+  var v = state[path];
+  return (v === undefined || v === null) ? fallback : v;
+}
+function set(path, value){ state[path] = value; save(); }
+
+/* ---------- tiny helpers ---------- */
+function el(id){ return document.getElementById(id); }
+function h(tag, attrs, kids){
+  var n = document.createElement(tag);
+  if(attrs) Object.keys(attrs).forEach(function(k){
+    if(k === "class") n.className = attrs[k];
+    else if(k === "text") n.textContent = attrs[k];
+    else if(k === "html") n.innerHTML = attrs[k];
+    else if(k.slice(0,2) === "on") n.addEventListener(k.slice(2), attrs[k]);
+    else if(attrs[k] !== null && attrs[k] !== false) n.setAttribute(k, attrs[k]);
+  });
+  (kids || []).forEach(function(c){ n.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+  return n;
+}
+var toastTimer = null;
+function toast(msg){
+  var t = el("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove("show"); }, 2600);
+}
+function money(n){
+  if(!isFinite(n)) return "—";
+  return "$" + n.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function pct(n){
+  if(!isFinite(n)) return "—";
+  return n.toFixed(1) + "%";
+}
+function num(id, fallback){
+  var v = parseFloat(el(id).value);
+  return isFinite(v) ? v : fallback;
+}
+function copyText(text, label){
+  function fallbackCopy(){
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly","");
+    ta.style.position = "fixed"; ta.style.top = "-1000px";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch(e){ ok = false; }
+    document.body.removeChild(ta);
+    toast(ok ? (label + " copied") : "Copy failed — select the text and copy manually");
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){ toast(label + " copied"); }, fallbackCopy);
+  } else fallbackCopy();
+}
+function download(filename, text){
+  try{
+    var blob = new Blob([text], {type:"text/plain;charset=utf-8"});
+    var url = URL.createObjectURL(blob);
+    var a = h("a", {href:url, download:filename});
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    toast("Downloaded " + filename);
+  } catch(e){ toast("Download blocked — copy the text instead"); }
+}
+function slug(s){
+  return String(s).toLowerCase().trim()
+    .replace(/['’]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60);
+}
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+/* =====================================================================
+   keep the sticky tab bar pinned under the header at any header height
+   ===================================================================== */
+(function stickyOffset(){
+  var bar = document.querySelector(".topbar");
+  function measure(){
+    document.documentElement.style.setProperty("--topbar-h", bar.offsetHeight + "px");
+  }
+  measure();
+  if(window.ResizeObserver) new ResizeObserver(measure).observe(bar);
+  else window.addEventListener("resize", measure);
+})();
+
+/* =====================================================================
+   theme
+   ===================================================================== */
+(function theme(){
+  var btn = el("themeBtn");
+  function apply(mode){
+    if(mode === "system") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", mode);
+    btn.textContent = mode === "light" ? "☀️ Light" : mode === "dark" ? "🌙 Dark" : "🌗 System";
+    btn.setAttribute("aria-label", "Colour theme: " + mode + ". Click to change.");
+  }
+  var mode = get("theme", "system");
+  apply(mode);
+  btn.addEventListener("click", function(){
+    mode = mode === "system" ? "light" : mode === "light" ? "dark" : "system";
+    set("theme", mode); apply(mode);
+  });
+})();
+
+/* =====================================================================
+   tabs — roving tabindex + arrow keys
+   ===================================================================== */
+(function tabs(){
+  var list = el("tablist");
+  var tabsArr = Array.prototype.slice.call(list.querySelectorAll('[role="tab"]'));
+  function select(tab, focus){
+    tabsArr.forEach(function(t){
+      var on = t === tab;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      el(t.getAttribute("aria-controls")).hidden = !on;
+    });
+    if(focus) tab.focus();
+    set("tab", tab.id);
+  }
+  tabsArr.forEach(function(t){
+    t.addEventListener("click", function(){ select(t, false); });
+    t.addEventListener("keydown", function(e){
+      var i = tabsArr.indexOf(t), n = null;
+      if(e.key === "ArrowRight") n = tabsArr[(i + 1) % tabsArr.length];
+      else if(e.key === "ArrowLeft") n = tabsArr[(i - 1 + tabsArr.length) % tabsArr.length];
+      else if(e.key === "Home") n = tabsArr[0];
+      else if(e.key === "End") n = tabsArr[tabsArr.length - 1];
+      if(n){ e.preventDefault(); select(n, true); }
+    });
+  });
+  var saved = get("tab", null);
+  var initial = saved ? el(saved) : null;
+  select(initial && initial.getAttribute("role") === "tab" ? initial : tabsArr[0], false);
+})();
+
+/* =====================================================================
+   CHOOSE — decision questions
+   ===================================================================== */
+var QUIZ = [
+  { id:"q1", q:"Have you sold at least 20 of something — anywhere, to anyone who was not a friend?", weight:3,
+    yes:"You have proof the product sells. That is the prerequisite everything else rests on.",
+    no:"Validate first. A store cannot fix a product nobody has bought yet, and it will cost you money every month while you find out." },
+  { id:"q2", q:"Do you have an audience you can reach directly — an email list, a following, a client list, a community you are actually part of?", weight:3,
+    yes:"That is your launch traffic. Your own store converts it far better than a marketplace listing does.",
+    no:"Your store will get roughly the traffic you send it, which is currently none. Marketplace search traffic is doing that job for you for a percentage." },
+  { id:"q3", q:"Are marketplace fees costing you more per month than a store plan would?", weight:2,
+    yes:"The maths already favours your own store. Check the break-even calculator for the exact figure.",
+    no:"Fees are not yet your problem. Revisit when they are — the calculator tells you when." },
+  { id:"q4", q:"Do you have more than one product, or a clear plan for a second within 90 days?", weight:2,
+    yes:"A catalogue justifies a storefront. One product does not need one — it needs a page.",
+    no:"A single product is a listing, not a store. Bundles, upsells and collections are most of what a store buys you." },
+  { id:"q5", q:"Do buyers ever come back and buy from you a second time?", weight:2,
+    yes:"Repeat buyers are the strongest argument for owning the relationship. On a marketplace, they are the marketplace's customer, not yours.",
+    no:"Without repeat purchase the customer relationship is worth less, and it is the main thing you are paying to own." },
+  { id:"q6", q:"Can you give this six to eight hours of setup, and an hour a week after that?", weight:1,
+    yes:"That is roughly what it takes. Good.",
+    no:"A half-built store converts worse than a marketplace listing. Wait until you have the hours — the plan bills either way." }
+];
+
+(function quiz(){
+  var wrap = el("quizQs");
+  QUIZ.forEach(function(item, i){
+    var saved = get("quiz." + item.id, "");
+    var q = h("div", {class:"q"}, [
+      h("p", {text:(i+1) + ". " + item.q}),
+      h("div", {class:"radios"}, ["yes","no","unsure"].map(function(v){
+        var input = h("input", {type:"radio", name:item.id, value:v, checked: saved === v ? "checked" : false});
+        input.addEventListener("change", function(){ set("quiz." + item.id, v); render(); });
+        return h("label", {}, [input, h("span", {text: v === "yes" ? "Yes" : v === "no" ? "No" : "Not sure"})]);
+      }))
+    ]);
+    wrap.appendChild(q);
+  });
+
+  el("quizReset").addEventListener("click", function(){
+    QUIZ.forEach(function(item){
+      set("quiz." + item.id, "");
+      Array.prototype.forEach.call(document.getElementsByName(item.id), function(r){ r.checked = false; });
+    });
+    render();
+    toast("Answers cleared");
+  });
+
+  function render(){
+    var answered = 0, score = 0, total = 0, notes = [];
+    QUIZ.forEach(function(item){
+      total += item.weight;
+      var a = get("quiz." + item.id, "");
+      if(!a) return;
+      answered++;
+      if(a === "yes"){ score += item.weight; notes.push({good:true, text:item.yes}); }
+      else if(a === "no"){ notes.push({good:false, text:item.no}); }
+      else { score += item.weight * 0.5; }
+    });
+    var box = el("quizVerdict");
+    if(answered < QUIZ.length){
+      box.hidden = false;
+      box.innerHTML = "";
+      box.appendChild(h("h3", {text:"Answer all six for a verdict"}));
+      box.appendChild(h("p", {class:"muted", text: answered + " of " + QUIZ.length + " answered."}));
+      return;
+    }
+    var ratio = score / total;
+    var verdict, body;
+    if(ratio >= 0.7){
+      verdict = "Open the store.";
+      body = "You have the two things that make a storefront pay for itself — a product that has sold and traffic you can point at it. Go to Set Up and work the eleven steps in order.";
+    } else if(ratio >= 0.4){
+      verdict = "Open it, but keep the marketplace listings live.";
+      body = "You are close, and the honest move is additive rather than a migration. Keep selling where the traffic already is, build the store alongside it, and send your own audience to the store where the margin is better. Revisit the weak answers below in 90 days.";
+    } else {
+      verdict = "Not yet — and that is the cheaper answer.";
+      body = "The store is not the constraint right now; validated demand and traffic are. Follow the book's sequence — Gumroad for the first sales, Etsy once you have reviews — and come back when the answers below have changed. This guide will still be here, and it costs nothing to wait.";
+    }
+    box.hidden = false;
+    box.innerHTML = "";
+    box.appendChild(h("h3", {text:verdict}));
+    box.appendChild(h("p", {text:body}));
+    var weak = notes.filter(function(n){ return !n.good; });
+    if(weak.length){
+      box.appendChild(h("p", {class:"lbl", html:"<strong>What is holding it back</strong>"}));
+      box.appendChild(h("ul", {}, weak.map(function(n){ return h("li", {text:n.text}); })));
+    }
+    var strong = notes.filter(function(n){ return n.good; });
+    if(strong.length){
+      box.appendChild(h("p", {html:"<strong>What is working in your favour</strong>"}));
+      box.appendChild(h("ul", {}, strong.map(function(n){ return h("li", {text:n.text}); })));
+    }
+  }
+  render();
+})();
+
+/* =====================================================================
+   SET UP — 11 steps
+   ===================================================================== */
+var SETUP = [
+{
+  id:"decide", title:"Decide what you sell before the trial clock starts", mins:"30–60 min",
+  why:"A Shopify trial is time-boxed and it does not pause while you think. Walk in with one product, one price and one buyer written down, and the trial becomes a build sprint instead of a browsing session that quietly turns into a paid month.",
+  items:[
+    "Write one sentence: “I sell ___ to ___ so they can ___.” If you cannot finish it, you are not ready for step 2.",
+    "Pick ONE product to launch with. A store with one finished product beats a store with nine drafts, every time.",
+    "Choose your track — digital download, print-on-demand, or physical stock. It changes most settings that follow (see the Product Tracks tab).",
+    "Set a price from the band for your product type on the Fees & Reference tab. Start at the bottom of the band.",
+    "Put the actual files, photos or artwork in one folder on your machine before you begin.",
+    "Write the product description now, away from the admin, using the Listing Builder tab."
+  ],
+  gotcha:"Do not start the trial “just to look around”. The theme store previews every theme without an account, and Shopify publishes screenshots of the admin. Browse those first and start the clock only when you have a product ready to upload."
+},
+{
+  id:"create", title:"Create the store — and get the irreversible settings right", mins:"20 min",
+  why:"Three settings made in the first five minutes are painful or impossible to change later. Everything else in the admin is reversible; these effectively are not.",
+  items:[
+    "Store currency — set it to the currency you want to be paid in. After your first order this cannot be changed without opening a new store.",
+    "Your .myshopify.com URL is derived from the store name and is permanent. The customer-facing name and your custom domain can both change later; this internal URL cannot.",
+    "Store address, country and timezone — these drive tax defaults, payout eligibility and every timestamp in your reports.",
+    "Set the store's primary language, and enable additional languages only if you will genuinely translate the content.",
+    "Turn on two-step authentication on the owner account immediately. A store is a payment account.",
+    "Confirm the password page is enabled so nothing is public while you build."
+  ],
+  gotcha:"Pick the store name carefully but do not agonise — the permanent part is only the .myshopify.com address, which customers rarely see once a custom domain is attached. Agonising over it is the classic day-one time sink."
+},
+{
+  id:"product", title:"Add your first product properly", mins:"45 min",
+  why:"The product page is the only page that has to work. Everything else on the store exists to get someone to it. Fill in every field the first time — half-filled products are why stores look unfinished.",
+  items:[
+    "Title: lead with the specific searchable phrase, not a clever name. “Freelance Designer Project Tracker — Notion Template” beats “The Focus System”.",
+    "Description: paste the five-part structure from the Listing Builder tab.",
+    "Media: at least three images. For digital products, mockups showing the product in use — the book identifies mockup images as the single biggest conversion factor.",
+    "Add descriptive alt text to every image. It is accessibility, and it is also image SEO.",
+    "Price, and a compare-at price only if the higher price was ever genuinely charged.",
+    "Uncheck “This is a physical product” for digital goods — this removes shipping from checkout entirely.",
+    "Inventory: SKU for your own records; turn tracking off for digital and print-on-demand items.",
+    "Product type and vendor — these are what automated collections sort on later.",
+    "Fill the SEO listing preview (page title, meta description, URL handle) — do not leave Shopify to auto-generate them.",
+    "Save as a draft until step 11. Do not publish products one at a time into a live store."
+  ],
+  gotcha:"The URL handle is generated from the title the first time you save. Rename the product later and the handle does not follow — you get a mismatched URL, or a redirect you have to manage. Set the title before the first save."
+},
+{
+  id:"collections", title:"Organise with collections before you have too many products", mins:"20 min",
+  why:"Collections are the store's navigation, its landing pages for search, and the thing you link in every post. Retrofitting them across 40 products is tedious; setting them up at three products costs nothing.",
+  items:[
+    "Create 2–5 collections that match how a buyer would ask for things, not how you filed them.",
+    "Use automated collections with a condition (product type, tag, price) so new products file themselves.",
+    "Give each collection a real description — collection pages rank in search and an empty one ranks for nothing.",
+    "Set a collection image so navigation menus and featured sections have something to show.",
+    "Build the main navigation menu from collections, plus About and Contact. Keep it to five items or fewer.",
+    "Add a footer menu with the policy pages from step 8."
+  ],
+  gotcha:"Do not create a collection per product. Three products in three collections of one is not organisation, it is a navigation menu that makes the store look emptier than it is."
+},
+{
+  id:"theme", title:"Pick a free theme and resist redesigning it", mins:"60–90 min",
+  why:"Shopify's free themes are fast, accessible and maintained. A paid theme buys you layout options you do not need yet and a slower page. Nothing about your first hundred sales depends on the theme.",
+  items:[
+    "Start with a free theme. Change it only when you can name the specific thing it cannot do.",
+    "Upload a logo, or set the store name as text in a good font. A bad logo is worse than no logo.",
+    "Set two colours and two fonts. Stop there.",
+    "Homepage sections, in this order: hero with one clear promise, featured product or collection, what is included, social proof, FAQ, email signup.",
+    "Write the hero headline as a promise to a buyer, not a slogan about you.",
+    "Preview on a phone at every step — most of your traffic is mobile, and the theme editor's desktop preview flatters you.",
+    "Remove every placeholder section the theme shipped with. Leftover demo content is the fastest way to look untrustworthy.",
+    "Check the contrast of your text on your background, and keep the base font at 16px or larger."
+  ],
+  gotcha:"Time spent in the theme editor feels like progress and mostly is not. Give yourself ninety minutes, then stop and go to payments — a beautiful store that cannot take money earns exactly as much as no store."
+},
+{
+  id:"payments", title:"Set up payments and verify the business", mins:"30 min + verification wait",
+  why:"This is the step with an external dependency, so start it early. Verification can take days, and every other step can proceed while it clears.",
+  items:[
+    "Activate Shopify Payments if it is available in your country — it avoids the additional transaction fee Shopify charges on third-party gateways.",
+    "Complete business verification: legal name, address, tax ID where required, and identity documents. Details must match your bank account exactly.",
+    "Enter payout bank details and note the payout schedule — money does not arrive the moment an order does.",
+    "Enable accelerated checkout buttons (Shop Pay, and the wallets your buyers use).",
+    "Add PayPal if your audience expects it. For some buyer segments its absence measurably costs sales.",
+    "Decide payment capture: automatic is right for digital goods; manual only if you need to review orders before charging.",
+    "Place a test order end to end before launch — see the Launch tab."
+  ],
+  gotcha:"If Shopify Payments is unavailable where you are, a third-party gateway costs its own fee plus Shopify's additional transaction fee on top. Price that in before you commit — it can be the difference between a plan tier paying for itself and not."
+},
+{
+  id:"shipping", title:"Shipping and delivery — or deliberately switching it off", mins:"15 min digital · 60 min physical",
+  why:"Unexpected shipping cost is the most cited reason people abandon a cart. Whatever you decide, decide it explicitly rather than letting a default decide for you.",
+  items:[
+    "Digital only: confirm “This is a physical product” is unchecked on every product. Shipping then disappears from checkout entirely — no rates to configure.",
+    "Physical: set your shipping origin, then build rates. Flat rate per order is the simplest thing that works.",
+    "If you offer free shipping, build its cost into the product price. “Free” shipping you are absorbing at a loss is a slow leak.",
+    "Set a free-shipping threshold above your average order value if you want it to lift basket size.",
+    "Restrict shipping zones to countries you will actually ship to. An order you cannot fulfil is worse than one you never took.",
+    "Enable local pickup if you have a physical location.",
+    "Mixed carts (a file plus a physical item): test one before launch — this is where shipping rules break."
+  ],
+  gotcha:"Selling both digital and physical goods and leaving “physical product” checked on the digital ones means Shopify asks for a shipping address and charges shipping on a file. It is a one-checkbox mistake that looks like a scam to the buyer."
+},
+{
+  id:"legal", title:"Taxes, policies and the legal minimum", mins:"45 min",
+  why:"Two categories: what tax authorities require of you, and what the buyer needs to see to trust you with a card number. Neither is optional, and the second one is also conversion work.",
+  items:[
+    "Set your tax regions and register where you are actually required to — thresholds vary by country and by state.",
+    "Digital goods are taxed differently from physical goods in many jurisdictions, including EU VAT charged at the buyer's location regardless of where you are.",
+    "Decide whether prices include tax, and say so clearly on the product page.",
+    "Generate the four policy pages — refund, privacy, terms of service, shipping — from Shopify's templates, then read them and edit. Templates leave placeholders.",
+    "Write a refund policy you can honour for digital goods. “All sales final” is legal in some markets and not in others; check yours.",
+    "Add a real contact method — an email address at minimum. A store with no way to reach a human converts worse.",
+    "Enable the cookie banner and customer privacy settings if you have EU/UK/California visitors.",
+    "Link all policy pages in the footer, where buyers look for them."
+  ],
+  gotcha:"Shopify's policy templates are a starting point and say so. Publishing one unread leaves placeholder text and terms that contradict how you actually operate — which is worse than having no policy, because now it is in writing."
+},
+{
+  id:"domain", title:"Connect a custom domain", mins:"20 min + DNS propagation",
+  why:"A .myshopify.com address in the URL bar reads as a trial store. The domain is the cheapest trust you will ever buy.",
+  items:[
+    "Buy the domain through Shopify for automatic configuration, or connect one you already own.",
+    "Connecting an existing domain: point the root A record at Shopify's IP and the www CNAME at your .myshopify.com address, per Shopify's current instructions.",
+    "Set the domain as primary so all traffic redirects to one canonical address — split traffic across two domains splits your SEO too.",
+    "Confirm the SSL certificate has provisioned. No padlock, no sales.",
+    "Set up email forwarding so hello@yourdomain reaches you.",
+    "Wait for DNS to propagate — minutes to 48 hours. Do not debug during the first hour."
+  ],
+  gotcha:"Keep the domain registration and the store on separate logins if a partner or contractor has admin access. Losing a domain is a much bigger problem than losing a store, and it is the asset most often lost in a falling-out."
+},
+{
+  id:"notify", title:"Notifications, apps and analytics", mins:"40 min",
+  why:"The order confirmation email is the most-opened message you will ever send. Most stores never look at it. And every app you install is a permanent tax on page speed and your monthly bill.",
+  items:[
+    "Read the order confirmation, shipping confirmation and abandoned checkout emails end to end. Add your logo and fix the tone.",
+    "Digital products: confirm the download link appears in the confirmation email and works from a different device.",
+    "Turn on the abandoned checkout email — recovering a checkout is the cheapest sale in the store.",
+    "Set the sender address to your domain, and verify it so mail does not land in spam.",
+    "Install only the apps you can name a reason for. Every one adds scripts, cost and a thing that breaks on theme updates.",
+    "Uninstall trial apps properly — some leave code in the theme after removal.",
+    "Enable Shopify's own analytics, and connect Google/Meta channels only if you will actually use them.",
+    "Set up a customer-facing email capture — the list is the asset you own when a platform changes its mind."
+  ],
+  gotcha:"App creep is the quiet killer of new store margins. Five apps at $10–$30 a month can exceed your plan cost while you are still finding your first hundred customers. Audit the list monthly and remove anything you have not consciously used."
+},
+{
+  id:"launch", title:"Choose a plan and remove the password page", mins:"15 min",
+  why:"The trial ends whether you are ready or not. Choose deliberately rather than being upgraded by a deadline.",
+  items:[
+    "Work the Launch tab checklist first. All of it.",
+    "Compare plan tiers at your actual volume on the Fees & Reference tab — the cheaper plan's higher card rate can cost more than the pricier plan's lower one.",
+    "Annual billing is usually discounted, but only commit once you have real orders.",
+    "Remove the password page.",
+    "Place one final real order on the live store with your own card, then refund it. Test mode is not the same thing.",
+    "Tell the people who already know you first. Your existing audience is your day-one traffic; strangers come later.",
+    "Put a recurring 30-minute slot in your calendar to review abandoned checkouts and the search terms people typed on your store."
+  ],
+  gotcha:"Launching to nobody is the norm and it is not a sign the store is broken. The book is explicit that the first ninety days are slow and that listings, reviews and SEO compound. Judge the store at day 90, not day 3."
+}
+];
+
+/* =====================================================================
+   LAUNCH — grouped pre-flight checks
+   ===================================================================== */
+var LAUNCH = [
+  { id:"money", title:"💳 Money", items:[
+    "Placed a real test order end to end and received the confirmation email.",
+    "Refunded that test order and confirmed the refund appears in the admin.",
+    "Digital: the download link in the confirmation email works on a device that is not logged into the admin.",
+    "Physical: checkout charges the shipping you expect for a domestic and an international address.",
+    "Taxes appear correctly at checkout for your own region.",
+    "A discount code you created applies correctly and cannot be stacked in a way you did not intend.",
+    "Payout bank details are entered and the business is verified."
+  ]},
+  { id:"trust", title:"🤝 Trust", items:[
+    "All four policy pages exist, are readable, and contain no template placeholder text.",
+    "A working contact email is visible without hunting for it.",
+    "The custom domain resolves with a valid SSL padlock.",
+    "About page says who is behind the store in the first person.",
+    "Every product has at least three images with alt text.",
+    "No lorem ipsum, no demo product, no placeholder image anywhere on the storefront."
+  ]},
+  { id:"mobile", title:"📱 Mobile &amp; speed", items:[
+    "Walked the full path — home, collection, product, cart, checkout — on a real phone.",
+    "Tap targets are large enough and nothing overflows the screen horizontally.",
+    "Hero image and product images are compressed; the homepage loads in a few seconds on mobile data.",
+    "Checked the store in a private window while logged out of the admin.",
+    "Navigation works with a keyboard alone."
+  ]},
+  { id:"findable", title:"🔎 Findable", items:[
+    "Every product and collection has a page title and meta description you wrote.",
+    "URL handles are clean and readable.",
+    "The homepage title says what you sell, not just the store name.",
+    "Favicon is set.",
+    "Store is not blocked from search engines in the theme or preferences.",
+    "A share of any product page shows the right image and text in the preview."
+  ]},
+  { id:"after", title:"⏭ After the first sale", items:[
+    "You know where to look to see an order, and how to issue a refund.",
+    "Abandoned checkout emails are switched on.",
+    "Email capture exists somewhere a visitor will actually see it.",
+    "You have written the follow-up message asking whether the product worked and inviting a review — the book puts a 20–30% review rate well above platform average, and it starts with asking.",
+    "A calendar reminder exists to review the store's own search terms and abandoned checkouts weekly."
+  ]}
+];
+
+/* ---- generic checklist rendering, shared by Set Up and Launch ---- */
+function checkKey(groupId, i){ return "chk." + groupId + "." + i; }
+
+function buildChecks(groupId, items, onChange){
+  var ul = h("ul", {class:"checks"});
+  items.forEach(function(text, i){
+    var key = checkKey(groupId, i);
+    var input = h("input", {type:"checkbox", checked: get(key, false) ? "checked" : false});
+    input.addEventListener("change", function(){
+      set(key, input.checked);
+      onChange();
+    });
+    ul.appendChild(h("li", {}, [ h("label", {}, [input, h("span", {text:text})]) ]));
+  });
+  return ul;
+}
+
+function countChecks(groups){
+  var done = 0, total = 0;
+  groups.forEach(function(g){
+    var items = g.items;
+    total += items.length;
+    items.forEach(function(_, i){ if(get(checkKey(g.id, i), false)) done++; });
+  });
+  return {done:done, total:total};
+}
+
+function updateGlobalProgress(){
+  var a = countChecks(SETUP), b = countChecks(LAUNCH);
+  el("globalProgress").textContent = (a.done + b.done) + " / " + (a.total + b.total) + " done";
+}
+
+(function setupTab(){
+  var wrap = el("setupSteps");
+
+  function refresh(){
+    var c = countChecks(SETUP);
+    var p = c.total ? Math.round(c.done / c.total * 100) : 0;
+    el("setupBar").style.width = p + "%";
+    el("setupOut").textContent = c.done + " of " + c.total + " · " + p + "%";
+    SETUP.forEach(function(s){
+      var node = el("step-" + s.id);
+      if(!node) return;
+      var d = 0;
+      s.items.forEach(function(_, i){ if(get(checkKey(s.id, i), false)) d++; });
+      node.classList.toggle("done", d === s.items.length);
+      var meta = node.querySelector(".sum-meta");
+      if(meta) meta.textContent = s.mins + " · " + d + "/" + s.items.length + " done";
+    });
+    updateGlobalProgress();
+  }
+
+  SETUP.forEach(function(s, idx){
+    var det = h("details", {class:"step", id:"step-" + s.id, open: get("open." + s.id, idx === 0) ? "open" : false});
+    det.addEventListener("toggle", function(){ set("open." + s.id, det.open); });
+    det.appendChild(h("summary", {}, [
+      h("span", {class:"num", "aria-hidden":"true", text:String(idx + 1)}),
+      h("span", {class:"sum-body"}, [
+        document.createTextNode(s.title),
+        h("span", {class:"sum-meta", text:s.mins})
+      ]),
+      h("span", {class:"caret", "aria-hidden":"true", text:"›"})
+    ]));
+    var body = h("div", {class:"step-body"});
+    body.appendChild(h("p", {class:"muted", text:s.why}));
+    body.appendChild(buildChecks(s.id, s.items, refresh));
+    body.appendChild(h("div", {class:"gotcha"}, [ h("p", {html:"<strong>Watch out.</strong> " + esc(s.gotcha)}) ]));
+    det.appendChild(body);
+    wrap.appendChild(det);
+  });
+
+  el("setupExpand").addEventListener("click", function(){
+    SETUP.forEach(function(s){ var n = el("step-" + s.id); n.open = true; set("open." + s.id, true); });
+  });
+  el("setupCollapse").addEventListener("click", function(){
+    SETUP.forEach(function(s){ var n = el("step-" + s.id); n.open = false; set("open." + s.id, false); });
+  });
+  el("setupReset").addEventListener("click", function(){
+    SETUP.forEach(function(s){ s.items.forEach(function(_, i){ set(checkKey(s.id, i), false); }); });
+    wrap.querySelectorAll("input[type=checkbox]").forEach(function(cb){ cb.checked = false; });
+    refresh();
+    toast("Set-up ticks cleared");
+  });
+  el("setupExport").addEventListener("click", function(){
+    var lines = ["# Shopify store setup — 11 steps", ""];
+    SETUP.forEach(function(s, idx){
+      lines.push("## " + (idx + 1) + ". " + s.title + "  _(" + s.mins + ")_", "");
+      lines.push(s.why, "");
+      s.items.forEach(function(t, i){
+        lines.push("- [" + (get(checkKey(s.id, i), false) ? "x" : " ") + "] " + t);
+      });
+      lines.push("", "> **Watch out.** " + s.gotcha, "");
+    });
+    lines.push("---", "", "From the Store Setup Guides, companion to *The AI Income Blueprint*.");
+    download("shopify-setup-checklist.md", lines.join("\n"));
+  });
+
+  refresh();
+})();
+
+(function launchTab(){
+  var wrap = el("launchGroups");
+
+  function refresh(){
+    var c = countChecks(LAUNCH);
+    var p = c.total ? Math.round(c.done / c.total * 100) : 0;
+    el("launchBar").style.width = p + "%";
+    el("launchOut").textContent = c.done + " of " + c.total + " · " + p + "%";
+    updateGlobalProgress();
+  }
+
+  LAUNCH.forEach(function(g){
+    var card = h("div", {class:"card"});
+    card.appendChild(h("h2", {html:g.title}));
+    card.appendChild(buildChecks(g.id, g.items, refresh));
+    wrap.appendChild(card);
+  });
+
+  el("launchReset").addEventListener("click", function(){
+    LAUNCH.forEach(function(g){ g.items.forEach(function(_, i){ set(checkKey(g.id, i), false); }); });
+    wrap.querySelectorAll("input[type=checkbox]").forEach(function(cb){ cb.checked = false; });
+    refresh();
+    toast("Launch ticks cleared");
+  });
+  el("launchExport").addEventListener("click", function(){
+    var lines = ["# Pre-launch checklist", ""];
+    LAUNCH.forEach(function(g){
+      lines.push("## " + g.title.replace(/&amp;/g, "&"), "");
+      g.items.forEach(function(t, i){
+        lines.push("- [" + (get(checkKey(g.id, i), false) ? "x" : " ") + "] " + t);
+      });
+      lines.push("");
+    });
+    download("store-launch-checklist.md", lines.join("\n"));
+  });
+
+  refresh();
+})();
+
+/* =====================================================================
+   TRACKS
+   ===================================================================== */
+var TRACKS = {
+  digital: {
+    title:"💾 Digital download",
+    lede:"Files: templates, prompt packs, e-books, printables, presets. Zero marginal cost, no shipping, instant delivery — and a set of settings that must all agree with each other or the buyer gets asked for a postal address to receive a PDF.",
+    config:[
+      ["Physical product checkbox","Unchecked. This one setting removes shipping fields, shipping rates and the delivery step from checkout."],
+      ["Inventory tracking","Off. A file does not run out."],
+      ["Delivery","A digital-delivery app attaches the file to the product and emails a link on payment. Shopify's own free app does this; several paid ones add licence keys and PDF stamping."],
+      ["Fulfilment","Automatic. Manual fulfilment on a digital product means buyers wait for you to click a button, at 3am, on a Sunday."],
+      ["Taxes","Digital goods are taxed differently in many places — EU VAT is charged at the buyer's location regardless of where you are. Check your obligations before volume makes it expensive."],
+      ["Refund policy","Decide and state it. Digital goods cannot be returned, but consumer law in some markets still grants a right to withdraw. “All sales final” is not universally enforceable."]
+    ],
+    watch:[
+      "Set a download limit and an expiry generous enough not to punish honest buyers — most support email is “my link expired”.",
+      "Keep files under the delivery app's size cap. Large video files usually belong on a hosting service with the store linking to it.",
+      "Name files for the buyer, not for you: “Freelance-Project-Tracker-v2.pdf”, not “final_FINAL_v7.pdf”.",
+      "Include a one-page README in the download telling them what to do first. It measurably reduces refunds.",
+      "Include your licence terms in the file itself — personal use vs commercial use, and whether they may resell.",
+      "Mockup images do the selling. Nobody can preview a file; they buy the picture of it. The book names mockups as the single biggest conversion factor for digital products."
+    ],
+    price:"Digital pricing is a confidence signal, not a cost calculation. Your marginal cost is zero, so anchoring on “what it cost me to make” produces prices that read as low quality. Use the bands on the Fees & Reference tab."
+  },
+  pod: {
+    title:"🎨 Print-on-demand",
+    lede:"You upload artwork; a partner prints and ships each item when it sells. No stock, no packing, no capital — in exchange for thin margins and a supply chain you do not control but are entirely accountable for.",
+    config:[
+      ["Physical product checkbox","Checked — a real item ships."],
+      ["Inventory tracking","Off. The partner's catalogue is the constraint, not your stock."],
+      ["Product creation","Create products from inside the partner's app so variants, mockups and print files stay linked. Products created manually in Shopify will not route to the printer."],
+      ["Shipping","Match your rates to the partner's actual rates and delivery windows. Guessing here loses money on every order, quietly."],
+      ["Fulfilment","Automatic through the partner app. Verify it is switched on — orders sitting unfulfilled because a toggle was off is the classic first-week failure."],
+      ["Margins","Item cost + shipping + platform fees, subtracted from your price, before you decide the price is good."]
+    ],
+    watch:[
+      "Order a sample of every product before you list it. Colours print differently than they look on a screen.",
+      "Check print-area templates carefully — artwork that looks centred in the mockup can be cropped on the real item.",
+      "Production time is added to shipping time. Say the total on the product page; the buyer does not care which part is which.",
+      "Set delivery expectations honestly on the product page and in the confirmation email. Most POD complaints are timing, not quality.",
+      "You handle support for defects the printer caused. Know their replacement policy before you need it.",
+      "Base costs change. Re-check your margins quarterly rather than discovering it in an annual total."
+    ],
+    price:"Margin is the whole game. A $25 shirt with a $13 base cost and $5 shipping leaves single-digit dollars before fees. Either price for the margin you need, or pick products with better base economics — the volume will not save a bad unit."
+  },
+  physical: {
+    title:"📦 Physical stock",
+    lede:"You hold inventory and ship it. The best margins of the three tracks, and the only one that can lose you money while you sleep — capital tied up in stock, and every order carrying real labour.",
+    config:[
+      ["Physical product checkbox","Checked."],
+      ["Inventory tracking","On, with “continue selling when out of stock” off unless you genuinely can backorder."],
+      ["Locations","Set your real shipping origin — it drives rate calculation and tax."],
+      ["Shipping rates","Start with flat-rate-per-order. Weight-based and carrier-calculated rates are more accurate and much more to maintain."],
+      ["Packaging","Weigh a packed item, not the item. Under-weighing costs you the difference on every single order."],
+      ["Variants","Size/colour combinations multiply fast. Build them properly at the start; restructuring variants later breaks URLs and reports."]
+    ],
+    watch:[
+      "Free shipping is a pricing decision, not a marketing one. If you offer it, the cost belongs in the price.",
+      "Set a free-shipping threshold above your average order value or it just costs you money on orders you already had.",
+      "Restrict shipping zones to countries you will actually ship to.",
+      "Print and use the packing slip and label flow before launch — fulfilment ergonomics matter at order ten, not order one.",
+      "Have a returns process written down before the first return, not during it.",
+      "Reconcile stock counts monthly. Shopify's number and the shelf's number diverge faster than anyone expects."
+    ],
+    price:"Cost of goods + packaging + shipping you absorb + payment fees + a real allowance for returns and breakage. What is left is margin — and if it does not survive a 10% return rate, the price is wrong, not the returns."
+  }
+};
+
+(function tracksTab(){
+  var body = el("trackBody");
+
+  function render(key){
+    var t = TRACKS[key];
+    body.innerHTML = "";
+
+    var intro = h("div", {class:"card"});
+    intro.appendChild(h("h2", {text:t.title}));
+    intro.appendChild(h("p", {class:"lede", text:t.lede}));
+    body.appendChild(intro);
+
+    var cfg = h("div", {class:"card"});
+    cfg.appendChild(h("h2", {text:"Settings that define this track"}));
+    var scroll = h("div", {class:"table-scroll"});
+    var table = h("table");
+    table.appendChild(h("thead", {}, [ h("tr", {}, [ h("th", {text:"Setting"}), h("th", {text:"What it must be, and why"}) ]) ]));
+    table.appendChild(h("tbody", {}, t.config.map(function(row){
+      return h("tr", {}, [ h("td", {}, [h("strong", {text:row[0]})]), h("td", {text:row[1]}) ]);
+    })));
+    scroll.appendChild(table);
+    cfg.appendChild(scroll);
+    body.appendChild(cfg);
+
+    var watch = h("div", {class:"card"});
+    watch.appendChild(h("h2", {text:"What goes wrong"}));
+    watch.appendChild(h("ul", {}, t.watch.map(function(x){ return h("li", {text:x}); })));
+    body.appendChild(watch);
+
+    var price = h("div", {class:"card"});
+    price.appendChild(h("h2", {text:"Pricing this track"}));
+    price.appendChild(h("p", {class:"muted", text:t.price}));
+    body.appendChild(price);
+  }
+
+  var saved = get("track", "digital");
+  Array.prototype.forEach.call(document.getElementsByName("track"), function(r){
+    if(r.value === saved) r.checked = true;
+    r.addEventListener("change", function(){
+      if(!r.checked) return;
+      set("track", r.value);
+      render(r.value);
+    });
+  });
+  render(TRACKS[saved] ? saved : "digital");
+})();
+
+/* =====================================================================
+   LISTING BUILDER
+   ===================================================================== */
+var TYPES = [
+  { id:"notion", label:"Notion template (single)", band:"$7–$17", low:7, high:17, platform:"Etsy, Gumroad",
+    formats:"A Notion template link you duplicate into your own workspace, plus a setup guide (PDF)",
+    compat:"Works on the Notion free plan. No plugins required.",
+    includes:["The main dashboard, pre-built and pre-filled with example data","A setup guide walking through first-time configuration","A short video walkthrough (optional but converts)"],
+    keywords:["notion template","notion dashboard","productivity template"] },
+  { id:"canva", label:"Canva template pack (5–10)", band:"$12–$27", low:12, high:27, platform:"Etsy, Creative Market",
+    formats:"Canva template links (one per design) plus a PDF with the links and instructions",
+    compat:"Editable on the Canva free plan. Fonts used are Canva-native so nothing is missing.",
+    includes:["10 fully editable templates","A colour and font guide so edits stay on-brand","A quick-start PDF"],
+    keywords:["canva template","instagram template","editable template"] },
+  { id:"printable", label:"Printable planner / tracker", band:"$5–$12", low:5, high:12, platform:"Etsy",
+    formats:"Print-ready PDFs in A4 and US Letter",
+    compat:"Prints on any home printer. Also works in any PDF annotation app on a tablet.",
+    includes:["The main planner pages","Undated versions so it never expires","Both A4 and US Letter sizes"],
+    keywords:["printable planner","pdf planner","digital download"] },
+  { id:"prompts", label:"Prompt pack (20–50 prompts)", band:"$9–$37", low:9, high:37, platform:"Gumroad, Payhip",
+    formats:"A formatted PDF plus a plain-text file for copy-pasting",
+    compat:"Works with ChatGPT, Claude and Gemini. No subscription required beyond a free tier.",
+    includes:["50 numbered prompts, organised by task","A how-to-use guide covering how to adapt each prompt","A licence covering personal and client use"],
+    keywords:["ai prompts","chatgpt prompts","prompt pack"] },
+  { id:"bundle", label:"Full template bundle (20+)", band:"$27–$67", low:27, high:67, platform:"Etsy, Gumroad",
+    formats:"A single download containing every template, organised in folders",
+    compat:"Listed per template inside the pack.",
+    includes:["All 20+ templates","An index so nothing gets lost","Free updates when templates are added"],
+    keywords:["template bundle","business templates","digital bundle"] },
+  { id:"workbook", label:"Workbook / guide product", band:"$17–$47", low:17, high:47, platform:"Gumroad, Payhip, Etsy",
+    formats:"A PDF workbook, plus fillable and print versions",
+    compat:"Any PDF reader. The fillable version needs a reader that supports form fields.",
+    includes:["The full workbook","Fillable and printable versions","A companion checklist"],
+    keywords:["digital workbook","guide pdf","self-paced"] },
+  { id:"art", label:"Digital art / wall art print", band:"$3–$15 per item", low:3, high:15, platform:"Etsy, Redbubble",
+    formats:"High-resolution files (300 DPI) in several standard frame ratios",
+    compat:"Prints at home or at any print shop. Colours are set up for standard photo paper.",
+    includes:["Files sized for common frame ratios","A printing guide covering paper and sizing","Personal-use licence"],
+    keywords:["wall art printable","digital print","home decor download"] },
+  { id:"swipe", label:"Swipe file / resource library", band:"$27–$97", low:27, high:97, platform:"Gumroad, Payhip",
+    formats:"A searchable library file plus source documents",
+    compat:"Opens in any modern browser or document reader.",
+    includes:["The full library, categorised and searchable","Source files you can adapt","Quarterly updates for a year"],
+    keywords:["swipe file","copywriting templates","resource library"] }
+];
+
+(function listingTab(){
+  var F = {
+    type: el("lType"), name: el("lName"), audience: el("lAudience"), outcome: el("lOutcome"),
+    problem: el("lProblem"), includes: el("lIncludes"), formats: el("lFormats"),
+    compat: el("lCompat"), price: el("lPrice"), compare: el("lCompare"), keywords: el("lKeywords")
+  };
+
+  TYPES.forEach(function(t){ F.type.appendChild(h("option", {value:t.id, text:t.label})); });
+
+  var STORE = "listing.";
+  Object.keys(F).forEach(function(k){
+    var saved = get(STORE + k, null);
+    if(saved !== null && saved !== "") F[k].value = saved;
+    F[k].addEventListener("input", function(){ set(STORE + k, F[k].value); render(); });
+    F[k].addEventListener("change", function(){
+      set(STORE + k, F[k].value);
+      if(k === "type"){ applyTypeDefaults(); prevType = currentType(); }
+      render();
+    });
+  });
+
+  function currentType(){
+    var t = TYPES.filter(function(x){ return x.id === F.type.value; })[0];
+    return t || TYPES[0];
+  }
+  var prevType = currentType();
+
+  function defaultsOf(t){
+    return {includes:t.includes.join("\n"), formats:t.formats, compat:t.compat, price:String(t.low)};
+  }
+
+  /* Fill the type-derived fields, but never overwrite text the user actually wrote:
+     a field is replaced only when it is empty or still holds the previous type's default. */
+  function applyTypeDefaults(){
+    var t = currentType();
+    var next = defaultsOf(t), prev = defaultsOf(prevType);
+    Object.keys(next).forEach(function(k){
+      var cur = String(F[k].value).trim();
+      if(cur === "" || cur === prev[k].trim()) F[k].value = next[k];
+      set(STORE + k, F[k].value);
+    });
+    el("lBand").textContent = t.band;
+    el("lKeywordHints").textContent = "Suggested starting keywords for this type: " + t.keywords.join(", ") + ". Replace the generic ones with your niche.";
+  }
+
+  function lines(){
+    return F.includes.value.split("\n").map(function(s){ return s.trim(); }).filter(Boolean);
+  }
+  function tags(){
+    return F.keywords.value.split(",").map(function(s){ return s.trim().toLowerCase(); }).filter(Boolean);
+  }
+
+  function fallback(v, alt){ return (v && v.trim()) ? v.trim() : alt; }
+
+  function build(){
+    var t = currentType();
+    var name = fallback(F.name.value, "[Product name]");
+    var aud = fallback(F.audience.value, "[who it is for]");
+    var out = fallback(F.outcome.value, "[the outcome they get]");
+    var prob = fallback(F.problem.value, "[the problem it removes]");
+    var inc = lines();
+    var kw = tags();
+
+    // Page title: keyword-led, product type appended if it fits (Shopify/Google truncate ~60)
+    var title = name;
+    if(kw.length && title.toLowerCase().indexOf(kw[0]) === -1 && (title + " — " + kw[0]).length <= 60){
+      title = title + " — " + kw[0].replace(/\b\w/g, function(c){ return c.toUpperCase(); });
+    }
+
+    var meta = "For " + aud + ". " + cap(out) + ". " + (inc.length ? inc.length + " components, instant download." : "Instant download.");
+
+    var md = [];
+    md.push("### " + cap(out) + " — without " + lower(prob));
+    md.push("");
+    md.push(cap(name) + " is a " + lower(t.label.replace(/\s*\(.*\)/, "")) + " built for " + aud + ". " +
+            "If " + lower(prob) + " is costing you time every week, this is the fix.");
+    md.push("");
+    md.push("### What it solves");
+    md.push("");
+    md.push("Most " + aud + " lose hours to " + lower(prob) + ". This does not add another system to maintain — it replaces the scattered version you already have, so you can " + lower(out) + " from day one.");
+    md.push("");
+    md.push("### What's included");
+    md.push("");
+    if(inc.length) inc.forEach(function(i){ md.push("- " + i); });
+    else md.push("- [List every component, specifically and countably]");
+    md.push("");
+    md.push("### The details");
+    md.push("");
+    md.push("- **You receive:** " + fallback(F.formats.value, "[file formats]"));
+    md.push("- **Requirements:** " + fallback(F.compat.value, "[compatibility]"));
+    md.push("- **Delivery:** instant download, emailed the moment payment clears");
+    md.push("- **Licence:** for your own use — please do not resell or redistribute the files");
+    md.push("");
+    md.push("### Questions people ask first");
+    md.push("");
+    md.push("**Do I need any paid software?**  ");
+    md.push(fallback(F.compat.value, "[Answer honestly — this question loses sales when unanswered.]"));
+    md.push("");
+    md.push("**How do I get it after buying?**  ");
+    md.push("A download link arrives by email straight after checkout. It is also on your order confirmation page.");
+    md.push("");
+    md.push("**Can I get a refund?**  ");
+    md.push("[State your actual policy for digital goods here — say it plainly, and honour it.]");
+    md.push("");
+    md.push("**What if I get stuck?**  ");
+    md.push("[Your contact email] — real replies, from a person.");
+
+    return {title:title, meta:meta, handle:slug(name === "[Product name]" ? "product" : name), md:md.join("\n"), tags:kw};
+  }
+
+  function cap(s){ s = String(s).trim(); return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+  function lower(s){ s = String(s).trim(); return s ? s.charAt(0).toLowerCase() + s.slice(1) : s; }
+
+  function counter(node, len, limit){
+    node.textContent = len + " / " + limit;
+    node.classList.toggle("over", len > limit);
+    node.classList.toggle("ok", len > 0 && len <= limit);
+  }
+
+  function toHtml(md){
+    // deliberately small: only the constructs build() emits
+    var out = [], inList = false;
+    md.split("\n").forEach(function(line){
+      var t = line.trim();
+      if(t.slice(0,4) === "### "){
+        if(inList){ out.push("</ul>"); inList = false; }
+        out.push("<h3>" + inline(t.slice(4)) + "</h3>");
+      } else if(t.slice(0,2) === "- "){
+        if(!inList){ out.push("<ul>"); inList = true; }
+        out.push("  <li>" + inline(t.slice(2)) + "</li>");
+      } else if(t === ""){
+        if(inList){ out.push("</ul>"); inList = false; }
+      } else {
+        if(inList){ out.push("</ul>"); inList = false; }
+        out.push("<p>" + inline(t.replace(/\s\s$/, "")) + "</p>");
+      }
+    });
+    if(inList) out.push("</ul>");
+    return out.join("\n");
+  }
+  function inline(s){
+    return esc(s).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  }
+
+  var current = build();
+  function render(){
+    current = build();
+    el("oTitle").value = current.title;
+    el("oMeta").value = current.meta;
+    el("oHandle").value = "/products/" + current.handle;
+    counter(el("cTitle"), current.title.length, 60);
+    counter(el("cMeta"), current.meta.length, 160);
+    var tagBox = el("oTags");
+    tagBox.innerHTML = "";
+    if(current.tags.length) current.tags.forEach(function(t){ tagBox.appendChild(h("span", {class:"tag", text:t})); });
+    else tagBox.appendChild(h("span", {class:"dim", text:"Add keywords above and they become tags."}));
+    el("lOut").textContent = current.md;
+
+    var t = currentType();
+    var p = parseFloat(F.price.value);
+    var band = el("lBand");
+    band.textContent = t.band;
+    band.title = "";
+    if(isFinite(p) && p > 0){
+      if(p < t.low){ band.textContent = t.band + " · below band"; band.title = "The book's guidance is to price at the bottom of the band, not below it — a low price reads as low confidence."; }
+      else if(p > t.high){ band.textContent = t.band + " · above band"; band.title = "Above the book's band for this type. Justify it with tiering or added components."; }
+    }
+  }
+
+  el("lCopy").addEventListener("click", function(){ copyText(current.md, "Description"); });
+  el("lCopyHtml").addEventListener("click", function(){ copyText(toHtml(current.md), "HTML"); });
+  el("lDownload").addEventListener("click", function(){
+    var text = [
+      "# " + current.title, "",
+      "**Page title (" + current.title.length + "/60):** " + current.title, "",
+      "**Meta description (" + current.meta.length + "/160):** " + current.meta, "",
+      "**URL handle:** /products/" + current.handle, "",
+      "**Tags:** " + (current.tags.join(", ") || "—"), "",
+      "**Price:** " + (F.price.value ? "$" + F.price.value : "—") +
+        (F.compare.value ? "  (compare at $" + F.compare.value + ")" : ""), "",
+      "---", "", current.md
+    ].join("\n");
+    download(current.handle + "-listing.md", text);
+  });
+  el("lClear").addEventListener("click", function(){
+    Object.keys(F).forEach(function(k){
+      if(k === "type") return;
+      F[k].value = "";
+      set(STORE + k, "");
+    });
+    applyTypeDefaults();
+    render();
+    toast("Form cleared");
+  });
+
+  applyTypeDefaults();
+  render();
+})();
+
+/* =====================================================================
+   FEES
+   ===================================================================== */
+var RATE_DEFAULTS = [
+  { id:"shopifyBasic", label:"Shopify Basic + Shopify Payments", monthly:39, pct:2.9, per:0.30, listing:0 },
+  { id:"shopifyGrow",  label:"Shopify (next tier up)",            monthly:105, pct:2.7, per:0.30, listing:0 },
+  { id:"etsy",         label:"Etsy",                              monthly:0,  pct:9.5, per:0.25, listing:0.20 },
+  { id:"gumroad",      label:"Gumroad (flat)",                    monthly:0,  pct:10,  per:0,    listing:0 },
+  { id:"payhip",       label:"Payhip free + Stripe",              monthly:0,  pct:7.9, per:0.30, listing:0 },
+  { id:"own",          label:"Own site + Stripe",                 monthly:15, pct:2.9, per:0.30, listing:0 }
+];
+var RATE_NOTES = {
+  etsy: "6.5% transaction + ~3% payment processing combined; listing fee applies per live listing.",
+  payhip: "5% Payhip + 2.9% Stripe, since Payhip settles through your own processor.",
+  gumroad: "Flat rate, no monthly plan. Verify the current figure.",
+  shopifyBasic: "Online card rate. Third-party gateways add Shopify's extra transaction fee on top.",
+  shopifyGrow: "Higher monthly, lower card rate — worth it only above a certain volume.",
+  own: "Monthly is hosting/tooling; adjust to what you actually pay."
+};
+
+(function feesTab(){
+  var rates = get("rates", null);
+  if(!rates || !Array.isArray(rates) || rates.length !== RATE_DEFAULTS.length){
+    rates = RATE_DEFAULTS.map(function(r){ return Object.assign({}, r); });
+  }
+
+  function persist(){ set("rates", rates); }
+
+  function buildRateRows(){
+    var body = el("ratesBody");
+    body.innerHTML = "";
+    rates.forEach(function(r, i){
+      var tr = h("tr");
+      var nameCell = h("td");
+      nameCell.appendChild(h("strong", {text:r.label}));
+      if(RATE_NOTES[r.id]) nameCell.appendChild(h("div", {class:"dim", style:"font-size:.78rem; margin-top:.15rem", text:RATE_NOTES[r.id]}));
+      tr.appendChild(nameCell);
+      [["monthly",1,"$"],["pct",0.1,"%"],["per",0.01,"$"],["listing",0.01,"$"]].forEach(function(spec){
+        var field = spec[0];
+        var input = h("input", {type:"number", min:"0", step:String(spec[1]), value:String(r[field]), inputmode:"decimal",
+          "aria-label": r.label + " " + field, style:"max-width:7rem; text-align:right"});
+        input.addEventListener("input", function(){
+          var v = parseFloat(input.value);
+          rates[i][field] = isFinite(v) ? v : 0;
+          persist(); compute();
+        });
+        tr.appendChild(h("td", {class:"num"}, [input]));
+      });
+      body.appendChild(tr);
+    });
+  }
+
+  function costFor(r, revenue, orders, listings){
+    return r.monthly + revenue * (r.pct / 100) + orders * r.per + (r.listing ? listings * r.listing : 0);
+  }
+
+  function compute(){
+    var revenue = num("fRev", 0);
+    var aov = Math.max(num("fAov", 1), 0.01);
+    var listings = Math.max(num("fListings", 0), 0);
+    var orders = revenue / aov;
+
+    var results = rates.map(function(r){
+      var cost = costFor(r, revenue, orders, listings);
+      return {label:r.label, cost:cost, keep:revenue - cost, eff: revenue > 0 ? cost / revenue * 100 : NaN};
+    });
+    var best = results.reduce(function(a, b){ return b.cost < a.cost ? b : a; }, results[0]);
+
+    var body = el("compareBody");
+    body.innerHTML = "";
+    results.forEach(function(res){
+      var tr = h("tr", res === best ? {class:"best"} : {});
+      tr.appendChild(h("td", {text:res.label}));
+      tr.appendChild(h("td", {class:"num", text:money(res.cost)}));
+      tr.appendChild(h("td", {class:"num", text:money(res.keep)}));
+      tr.appendChild(h("td", {class:"num", text:pct(res.eff)}));
+      body.appendChild(tr);
+    });
+
+    breakEven();
+  }
+
+  function rateById(id){
+    return rates.filter(function(r){ return r.id === id; })[0];
+  }
+
+  /* break-even scan: lowest revenue at which Shopify Basic costs less than the rival */
+  function breakEven(){
+    var out = el("beOut");
+    var revenue = Math.max(num("beRev", 0), 0);
+    var aov = Math.max(num("beAov", 1), 0.01);
+    var listings = Math.max(num("fListings", 0), 0);
+    var rivalId = el("beRival").value;
+    var shop = rateById("shopifyBasic");
+    var rival = rateById(rivalId);
+    if(!shop || !rival){ out.textContent = "Rates unavailable."; return; }
+
+    var orders = revenue / aov;
+    var cShop = costFor(shop, revenue, orders, listings);
+    var cRival = costFor(rival, revenue, orders, listings);
+
+    // scan upward for the crossover
+    var crossover = null;
+    for(var rev = 0; rev <= 100000; rev += 10){
+      var o = rev / aov;
+      if(costFor(shop, rev, o, listings) < costFor(rival, rev, o, listings)){ crossover = rev; break; }
+    }
+
+    out.innerHTML = "";
+    var p1 = h("p");
+    p1.appendChild(h("strong", {text:"At " + money(revenue) + "/month: "}));
+    p1.appendChild(document.createTextNode(
+      shop.label.split(" +")[0] + " costs " + money(cShop) + " · " + rival.label + " costs " + money(cRival) + ". "
+    ));
+    p1.appendChild(h("strong", {text: cShop < cRival ? "Your own store is cheaper." : cShop > cRival ? (rival.label + " is cheaper.") : "They are level."}));
+    out.appendChild(p1);
+
+    var p2 = h("p");
+    if(crossover === null){
+      p2.textContent = "Within a $100,000/month range at this average order value, the marketplace stays cheaper on fees alone. That does not make it the right answer — it makes fees the wrong reason to switch. Owning the customer relationship is.";
+    } else if(crossover === 0){
+      p2.textContent = "Your own store is cheaper at every revenue level with these rates — the marketplace's percentage exceeds the plan cost immediately at this average order value.";
+    } else {
+      p2.appendChild(document.createTextNode("Crossover is around "));
+      p2.appendChild(h("strong", {text: money(crossover) + "/month"}));
+      p2.appendChild(document.createTextNode(
+        " (about " + Math.ceil(crossover / aov) + " orders at " + money(aov) + "). Below that the marketplace is cheaper on fees; above it the plan pays for itself."
+      ));
+    }
+    out.appendChild(p2);
+
+    var p3 = h("p", {class:"dim"});
+    p3.appendChild(h("small", {text:"Fees are one input. The marketplace is also supplying traffic you would otherwise have to buy or earn — at low volume that is worth far more than the fee difference."}));
+    out.appendChild(p3);
+  }
+
+  ["fRev","fAov","fListings"].forEach(function(id){
+    el(id).addEventListener("input", function(){
+      set("fees." + id, el(id).value);
+      compute();
+    });
+    var saved = get("fees." + id, null);
+    if(saved !== null && saved !== "") el(id).value = saved;
+  });
+  ["beRev","beAov","beRival"].forEach(function(id){
+    el(id).addEventListener("input", function(){ set("fees." + id, el(id).value); breakEven(); });
+    el(id).addEventListener("change", function(){ set("fees." + id, el(id).value); breakEven(); });
+    var saved = get("fees." + id, null);
+    if(saved !== null && saved !== "") el(id).value = saved;
+  });
+
+  el("ratesReset").addEventListener("click", function(){
+    rates = RATE_DEFAULTS.map(function(r){ return Object.assign({}, r); });
+    persist();
+    buildRateRows();
+    compute();
+    toast("Rates restored to defaults");
+  });
+
+  /* price bands table */
+  var bandBody = el("bandBody");
+  TYPES.forEach(function(t){
+    bandBody.appendChild(h("tr", {}, [
+      h("td", {}, [h("strong", {text:t.label})]),
+      h("td", {class:"nowrap", text:t.band}),
+      h("td", {text:t.platform}),
+      h("td", {text: t.high >= 27
+        ? "Strong own-store candidate — the margin difference on a higher price point is material."
+        : "Keep on the marketplace for discovery; bundle several into an own-store product."})
+    ]));
+  });
+
+  buildRateRows();
+  compute();
+})();
+
+/* =====================================================================
+   GLOSSARY
+   ===================================================================== */
+var GLOSSARY = [
+  ["Abandoned checkout","Someone entered checkout, gave an email, and left without paying. Shopify can email them automatically. The highest-return five minutes of setup in the whole admin."],
+  ["Average order value (AOV)","Revenue ÷ number of orders. Raising it with bundles is usually cheaper than raising traffic."],
+  ["Collection","A group of products. Automated collections file new products themselves based on a condition; manual ones do not."],
+  ["Compare-at price","The struck-through higher price. Only use it if the product was genuinely sold at that price — several jurisdictions regulate this."],
+  ["Conversion rate","Orders ÷ sessions. Statistical noise below a few hundred sessions a month; do not redesign the store based on it early."],
+  ["Fulfilment","Marking an order as sent. Automatic for digital goods and print-on-demand; manual if you pack the box."],
+  ["Handle","The last part of a URL — /products/handle. Generated from the title on first save and does not follow a rename."],
+  ["Meta description","The snippet under a search result. Around 160 characters before truncation. It does not affect ranking; it affects whether anyone clicks."],
+  ["Payment gateway","What actually charges the card. Shopify Payments is Shopify's own; third-party gateways incur an additional Shopify transaction fee on top of their own."],
+  ["Payout","When money reaches your bank, which is days after the order, not the same moment."],
+  ["Print-on-demand (POD)","A partner prints and ships each item as it sells. No stock, no capital, thin margins, and their delivery delays are your customer service problem."],
+  ["Sales channel","Somewhere else your products can be sold from — a marketplace, a social platform, a point of sale. The online store is one channel, not the only one."],
+  ["SKU","Your internal code for a product or variant. Nobody but you sees it; you will still want it at product forty."],
+  ["Variant","A version of a product — size, colour, or a pricing tier. Tiered pricing is variants, not separate products."]
+];
+(function glossary(){
+  var dl = el("glossary");
+  GLOSSARY.forEach(function(pair){
+    dl.appendChild(h("dt", {}, [h("strong", {text:pair[0]})]));
+    dl.appendChild(h("dd", {text:pair[1]}));
+  });
+})();
+
+/* =====================================================================
+   backup / clear
+   ===================================================================== */
+el("backupBtn").addEventListener("click", function(){
+  var stamp = new Date().toISOString().slice(0, 10);
+  download("store-setup-guides-backup-" + stamp + ".json", JSON.stringify(state, null, 2));
+});
+el("clearBtn").addEventListener("click", function(){
+  if(!confirm("Erase everything this app has saved — checklist ticks, quiz answers, listing draft and edited rates?\n\nA backup file downloads first.")) return;
+  var stamp = new Date().toISOString().slice(0, 10);
+  download("store-setup-guides-backup-" + stamp + ".json", JSON.stringify(state, null, 2));
+  setTimeout(function(){
+    state = {};
+    if(storageOk){ try { localStorage.removeItem(KEY); } catch(e){} }
+    memory = {};
+    location.reload();
+  }, 400);
+});
+
+if(!storageOk){
+  toast("Storage unavailable — your work will not survive a reload");
+}
+
+})();
+</script>
+</body>
+</html>
