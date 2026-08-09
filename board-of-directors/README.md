@@ -178,6 +178,13 @@ engine's numbers to the model is the point.
 
 ## Selling it
 
+[`sell/`](sell/) contains the storefront, ready to configure:
+
+| File | What it is |
+|---|---|
+| [`sell/index.html`](sell/index.html) | A complete sales landing page — hero, the argument, the worked example as proof, pricing tiers, FAQ. Self-contained and offline like everything else here; host it anywhere. Set `gumroadUrl` and your prices in the `CONFIG` block at the bottom of the file and the page wires itself up. Until you do, it shows a seller-only banner telling you the checkout is still a placeholder |
+| [`sell/gumroad-listing.md`](sell/gumroad-listing.md) | Every Gumroad field written out paste-ready: name, summary, tags, the full description, version pricing, what to zip, cover art instructions, receipt note, and a day-7 follow-up email |
+
 This folder is built to be sold. Three separable products:
 
 | Product | Files | Suits |

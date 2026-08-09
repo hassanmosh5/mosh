@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLEAR AI Board of Directors — the board that is allowed to say no</title>
+<meta name="description" content="Fifteen directors score your decision against your own numbers, argue with each other, simulate the downside for 36 months, and return a verdict that can be no. One file. Works offline. No API key.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="CLEAR AI Board of Directors">
+<meta property="og:description" content="Fifteen directors. One decision. No cheerleading. A single-file decision engine that computes the arithmetic most business plans skip.">
+<meta property="og:type" content="product">
+<style>
+/* ===========================================================================
+   SALES LANDING PAGE — CLEAR AI Board of Directors
+   Single file. No external requests: no CDN, no web fonts, no images, no
+   analytics, no trackers. The Gumroad overlay is opt-in and commented out.
+   Everything you need to change is in the CONFIG block at the bottom.
+   =========================================================================== */
+
+:root {
+  --ink:       #14181f;
+  --ink-2:     #414b5c;
+  --ink-3:     #6f7a8d;
+  --bg:        #f2f4f8;
+  --surface:   #ffffff;
+  --surface-2: #f7f9fc;
+  --surface-3: #eaeef5;
+  --line:      #dce2ec;
+  --line-2:    #c2cbdb;
+
+  --navy:      #1a3a6b;
+  --navy-2:    #2b5697;
+  --navy-bg:   #e9eff9;
+  --brass:     #8a6512;
+  --brass-2:   #a97d1c;
+  --brass-bg:  #fbf2dd;
+  --green:     #166b41;
+  --green-bg:  #e4f4ec;
+  --amber:     #8a5606;
+  --amber-bg:  #fdf2df;
+  --red:       #a12424;
+  --red-bg:    #fdebeb;
+
+  --shadow:    0 1px 2px rgba(14,20,32,.06), 0 8px 24px -14px rgba(14,20,32,.24);
+  --shadow-lg: 0 2px 6px rgba(14,20,32,.08), 0 30px 60px -26px rgba(14,20,32,.36);
+  --radius:    16px;
+  --radius-sm: 10px;
+
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+}
+
+html[data-theme="dark"], :root.dark {
+  --ink: #e6ebf4; --ink-2: #b0bacb; --ink-3: #838da0;
+  --bg: #0d1018; --surface: #161a24; --surface-2: #1c212c; --surface-3: #232936;
+  --line: #2b3140; --line-2: #3c4557;
+  --navy: #8fb2f0; --navy-2: #7099e0; --navy-bg: #16223c;
+  --brass: #d9ad4d; --brass-2: #c1963a; --brass-bg: #2a2210;
+  --green: #6ccd99; --green-bg: #12281d;
+  --amber: #e6b45f; --amber-bg: #2a2011;
+  --red: #ef8985; --red-bg: #2b1616;
+  --shadow: 0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.7);
+  --shadow-lg: 0 2px 6px rgba(0,0,0,.5), 0 30px 60px -26px rgba(0,0,0,.8);
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --ink: #e6ebf4; --ink-2: #b0bacb; --ink-3: #838da0;
+    --bg: #0d1018; --surface: #161a24; --surface-2: #1c212c; --surface-3: #232936;
+    --line: #2b3140; --line-2: #3c4557;
+    --navy: #8fb2f0; --navy-2: #7099e0; --navy-bg: #16223c;
+    --brass: #d9ad4d; --brass-2: #c1963a; --brass-bg: #2a2210;
+    --green: #6ccd99; --green-bg: #12281d;
+    --amber: #e6b45f; --amber-bg: #2a2011;
+    --red: #ef8985; --red-bg: #2b1616;
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.7);
+    --shadow-lg: 0 2px 6px rgba(0,0,0,.5), 0 30px 60px -26px rgba(0,0,0,.8);
+  }
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans);
+  font-size: 16px; line-height: 1.62; -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 62rem; margin: 0 auto; padding: 0 1.15rem; }
+.narrow { max-width: 46rem; }
+a { color: var(--navy); }
+:focus-visible { outline: 2px solid var(--navy-2); outline-offset: 3px; border-radius: 8px; }
+img, svg { max-width: 100%; }
+
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 0; top: 0; background: var(--navy); color: #fff; padding: .6rem 1rem; z-index: 99; }
+
+/* ------------------------------------------------------------------- nav -- */
+.nav {
+  position: sticky; top: 0; z-index: 40; background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.nav .wrap { display: flex; align-items: center; gap: .8rem; min-height: 3.5rem; }
+.nav .mark { font-family: var(--serif); font-weight: 700; letter-spacing: -.01em; margin-right: auto; font-size: 1rem; }
+.nav .mark span { color: var(--ink-3); font-family: var(--sans); font-weight: 400; font-size: .78rem; display: block; letter-spacing: .03em; }
+.nav .price { font-family: var(--mono); font-weight: 700; color: var(--brass); font-size: .95rem; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
+  font-family: inherit; font-size: .95rem; font-weight: 650; cursor: pointer;
+  border-radius: var(--radius-sm); border: 1px solid var(--navy); background: var(--navy);
+  color: #fff; padding: .6rem 1.15rem; text-decoration: none; transition: background .15s, transform .12s;
+}
+html[data-theme="dark"] .btn, :root.dark .btn { color: #0d1018; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) .btn { color: #0d1018; } }
+.btn:hover { background: var(--navy-2); border-color: var(--navy-2); transform: translateY(-1px); }
+.btn.sm { font-size: .85rem; padding: .42rem .85rem; }
+.btn.lg { font-size: 1.05rem; padding: .85rem 1.7rem; }
+.btn.ghost { background: transparent; color: var(--navy); border-color: var(--line-2); }
+.btn.ghost:hover { background: var(--surface-3); }
+.btn-theme {
+  background: transparent; border: 1px solid var(--line); color: var(--ink-2);
+  border-radius: var(--radius-sm); padding: .35rem .6rem; font-size: .8rem; cursor: pointer;
+  font-family: inherit;
+}
+
+/* --------------------------------------------------------------- sections - */
+section { padding: clamp(2.8rem, 7vw, 5rem) 0; }
+section.tight { padding: clamp(2rem, 4vw, 3rem) 0; }
+section + section { border-top: 1px solid var(--line); }
+.eyebrow {
+  font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: var(--brass);
+  font-weight: 750; margin-bottom: .6rem;
+}
+h1 {
+  font-family: var(--serif); font-size: clamp(2.1rem, 6vw, 3.5rem); line-height: 1.05;
+  letter-spacing: -.025em; margin: 0 0 .8rem; max-width: 20ch;
+}
+h2 {
+  font-family: var(--serif); font-size: clamp(1.5rem, 3.6vw, 2.2rem); line-height: 1.15;
+  letter-spacing: -.02em; margin: 0 0 .7rem; max-width: 24ch;
+}
+h3 { font-size: 1.05rem; margin: 0 0 .35rem; font-weight: 680; }
+p { margin: 0 0 1rem; }
+p.lede { font-size: clamp(1.03rem, 2.1vw, 1.2rem); color: var(--ink-2); max-width: 46ch; }
+p.sub { color: var(--ink-2); max-width: 62ch; }
+.muted { color: var(--ink-3); }
+.small { font-size: .88rem; }
+.tiny { font-size: .78rem; }
+.mono { font-family: var(--mono); }
+
+/* ------------------------------------------------------------------ hero -- */
+.hero { padding-top: clamp(2.5rem, 6vw, 4.5rem); padding-bottom: clamp(2.5rem, 6vw, 4rem); }
+.hero-grid { display: grid; gap: clamp(2rem, 5vw, 3.5rem); grid-template-columns: 1fr; align-items: center; }
+@media (min-width: 900px) { .hero-grid { grid-template-columns: 1.05fr .95fr; } }
+.cta-row { display: flex; flex-wrap: wrap; gap: .7rem; align-items: center; margin: 1.4rem 0 .8rem; }
+.cta-note { font-size: .82rem; color: var(--ink-3); }
+.trust { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1.2rem; }
+.trust span {
+  font-size: .76rem; padding: .25rem .6rem; border-radius: 999px;
+  background: var(--surface-3); color: var(--ink-2); white-space: nowrap;
+}
+
+/* ------------------------------------------------------- product mock-up -- */
+.mock {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow-lg); overflow: hidden; font-size: 13px;
+}
+.mock-bar {
+  display: flex; align-items: center; gap: .4rem; padding: .5rem .7rem;
+  border-bottom: 1px solid var(--line); background: var(--surface-2);
+}
+.mock-bar i { width: .55rem; height: .55rem; border-radius: 50%; background: var(--line-2); display: block; }
+.mock-bar b { font-size: .7rem; font-weight: 600; color: var(--ink-3); margin-left: .4rem; font-family: var(--mono); }
+.mock-body { padding: 1rem; }
+.mock-verdict {
+  border: 2px solid var(--amber); background: var(--amber-bg); border-radius: 12px;
+  padding: .9rem .8rem; text-align: center; margin-bottom: .8rem;
+}
+.mock-verdict .k { font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); font-weight: 750; }
+.mock-verdict .v { font-family: var(--serif); font-size: clamp(1.1rem, 3vw, 1.5rem); color: var(--amber); line-height: 1.1; margin-top: .2rem; }
+.mock-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem; margin-bottom: .85rem; }
+@media (min-width: 480px) { .mock-stats { grid-template-columns: repeat(4, 1fr); } }
+.mock-stat { background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: .45rem .5rem; }
+.mock-stat .k { font-size: .58rem; color: var(--ink-3); font-weight: 650; line-height: 1.25; }
+.mock-stat .v { font-family: var(--mono); font-weight: 700; font-size: .95rem; }
+.mock-block {
+  border: 1px solid var(--red); background: var(--red-bg); border-radius: 8px;
+  padding: .5rem .6rem; font-size: .72rem; margin-bottom: .8rem; line-height: 1.45;
+}
+.mock-block b { color: var(--red); }
+.vrow { display: grid; grid-template-columns: 6.6rem 1fr 1.7rem; gap: .45rem; align-items: center; font-size: .7rem; margin-bottom: .22rem; }
+.vrow .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ink-2); }
+.vrow .tr { background: var(--surface-3); border-radius: 3px; height: 11px; overflow: hidden; position: relative; }
+.vrow .tr i { display: block; height: 100%; border-radius: 3px; }
+.vrow .tr::after { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--line-2); }
+.vrow .vv { font-family: var(--mono); font-weight: 700; text-align: right; }
+
+/* ------------------------------------------------------------------ grid -- */
+.grid { display: grid; gap: 1.1rem; }
+.g2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); }
+.g3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.25rem 1.35rem;
+}
+.card .ic { font-size: 1.5rem; line-height: 1; display: block; margin-bottom: .55rem; }
+.card p:last-child { margin-bottom: 0; }
+.card.flush { padding: 0; overflow: hidden; }
+
+pre.code {
+  background: #101520; color: #dee5f1; border-radius: var(--radius-sm); padding: 1rem 1.1rem;
+  overflow-x: auto; font-family: var(--mono); font-size: .82rem; line-height: 1.7; margin: 1rem 0;
+}
+pre.code .c { color: #7b879c; }
+pre.code .k { color: #d9ad4d; }
+
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); }
+table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+th, td { padding: .55rem .75rem; text-align: left; border-bottom: 1px solid var(--line); }
+th { background: var(--surface-2); font-size: .7rem; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3); font-weight: 750; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+td.num { text-align: right; font-family: var(--mono); font-weight: 650; white-space: nowrap; }
+tr.blocking td { background: var(--red-bg); }
+tr.blocking td.num { color: var(--red); }
+
+.callout {
+  border-left: 3px solid var(--brass); background: var(--brass-bg); border-radius: 0 10px 10px 0;
+  padding: .95rem 1.15rem; margin: 1.2rem 0;
+}
+.callout.plain { border-left-color: var(--line-2); background: var(--surface-2); }
+.callout p:last-child { margin-bottom: 0; }
+
+/* padding + absolute marker rather than flex: a flex item's min-content width
+   can push a long unbreakable phrase past the viewport on narrow screens */
+ul.ticks, ul.crosses { list-style: none; padding: 0; margin: .6rem 0; }
+ul.ticks li, ul.crosses li {
+  position: relative; padding-left: 1.4rem; margin: .5rem 0; overflow-wrap: anywhere;
+}
+ul.ticks li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--green); font-weight: 700; }
+ul.crosses li::before { content: "✕"; position: absolute; left: 0; top: 0; color: var(--red); font-weight: 700; }
+
+/* ---------------------------------------------------------------- pricing - */
+.tiers { display: grid; gap: 1.1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); align-items: start; }
+.tier {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.35rem 1.4rem; display: flex; flex-direction: column; gap: .5rem; height: 100%;
+}
+.tier.best { border-color: var(--brass); border-width: 2px; position: relative; }
+.tier.best::after {
+  content: "Most complete"; position: absolute; top: -.72rem; left: 1.3rem;
+  background: var(--brass); color: #fff; font-size: .66rem; font-weight: 700;
+  padding: .12rem .55rem; border-radius: 999px; letter-spacing: .04em;
+}
+html[data-theme="dark"] .tier.best::after, :root.dark .tier.best::after { color: #0d1018; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) .tier.best::after { color: #0d1018; } }
+.tier h3 { font-family: var(--serif); font-size: 1.15rem; margin: 0; }
+.tier .amt { font-family: var(--mono); font-size: 2rem; font-weight: 700; line-height: 1; color: var(--brass); }
+.tier .amt small { font-size: .78rem; color: var(--ink-3); font-weight: 500; font-family: var(--sans); display: block; margin-top: .25rem; }
+.tier ul { margin: .3rem 0 auto; }
+.tier .btn { margin-top: .8rem; }
+
+/* -------------------------------------------------------------------- faq - */
+details.faq {
+  border-bottom: 1px solid var(--line); padding: .2rem 0;
+}
+details.faq > summary {
+  cursor: pointer; font-weight: 640; padding: .85rem .2rem; list-style: none;
+  display: flex; align-items: baseline; gap: .6rem; font-size: .98rem;
+}
+details.faq > summary::-webkit-details-marker { display: none; }
+details.faq > summary::before { content: "+"; color: var(--brass); font-weight: 700; font-family: var(--mono); flex: 0 0 auto; }
+details.faq[open] > summary::before { content: "−"; }
+details.faq > div { padding: 0 .2rem 1rem 1.5rem; color: var(--ink-2); font-size: .93rem; }
+details.faq > div p:last-child { margin-bottom: 0; }
+
+/* ------------------------------------------------------------------ final - */
+.final {
+  background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius);
+  padding: clamp(1.8rem, 5vw, 3rem); text-align: center; box-shadow: var(--shadow);
+}
+.final h2 { margin-left: auto; margin-right: auto; }
+.final p { margin-left: auto; margin-right: auto; }
+
+footer.foot { border-top: 1px solid var(--line); padding: 2rem 0 3.5rem; font-size: .82rem; color: var(--ink-3); }
+footer.foot p { max-width: 60rem; }
+footer.foot a { color: var(--ink-2); }
+
+.setup-warning {
+  background: var(--red-bg); border-bottom: 2px solid var(--red); color: var(--ink);
+  padding: .6rem 0; font-size: .85rem;
+}
+.setup-warning code { font-family: var(--mono); background: var(--surface); padding: .1em .4em; border-radius: 4px; border: 1px solid var(--line); }
+
+@media (max-width: 560px) {
+  .vrow { grid-template-columns: 5.2rem 1fr 1.6rem; }
+  .nav .price { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#buy">Skip to pricing</a>
+
+<div id="setup-warning" class="setup-warning" hidden>
+  <div class="wrap">
+    <b>Setup:</b> this page still points at a placeholder checkout. Open it in an editor and set
+    <code>gumroadUrl</code> and <code>price</code> in the <code>CONFIG</code> block at the bottom.
+    This notice disappears once you do, and is never shown to buyers.
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="wrap">
+    <div class="mark">CLEAR AI Board of Directors<span>fifteen directors · one decision · no cheerleading</span></div>
+    <span class="price" data-cfg="price"></span>
+    <button class="btn-theme" id="theme" aria-label="Switch colour theme">◐</button>
+    <a class="btn sm" data-buy href="#buy">Get it</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================== HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Decision tool · one file · works offline</div>
+        <h1>The board that is allowed to say no.</h1>
+        <p class="lede">
+          Fifteen directors score your decision against <em>your</em> numbers, argue with each
+          other in public, simulate the downside month by month for three years, and hand back a
+          verdict — which is sometimes <span class="mono">REJECT</span>.
+        </p>
+        <div class="cta-row">
+          <a class="btn lg" data-buy href="#buy">Get the board — <span data-cfg="price"></span></a>
+          <span class="cta-note">Instant download · <span data-cfg="guarantee"></span></span>
+        </div>
+        <div class="trust">
+          <span>No API key required</span>
+          <span>No account</span>
+          <span>No internet needed</span>
+          <span>Nothing is uploaded</span>
+          <span>One HTML file</span>
+        </div>
+      </div>
+
+      <!-- a stylised replica of the app's Resolution page -->
+      <div class="mock" role="img" aria-label="Screenshot of the app's resolution page showing a MODIFY AND RESUBMIT verdict, a weighted score of 50 out of 100, 50 percent confidence, two blocking findings, and the fifteen director votes as bars.">
+        <div class="mock-bar"><i></i><i></i><i></i><b>⚖️ Resolution</b></div>
+        <div class="mock-body">
+          <div class="mock-verdict">
+            <div class="k">Resolution of the board</div>
+            <div class="v">MODIFY AND RESUBMIT</div>
+          </div>
+          <div class="mock-stats">
+            <div class="mock-stat"><div class="k">Weighted score</div><div class="v">50</div></div>
+            <div class="mock-stat"><div class="k">Confidence</div><div class="v">50%</div></div>
+            <div class="mock-stat"><div class="k">Blocking</div><div class="v" style="color:var(--red)">2</div></div>
+            <div class="mock-stat"><div class="k">Evidence</div><div class="v" style="color:var(--amber)">47%</div></div>
+          </div>
+          <div class="mock-block">
+            <b>Blocking — Chief Financial Officer:</b> runway (1.8 mo) is shorter than time to first revenue plus a margin.<br>
+            <b>Blocking — Risk Director:</b> exposure ($12,100) exceeds available capital ($9,000).
+          </div>
+          <div class="vrow"><span class="nm">♟ CEO</span><span class="tr"><i style="width:80%;background:var(--green)"></i></span><span class="vv" style="color:var(--green)">80</span></div>
+          <div class="vrow"><span class="nm">🌍 Africa Market</span><span class="tr"><i style="width:71%;background:var(--green)"></i></span><span class="vv" style="color:var(--green)">71</span></div>
+          <div class="vrow"><span class="nm">🔭 Competitive</span><span class="tr"><i style="width:68%;background:var(--brass-2)"></i></span><span class="vv" style="color:var(--brass-2)">68</span></div>
+          <div class="vrow"><span class="nm">👥 Human Capital</span><span class="tr"><i style="width:67%;background:var(--brass-2)"></i></span><span class="vv" style="color:var(--brass-2)">67</span></div>
+          <div class="vrow"><span class="nm">🧩 Product</span><span class="tr"><i style="width:62%;background:var(--brass-2)"></i></span><span class="vv" style="color:var(--brass-2)">62</span></div>
+          <div class="vrow"><span class="nm">🫱 Customer</span><span class="tr"><i style="width:60%;background:var(--brass-2)"></i></span><span class="vv" style="color:var(--brass-2)">60</span></div>
+          <div class="vrow"><span class="nm">🤝 Sales</span><span class="tr"><i style="width:46%;background:var(--amber)"></i></span><span class="vv" style="color:var(--amber)">46</span></div>
+          <div class="vrow"><span class="nm">📣 Marketing</span><span class="tr"><i style="width:38%;background:var(--amber)"></i></span><span class="vv" style="color:var(--amber)">38</span></div>
+          <div class="vrow"><span class="nm">💷 CFO</span><span class="tr"><i style="width:32%;background:var(--amber)"></i></span><span class="vv" style="color:var(--amber)">32</span></div>
+          <div class="vrow"><span class="nm">⚙ COO</span><span class="tr"><i style="width:28%;background:var(--red)"></i></span><span class="vv" style="color:var(--red)">28</span></div>
+          <div class="vrow"><span class="nm">⚠ Risk</span><span class="tr"><i style="width:16%;background:var(--red)"></i></span><span class="vv" style="color:var(--red)">16</span></div>
+          <div class="vrow"><span class="nm">📈 Investment</span><span class="tr"><i style="width:14%;background:var(--red)"></i></span><span class="vv" style="color:var(--red)">14</span></div>
+          <p class="tiny muted" style="margin:.6rem 0 0">Real output from the worked example included in the app.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== PROBLEM ========= -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Why this exists</div>
+    <h2>“Act as a board of directors” is the most flattering prompt on the internet.</h2>
+    <p class="sub">
+      You have probably run it. Fifteen enthusiastic paragraphs come back, they agree with each
+      other, and they agree with you. It looks like scrutiny. It functions as applause. Three
+      things are missing, and all three are the reason people buy this instead.
+    </p>
+
+    <div class="grid g3" style="margin-top:1.8rem">
+      <div class="card">
+        <span class="ic">🧮</span>
+        <h3>No arithmetic</h3>
+        <p class="small muted">
+          A board that never divides your burn by your gross profit is not evaluating a business.
+          It is describing one back to you in a nicer voice.
+        </p>
+      </div>
+      <div class="card">
+        <span class="ic">🤝</span>
+        <h3>No disagreement</h3>
+        <p class="small muted">
+          Real directors have conflicting mandates. Innovation wants speed, Risk wants proof.
+          A model trained to be agreeable smooths that away — and the conflict was the value.
+        </p>
+      </div>
+      <div class="card">
+        <span class="ic">🎲</span>
+        <h3>No honesty about inputs</h3>
+        <p class="small muted">
+          Confident conclusions built on numbers you invented ten seconds earlier are worse than
+          no conclusion at all, because now you believe them.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== ARITHMETIC ====== -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">What it actually does</div>
+    <h2>It does the arithmetic first, then lets the directors talk.</h2>
+    <p class="sub">
+      Before a single director says a word, the engine computes this from the figures you enter.
+      It is plain code inside the file — you can open it and read every line of it.
+    </p>
+
+    <pre class="code"><span class="c">// computed before any director speaks</span>
+monthly gross profit  = price × gross margin
+lifetime value        = monthly gross profit ÷ monthly churn
+LTV : CAC             <span class="c">— below 1:1 is fatal, below 3:1 is a condition</span>
+payback months        = CAC ÷ monthly gross profit
+breakeven customers   = monthly burn ÷ monthly gross profit
+<span class="k">capacity ceiling      = usable hours ÷ hours to serve one customer</span>
+<span class="k">runway after build    = (capital − capital required) ÷ monthly burn</span></pre>
+
+    <p class="sub">The last two are the ones people miss, and they are the ones that end businesses.</p>
+
+    <div class="grid g2" style="margin-top:1.4rem">
+      <div class="card">
+        <h3>Capacity against breakeven</h3>
+        <p class="small">
+          If your own hands cap you at 51 customers and breakeven needs 47, success arrives as an
+          operations crisis about a quarter after it arrives as good news. If capacity is
+          <em>below</em> breakeven, the plan cannot reach breakeven at any level of sales success —
+          and no amount of marketing repairs that.
+        </p>
+        <p class="small muted" style="margin-bottom:0">Three remedies exist: automate, raise the price, or add people. The app tells you which one closes the gap.</p>
+      </div>
+      <div class="card">
+        <h3>Runway against time to revenue</h3>
+        <p class="small">
+          If the build leaves you 1.8 months of cash and your first customer is 4 months away, you
+          run out before you find out. This is invisible in a spreadsheet that models revenue but
+          not the silence before it.
+        </p>
+        <p class="small muted" style="margin-bottom:0">The app treats it as a blocking finding and caps the score of the seat that raised it.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><b>Six conditions are treated as blocking.</b> A director who raises one cannot also report a comfortable score — the block is the headline, whatever else that mandate liked:</p>
+      <p class="small mono" style="margin-top:.5rem">
+        inverted unit economics · runway shorter than time to revenue · capital gap ·
+        capacity below breakeven · exposure above stated capital · heavy regulation with no licensing plan
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== PROOF =========== -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The demonstration</div>
+    <h2>Watch it disagree with a plan whose numbers look great.</h2>
+    <p class="sub">
+      The app ships with a worked example you can load in one click: two people running a manual
+      bookkeeping service in Lagos at $3,200 a month, considering turning it into $39/month
+      software, with no engineer on the team.
+    </p>
+    <p class="sub">
+      The unit economics are <em>excellent</em> — 13.6:1 lifetime value to acquisition cost,
+      payback in 1.1 months. A cheerleading board stops there and says yes. Here is what fifteen
+      mandates said instead.
+    </p>
+
+    <div class="tablewrap" style="margin-top:1.3rem">
+      <table>
+        <thead><tr><th>Seat</th><th class="num">Score</th><th>Finding</th></tr></thead>
+        <tbody>
+          <tr><td>CEO &amp; Strategy Chair</td><td class="num" style="color:var(--green)">80</td><td class="small">Strong founder–market fit and a real market — but names the cannibalisation of the service revenue</td></tr>
+          <tr><td>Africa Market</td><td class="num" style="color:var(--green)">71</td><td class="small">Mobile money is in the plan, which is correct; flags recurring-card billing friction</td></tr>
+          <tr><td>Competitive Intelligence</td><td class="num" style="color:var(--brass-2)">68</td><td class="small">Proven demand with a genuine wedge the incumbents cannot copy quickly</td></tr>
+          <tr class="blocking"><td><b>Chief Financial Officer</b></td><td class="num">32</td><td class="small"><b>BLOCKING</b> — 1.8 months of runway against 4 months to first revenue</td></tr>
+          <tr><td>Chief Operating Officer</td><td class="num" style="color:var(--red)">28</td><td class="small">546 hours of build at 20h/week is 10.5 months, not the 4 the plan assumes</td></tr>
+          <tr class="blocking"><td><b>Risk Director</b></td><td class="num">16</td><td class="small"><b>BLOCKING</b> — $12,100 of exposure against $9,000 of capital you said you could lose</td></tr>
+          <tr><td>Investment Director</td><td class="num" style="color:var(--red)">14</td><td class="small">Probability-weighted cash at 24 months is negative; the do-nothing alternative wins</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="margin-top:1.4rem">
+      <p>
+        <b>Verdict: MODIFY AND RESUBMIT</b> at 50/100, confidence 50%.
+      </p>
+      <p class="small" style="margin-bottom:0">
+        Not “no”. Not “yes, go for it”. The economics are fine <em>and</em> the plan runs out of
+        money in month two — which is a different sentence, a more useful one, and one you can
+        actually act on this week.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== EVIDENCE ======== -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The part nobody else does</div>
+    <h2>Every number you type is tagged measured, estimated, or guessed.</h2>
+    <p class="sub">
+      Click a tag to cycle it. The board's confidence score is discounted by how much of its input
+      is guesswork, and the directors say so out loud in the report.
+    </p>
+
+    <pre class="code">confidence = 0.40 × agreement between the fifteen seats
+           + 0.45 × evidence quality of your inputs
+           + 0.15 × completeness of your brief</pre>
+
+    <p class="sub">
+      That is deliberately <em>not</em> a probability of success, and the app says so on the
+      resolution page in the same size type as the score itself. It measures whether the board's
+      own inputs are worth anything. It cannot measure whether you are right, because it has never
+      met your customers.
+    </p>
+
+    <div class="grid g2" style="margin-top:1.4rem">
+      <div class="card">
+        <h3>Guesses are weighted toward the worst case</h3>
+        <p class="small muted" style="margin-bottom:0">
+          Scenario probabilities are derived from evidence quality, not from optimism. A brief
+          built on guesses is not neutral — guesses are systematically optimistic, and the model
+          leans against them on purpose.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Unanimity triggers a warning</h3>
+        <p class="small muted" style="margin-bottom:0">
+          If the fifteen scores land within 8 points of each other, the app flags it. That much
+          agreement means one input is dominating every seat, or the brief is too vague to
+          disagree about. A board that agrees on everything has one director wearing fifteen hats.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== CONTENTS ======== -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">What you get</div>
+    <h2>Two products in one download.</h2>
+
+    <div class="grid g2" style="margin-top:1.5rem">
+      <div class="card">
+        <span class="ic">🏛</span>
+        <h3>The app — one HTML file</h3>
+        <p class="small muted">Open it and it runs. No install, no build step, no account, no API key, no internet.</p>
+        <ul class="ticks small">
+          <li><b>Brief</b> — the CLEAR intake: context, length, examples, audience, role</li>
+          <li><b>Numbers</b> — ~35 inputs, twelve derived metrics updating live</li>
+          <li><b>Board</b> — fifteen director reports with scores, concerns and what would change each vote</li>
+          <li><b>Debate</b> — the collisions between seats, with a chair's ruling on each</li>
+          <li><b>Risk</b> — three 36-month cash simulations and a ranked pre-mortem</li>
+          <li><b>Resolution</b> — verdict, weighted vote, blocking findings, conditions attached</li>
+          <li><b>Roadmap</b> — 30/90/365-day plans with saved progress and nine KPIs</li>
+          <li><b>Minutes</b> — the whole deliberation as ~28,000 characters of Markdown</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="ic">🤖</span>
+        <h3>The agent pack</h3>
+        <p class="small muted">The same fifteen seats as a hosted AI agent, if you would rather chat with it.</p>
+        <ul class="ticks small">
+          <li>System prompt, ready to paste — set up in about ten minutes</li>
+          <li>Configuration for <b>ChatGPT custom GPT</b>, <b>Claude Project</b>, <b>Gemini Gem</b> and raw API</li>
+          <li>A knowledge file documenting the whole method — the formulas, the thresholds, the failure modes</li>
+          <li>Recommended settings, and why temperature matters here</li>
+        </ul>
+        <p class="small" style="margin-top:.9rem;margin-bottom:0">
+          The app also builds a complete board prompt with <em>your</em> brief and figures already
+          in it, ready to paste into any chat model — no key needed. Or plug in your own key and
+          run live directors against OpenAI, Anthropic or any compatible endpoint.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout plain">
+      <p class="small" style="margin-bottom:0">
+        <b>Your data stays on your machine.</b> With AI mode switched off the file makes zero
+        network requests — verified, and verifiable by you, because the whole product is one
+        readable file. If you do switch on AI mode, your key is stored in your browser and sent to
+        the provider you chose and to nobody else. There is no server in this product to send it to.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== FIT ============= -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Before you buy</div>
+    <h2>Who this is for, and who should not buy it.</h2>
+    <p class="sub">A refund is more expensive for both of us than an honest paragraph. Read the right-hand column first.</p>
+
+    <div class="grid g2" style="margin-top:1.4rem">
+      <div class="card">
+        <h3>Buy it if</h3>
+        <ul class="ticks small">
+          <li>You are about to commit real money or months to a decision you cannot fully undo</li>
+          <li>You have rough numbers — price, costs, capital, hours — even if half of them are guesses</li>
+          <li>You want the argument <em>against</em> your plan, in writing, before you find it the expensive way</li>
+          <li>You have to convince a partner, a lender, a spouse, or an internal approver</li>
+          <li>You are trading in a market where data is metered and power is unreliable, and offline is not a nice-to-have</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Do not buy it if</h3>
+        <ul class="crosses small">
+          <li>You want it to say yes. It is designed to be capable of saying no, and it will</li>
+          <li>You have no figures at all and no willingness to estimate any. It computes; it cannot conjure</li>
+          <li>You want automated bookkeeping, a business plan template, or a pitch deck. This is none of those</li>
+          <li>You need regulated financial, legal or tax advice. Buy an hour with a professional instead</li>
+          <li>You want something that integrates with your bank, your CRM, or your accounting software. It integrates with nothing on purpose</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== PRICING ========= -->
+<section id="buy">
+  <div class="wrap">
+    <div class="eyebrow">Pricing</div>
+    <h2>One payment. Yours permanently.</h2>
+    <p class="sub">No subscription, no seat count, no usage meter, nothing to cancel. Updates are free forever because the file is the product.</p>
+
+    <div class="tiers" style="margin-top:1.8rem">
+      <div class="tier">
+        <h3>The app</h3>
+        <div class="amt" data-cfg="priceApp">—</div>
+        <ul class="ticks small">
+          <li>The full fifteen-seat app</li>
+          <li>Works offline forever</li>
+          <li>Free updates</li>
+        </ul>
+        <a class="btn ghost" data-buy-variant="app" href="#">Buy the app</a>
+      </div>
+
+      <div class="tier best">
+        <h3>App + agent pack</h3>
+        <div class="amt" data-cfg="price">—</div>
+        <ul class="ticks small">
+          <li>Everything in the app</li>
+          <li>The agent pack: GPT, Claude, Gemini, API</li>
+          <li>The method knowledge file</li>
+          <li>Free updates</li>
+        </ul>
+        <a class="btn" data-buy href="#">Get the bundle</a>
+      </div>
+
+      <div class="tier">
+        <h3>Team</h3>
+        <div class="amt" data-cfg="priceTeam">—</div>
+        <ul class="ticks small">
+          <li>Everything in the bundle</li>
+          <li>Licensed for your whole team</li>
+          <li>Use with client work</li>
+        </ul>
+        <a class="btn ghost" data-buy-variant="team" href="#">Buy the team licence</a>
+      </div>
+    </div>
+
+    <p class="small muted center" style="text-align:center;margin-top:1.4rem">
+      <span data-cfg="guarantee"></span> · Secure checkout handled by Gumroad · Instant download
+    </p>
+  </div>
+</section>
+
+<!-- ===================================================== FAQ ============= -->
+<section>
+  <div class="wrap narrow">
+    <div class="eyebrow">Questions</div>
+    <h2>The things people ask before buying.</h2>
+
+    <div style="margin-top:1.4rem">
+      <details class="faq" open>
+        <summary>Do I need an OpenAI or Claude API key?</summary>
+        <div><p>No. The whole board runs offline on a scoring engine built into the file. AI mode is optional and additive — and even it has a route that needs no key, because the app can build the complete board prompt with your figures already in it, ready to paste into any free chat model.</p></div>
+      </details>
+      <details class="faq">
+        <summary>Does it work without internet?</summary>
+        <div><p>Yes, completely, and that is a design decision rather than a limitation. Open the file from your desktop with the wifi off and every feature works. Nothing loads from a CDN, there are no web fonts, and there is no analytics script.</p></div>
+      </details>
+      <details class="faq">
+        <summary>Where does my data go?</summary>
+        <div><p>Into your own browser's local storage and nowhere else. You can back the whole session up to a JSON file and restore it later. The product has no server, no account and no database — which you can confirm yourself, because it is one readable file.</p></div>
+      </details>
+      <details class="faq">
+        <summary>Is this financial or legal advice?</summary>
+        <div><p>No, and it says so inside the product as well as here. It is a scoring engine applying fixed, readable rules to figures you supply. It has no access to your market, your customers or your books, and it cannot verify a single number you enter. Anything involving other people's money, regulated activity or debt should be checked by someone qualified and accountable.</p></div>
+      </details>
+      <details class="faq">
+        <summary>What if it tells me not to do the thing I want to do?</summary>
+        <div><p>Then you have learned something for the price of a download rather than the price of a launch. You are still free to proceed — it has no authority over you. But it will have written down exactly which numbers have to be wrong for you to be right, which is a useful list to keep.</p></div>
+      </details>
+      <details class="faq">
+        <summary>Can I use it for more than one decision?</summary>
+        <div><p>Yes, unlimited. Back up each session as a JSON file, clear, and start the next one. Re-running the same decision at day 30 and day 90 with the figures you actually observed is where most of the value is — the point is watching which assumption was wrong and how fast you found out.</p></div>
+      </details>
+      <details class="faq">
+        <summary>Does it work on a phone?</summary>
+        <div><p>Yes. The layout is responsive down to small screens and there is no horizontal scrolling. Typing a full brief is more comfortable on a laptop, but reading the board's report and ticking off the roadmap works fine on a phone.</p></div>
+      </details>
+      <details class="faq">
+        <summary>Can I resell it or use it with clients?</summary>
+        <div><p>Client work is covered by the team licence. Reselling the file itself is not included in any tier. If you want to bundle it into something you sell, message me before you do and we will sort out terms.</p></div>
+      </details>
+      <details class="faq">
+        <summary>Refunds?</summary>
+        <div><p><span data-cfg="guarantee"></span> Load the worked example, see whether the output is the kind of scrutiny you were after, and decide. No form to fill in and no reason required.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== FINAL =========== -->
+<section>
+  <div class="wrap narrow">
+    <div class="final">
+      <div class="eyebrow">The matter before the board</div>
+      <h2>You already know which decision you have been avoiding.</h2>
+      <p class="sub" style="text-align:left">
+        Put it in front of fifteen people whose job is to find the flaw in it. It takes about
+        twenty minutes to enter the brief, and the answer is either a plan with the weak points
+        named, or a saved year.
+      </p>
+      <div class="cta-row" style="justify-content:center">
+        <a class="btn lg" data-buy href="#">Convene the board — <span data-cfg="price"></span></a>
+      </div>
+      <p class="tiny muted" style="margin-bottom:0"><span data-cfg="guarantee"></span> · Instant download · Works offline forever</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>
+      <b>CLEAR AI Board of Directors.</b> A decision-support tool. It applies a fixed set of rules —
+      which you can read in the file — to figures you supply. It is not financial, legal, tax or
+      investment advice, it is not a substitute for a real board, an accountant or a lawyer, and it
+      makes no claim about the outcome of any decision you take. Its confidence score measures
+      agreement between its own seats and the quality of your inputs; it cannot measure whether you
+      are right.
+    </p>
+    <p data-cfg-html="footerContact"></p>
+  </div>
+</footer>
+
+<script>
+/* ===========================================================================
+   CONFIG — the only part of this page you need to edit.
+   ---------------------------------------------------------------------------
+   1. Create the product in Gumroad and copy its URL.
+   2. Paste it into gumroadUrl below and set your prices.
+   3. If you sell tiers as Gumroad "versions", put each version's URL in
+      variantUrls; otherwise every button points at the single product.
+   =========================================================================== */
+const CONFIG = {
+  /* Your Gumroad product URL. Replace the whole string. */
+  gumroadUrl: "https://YOURNAME.gumroad.com/l/clear-board",
+
+  /* Headline price — the bundle, since that is what most people should buy. */
+  price:      "$39",
+  priceApp:   "$29",
+  priceTeam:  "$99",
+
+  guarantee:  "30-day refund, no questions asked",
+
+  /* Optional: per-tier checkout URLs if you use Gumroad versions.
+     Leave any of them empty to fall back to gumroadUrl. */
+  variantUrls: {
+    app:  "",
+    team: ""
+  },
+
+  /* Shown in the footer. Plain text or simple HTML. */
+  footerContact: 'Built by <b>Hassan Mohammed</b>. Questions before buying? Email <a href="mailto:you@example.com">you@example.com</a>.',
+
+  /* Set to true to load Gumroad's overlay checkout script. This is the ONLY
+     thing on this page that makes an external request — off by default. */
+  useGumroadOverlay: false
+};
+
+/* --------------------------------------------------------------------------
+   Nothing below here needs editing.
+   -------------------------------------------------------------------------- */
+(function () {
+  const PLACEHOLDER = "YOURNAME";
+  const $$ = s => Array.prototype.slice.call(document.querySelectorAll(s));
+
+  /* fill text placeholders */
+  $$("[data-cfg]").forEach(el => {
+    const v = CONFIG[el.getAttribute("data-cfg")];
+    if (v != null) el.textContent = v;
+  });
+  $$("[data-cfg-html]").forEach(el => {
+    const v = CONFIG[el.getAttribute("data-cfg-html")];
+    if (v != null) el.innerHTML = v;
+  });
+
+  /* wire every buy button */
+  const url = CONFIG.gumroadUrl || "#";
+  $$("[data-buy]").forEach(a => { a.href = url; });
+  $$("[data-buy-variant]").forEach(a => {
+    const k = a.getAttribute("data-buy-variant");
+    a.href = (CONFIG.variantUrls && CONFIG.variantUrls[k]) || url;
+  });
+
+  /* the in-page pricing anchor should still scroll rather than leave */
+  const navBuy = document.querySelector('.nav [data-buy]');
+  if (navBuy) {
+    navBuy.href = "#buy";
+    navBuy.addEventListener("click", e => {
+      e.preventDefault();
+      const t = document.getElementById("buy");
+      if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  /* loud, seller-only warning while the checkout is still a placeholder */
+  if (url.indexOf(PLACEHOLDER) >= 0) {
+    const w = document.getElementById("setup-warning");
+    if (w) w.hidden = false;
+  }
+
+  /* theme toggle: light → dark → follow the system */
+  const KEY = "clear-board-landing-theme";
+  let theme = null;
+  try { theme = localStorage.getItem(KEY); } catch (e) {}
+  const apply = () => {
+    if (theme) document.documentElement.setAttribute("data-theme", theme);
+    else document.documentElement.removeAttribute("data-theme");
+  };
+  apply();
+  const btn = document.getElementById("theme");
+  if (btn) btn.addEventListener("click", () => {
+    theme = theme === "light" ? "dark" : theme === "dark" ? null : "light";
+    try { theme ? localStorage.setItem(KEY, theme) : localStorage.removeItem(KEY); } catch (e) {}
+    apply();
+  });
+
+  /* opt-in Gumroad overlay — makes an external request, so it is off unless asked for */
+  if (CONFIG.useGumroadOverlay) {
+    const s = document.createElement("script");
+    s.src = "https://gumroad.com/js/gumroad.js";
+    s.async = true;
+    document.body.appendChild(s);
+    $$("[data-buy], [data-buy-variant]").forEach(a => {
+      if (a.closest(".nav")) return;
+      a.classList.add("gumroad-button");
+    });
+  }
+})();
+</script>
+</body>
+</html>
