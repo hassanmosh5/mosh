@@ -1,0 +1,3871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course Creation Systems — outline, production plan and launch maths</title>
+<meta name="description" content="Turn a course idea into a build specification: a backward-designed curriculum, time-boxed lesson scripts, an honest production-hours estimate, pricing and platform arithmetic, a drop-off audit and a launch schedule. Single file, fully offline.">
+<meta name="color-scheme" content="light dark">
+<style>
+/* ===========================================================================
+   COURSE CREATION SYSTEMS
+   Single file. No external requests of any kind. Everything below is inline:
+   no CDN scripts, no web fonts, no images, no analytics, no network calls.
+   =========================================================================== */
+
+:root {
+  --ink:        #16151d;
+  --ink-2:      #444055;
+  --ink-3:      #6f6a83;
+  --bg:         #f7f5fb;
+  --surface:    #ffffff;
+  --surface-2:  #faf8fd;
+  --surface-3:  #f0edf7;
+  --line:       #e2dded;
+  --line-2:     #cbc3dc;
+
+  --acc:        #5b3ecc;
+  --acc-2:      #6f52e0;
+  --acc-bg:     #eeeafc;
+  --teal:       #0e6d70;
+  --teal-bg:    #e0f2f2;
+  --green:      #17683e;
+  --green-bg:   #e4f4eb;
+  --amber:      #8a5606;
+  --amber-bg:   #fdf2df;
+  --red:        #a52424;
+  --red-bg:     #fdebea;
+  --pink:       #a52777;
+  --pink-bg:    #fbe9f4;
+
+  --code-bg:    #14121d;
+  --code-ink:   #e2dff0;
+  --code-key:   #b39cf5;
+  --code-str:   #a5d6a7;
+  --code-com:   #857f9c;
+  --code-num:   #ffcc80;
+
+  --shadow:     0 1px 2px rgba(22,18,36,.06), 0 8px 24px -14px rgba(22,18,36,.22);
+  --shadow-lg:  0 2px 6px rgba(22,18,36,.07), 0 28px 56px -24px rgba(22,18,36,.32);
+  --radius:     14px;
+  --radius-sm:  9px;
+
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html[data-theme="dark"] {
+  --ink:        #e9e6f3;
+  --ink-2:      #b7b1c9;
+  --ink-3:      #8a849e;
+  --bg:         #100e17;
+  --surface:    #191723;
+  --surface-2:  #1f1d2b;
+  --surface-3:  #272436;
+  --line:       #2f2b40;
+  --line-2:     #443f5a;
+
+  --acc:        #b39cf5;
+  --acc-2:      #9c81ef;
+  --acc-bg:     #201a37;
+  --teal:       #5fc7ca;
+  --teal-bg:    #0f2729;
+  --green:      #6ecf9b;
+  --green-bg:   #12281d;
+  --amber:      #e8b661;
+  --amber-bg:   #2a2011;
+  --red:        #f08a86;
+  --red-bg:     #2c1616;
+  --pink:       #ef94c8;
+  --pink-bg:    #2e1626;
+
+  --code-bg:    #0b0910;
+  --shadow:     0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.7);
+  --shadow-lg:  0 2px 6px rgba(0,0,0,.5), 0 28px 56px -24px rgba(0,0,0,.8);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --ink:        #e9e6f3;
+    --ink-2:      #b7b1c9;
+    --ink-3:      #8a849e;
+    --bg:         #100e17;
+    --surface:    #191723;
+    --surface-2:  #1f1d2b;
+    --surface-3:  #272436;
+    --line:       #2f2b40;
+    --line-2:     #443f5a;
+
+    --acc:        #b39cf5;
+    --acc-2:      #9c81ef;
+    --acc-bg:     #201a37;
+    --teal:       #5fc7ca;
+    --teal-bg:    #0f2729;
+    --green:      #6ecf9b;
+    --green-bg:   #12281d;
+    --amber:      #e8b661;
+    --amber-bg:   #2a2011;
+    --red:        #f08a86;
+    --red-bg:     #2c1616;
+    --pink:       #ef94c8;
+    --pink-bg:    #2e1626;
+
+    --code-bg:    #0b0910;
+    --shadow:     0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.7);
+    --shadow-lg:  0 2px 6px rgba(0,0,0,.5), 0 28px 56px -24px rgba(0,0,0,.8);
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { line-height: 1.25; margin: 0; font-weight: 650; letter-spacing: -.012em; }
+h2 { font-size: 22px; }
+h3 { font-size: 17px; }
+h4 { font-size: 15px; }
+p { margin: 0 0 1em; }
+p:last-child { margin-bottom: 0; }
+a { color: var(--acc); text-underline-offset: 2px; }
+code, kbd, samp { font-family: var(--mono); font-size: .89em; }
+small { font-size: 13px; }
+
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+/* ---------------- top bar ---------------- */
+
+.topbar {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar .wrap {
+  display: flex; align-items: center; gap: 14px;
+  min-height: 60px; flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px;
+}
+.brand { display: flex; align-items: baseline; gap: 10px; margin-right: auto; }
+.brand b { font-size: 16px; font-weight: 700; letter-spacing: -.02em; }
+.brand span { font-size: 11px; color: var(--ink-3); letter-spacing: .06em; text-transform: uppercase; }
+@media (max-width: 760px) { .brand span { display: none; } }
+
+/* ---------------- buttons ---------------- */
+
+button, .btn {
+  font: inherit; font-size: 14px; font-weight: 550;
+  color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  padding: 8px 13px; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  transition: background .12s, border-color .12s, transform .1s, color .12s;
+  text-decoration: none;
+}
+button:hover, .btn:hover { background: var(--surface-2); border-color: var(--ink-3); }
+button:active { transform: translateY(1px); }
+button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visible,
+input:focus-visible, [tabindex]:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--acc-2); outline-offset: 2px;
+}
+button.primary { background: var(--acc); border-color: var(--acc); color: #fff; }
+html[data-theme="dark"] button.primary { color: #100e17; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) button.primary { color: #100e17; } }
+button.primary:hover { background: var(--acc-2); border-color: var(--acc-2); }
+button.ghost { background: transparent; border-color: transparent; color: var(--ink-2); }
+button.ghost:hover { background: var(--surface-2); border-color: var(--line); }
+button.danger { color: var(--red); }
+button.danger:hover { border-color: var(--red); }
+button.sm { padding: 5px 10px; font-size: 13px; }
+button.xs { padding: 3px 8px; font-size: 12px; }
+button[disabled] { opacity: .45; cursor: not-allowed; }
+button[disabled]:hover { background: var(--surface); border-color: var(--line-2); }
+
+/* ---------------- tabs ---------------- */
+
+.tabstrip { border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 60px; z-index: 45; }
+.tabstrip .wrap { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: thin; padding-right: 8px; }
+.tab {
+  border: none; background: none; border-radius: 0;
+  padding: 12px 13px; font-size: 14px; font-weight: 550; color: var(--ink-3);
+  border-bottom: 2px solid transparent; white-space: nowrap; flex: 0 0 auto;
+}
+.tab:hover { background: var(--surface-2); border-color: transparent; border-bottom-color: var(--line-2); color: var(--ink-2); }
+.tab[aria-selected="true"] { color: var(--acc); border-bottom-color: var(--acc); background: none; }
+
+main { padding: 26px 0 90px; }
+.panel[hidden] { display: none; }
+
+/* ---------------- cards & layout ---------------- */
+
+.card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
+  margin-bottom: 18px;
+}
+.card.flush { padding: 0; overflow: hidden; }
+.card-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.card-head h2, .card-head h3 { margin-right: auto; }
+.card > .sub { color: var(--ink-2); font-size: 14px; margin: -6px 0 16px; }
+
+.grid { display: grid; gap: 18px; }
+.grid.two { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+.grid.three { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.grid.four { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.split { display: grid; grid-template-columns: minmax(300px, 380px) 1fr; gap: 18px; align-items: start; }
+@media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
+
+/* Grid items default to min-width:auto, so a wide table's min-content pushes its
+   whole track past the viewport. Tables scroll inside .tablewrap; the track must
+   be allowed to shrink to let them. */
+.grid > *, .split > * { min-width: 0; }
+
+.page-intro { max-width: 760px; margin-bottom: 20px; }
+.page-intro h2 { margin-bottom: 8px; }
+.page-intro p { color: var(--ink-2); font-size: 15px; }
+
+/* ---------------- form controls ---------------- */
+
+label { display: block; font-size: 13px; font-weight: 600; color: var(--ink-2); margin-bottom: 5px; }
+label .hint { font-weight: 400; color: var(--ink-3); }
+
+input[type="text"], input[type="number"], input[type="date"], input[type="url"], select, textarea {
+  font: inherit; font-size: 14px; width: 100%;
+  color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
+select { cursor: pointer; }
+input::placeholder, textarea::placeholder { color: var(--ink-3); opacity: .8; }
+input[type="range"] { width: 100%; accent-color: var(--acc); }
+
+.field { margin-bottom: 14px; }
+.field:last-child { margin-bottom: 0; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field-row.three { grid-template-columns: 1fr 1fr 1fr; }
+@media (max-width: 560px) { .field-row, .field-row.three { grid-template-columns: 1fr; } }
+
+/* fieldset ignores min-width:0 and refuses to shrink below its min-content —
+   min-inline-size is the only property that overrides it. Without this, a wide
+   child pushes the fieldset past the viewport. */
+fieldset { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px 14px; margin: 0 0 14px; min-inline-size: 0; }
+legend { font-size: 12px; font-weight: 650; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); padding: 0 6px; }
+
+.check { display: flex; align-items: flex-start; gap: 9px; font-size: 14px; font-weight: 450; color: var(--ink); margin-bottom: 0; cursor: pointer; }
+.check input { margin: 3px 0 0; accent-color: var(--acc); width: 15px; height: 15px; flex: 0 0 auto; cursor: pointer; }
+.check > span { flex: 1; }
+.check + .check { margin-top: 9px; }
+
+.seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: var(--radius-sm); overflow: hidden; flex-wrap: wrap; }
+.seg button { border: none; border-radius: 0; border-right: 1px solid var(--line-2); background: var(--surface); font-size: 13px; padding: 7px 12px; }
+.seg button:last-child { border-right: none; }
+.seg button[aria-pressed="true"] { background: var(--acc); color: #fff; }
+html[data-theme="dark"] .seg button[aria-pressed="true"] { color: #100e17; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) .seg button[aria-pressed="true"] { color: #100e17; } }
+
+/* ---------------- pills, badges, chips ---------------- */
+
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11.5px; font-weight: 650; letter-spacing: .03em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 100px; border: 1px solid transparent; white-space: nowrap;
+}
+.pill.acc   { background: var(--acc-bg);   color: var(--acc);   border-color: color-mix(in srgb, var(--acc) 28%, transparent); }
+.pill.green { background: var(--green-bg); color: var(--green); border-color: color-mix(in srgb, var(--green) 28%, transparent); }
+.pill.amber { background: var(--amber-bg); color: var(--amber); border-color: color-mix(in srgb, var(--amber) 30%, transparent); }
+.pill.red   { background: var(--red-bg);   color: var(--red);   border-color: color-mix(in srgb, var(--red) 28%, transparent); }
+.pill.teal  { background: var(--teal-bg);  color: var(--teal);  border-color: color-mix(in srgb, var(--teal) 28%, transparent); }
+.pill.pink  { background: var(--pink-bg);  color: var(--pink);  border-color: color-mix(in srgb, var(--pink) 28%, transparent); }
+.pill.grey  { background: var(--surface-3); color: var(--ink-3); border-color: var(--line); }
+
+.tag { font-family: var(--mono); font-size: 12px; background: var(--surface-3); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; white-space: nowrap; }
+
+/* ---------------- tables ---------------- */
+
+.tablewrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-3); font-weight: 650; white-space: nowrap; background: var(--surface-2); }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: var(--surface-2); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+td.win { color: var(--green); font-weight: 650; }
+table code { background: var(--surface-3); border-radius: 4px; padding: 1px 5px; }
+table input[type="number"], table input[type="text"] { padding: 4px 7px; font-size: 13px; min-width: 72px; }
+
+/* ---------------- code / output blocks ---------------- */
+
+.codebox { border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 14px; background: var(--code-bg); }
+.codebox-head {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 7px 10px 7px 12px; background: rgba(255,255,255,.05);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.codebox-head .name { font-family: var(--mono); font-size: 12.5px; color: #d6d0ea; margin-right: auto; }
+.codebox-head button { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.16); color: #e9e6f3; font-size: 12px; padding: 4px 9px; }
+.codebox-head button:hover { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.3); }
+.codebox pre {
+  margin: 0; padding: 14px; overflow-x: auto;
+  font-family: var(--mono); font-size: 12.5px; line-height: 1.65; color: var(--code-ink);
+  tab-size: 2; white-space: pre-wrap; word-break: break-word;
+}
+.codebox pre .h { color: var(--code-key); font-weight: 700; }
+.codebox pre .t { color: var(--code-num); }
+.codebox pre .c { color: var(--code-com); font-style: italic; }
+
+/* ---------------- callouts ---------------- */
+
+.note {
+  border-left: 3px solid var(--acc); background: var(--acc-bg);
+  padding: 11px 14px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 14px; margin-bottom: 14px; color: var(--ink);
+}
+.note.warn { border-color: var(--amber); background: var(--amber-bg); }
+.note.bad  { border-color: var(--red);   background: var(--red-bg); }
+.note.good { border-color: var(--green); background: var(--green-bg); }
+.note b { font-weight: 650; }
+.note :last-child { margin-bottom: 0; }
+.note ul { margin: .5em 0 0; padding-left: 20px; }
+.note li { margin-bottom: 4px; }
+
+/* ---------------- stats ---------------- */
+
+.stat { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 13px 15px; }
+.stat .k { font-size: 12px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .04em; font-weight: 600; margin-bottom: 4px; }
+.stat .v { font-size: 25px; font-weight: 680; letter-spacing: -.02em; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.stat .v.sm { font-size: 19px; }
+.stat .d { font-size: 12.5px; color: var(--ink-3); margin-top: 4px; line-height: 1.45; }
+.stat.good .v { color: var(--green); }
+.stat.bad .v { color: var(--red); }
+.stat.warn .v { color: var(--amber); }
+.stat.accent { background: var(--acc-bg); border-color: color-mix(in srgb, var(--acc) 25%, transparent); }
+.stat.accent .v { color: var(--acc); }
+
+/* ---------------- outline builder ---------------- */
+
+.module {
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface); margin-bottom: 14px; overflow: hidden;
+}
+.module-head { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; background: var(--surface-2); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.module-head .idx {
+  flex: 0 0 auto; width: 25px; height: 25px; border-radius: 7px;
+  background: var(--acc-bg); color: var(--acc); border: 1px solid color-mix(in srgb, var(--acc) 30%, transparent);
+  display: grid; place-items: center; font-size: 12.5px; font-weight: 700; margin-top: 3px;
+}
+.module-head .mh-body { flex: 1 1 260px; min-width: 0; }
+.module-head .mh-body > input { font-weight: 620; }
+.module-outcome input { font-weight: 450; font-size: 13.5px; color: var(--ink-2); }
+.module-head .mh-acts { display: flex; gap: 4px; align-items: center; flex: 0 0 auto; }
+.module-outcome { font-size: 13px; margin-top: 6px; }
+.module-meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding: 0 14px 10px; font-size: 12.5px; color: var(--ink-3); background: var(--surface-2); }
+
+.lessons { list-style: none; margin: 0; padding: 8px 10px 10px; }
+.lesson {
+  display: grid; gap: 8px; align-items: center; padding: 8px;
+  grid-template-columns: 22px minmax(140px, 1fr) 128px 150px 74px auto;
+  border-radius: var(--radius-sm); border: 1px solid transparent;
+}
+.lesson:hover { background: var(--surface-2); border-color: var(--line); }
+.lesson .ln { font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; text-align: right; }
+.lesson .acts { display: flex; gap: 3px; }
+.lesson.flagged { border-color: color-mix(in srgb, var(--amber) 45%, transparent); background: var(--amber-bg); }
+/* Below the breakpoint the row becomes a single stack beside its number.
+   Without pinning every control to column 2, the auto-placement drops the
+   selects into the 22px number column and they push the page sideways. */
+@media (max-width: 860px) {
+  .lesson { grid-template-columns: 22px minmax(0, 1fr); }
+  .lesson > * { grid-column: 2; min-width: 0; }
+  .lesson > .ln { grid-column: 1; grid-row: 1; }
+  .lesson .acts { justify-content: flex-end; }
+}
+.lesson-head {
+  display: grid; gap: 8px; padding: 2px 8px 6px;
+  grid-template-columns: 22px minmax(140px, 1fr) 128px 150px 74px auto;
+  font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-3); font-weight: 650;
+}
+@media (max-width: 860px) { .lesson-head { display: none; } }
+
+/* ---------------- beats / script ---------------- */
+
+.beats { list-style: none; margin: 0; padding: 0; }
+.beat { display: flex; gap: 12px; align-items: baseline; padding: 9px 0; border-bottom: 1px dashed var(--line); }
+.beat:last-child { border-bottom: none; }
+.beat .clock { font-family: var(--mono); font-size: 13px; color: var(--acc); font-variant-numeric: tabular-nums; flex: 0 0 auto; width: 96px; }
+.beat .bname { font-weight: 620; font-size: 14px; flex: 0 0 auto; width: 120px; }
+.beat .bwhat { font-size: 13.5px; color: var(--ink-2); flex: 1; min-width: 0; }
+@media (max-width: 620px) {
+  .beat { flex-wrap: wrap; gap: 4px 12px; }
+  .beat .bwhat { flex: 1 1 100%; }
+}
+
+/* ---------------- bars ---------------- */
+
+.bar { height: 8px; border-radius: 100px; background: var(--surface-3); overflow: hidden; border: 1px solid var(--line); }
+.bar i { display: block; height: 100%; background: var(--acc); transition: width .3s; }
+.bar i.good { background: var(--green); }
+.bar i.warn { background: var(--amber); }
+.bar i.bad  { background: var(--red); }
+@media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
+
+.stackbar { display: flex; height: 26px; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--line); background: var(--surface-3); }
+.stackbar span { display: block; height: 100%; min-width: 2px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 10px; font-size: 13px; color: var(--ink-2); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; }
+
+/* ---------------- findings ---------------- */
+
+.finding { border: 1px solid var(--line); border-left-width: 3px; border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 10px; background: var(--surface); }
+.finding.high { border-left-color: var(--red); }
+.finding.med  { border-left-color: var(--amber); }
+.finding.low  { border-left-color: var(--acc); }
+.finding .fh { display: flex; gap: 9px; align-items: baseline; flex-wrap: wrap; margin-bottom: 5px; }
+.finding .fh b { font-size: 15px; font-weight: 620; }
+.finding .cost { font-size: 13.5px; color: var(--ink-2); margin-bottom: 6px; }
+.finding .fix { font-size: 13.5px; color: var(--ink); background: var(--surface-2); border-radius: 7px; padding: 8px 11px; }
+.finding .fix b { color: var(--green); }
+.finding .where { font-size: 12.5px; color: var(--ink-3); margin-top: 6px; }
+
+/* ---------------- timeline ---------------- */
+
+.tl { list-style: none; margin: 0; padding: 0 0 0 4px; }
+.tl li { display: flex; gap: 14px; align-items: flex-start; padding: 0 0 16px; position: relative; }
+.tl li::before { content: ""; position: absolute; left: 7px; top: 20px; bottom: 0; width: 2px; background: var(--line); }
+.tl li:last-child::before { display: none; }
+.tl .dot { flex: 0 0 auto; width: 16px; height: 16px; border-radius: 50%; background: var(--surface); border: 3px solid var(--acc); margin-top: 3px; z-index: 1; }
+.tl .dot.done { background: var(--green); border-color: var(--green); }
+.tl .dot.late { background: var(--red); border-color: var(--red); }
+.tl .tlb { flex: 1; min-width: 0; }
+.tl .when { font-size: 12.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.tl .what { font-weight: 600; font-size: 14.5px; }
+.tl .why { font-size: 13.5px; color: var(--ink-2); margin-top: 2px; }
+
+/* ---------------- misc ---------------- */
+
+details.disclosure { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0; margin-bottom: 10px; background: var(--surface-2); }
+details.disclosure > summary { cursor: pointer; padding: 10px 14px; font-weight: 600; font-size: 14px; list-style: none; display: flex; align-items: center; gap: 8px; }
+details.disclosure > summary::-webkit-details-marker { display: none; }
+details.disclosure > summary::before { content: "\25B8"; color: var(--ink-3); font-size: 12px; transition: transform .15s; }
+details.disclosure[open] > summary::before { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) { details.disclosure > summary::before { transition: none; } }
+details.disclosure .dbody { padding: 0 14px 14px; font-size: 14px; color: var(--ink-2); }
+details.disclosure .dbody :last-child { margin-bottom: 0; }
+
+.divider { height: 1px; background: var(--line); margin: 18px 0; border: none; }
+.muted { color: var(--ink-3); }
+.mono { font-family: var(--mono); }
+.nowrap { white-space: nowrap; }
+.right { text-align: right; }
+.center { text-align: center; }
+.stack > * + * { margin-top: 12px; }
+/* max-width, because a .row nested in another flex container keeps its
+   max-content width and pushes the page sideways instead of wrapping. */
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; min-width: 0; max-width: 100%; }
+.row.end { justify-content: flex-end; }
+.spacer { flex: 1; }
+
+.empty { text-align: center; padding: 34px 20px; color: var(--ink-3); font-size: 14px; border: 1px dashed var(--line-2); border-radius: var(--radius-sm); }
+
+.toasts { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; width: min(92vw, 460px); }
+.toast {
+  background: var(--ink); color: var(--bg); font-size: 14px; font-weight: 500;
+  padding: 9px 16px; border-radius: 100px; box-shadow: var(--shadow-lg);
+  animation: rise .22s ease-out; text-align: center;
+}
+.toast.err { background: var(--red); color: #fff; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
+
+.sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+.skip { position: absolute; left: -9999px; top: 0; z-index: 200; background: var(--acc); color: #fff; padding: 10px 16px; border-radius: 0 0 var(--radius-sm) 0; }
+.skip:focus { left: 0; }
+
+.foot { border-top: 1px solid var(--line); margin-top: 30px; padding: 22px 0 40px; font-size: 13px; color: var(--ink-3); }
+.foot p { margin-bottom: .7em; max-width: 820px; }
+
+@media print {
+  .topbar, .tabstrip, .noprint, .toasts { display: none !important; }
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .card { box-shadow: none; border-color: #bbb; break-inside: avoid; page-break-inside: avoid; }
+  .codebox { background: #fff; border-color: #bbb; }
+  .codebox pre { color: #111; }
+  .codebox pre .h, .codebox pre .t, .codebox pre .c { color: #111; }
+  .codebox-head { background: #f0f0f0; }
+  .codebox-head .name { color: #111; }
+  a { color: #000; }
+  .panel[hidden] { display: none !important; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <b>Course Creation Systems</b>
+      <span>outline &middot; production &middot; launch</span>
+    </div>
+    <button id="btn-backup" class="sm ghost" title="Download everything you've entered as a JSON file">&#11015; Back up</button>
+    <button id="btn-restore" class="sm ghost" title="Load a backup file back in">&#11014; Restore</button>
+    <button id="btn-clear" class="sm ghost danger" title="Back up, then erase all saved data">&#128465; Clear</button>
+    <button id="btn-theme" class="sm ghost" aria-label="Switch colour theme" title="Switch colour theme">&#9686; Theme</button>
+    <input id="restore-file" type="file" accept="application/json,.json" class="sr" tabindex="-1" aria-hidden="true">
+  </div>
+</header>
+
+<nav class="tabstrip" aria-label="Sections">
+  <div class="wrap" role="tablist">
+    <button class="tab" role="tab" id="tab-outcome"    aria-controls="panel-outcome"    data-panel="outcome">&#127919; Outcome</button>
+    <button class="tab" role="tab" id="tab-curriculum" aria-controls="panel-curriculum" data-panel="curriculum">&#129521; Curriculum</button>
+    <button class="tab" role="tab" id="tab-lesson"     aria-controls="panel-lesson"     data-panel="lesson">&#127916; Lesson design</button>
+    <button class="tab" role="tab" id="tab-production" aria-controls="panel-production" data-panel="production">&#127981; Production</button>
+    <button class="tab" role="tab" id="tab-pricing"    aria-controls="panel-pricing"    data-panel="pricing">&#129518; Pricing</button>
+    <button class="tab" role="tab" id="tab-platform"   aria-controls="panel-platform"   data-panel="platform">&#127959; Platform</button>
+    <button class="tab" role="tab" id="tab-audit"      aria-controls="panel-audit"      data-panel="audit">&#129658; Drop-off audit</button>
+    <button class="tab" role="tab" id="tab-launch"     aria-controls="panel-launch"     data-panel="launch">&#128640; Launch</button>
+    <button class="tab" role="tab" id="tab-brief"      aria-controls="panel-brief"      data-panel="brief">&#128196; Brief</button>
+  </div>
+</nav>
+
+<main id="main" class="wrap">
+
+<!-- ==================== OUTCOME ==================== -->
+<section class="panel" id="panel-outcome" role="tabpanel" aria-labelledby="tab-outcome" hidden>
+  <div class="page-intro">
+    <h2>Start with the outcome, not the outline</h2>
+    <p>
+      A course is not a pile of videos about a subject &mdash; it is a route from where someone is now to
+      somewhere they can prove they have arrived. Write that route down first. Every other tab in this app
+      is generated from what you type here, including the outline, the production estimate and the launch
+      schedule.
+    </p>
+  </div>
+
+  <div class="split">
+    <div>
+      <div class="card">
+        <div class="card-head"><h3>The promise</h3></div>
+        <div class="field">
+          <label for="o-title">Working title</label>
+          <input id="o-title" type="text" placeholder="e.g. The 30-Day Client Machine">
+        </div>
+        <div class="field">
+          <label for="o-audience">Who exactly it is for <span class="hint">&mdash; narrow beats big</span></label>
+          <input id="o-audience" type="text" placeholder="e.g. freelance copywriters with 1&ndash;3 clients">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="o-before">Where they are now</label>
+            <textarea id="o-before" placeholder="Chasing referrals, no repeatable way to find work"></textarea>
+          </div>
+          <div class="field">
+            <label for="o-after">Where they are after</label>
+            <textarea id="o-after" placeholder="A weekly outreach system producing 3 qualified calls"></textarea>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="o-metric">The proof <span class="hint">&mdash; what they can measure</span></label>
+            <input id="o-metric" type="text" placeholder="3 qualified calls booked in one week">
+          </div>
+          <div class="field">
+            <label for="o-timeframe">In how long</label>
+            <input id="o-timeframe" type="text" placeholder="30 days">
+          </div>
+        </div>
+        <div class="note" id="o-promise-note"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Shape &amp; economics</h3></div>
+        <fieldset>
+          <legend>Delivery format</legend>
+          <div class="seg" id="o-format" role="group" aria-label="Delivery format">
+            <button type="button" data-format="selfpaced">Self-paced</button>
+            <button type="button" data-format="cohort">Cohort</button>
+            <button type="button" data-format="hybrid">Hybrid</button>
+          </div>
+          <p class="muted" id="o-format-note" style="font-size:13px;margin:10px 0 0"></p>
+        </fieldset>
+        <div class="field-row">
+          <div class="field">
+            <label for="o-currency">Currency</label>
+            <select id="o-currency"></select>
+          </div>
+          <div class="field">
+            <label for="o-price">Price</label>
+            <input id="o-price" type="number" min="0" step="1" inputmode="decimal">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="o-revtarget">Revenue target <span class="hint">&mdash; first launch</span></label>
+            <input id="o-revtarget" type="number" min="0" step="1" inputmode="decimal">
+          </div>
+          <div class="field">
+            <label for="o-launch">Target launch date</label>
+            <input id="o-launch" type="date">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="o-capacity">Hours a week you can build</label>
+            <input id="o-capacity" type="number" min="0" step="0.5" inputmode="decimal">
+          </div>
+          <div class="field">
+            <label for="o-audience-size">People you can reach today</label>
+            <input id="o-audience-size" type="number" min="0" step="1" inputmode="numeric">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="o-conv">Buy rate <span class="hint">&mdash; % of that audience</span></label>
+            <input id="o-conv" type="number" min="0" max="100" step="0.1" inputmode="decimal">
+          </div>
+          <div class="field">
+            <label for="o-refund">Refund rate <span class="hint">&mdash; %</span></label>
+            <input id="o-refund" type="number" min="0" max="100" step="0.5" inputmode="decimal">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card" id="o-gate-card">
+        <div class="card-head">
+          <h3>The validation gate</h3>
+          <span class="pill grey" id="o-gate-pill">Not checked</span>
+        </div>
+        <p class="sub">
+          Chapter 7 of <i>The AI Income Blueprint</i> gives three criteria for a product worth building, and a
+          30-minute method for testing demand before you build it. A course is the most expensive digital
+          product to make, so this matters more here than anywhere else.
+        </p>
+        <fieldset>
+          <legend>The 3 criteria</legend>
+          <label class="check"><input type="checkbox" id="g-c1"><span><b>It solves a specific, recurring problem.</b> Not &ldquo;learn design&rdquo; &mdash; a problem someone hits again and again and would pay to stop hitting.</span></label>
+          <label class="check"><input type="checkbox" id="g-c2"><span><b>The buyer is easy to reach.</b> You can name the forum, group, list or search term where they already gather.</span></label>
+          <label class="check"><input type="checkbox" id="g-c3"><span><b>You can test it fast.</b> There is a version small enough to put in front of people before you build the whole thing.</span></label>
+        </fieldset>
+        <div class="field">
+          <label for="g-evidence">Evidence of demand <span class="hint">&mdash; what actually happened, not what you expect</span></label>
+          <textarea id="g-evidence" placeholder="e.g. 14 waitlist signups from one post; 5 buyer calls, 4 named the same problem; 2 pre-sales at half price"></textarea>
+        </div>
+        <div id="o-gate-out"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Where you stand</h3></div>
+        <div class="grid four" id="o-stats"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>The 30-minute validation method</h3></div>
+        <p class="sub">Chapter 7, applied to a course. Run it before you record anything.</p>
+        <ol id="o-validation" style="margin:0;padding-left:20px;font-size:14px;color:var(--ink-2)"></ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CURRICULUM ==================== -->
+<section class="panel" id="panel-curriculum" role="tabpanel" aria-labelledby="tab-curriculum" hidden>
+  <div class="page-intro">
+    <h2>Design backwards from the proof</h2>
+    <p>
+      Start at the outcome and ask what someone must be able to do to reach it. Those are your modules.
+      Then ask what they must be able to do to finish each module. Those are your lessons. Anything that
+      does not sit on that path is a bonus, not a lesson &mdash; mark it as such and it stops inflating your
+      build.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Outline</h3>
+      <div class="row noprint">
+        <select id="c-archetype" aria-label="Starting structure" style="flex:1 1 210px;width:auto;min-width:0;max-width:100%"></select>
+        <button id="c-apply-archetype" class="sm">Load structure</button>
+        <button id="c-add-module" class="sm primary">+ Module</button>
+      </div>
+    </div>
+    <div class="grid four" id="c-stats" style="margin-bottom:16px"></div>
+    <div id="c-scope"></div>
+    <div id="c-outline"></div>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <div class="card-head"><h3>Runtime by module</h3></div>
+      <div id="c-balance"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Lesson types, and what each is for</h3></div>
+      <div class="tablewrap"><table id="c-types"><thead><tr><th>Type</th><th>Job</th><th>Runtime guide</th></tr></thead><tbody></tbody></table></div>
+      <p class="muted" style="font-size:13px;margin-top:12px">
+        A course made only of <b>teach</b> lessons is a book someone has to watch. The completing ones are
+        built around what the learner produces.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== LESSON DESIGN ==================== -->
+<section class="panel" id="panel-lesson" role="tabpanel" aria-labelledby="tab-lesson" hidden>
+  <div class="page-intro">
+    <h2>One lesson, time-boxed</h2>
+    <p>
+      Every lesson has the same shape, and the shape is a clock. Pick a lesson and the app splits its
+      runtime into beats, gives you the word budget that fits, and writes the script skeleton you record
+      from.
+    </p>
+  </div>
+
+  <div class="split">
+    <div>
+      <div class="card">
+        <div class="card-head"><h3>Pick a lesson</h3></div>
+        <div class="field">
+          <label for="l-pick">Lesson</label>
+          <select id="l-pick"></select>
+        </div>
+        <div id="l-meta"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Delivery settings</h3></div>
+        <div class="field">
+          <label for="l-wpm">Speaking pace <span class="hint">&mdash; words per minute</span></label>
+          <input id="l-wpm" type="number" min="60" max="220" step="5" inputmode="numeric">
+          <p class="muted" style="font-size:12.5px;margin-top:6px">
+            Unhurried teaching sits around 130&ndash;150. Anything above 170 is hard to follow when the
+            material is new.
+          </p>
+        </div>
+        <div class="field">
+          <label class="check"><input type="checkbox" id="l-show-prompt"><span>Show the AI scripting prompt</span></label>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-head">
+          <h3>Beat sheet</h3>
+          <span id="l-budget" class="pill acc"></span>
+        </div>
+        <ul class="beats" id="l-beats"></ul>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <h3>Script skeleton</h3>
+          <button id="l-copy-script" class="sm noprint">Copy</button>
+          <button id="l-dl-script" class="sm noprint">Download .md</button>
+        </div>
+        <div id="l-script"></div>
+      </div>
+      <div class="card" id="l-prompt-card" hidden>
+        <div class="card-head">
+          <h3>Scripting prompt</h3>
+          <button id="l-copy-prompt" class="sm noprint">Copy</button>
+        </div>
+        <p class="sub">
+          Built on the CLEAR formula from Chapter 5 &mdash; Context, Length, Examples, Audience, Role &mdash; and
+          filled in from this lesson. Draft with it, then rewrite in your own voice; the parts of a course
+          people quote back to you are never the generated ones.
+        </p>
+        <div id="l-prompt"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PRODUCTION ==================== -->
+<section class="panel" id="panel-production" role="tabpanel" aria-labelledby="tab-production" hidden>
+  <div class="page-intro">
+    <h2>What this will actually cost you in hours</h2>
+    <p>
+      The number that kills most courses is not the price or the platform. It is that a finished minute of
+      course takes many minutes to make, and nobody works that out before starting. Here it is, from your
+      own outline.
+    </p>
+  </div>
+
+  <div id="p-gate"></div>
+
+  <div class="grid four" id="p-stats"></div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="card-head"><h3>Where the hours go</h3></div>
+    <div id="p-breakdown"></div>
+  </div>
+
+  <div class="split">
+    <div>
+      <div class="card">
+        <div class="card-head"><h3>Effort ratios</h3></div>
+        <p class="sub">Minutes of work per finished minute. Editable &mdash; these are planning defaults, not measurements.</p>
+        <div class="tablewrap"><table id="p-ratios"><thead><tr><th>Production style</th><th class="num">Ratio</th><th class="num">Typical</th></tr></thead><tbody></tbody></table></div>
+        <button id="p-reset-ratios" class="sm ghost noprint" style="margin-top:12px">Reset to defaults</button>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Calibrate from your first lesson</h3></div>
+        <p class="sub">
+          The only ratio worth trusting is your own. Record one real lesson, log the wall-clock hours it
+          took including retakes and edit, and everything on this tab recalculates.
+        </p>
+        <div class="field-row">
+          <div class="field">
+            <label for="p-cal-mins">Finished minutes</label>
+            <input id="p-cal-mins" type="number" min="0" step="0.5" inputmode="decimal" placeholder="8">
+          </div>
+          <div class="field">
+            <label for="p-cal-hours">Hours it took</label>
+            <input id="p-cal-hours" type="number" min="0" step="0.25" inputmode="decimal" placeholder="4.5">
+          </div>
+        </div>
+        <div class="field">
+          <label for="p-cal-style">Which style was it?</label>
+          <select id="p-cal-style"></select>
+        </div>
+        <div class="row">
+          <button id="p-cal-apply" class="primary sm">Use my measured ratio</button>
+          <button id="p-cal-clear" class="sm ghost">Clear</button>
+        </div>
+        <div id="p-cal-out" style="margin-top:12px"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-head"><h3>Everything that is not recording</h3></div>
+        <p class="sub">Untick what you are genuinely not doing. Leaving it all ticked is the honest default.</p>
+        <div class="tablewrap"><table id="p-overheads"><thead><tr><th>Task</th><th class="num">Hours</th><th class="num">Basis</th></tr></thead><tbody></tbody></table></div>
+        <div class="field" style="margin-top:14px;max-width:260px">
+          <label for="p-contingency">Contingency <span class="hint">&mdash; % on production</span></label>
+          <input id="p-contingency" type="number" min="0" max="200" step="5" inputmode="numeric">
+        </div>
+        <p class="muted" style="font-size:13px;margin-top:8px">
+          Re-records, a corrupted file, the week you get ill. Twenty per cent is optimistic and still better
+          than none.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Can you finish in time?</h3></div>
+        <div id="p-schedule"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>If it does not fit</h3></div>
+        <div id="p-levers"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PRICING ==================== -->
+<section class="panel" id="panel-pricing" role="tabpanel" aria-labelledby="tab-pricing" hidden>
+  <div class="page-intro">
+    <h2>Price the outcome, then check the arithmetic</h2>
+    <p>
+      Chapter 11 argues for pricing against the transformation rather than the hours. That sets the ceiling.
+      The arithmetic below sets the floor: how many sales your target needs, how many people you must reach
+      to get them, and what the whole build earns per hour you spend on it.
+    </p>
+  </div>
+
+  <div class="grid four" id="pr-stats"></div>
+
+  <div class="split" style="margin-top:18px">
+    <div>
+      <div class="card">
+        <div class="card-head"><h3>Value anchor</h3></div>
+        <p class="sub">What is the outcome worth to the buyer in their first year? Price is usually an easy yes below 10&ndash;20% of that.</p>
+        <div class="field">
+          <label for="pv-mode">Value comes from</label>
+          <select id="pv-mode">
+            <option value="time">Time saved</option>
+            <option value="money">Money earned or saved</option>
+            <option value="manual">A number I will type</option>
+          </select>
+        </div>
+        <div id="pv-inputs"></div>
+        <div id="pv-out" style="margin-top:14px"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>What your time is worth</h3></div>
+        <div class="field">
+          <label for="pr-hourly">Your hourly rate <span class="hint">&mdash; what you'd earn instead</span></label>
+          <input id="pr-hourly" type="number" min="0" step="1" inputmode="decimal">
+        </div>
+        <div id="pr-opportunity"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-head"><h3>The route to your target</h3></div>
+        <div id="pr-funnel"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Price bands and what each one promises</h3></div>
+        <p class="sub">
+          Bands, not prices &mdash; the number moves with your market and currency. What does not move is
+          what a buyer expects at each level. Charging flagship money for a self-paced video library is how
+          refund rates get to double digits.
+        </p>
+        <div class="tablewrap"><table id="pr-ladder"><thead><tr><th>Band</th><th>Typical shape</th><th>What the buyer expects</th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Sensitivity</h3></div>
+        <p class="sub">Same course, different price. Sales needed to hit your target, and whether your audience can supply them.</p>
+        <div class="tablewrap"><table id="pr-sens"><thead><tr><th class="num">Price</th><th class="num">Net per sale</th><th class="num">Sales needed</th><th class="num">People needed</th><th>Reachable?</th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PLATFORM ==================== -->
+<section class="panel" id="panel-platform" role="tabpanel" aria-labelledby="tab-platform" hidden>
+  <div class="page-intro">
+    <h2>Where it lives, and what that costs per sale</h2>
+    <p>
+      Hosting models trade a monthly fee against a cut of every sale. Which is cheaper is not a matter of
+      opinion &mdash; it is one division, and it flips at a sales volume you can calculate. Every fee below
+      is editable because published rates change; type in the real ones before deciding.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Fee model</h3>
+      <div class="row noprint">
+        <label for="pf-volume" style="margin:0">Sales a month</label>
+        <input id="pf-volume" type="number" min="0" step="1" inputmode="numeric" style="width:90px">
+        <button id="pf-reset" class="sm ghost">Reset fees</button>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table id="pf-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th class="num">Take %</th>
+            <th class="num">Per sale</th>
+            <th class="num">Monthly</th>
+            <th class="num">Net / sale</th>
+            <th class="num">Net / month</th>
+            <th class="num">Break-even</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="muted" style="font-size:13px;margin-top:12px">
+      &ldquo;Break-even&rdquo; is the monthly sales volume at which this model overtakes the best
+      zero-monthly-fee option at your price. Below it you are paying rent for nothing.
+    </p>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <div class="card-head"><h3>What you are actually buying</h3></div>
+      <div id="pf-notes"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>The marketplace question</h3></div>
+      <div id="pf-marketplace"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== DROP-OFF AUDIT ==================== -->
+<section class="panel" id="panel-audit" role="tabpanel" aria-labelledby="tab-audit" hidden>
+  <div class="page-intro">
+    <h2>Where people will stop</h2>
+    <p>
+      This reads your outline and flags the structural reasons a learner quits: a first lesson too long to
+      finish in a sitting, a module with nothing to hand in, a course with no deadline in it anywhere.
+      Every finding points at something in your own outline, and none of it is a prediction &mdash; it is a
+      list of the places where courses lose people.
+    </p>
+  </div>
+
+  <div class="grid four" id="a-stats"></div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="card-head">
+      <h3>Findings</h3>
+      <span id="a-count" class="muted"></span>
+    </div>
+    <div id="a-findings"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>The mechanics behind the checks</h3></div>
+    <div id="a-mechanics"></div>
+  </div>
+</section>
+
+<!-- ==================== LAUNCH ==================== -->
+<section class="panel" id="panel-launch" role="tabpanel" aria-labelledby="tab-launch" hidden>
+  <div class="page-intro">
+    <h2>Counting backwards from launch day</h2>
+    <p>
+      A launch is a sequence with dependencies, so it is built backwards from the date. The schedule below
+      is generated from your target date and checked against your production estimate &mdash; if the build
+      does not finish before the beta needs to start, it says so here rather than in week six.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Schedule</h3>
+      <div class="row noprint">
+        <label for="lp-beta" class="check" style="margin:0"><input type="checkbox" id="lp-beta"><span>Run a beta cohort first</span></label>
+      </div>
+    </div>
+    <div id="lp-conflict"></div>
+    <ul class="tl" id="lp-timeline"></ul>
+  </div>
+
+  <div class="split">
+    <div>
+      <div class="card">
+        <div class="card-head"><h3>Waitlist maths</h3></div>
+        <div class="field-row">
+          <div class="field">
+            <label for="lp-listconv">Waitlist buy rate <span class="hint">&mdash; %</span></label>
+            <input id="lp-listconv" type="number" min="0" max="100" step="0.5" inputmode="decimal">
+          </div>
+          <div class="field">
+            <label for="lp-signup">Signup rate <span class="hint">&mdash; % of reach</span></label>
+            <input id="lp-signup" type="number" min="0" max="100" step="0.5" inputmode="decimal">
+          </div>
+        </div>
+        <div id="lp-waitlist"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Beta cohort</h3></div>
+        <div id="lp-betanote"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-head">
+          <h3>Launch emails</h3>
+          <button id="lp-copy-emails" class="sm noprint">Copy outline</button>
+        </div>
+        <p class="sub">Seven sends across the open cart. The job of each one is different; sending the same message seven times is why people mute launches.</p>
+        <div class="tablewrap"><table id="lp-emails"><thead><tr><th>When</th><th>Job</th><th>Subject pattern</th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Post-launch decision</h3></div>
+        <div id="lp-after"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== BRIEF ==================== -->
+<section class="panel" id="panel-brief" role="tabpanel" aria-labelledby="tab-brief" hidden>
+  <div class="page-intro">
+    <h2>The whole plan, as one document</h2>
+    <p>
+      Everything you have entered and everything the app worked out, as Markdown you can paste into a doc,
+      hand to an editor, or keep as the spec you build against.
+    </p>
+  </div>
+
+  <div class="card noprint">
+    <div class="card-head"><h3>What to include</h3></div>
+    <div class="grid three" id="b-options"></div>
+    <hr class="divider">
+    <div class="row">
+      <button id="b-build" class="primary">Build the brief</button>
+      <button id="b-copy" disabled>Copy</button>
+      <button id="b-download" disabled>Download .md</button>
+      <button id="b-csv" disabled>Outline as CSV</button>
+      <button id="b-print" disabled>Print</button>
+      <span class="spacer"></span>
+      <span class="muted" id="b-size"></span>
+    </div>
+  </div>
+
+  <div class="card" id="b-preview-card" hidden>
+    <div class="card-head"><h3>Preview</h3></div>
+    <div id="b-preview"></div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>
+      <b>Course Creation Systems</b> &mdash; a planning tool for <i>The AI Income Blueprint</i> by Hassan Mohammed.
+      The validation gate is Chapter 7's 3 Criteria and 30-Minute Validation Method; the pricing tab follows
+      Chapter 11's argument for pricing the outcome rather than the hour; the launch schedule is built on
+      Chapter 14's 30-day plan. Everything else &mdash; effort ratios, fee models, drop-off checks &mdash; is
+      course-production craft the book does not cover.
+    </p>
+    <p>
+      Effort ratios and price bands are <b>planning defaults with wide ranges</b>, not measurements of your
+      work or quotes from any platform. Calibrate the ratios against one real lesson and type in the fees
+      you were actually quoted. Nothing here forecasts sales: every figure is arithmetic on numbers you
+      supplied.
+    </p>
+    <p>
+      Everything you type stays in this browser's local storage. No accounts, no network requests, no
+      analytics. <span id="foot-storage"></span>
+    </p>
+  </div>
+</footer>
+
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+<script>
+/* ===========================================================================
+   DATA
+   Course-production craft, not book content, except where marked. Ratios and
+   price bands are planning defaults with wide ranges — every one of them is
+   editable in the interface, and the app says so wherever it uses them.
+   =========================================================================== */
+
+const CURRENCIES = [
+  { code: "USD", sym: "$",   name: "US dollar" },
+  { code: "EUR", sym: "€", name: "Euro" },
+  { code: "GBP", sym: "£", name: "Pound sterling" },
+  { code: "CAD", sym: "CA$", name: "Canadian dollar" },
+  { code: "AUD", sym: "A$",  name: "Australian dollar" },
+  { code: "NGN", sym: "₦", name: "Nigerian naira" },
+  { code: "GHS", sym: "GH₵", name: "Ghanaian cedi" },
+  { code: "KES", sym: "KSh", name: "Kenyan shilling" },
+  { code: "ZAR", sym: "R",   name: "South African rand" },
+  { code: "INR", sym: "₹", name: "Indian rupee" },
+  { code: "AED", sym: "AED", name: "UAE dirham" },
+  { code: "SGD", sym: "S$",  name: "Singapore dollar" }
+];
+
+/* --------------------------------------------------------------------------
+   Delivery formats. The choice changes the maths, not just the marketing:
+   recorded work is paid for once, live work is paid for every cohort.
+   -------------------------------------------------------------------------- */
+
+const FORMATS = [
+  {
+    id: "selfpaced", label: "Self-paced",
+    note: "Built once, sold forever, finished by almost nobody. The whole design problem is manufacturing the deadlines a cohort would have given you for free.",
+    deadline: false
+  },
+  {
+    id: "cohort", label: "Cohort",
+    note: "Start date, live sessions, people moving together. Completion is far higher and so is your delivery cost — every run costs you the live hours again.",
+    deadline: true
+  },
+  {
+    id: "hybrid", label: "Hybrid",
+    note: "Recorded lessons plus live calls. You pay the recording cost once and the call cost every cohort; the calls are what make people watch the recordings.",
+    deadline: true
+  }
+];
+
+/* --------------------------------------------------------------------------
+   Production styles. Ratio = minutes of work per finished minute, covering
+   scripting, recording, retakes and edit. Wide because the real figure depends
+   on you — hence the calibration panel.
+   -------------------------------------------------------------------------- */
+
+const STYLES = [
+  { id: "screen",   label: "Screencast / demo",       ratio: 12, lo: 6,  hi: 20, live: false,
+    what: "Recording your screen doing the thing. The cheapest video that still teaches." },
+  { id: "audio",    label: "Audio only",              ratio: 10, lo: 6,  hi: 18, live: false,
+    what: "No framing, no lighting, no eyeline. Fine for reflection and theory, useless for anything you must see." },
+  { id: "text",     label: "Text lesson / worksheet", ratio: 15, lo: 8,  hi: 25, live: false,
+    what: "Per reading-minute — roughly 200 words. Cheap to make, cheap to revise, easy to skim." },
+  { id: "slides",   label: "Slides + voiceover",      ratio: 22, lo: 12, hi: 35, live: false,
+    what: "The deck is the work. The voiceover is an afternoon." },
+  { id: "talking",  label: "Talking head, scripted",  ratio: 35, lo: 20, hi: 60, live: false,
+    what: "Script, camera, retakes, cut to length. The default for anything where you are the reason they bought." },
+  { id: "edited",   label: "Heavily edited",          ratio: 60, lo: 40, hi: 90, live: false,
+    what: "B-roll, motion graphics, multiple angles. Buy this only where it teaches something plain video cannot." },
+  { id: "live",     label: "Live session",            ratio: 3,  lo: 2,  hi: 6,  live: true,
+    what: "Prep only. The session itself is a delivery cost you pay again every cohort." }
+];
+
+/* --------------------------------------------------------------------------
+   Lesson types and their beat structure. Percentages are of the lesson's
+   runtime and sum to 1 within each type.
+   -------------------------------------------------------------------------- */
+
+const TYPES = [
+  { id: "teach",      label: "Teach",      guide: "6–12 min",
+    job: "Install one idea they did not have before." },
+  { id: "demo",       label: "Demo",       guide: "5–15 min",
+    job: "Show the thing being done at real speed, mistakes included." },
+  { id: "workshop",   label: "Workshop",   guide: "10–20 min",
+    job: "They build their version while the lesson is still running." },
+  { id: "checkpoint", label: "Checkpoint", guide: "3–8 min",
+    job: "They produce something you could mark, against a stated standard." },
+  { id: "resource",   label: "Resource",   guide: "3–8 min",
+    job: "Hand over a template and show exactly how it gets used." }
+];
+
+const BEATS = {
+  teach: [
+    { n: "Hook",            p: 0.08, what: "The specific failure this lesson removes, in one sentence. No welcome, no housekeeping." },
+    { n: "Why now",         p: 0.10, what: "Where this sits on the route and what it unblocks. One line back, one line forward." },
+    { n: "Teach",           p: 0.48, what: "One idea. If you are teaching two, this is two lessons." },
+    { n: "Example",         p: 0.22, what: "The idea applied to something real, with the actual words, numbers or screen shown." },
+    { n: "Recap & bridge",  p: 0.12, what: "Three sentences back, one sentence forward to what they do next." }
+  ],
+  demo: [
+    { n: "Hook",            p: 0.08, what: "What they will be able to reproduce by the end, stated as a result." },
+    { n: "Setup",           p: 0.12, what: "Starting state and what is on screen. Assume they paused and came back." },
+    { n: "Walkthrough",     p: 0.55, what: "Do it at working speed, narrating decisions rather than clicks." },
+    { n: "Where it breaks", p: 0.15, what: "The two or three failures they will hit, and what each looks like." },
+    { n: "Bridge",          p: 0.10, what: "Tell them to do it now, on their own material, before the next lesson." }
+  ],
+  workshop: [
+    { n: "The brief",       p: 0.12, what: "What they are making in this lesson and what finished looks like." },
+    { n: "Model it",        p: 0.20, what: "You do one, out loud, so the standard is visible rather than described." },
+    { n: "Their turn",      p: 0.45, what: "Explicit pause. Tell them to stop the video and do it — then say how long it should take." },
+    { n: "Common mistakes", p: 0.15, what: "The three versions you always see, and why each one is worse than it looks." },
+    { n: "Bridge",          p: 0.08, what: "Where their output gets used later. Nothing they make should be an exercise." }
+  ],
+  checkpoint: [
+    { n: "Restate",         p: 0.15, what: "The module outcome, and why this proves it." },
+    { n: "The task",        p: 0.35, what: "Exactly what they submit or produce. One deliverable, not a list." },
+    { n: "The standard",    p: 0.35, what: "How they know it is good enough. Show a passing example and a failing one." },
+    { n: "What next",       p: 0.15, what: "What unlocks, and what to fix first if they fell short." }
+  ],
+  resource: [
+    { n: "Purpose",         p: 0.18, what: "The job this template does and when it is the wrong tool." },
+    { n: "Tour",            p: 0.47, what: "Every field, tab or section — briefly, but leave nothing unexplained." },
+    { n: "Fill one in",     p: 0.25, what: "Complete it once with a real example, live." },
+    { n: "Where it goes",   p: 0.10, what: "Where they store it and which later lesson uses it." }
+  ]
+};
+
+/* --------------------------------------------------------------------------
+   Everything that is not recording. `fixed` is hours; `perHour` is hours per
+   finished hour of course.
+   -------------------------------------------------------------------------- */
+
+const OVERHEADS = [
+  { k: "design",   label: "Curriculum design & scripting setup", fixed: 6,           note: "Outcomes, sequencing, the outline you are looking at." },
+  { k: "deck",     label: "Slides & on-screen assets",                    perHour: 3, note: "Scales with runtime, not with lesson count." },
+  { k: "workbook", label: "Workbook, templates & downloads",   fixed: 10,             note: "The part people actually keep." },
+  { k: "captions", label: "Captions & transcripts",                       perHour: 1.5, note: "Auto-generate, then fix. The fixing is the hour." },
+  { k: "art",      label: "Course artwork & thumbnails",        fixed: 4 },
+  { k: "platform", label: "Platform setup, upload & test run",  fixed: 8,             note: "Including buying your own course once, as a stranger would." },
+  { k: "sales",    label: "Sales page & checkout",              fixed: 12 },
+  { k: "emails",   label: "Launch email sequence",              fixed: 8 },
+  { k: "beta",     label: "Beta cohort & revision round",       fixed: 12,            note: "The cheapest quality you will ever buy." },
+  { k: "support",  label: "FAQ, support docs & onboarding",     fixed: 4 }
+];
+
+/* --------------------------------------------------------------------------
+   Starting structures. Not templates to ship — scaffolds to argue with.
+   -------------------------------------------------------------------------- */
+
+const ARCHETYPES = [
+  {
+    id: "implementation", label: "Implementation system — build a working thing",
+    blurb: "For a promise shaped like “you will have a working X by the end”.",
+    modules: [
+      { title: "Decide and set up", outcome: "They have chosen their variant and the tools are ready.", lessons: [
+        { title: "What you are building, and what it is not", type: "teach", mins: 7, style: "talking" },
+        { title: "Pick your variant", type: "workshop", mins: 12, style: "talking" },
+        { title: "Tool setup, start to finish", type: "demo", mins: 14, style: "screen" },
+        { title: "Checkpoint: your setup runs", type: "checkpoint", mins: 5, style: "screen" }
+      ] },
+      { title: "Build the core", outcome: "The smallest version exists and works end to end.", lessons: [
+        { title: "The one principle that makes this work", type: "teach", mins: 9, style: "talking" },
+        { title: "Build it with me", type: "demo", mins: 16, style: "screen" },
+        { title: "Your turn, on your own material", type: "workshop", mins: 15, style: "screen" },
+        { title: "Checkpoint: a working v1", type: "checkpoint", mins: 6, style: "screen" }
+      ] },
+      { title: "Make it hold up", outcome: "It survives the three ways it normally breaks.", lessons: [
+        { title: "Where this breaks in the wild", type: "teach", mins: 8, style: "talking" },
+        { title: "Fixing the three usual failures", type: "demo", mins: 14, style: "screen" },
+        { title: "The maintenance routine", type: "resource", mins: 6, style: "screen" }
+      ] },
+      { title: "Run it for real", outcome: "It is in use and they can tell whether it is working.", lessons: [
+        { title: "Your first week, day by day", type: "resource", mins: 7, style: "slides" },
+        { title: "What to measure and what to ignore", type: "teach", mins: 8, style: "talking" },
+        { title: "Checkpoint: one week of real results", type: "checkpoint", mins: 5, style: "talking" }
+      ] }
+    ]
+  },
+  {
+    id: "skill", label: "Skill course — get measurably better at something",
+    blurb: "For a promise shaped like “you will be able to do X to this standard”.",
+    modules: [
+      { title: "The standard", outcome: "They can tell good work from bad, including their own.", lessons: [
+        { title: "What good actually looks like", type: "teach", mins: 9, style: "slides" },
+        { title: "Five examples, ranked and explained", type: "demo", mins: 13, style: "slides" },
+        { title: "Score your own current work", type: "workshop", mins: 12, style: "talking" }
+      ] },
+      { title: "The fundamentals", outcome: "The three moves everything else is built from.", lessons: [
+        { title: "Move one, in isolation", type: "teach", mins: 8, style: "talking" },
+        { title: "Move two, in isolation", type: "teach", mins: 8, style: "talking" },
+        { title: "Move three, in isolation", type: "teach", mins: 8, style: "talking" },
+        { title: "Drill: all three, badly, on purpose", type: "workshop", mins: 14, style: "talking" }
+      ] },
+      { title: "Under pressure", outcome: "They can do it with a constraint, not just in practice.", lessons: [
+        { title: "Working to a deadline", type: "demo", mins: 12, style: "screen" },
+        { title: "Working to someone else's brief", type: "workshop", mins: 15, style: "talking" },
+        { title: "Checkpoint: one piece, one hour", type: "checkpoint", mins: 6, style: "talking" }
+      ] },
+      { title: "A piece worth showing", outcome: "They finish something they would put their name on.", lessons: [
+        { title: "Choosing the right piece", type: "teach", mins: 7, style: "talking" },
+        { title: "Critique: how to read feedback", type: "teach", mins: 8, style: "talking" },
+        { title: "Checkpoint: the finished piece", type: "checkpoint", mins: 6, style: "talking" }
+      ] }
+    ]
+  },
+  {
+    id: "software", label: "Tool course — learn a piece of software",
+    blurb: "For a promise shaped like “you will run X confidently for your own work”.",
+    modules: [
+      { title: "Set up and orient", outcome: "Installed, configured, and they know what they are looking at.", lessons: [
+        { title: "The tour, in five minutes", type: "demo", mins: 5, style: "screen" },
+        { title: "Setup and settings that matter", type: "demo", mins: 11, style: "screen" },
+        { title: "Checkpoint: your workspace, configured", type: "checkpoint", mins: 4, style: "screen" }
+      ] },
+      { title: "The core workflow", outcome: "They can complete the main job end to end without help.", lessons: [
+        { title: "The workflow, start to finish", type: "demo", mins: 15, style: "screen" },
+        { title: "Doing it on your own file", type: "workshop", mins: 14, style: "screen" },
+        { title: "The ten shortcuts worth learning", type: "resource", mins: 7, style: "screen" },
+        { title: "Checkpoint: one real job, done", type: "checkpoint", mins: 5, style: "screen" }
+      ] },
+      { title: "Beyond the basics", outcome: "They use the features that actually save time.", lessons: [
+        { title: "Automation and reuse", type: "demo", mins: 13, style: "screen" },
+        { title: "Working with other people's files", type: "demo", mins: 10, style: "screen" },
+        { title: "What to ignore, and why", type: "teach", mins: 6, style: "talking" }
+      ] },
+      { title: "When it goes wrong", outcome: "They can diagnose their own problems.", lessons: [
+        { title: "Reading the error", type: "demo", mins: 9, style: "screen" },
+        { title: "The five problems everyone hits", type: "resource", mins: 8, style: "screen" }
+      ] }
+    ]
+  },
+  {
+    id: "business", label: "Launch course — get an offer selling",
+    blurb: "For a promise shaped like “you will have your first paying customer”. Mirrors Chapters 13–14.",
+    modules: [
+      { title: "Choose the offer", outcome: "One offer, chosen on evidence rather than enthusiasm.", lessons: [
+        { title: "Fit before opportunity", type: "teach", mins: 8, style: "talking" },
+        { title: "Score your options", type: "workshop", mins: 13, style: "slides" },
+        { title: "Checkpoint: one offer, written in a sentence", type: "checkpoint", mins: 4, style: "talking" }
+      ] },
+      { title: "Validate before you build", outcome: "Proof someone wants it, gathered in a week.", lessons: [
+        { title: "What counts as evidence", type: "teach", mins: 8, style: "talking" },
+        { title: "The 30-minute demand test", type: "demo", mins: 11, style: "screen" },
+        { title: "Talking to five buyers", type: "workshop", mins: 12, style: "talking" },
+        { title: "Checkpoint: evidence, or a pivot", type: "checkpoint", mins: 5, style: "talking" }
+      ] },
+      { title: "Build the minimum", outcome: "A deliverable good enough to charge for.", lessons: [
+        { title: "What to leave out of v1", type: "teach", mins: 7, style: "talking" },
+        { title: "Building it with AI assistance", type: "demo", mins: 15, style: "screen" },
+        { title: "Pricing it", type: "workshop", mins: 12, style: "slides" }
+      ] },
+      { title: "Sell it", outcome: "The offer is live and being shown to real buyers.", lessons: [
+        { title: "The page and the checkout", type: "demo", mins: 13, style: "screen" },
+        { title: "Where your first ten buyers come from", type: "teach", mins: 9, style: "talking" },
+        { title: "Handling the four objections", type: "teach", mins: 8, style: "talking" },
+        { title: "Checkpoint: your first sale", type: "checkpoint", mins: 5, style: "talking" }
+      ] }
+    ]
+  },
+  {
+    id: "exam", label: "Exam prep — pass a specific test",
+    blurb: "For a promise shaped like “you will pass X first time”.",
+    modules: [
+      { title: "Map the exam", outcome: "They know the format, weighting and pass mark cold.", lessons: [
+        { title: "Format, timing, marking", type: "teach", mins: 8, style: "slides" },
+        { title: "Where the marks actually are", type: "teach", mins: 7, style: "slides" },
+        { title: "Diagnostic: your baseline", type: "checkpoint", mins: 5, style: "text" }
+      ] },
+      { title: "Domain drills", outcome: "Each weighted domain practised to the exam standard.", lessons: [
+        { title: "Domain one: the traps", type: "teach", mins: 10, style: "slides" },
+        { title: "Domain two: the traps", type: "teach", mins: 10, style: "slides" },
+        { title: "Domain three: the traps", type: "teach", mins: 10, style: "slides" },
+        { title: "Drill set, timed", type: "workshop", mins: 15, style: "text" }
+      ] },
+      { title: "Exam technique", outcome: "They lose no marks to the format itself.", lessons: [
+        { title: "Reading the question", type: "demo", mins: 9, style: "slides" },
+        { title: "Time allocation and when to move on", type: "teach", mins: 7, style: "talking" },
+        { title: "Educated guessing", type: "teach", mins: 6, style: "talking" }
+      ] },
+      { title: "Mocks and exam day", outcome: "Two full mocks under real conditions, and a plan for the day.", lessons: [
+        { title: "Mock one, under timing", type: "checkpoint", mins: 5, style: "text" },
+        { title: "Marking your own mock honestly", type: "demo", mins: 10, style: "screen" },
+        { title: "Mock two and the final gap list", type: "checkpoint", mins: 5, style: "text" },
+        { title: "The 24 hours before", type: "resource", mins: 6, style: "talking" }
+      ] }
+    ]
+  },
+  {
+    id: "blank", label: "Blank — one module, one lesson",
+    blurb: "Start from nothing.",
+    modules: [
+      { title: "Module 1", outcome: "", lessons: [ { title: "Lesson 1", type: "teach", mins: 8, style: "talking" } ] }
+    ]
+  }
+];
+
+/* --------------------------------------------------------------------------
+   Price bands. Bands, not prices: the numbers scale with market and currency.
+   What does not scale is what a buyer expects for their money.
+   -------------------------------------------------------------------------- */
+
+const BANDS = [
+  { lo: 0,    hi: 0,     label: "Free",           shape: "One problem, 20–40 minutes, no support.",
+    expects: "Nothing. It exists to prove you can teach and to build the list you launch to." },
+  { lo: 1,    hi: 49,    label: "Tripwire",       shape: "One narrow win, under an hour of material.",
+    expects: "A single result, fast. No community, no calls, no feedback — and no complaints about that." },
+  { lo: 50,   hi: 299,   label: "Core course",    shape: "The complete route, self-paced, 2–5 hours.",
+    expects: "A finished, ordered curriculum, working downloads, email support, and updates when the material dates." },
+  { lo: 300,  hi: 799,   label: "Flagship",       shape: "Deep self-paced course plus assets and a community.",
+    expects: "Everything above plus templates worth having on their own, a place to ask questions, and a visible reason to trust you." },
+  { lo: 800,  hi: 2499,  label: "Cohort / group", shape: "Start date, live sessions, group feedback.",
+    expects: "A human, on a schedule, who looks at their work. Deadlines. Peers. If it is really recordings with a Slack channel, they will ask for the money back." },
+  { lo: 2500, hi: null,  label: "Hybrid / 1:1",   shape: "Programme with individual attention.",
+    expects: "Time with you specifically, tailored feedback, and access when they are stuck. Priced against their outcome, not your hours." }
+];
+
+/* --------------------------------------------------------------------------
+   Hosting models. Every figure is a starting point you should overwrite with
+   the rate you were actually quoted — published pricing moves constantly, and
+   processing fees differ by country.
+   -------------------------------------------------------------------------- */
+
+const PLATFORM_DEFAULTS = [
+  { id: "marketplace", label: "Course marketplace", take: 50, fixed: 0, monthly: 0,
+    what: "You list on someone else's storefront and they bring the buyer. The cut is large because it is an advertising budget you only pay on sales.",
+    cost: "You do not own the customer, the price is often set by their sitewide discounting, and the same buyer can be sold a competitor's course on your page." },
+  { id: "checkout", label: "Checkout + file delivery", take: 10, fixed: 0, monthly: 0,
+    what: "A payment page that emails the files. No course player, no progress tracking, no drip.",
+    cost: "Everything past the sale is manual. Fine for a tripwire, painful for a flagship." },
+  { id: "creator-lite", label: "Course platform, entry plan", take: 7.9, fixed: 0.3, monthly: 39,
+    what: "A real course player with progress tracking, on a plan that still takes a percentage.",
+    cost: "The percentage is the sting: it scales with your success while the monthly fee does not." },
+  { id: "creator-pro", label: "Course platform, higher plan", take: 2.9, fixed: 0.3, monthly: 99,
+    what: "The same platform on a plan where the take drops to card processing only.",
+    cost: "You pay it in slow months too. Worth it above the break-even volume, dead weight below it." },
+  { id: "membership", label: "Community / membership platform", take: 2.9, fixed: 0.3, monthly: 89,
+    what: "Community first, courses attached. Suits cohorts and anything where the peers are part of the product.",
+    cost: "A quiet community is worse than none — it is visible proof that nobody else bought." },
+  { id: "selfhost", label: "Self-hosted LMS", take: 2.9, fixed: 0.3, monthly: 25,
+    what: "Your own site, an LMS plugin, your own video hosting. Cheapest per sale by a distance.",
+    cost: "Roughly 20 hours of setup and you are the support desk when checkout breaks on a Saturday." }
+];
+
+/* --------------------------------------------------------------------------
+   Launch emails. Seven sends, seven different jobs.
+   -------------------------------------------------------------------------- */
+
+const EMAILS = [
+  { when: "Cart opens",        job: "State the promise and who it is for. Link once, high up.",              subject: "It's open: [outcome] in [timeframe]" },
+  { when: "+1 day",            job: "The cost of staying where they are. Story, not features.",              subject: "The [specific failure] most [audience] never fix" },
+  { when: "+2 days",           job: "Proof. A beta result with a number in it, or the work itself.",         subject: "[Name] got [result] in [time]" },
+  { when: "+3 days",           job: "The four objections — time, money, “will it work for me”, “isn't this free somewhere”.", subject: "“I don't have time for a course”" },
+  { when: "+4 days",           job: "What is actually inside. The curriculum, plainly, with runtimes.",       subject: "Everything in [course], module by module" },
+  { when: "24 hours left",     job: "Deadline mechanics. Say exactly what changes and when.",                 subject: "Closing tomorrow at [time] — what happens after" },
+  { when: "Final 3 hours",     job: "One line, one link, no argument. Shorter than you think.",               subject: "Last call" }
+];
+
+/* --------------------------------------------------------------------------
+   The 30-Minute Validation Method (Chapter 7), applied to a course.
+   -------------------------------------------------------------------------- */
+
+const VALIDATION = [
+  { t: "0–5 min",   what: "Write the promise as one sentence containing a measurable proof. If you cannot, the course is not a course yet." },
+  { t: "5–12 min",  what: "Go where the buyer already gathers. Read twenty recent posts. Count how many describe this exact problem in their own words — the count is the signal, not your reading of it." },
+  { t: "12–20 min", what: "Search for what already exists at this price. Competition is proof of a market; an empty result is a warning, not a gap." },
+  { t: "20–26 min", what: "Send the one-sentence promise to five real people and ask what they would want it to cover. Their answers are your module list." },
+  { t: "26–30 min", what: "Ask the two who replied hardest whether they will pre-pay half now for a beta seat. Money is the only reply that counts; everything else is politeness." }
+];
+
+/* --------------------------------------------------------------------------
+   Brief sections.
+   -------------------------------------------------------------------------- */
+
+const BRIEF_SECTIONS = [
+  { k: "outcome",    label: "Promise & audience" },
+  { k: "curriculum", label: "Full curriculum" },
+  { k: "scripts",    label: "Beat sheets for every lesson" },
+  { k: "production", label: "Production plan & hours" },
+  { k: "pricing",    label: "Pricing & revenue maths" },
+  { k: "platform",   label: "Platform comparison" },
+  { k: "audit",      label: "Drop-off audit" },
+  { k: "launch",     label: "Launch schedule & emails" }
+];
+
+/* ===========================================================================
+   CORE — helpers, storage, formatting
+   =========================================================================== */
+
+const $  = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+
+function el(tag, attrs, kids) {
+  const n = document.createElement(tag);
+  if (attrs) for (const k in attrs) {
+    const v = attrs[k];
+    if (v === null || v === undefined || v === false) continue;
+    if (k === "html") n.innerHTML = v;
+    else if (k === "text") n.textContent = v;
+    else if (k === "cls") n.className = v;
+    else if (k.slice(0, 2) === "on") n.addEventListener(k.slice(2), v);
+    else n.setAttribute(k, v === true ? "" : v);
+  }
+  if (kids) (Array.isArray(kids) ? kids : [kids]).forEach(c => {
+    if (c === null || c === undefined || c === false) return;
+    n.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+  });
+  return n;
+}
+
+function esc(s) {
+  return String(s === null || s === undefined ? "" : s).replace(/[&<>"']/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+let uidCounter = 0;
+function uid(prefix) { return (prefix || "id") + "-" + (++uidCounter).toString(36) + "-" + Math.random().toString(36).slice(2, 7); }
+
+/* ---- storage that degrades to memory rather than throwing ---- */
+
+const Store = (function () {
+  const KEY = "course-creation-systems.v1";
+  let mem = null, warned = false;
+  function ok() {
+    try { localStorage.setItem("__t", "1"); localStorage.removeItem("__t"); return true; }
+    catch (e) { return false; }
+  }
+  const available = ok();
+  return {
+    available,
+    read() {
+      if (!available) return mem;
+      try { const r = localStorage.getItem(KEY); return r ? JSON.parse(r) : null; }
+      catch (e) { return null; }
+    },
+    write(v) {
+      mem = v;
+      if (!available) return;
+      try { localStorage.setItem(KEY, JSON.stringify(v)); }
+      catch (e) {
+        if (!warned) { warned = true; toast("Couldn't save — this browser is blocking local storage. Your work stays in memory until you close the tab.", true); }
+      }
+    },
+    wipe() {
+      mem = null;
+      if (!available) return;
+      try { localStorage.removeItem(KEY); } catch (e) {}
+    }
+  };
+})();
+
+/* ---- toast ---- */
+
+function toast(msg, isErr) {
+  const box = $("#toasts");
+  if (!box) return;
+  const t = el("div", { cls: "toast" + (isErr ? " err" : ""), text: msg });
+  box.appendChild(t);
+  setTimeout(() => { t.remove(); }, isErr ? 5200 : 2600);
+}
+
+async function copyText(str, label) {
+  try {
+    if (navigator.clipboard && window.isSecureContext !== false) {
+      await navigator.clipboard.writeText(str);
+    } else { throw new Error("no clipboard"); }
+    toast((label || "Copied") + " — " + str.length.toLocaleString() + " characters");
+    return true;
+  } catch (e) {
+    // file:// and older browsers: fall back to a hidden textarea
+    try {
+      const ta = el("textarea", { style: "position:fixed;top:-9999px;opacity:0" });
+      ta.value = str;
+      document.body.appendChild(ta);
+      ta.select();
+      const done = document.execCommand("copy");
+      ta.remove();
+      if (!done) throw new Error("denied");
+      toast((label || "Copied") + " — " + str.length.toLocaleString() + " characters");
+      return true;
+    } catch (e2) {
+      toast("Couldn't reach the clipboard. Select the text and copy it manually.", true);
+      return false;
+    }
+  }
+}
+
+function download(name, text, mime) {
+  try {
+    const blob = new Blob([text], { type: (mime || "text/plain") + ";charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = el("a", { href: url, download: name });
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 500);
+    toast("Downloaded " + name);
+  } catch (e) {
+    toast("This browser blocked the download. Copy the text instead.", true);
+  }
+}
+
+/* ---- numbers, money, time ---- */
+
+function numOr(v, d) {
+  const n = parseFloat(v);
+  return isFinite(n) ? n : d;
+}
+function cur() {
+  return CURRENCIES.find(c => c.code === state.currency) || CURRENCIES[0];
+}
+function money(n, dp) {
+  if (n === null || n === undefined || !isFinite(n)) return "—";
+  const c = cur();
+  const digits = dp === undefined ? (Math.abs(n) < 10 && n !== 0 ? 2 : 0) : dp;
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: "currency", currency: c.code,
+      minimumFractionDigits: digits, maximumFractionDigits: digits
+    }).format(n);
+  } catch (e) {
+    return c.sym + n.toFixed(digits);
+  }
+}
+function num(n, dp) {
+  if (n === null || n === undefined || !isFinite(n)) return "—";
+  return n.toLocaleString(undefined, { minimumFractionDigits: dp || 0, maximumFractionDigits: dp === undefined ? 0 : dp });
+}
+function pct(n, dp) {
+  if (n === null || n === undefined || !isFinite(n)) return "—";
+  return n.toFixed(dp === undefined ? 1 : dp) + "%";
+}
+/** Minutes as "1h 24m" / "48m". */
+function hm(mins) {
+  if (!isFinite(mins)) return "—";
+  const m = Math.round(mins);
+  if (m < 60) return m + "m";
+  return Math.floor(m / 60) + "h " + (m % 60) + "m";
+}
+/** Seconds as mm:ss, for beat clocks. */
+function mmss(secs) {
+  const s = Math.max(0, Math.round(secs));
+  return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+}
+function hours(h, dp) {
+  if (!isFinite(h)) return "—";
+  return num(h, dp === undefined ? (h < 10 ? 1 : 0) : dp) + " h";
+}
+const DAY = 86400000;
+function parseDate(s) {
+  if (!s) return null;
+  const d = new Date(s + "T12:00:00");
+  return isFinite(d.getTime()) ? d : null;
+}
+function shiftDays(d, n) { return new Date(d.getTime() + n * DAY); }
+function fmtDate(d) {
+  if (!d) return "—";
+  try { return d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }); }
+  catch (e) { return d.toISOString().slice(0, 10); }
+}
+function isoDate(d) { return d ? d.toISOString().slice(0, 10) : ""; }
+function today() { const d = new Date(); d.setHours(12, 0, 0, 0); return d; }
+function daysBetween(a, b) { return Math.round((b.getTime() - a.getTime()) / DAY); }
+
+/* ===========================================================================
+   STATE
+   =========================================================================== */
+
+function seedModules(archId) {
+  const a = ARCHETYPES.find(x => x.id === archId) || ARCHETYPES[0];
+  return a.modules.map(m => ({
+    id: uid("m"),
+    title: m.title,
+    outcome: m.outcome,
+    lessons: m.lessons.map(l => ({
+      id: uid("l"),
+      title: l.title, type: l.type, mins: l.mins, style: l.style, core: true
+    }))
+  }));
+}
+
+function defaultState() {
+  return {
+    v: 1,
+    tab: "outcome",
+    theme: null,
+    currency: "USD",
+
+    title: "", audience: "", before: "", after: "", metric: "", timeframe: "",
+    format: "selfpaced",
+    price: 149, revTarget: 5000, launchDate: "", capacity: 6,
+    audienceSize: 500, conv: 2, refund: 5,
+
+    gate: { c1: false, c2: false, c3: false },
+    evidence: "",
+
+    archetype: "implementation",
+    modules: seedModules("implementation"),
+
+    ratios: {},
+    overheads: {},
+    contingency: 20,
+    calibration: null,
+
+    wpm: 140,
+    showPrompt: false,
+    lessonSel: null,
+
+    hourly: 40,
+    value: { mode: "time", hpm: 4, rate: 40, peryear: 3000, manual: 3000 },
+
+    platforms: {},
+    platformSel: "creator-lite",
+    volume: 20,
+
+    beta: true, listConv: 5, signupRate: 3,
+
+    brief: { outcome: true, curriculum: true, scripts: false, production: true, pricing: true, platform: true, audit: true, launch: true }
+  };
+}
+
+let state = defaultState();
+
+function save() { Store.write(state); }
+
+function load() {
+  const s = Store.read();
+  applySaved(s);
+}
+
+/** Merge a saved object over the defaults, one key deep, so an older or
+    hand-edited file can never leave a required key undefined. */
+function applySaved(s) {
+  if (!s || typeof s !== "object") return false;
+  const d = defaultState();
+  for (const k in d) {
+    if (!(k in s)) continue;
+    if (d[k] && typeof d[k] === "object" && !Array.isArray(d[k]) &&
+        s[k] && typeof s[k] === "object" && !Array.isArray(s[k])) {
+      state[k] = Object.assign({}, d[k], s[k]);
+    } else if (s[k] !== null && s[k] !== undefined) {
+      state[k] = s[k];
+    }
+  }
+  // structural repair: modules and lessons must have ids and valid enums
+  if (!Array.isArray(state.modules) || !state.modules.length) state.modules = d.modules;
+  state.modules = state.modules.map(m => ({
+    id: m && m.id || uid("m"),
+    title: m && typeof m.title === "string" ? m.title : "Module",
+    outcome: m && typeof m.outcome === "string" ? m.outcome : "",
+    lessons: (m && Array.isArray(m.lessons) ? m.lessons : []).map(l => ({
+      id: l && l.id || uid("l"),
+      title: l && typeof l.title === "string" ? l.title : "Lesson",
+      type: TYPES.some(t => t.id === (l && l.type)) ? l.type : "teach",
+      style: STYLES.some(t => t.id === (l && l.style)) ? l.style : "talking",
+      mins: Math.max(0, numOr(l && l.mins, 8)),
+      core: !(l && l.core === false)
+    }))
+  }));
+  if (!FORMATS.some(f => f.id === state.format)) state.format = d.format;
+  if (!CURRENCIES.some(c => c.code === state.currency)) state.currency = d.currency;
+  if (!PLATFORM_DEFAULTS.some(p => p.id === state.platformSel)) state.platformSel = d.platformSel;
+  return true;
+}
+
+/* ===========================================================================
+   DERIVED — the whole engine. Everything below is arithmetic on state; no
+   figure here is a forecast.
+   =========================================================================== */
+
+function fmt() { return FORMATS.find(f => f.id === state.format) || FORMATS[0]; }
+function styleOf(id) { return STYLES.find(s => s.id === id) || STYLES[4]; }
+function typeOf(id) { return TYPES.find(t => t.id === id) || TYPES[0]; }
+
+/** Every lesson, flattened, carrying its position. */
+function allLessons() {
+  const out = [];
+  state.modules.forEach((m, mi) => m.lessons.forEach((l, li) => {
+    out.push({ lesson: l, module: m, mi, li, n: (mi + 1) + "." + (li + 1) });
+  }));
+  return out;
+}
+function lessonById(id) {
+  return allLessons().find(x => x.lesson.id === id) || null;
+}
+function moduleMinutes(m) {
+  return m.lessons.reduce((a, l) => a + numOr(l.mins, 0), 0);
+}
+function totalMinutes() {
+  return state.modules.reduce((a, m) => a + moduleMinutes(m), 0);
+}
+function coreMinutes() {
+  return allLessons().filter(x => x.lesson.core !== false).reduce((a, x) => a + numOr(x.lesson.mins, 0), 0);
+}
+function bonusMinutes() { return totalMinutes() - coreMinutes(); }
+
+/** Minutes spent on lessons where the learner produces something. */
+function doingMinutes() {
+  return allLessons()
+    .filter(x => x.lesson.type === "workshop" || x.lesson.type === "checkpoint")
+    .reduce((a, x) => a + numOr(x.lesson.mins, 0), 0);
+}
+
+/** Effort ratio in use for a style — the override if one was set, else the default. */
+function ratioFor(styleId) {
+  const o = state.ratios[styleId];
+  const n = numOr(o, NaN);
+  return isFinite(n) && n > 0 ? n : styleOf(styleId).ratio;
+}
+/** One-off build hours for a single lesson. */
+function lessonHours(l) {
+  return numOr(l.mins, 0) * ratioFor(l.style) / 60;
+}
+/** All recording/writing hours, before contingency and overheads. */
+function productionHours() {
+  return allLessons().reduce((a, x) => a + lessonHours(x.lesson), 0);
+}
+/** Hours per production style, for the breakdown bar. */
+function hoursByStyle() {
+  const map = {};
+  allLessons().forEach(x => {
+    map[x.lesson.style] = (map[x.lesson.style] || 0) + lessonHours(x.lesson);
+  });
+  return STYLES.map(s => ({ style: s, h: map[s.id] || 0 })).filter(r => r.h > 0);
+}
+/** Live minutes are prepped once and then delivered again for every cohort. */
+function liveMinutes() {
+  return allLessons().filter(x => styleOf(x.lesson.style).live).reduce((a, x) => a + numOr(x.lesson.mins, 0), 0);
+}
+/** Live delivery, plus a quarter for overrun and questions. */
+function deliveryHoursPerCohort() {
+  return liveMinutes() / 60 * 1.25;
+}
+
+function overheadOn(k) {
+  const o = state.overheads[k];
+  return !o || o.on === undefined ? true : !!o.on;
+}
+function overheadHours(k) {
+  const def = OVERHEADS.find(o => o.k === k);
+  if (!def) return 0;
+  const o = state.overheads[k] || {};
+  if (def.perHour !== undefined) {
+    const per = numOr(o.hours, def.perHour);
+    return per * (totalMinutes() / 60);
+  }
+  return numOr(o.hours, def.fixed);
+}
+function overheadTotal() {
+  return OVERHEADS.reduce((a, o) => a + (overheadOn(o.k) ? overheadHours(o.k) : 0), 0);
+}
+function contingencyHours() {
+  return productionHours() * numOr(state.contingency, 0) / 100;
+}
+/** The number this whole tab exists to produce. */
+function buildHours() {
+  return productionHours() + contingencyHours() + overheadTotal();
+}
+function weeksToBuild() {
+  const cap = numOr(state.capacity, 0);
+  return cap > 0 ? buildHours() / cap : Infinity;
+}
+function finishDate() {
+  const w = weeksToBuild();
+  if (!isFinite(w)) return null;
+  return shiftDays(today(), Math.ceil(w * 7));
+}
+/** Blended ratio across the whole course — minutes of work per finished minute. */
+function blendedRatio() {
+  const t = totalMinutes();
+  return t > 0 ? productionHours() * 60 / t : 0;
+}
+
+/* ---- money ---- */
+
+function platformRow(id) {
+  const def = PLATFORM_DEFAULTS.find(p => p.id === id);
+  if (!def) return null;
+  const o = state.platforms[id] || {};
+  return {
+    id: def.id, label: def.label, what: def.what, cost: def.cost,
+    take: numOr(o.take, def.take),
+    fixed: numOr(o.fixed, def.fixed),
+    monthly: numOr(o.monthly, def.monthly)
+  };
+}
+function allPlatforms() { return PLATFORM_DEFAULTS.map(p => platformRow(p.id)); }
+function selectedPlatform() { return platformRow(state.platformSel) || allPlatforms()[0]; }
+
+/** What reaches you from one sale, before refunds. */
+function netPerSale(row, price) {
+  const p = price === undefined ? numOr(state.price, 0) : price;
+  const n = p * (1 - numOr(row.take, 0) / 100) - numOr(row.fixed, 0);
+  return Math.max(0, n);
+}
+/** What reaches you per sale once refunds are taken out of the batch. */
+function effectiveNet(price) {
+  return netPerSale(selectedPlatform(), price) * (1 - numOr(state.refund, 0) / 100);
+}
+function salesNeeded(price) {
+  const n = effectiveNet(price);
+  const t = numOr(state.revTarget, 0);
+  return n > 0 && t > 0 ? Math.ceil(t / n) : null;
+}
+function peopleNeeded(price) {
+  const s = salesNeeded(price);
+  const c = numOr(state.conv, 0) / 100;
+  return s !== null && c > 0 ? Math.ceil(s / c) : null;
+}
+/** Sales your current reach can supply at the stated buy rate. */
+function reachableSales() {
+  return numOr(state.audienceSize, 0) * numOr(state.conv, 0) / 100;
+}
+function reachableRevenue() {
+  return reachableSales() * effectiveNet();
+}
+function revenuePerBuildHour() {
+  const h = buildHours();
+  return h > 0 ? reachableRevenue() / h : null;
+}
+function opportunityCost() {
+  return buildHours() * numOr(state.hourly, 0);
+}
+function breakEvenSales() {
+  const n = effectiveNet();
+  const c = opportunityCost();
+  return n > 0 ? Math.ceil(c / n) : null;
+}
+/** Annual value of the outcome to the buyer, from whichever anchor is chosen. */
+function outcomeValue() {
+  const v = state.value || {};
+  if (v.mode === "money") return numOr(v.peryear, 0);
+  if (v.mode === "manual") return numOr(v.manual, 0);
+  return numOr(v.hpm, 0) * 12 * numOr(v.rate, 0);
+}
+function priceAsShareOfValue() {
+  const val = outcomeValue();
+  return val > 0 ? numOr(state.price, 0) / val * 100 : null;
+}
+function bandFor(price) {
+  return BANDS.slice().reverse().find(b => price >= b.lo) || BANDS[0];
+}
+/** The best net-per-sale available with no monthly fee — the bar a subscription must clear. */
+function bestFreeRow() {
+  const free = allPlatforms().filter(p => p.monthly <= 0);
+  if (!free.length) return null;
+  return free.reduce((best, r) => netPerSale(r) > netPerSale(best) ? r : best, free[0]);
+}
+/** Monthly sales at which a monthly-fee model overtakes the best free one. */
+function platformBreakEven(row) {
+  const base = bestFreeRow();
+  if (!base || row.monthly <= 0) return null;
+  const gain = netPerSale(row) - netPerSale(base);
+  if (gain <= 0) return Infinity;
+  return row.monthly / gain;
+}
+
+/* ---- validation gate ---- */
+
+function gateScore() {
+  const g = state.gate || {};
+  return (g.c1 ? 1 : 0) + (g.c2 ? 1 : 0) + (g.c3 ? 1 : 0);
+}
+function gatePassed() {
+  return gateScore() === 3 && (state.evidence || "").trim().length >= 15;
+}
+
+/* ---- schedule ---- */
+
+/** Launch schedule, counted backwards from the target date.
+    Offsets are days relative to cart open (day 0). */
+function launchPlan() {
+  const L = parseDate(state.launchDate);
+  const beta = !!state.beta;
+  const steps = beta ? [
+    { d: -56, what: "Build finished", why: "Everything recorded, uploaded and playable. This is the date your production plan has to beat." , gate: true },
+    { d: -49, what: "Beta seats offered", why: "8–12 people from your reach, at roughly half price, in exchange for weekly feedback and a testimonial." },
+    { d: -42, what: "Beta cohort starts", why: "Run it live even if the course is self-paced. You will learn more in three weeks than in three months of editing." },
+    { d: -21, what: "Beta ends — revisions", why: "Fix what the beta broke. Re-record only what was genuinely wrong; resist re-recording everything." },
+    { d: -18, what: "Testimonials collected", why: "Ask for the number, not the compliment: what changed, and by how much." },
+    { d: -14, what: "Waitlist opens", why: "One page, one promise, one field. Everything else is decoration." },
+    { d: -10, what: "Pre-launch piece 1", why: "Teach the smallest useful piece of the course in public. No pitch." },
+    { d: -7,  what: "Pre-launch piece 2", why: "The problem, told as a story with a cost attached." },
+    { d: -4,  what: "Pre-launch piece 3", why: "A beta result, in their words." },
+    { d: -1,  what: "“Tomorrow” email", why: "Sets the time and the terms so nobody misses the open." },
+    { d: 0,   what: "Cart opens", why: "Seven-day window. Longer and the deadline stops meaning anything." },
+    { d: 6,   what: "Cart closes", why: "Whatever you said would change must actually change." },
+    { d: 7,   what: "Onboarding", why: "The first 48 hours decide completion. Point everyone at one first action." },
+    { d: 21,  what: "Post-mortem", why: "Refunds, completion, what people asked for. Decide evergreen or next cohort." }
+  ] : [
+    { d: -28, what: "Build finished", why: "Everything recorded, uploaded and playable. This is the date your production plan has to beat.", gate: true },
+    { d: -25, what: "Five test users", why: "Not a cohort, but not zero either. Watch five people use it and fix what stops them." },
+    { d: -14, what: "Waitlist opens", why: "One page, one promise, one field." },
+    { d: -10, what: "Pre-launch piece 1", why: "Teach the smallest useful piece of the course in public. No pitch." },
+    { d: -7,  what: "Pre-launch piece 2", why: "The problem, told as a story with a cost attached." },
+    { d: -4,  what: "Pre-launch piece 3", why: "Proof — a result, a before and after, or the work itself." },
+    { d: -1,  what: "“Tomorrow” email", why: "Sets the time and the terms so nobody misses the open." },
+    { d: 0,   what: "Cart opens", why: "Seven-day window. Longer and the deadline stops meaning anything." },
+    { d: 6,   what: "Cart closes", why: "Whatever you said would change must actually change." },
+    { d: 7,   what: "Onboarding", why: "The first 48 hours decide completion. Point everyone at one first action." },
+    { d: 21,  what: "Post-mortem", why: "Refunds, completion, what people asked for. Decide evergreen or next cohort." }
+  ];
+  return steps.map(s => Object.assign({}, s, { date: L ? shiftDays(L, s.d) : null }));
+}
+/** The date the build has to be finished by, and whether the estimate makes it. */
+function buildDeadline() {
+  const plan = launchPlan();
+  const g = plan.find(s => s.gate);
+  return g ? g.date : null;
+}
+function scheduleConflict() {
+  const need = buildDeadline(), got = finishDate();
+  if (!need || !got) return null;
+  const slip = daysBetween(need, got);
+  return { need, got, slip, ok: slip <= 0 };
+}
+
+/* ---- waitlist ---- */
+
+function waitlistNeeded() {
+  const s = salesNeeded();
+  const c = numOr(state.listConv, 0) / 100;
+  return s !== null && c > 0 ? Math.ceil(s / c) : null;
+}
+function reachForWaitlist() {
+  const w = waitlistNeeded();
+  const r = numOr(state.signupRate, 0) / 100;
+  return w !== null && r > 0 ? Math.ceil(w / r) : null;
+}
+
+/* ===========================================================================
+   DROP-OFF AUDIT — structural checks against your own outline. Every finding
+   points at something you typed. None of it predicts a completion rate.
+   =========================================================================== */
+
+function auditFindings() {
+  const f = [];
+  const L = allLessons();
+  const total = totalMinutes();
+  const mods = state.modules;
+  const add = (sev, id, title, cost, fix, where) => f.push({ sev, id, title, cost, fix, where: where || "" });
+
+  if (!gatePassed()) {
+    add("high", "unvalidated", "No evidence anyone wants this",
+      "Everything below is a structural problem you can fix in an afternoon. This one costs you the entire build — " + hours(buildHours()) + " of work aimed at a guess.",
+      "Run the 30-minute validation method on the Outcome tab. Two pre-sales beat any amount of outline polishing.",
+      "Outcome tab → validation gate");
+  }
+  if (!(state.metric || "").trim()) {
+    add("high", "no-metric", "The promise has no measurable proof",
+      "Without a stated proof, nobody can tell whether they finished, including you — and “I didn't really get anything out of it” becomes unanswerable at refund time.",
+      "Fill in “The proof” on the Outcome tab: something the learner can point at in week four.",
+      "Outcome tab");
+  }
+
+  if (L.length) {
+    const first = L[0].lesson;
+    if (numOr(first.mins, 0) > 10) {
+      add("high", "first-lesson-long", "The first lesson is " + hm(first.mins) + " long",
+        "The first session is where refunds and abandonments are decided. A long opener spends that session on you rather than on them.",
+        "Cut it under 10 minutes and end it with something they have made or changed.",
+        "Lesson 1.1 — " + first.title);
+    }
+    const m1 = mods[0];
+    if (m1 && !m1.lessons.some(l => l.type === "workshop" || l.type === "checkpoint")) {
+      add("high", "no-early-win", "Nothing to do in the first module",
+        "A learner who watches an entire module without producing anything has no evidence the course works, and no reason to open it again tomorrow.",
+        "Convert one lesson in module 1 to a workshop or checkpoint. The first win should land on day one.",
+        "Module 1 — " + (m1.title || "untitled"));
+    }
+  }
+
+  const longOnes = L.filter(x => numOr(x.lesson.mins, 0) > 15);
+  if (longOnes.length) {
+    add("med", "long-lessons", longOnes.length + " lesson" + (longOnes.length > 1 ? "s are" : " is") + " over 15 minutes",
+      "Long lessons are the ones people postpone, and a postponed lesson is usually the last one they open.",
+      "Split each at its natural seam. Two 8-minute lessons finish; one 16-minute lesson gets bookmarked.",
+      longOnes.map(x => x.n + " " + x.lesson.title + " (" + hm(x.lesson.mins) + ")").join(" · "));
+  }
+
+  const noCheck = mods.filter(m => m.lessons.length && !m.lessons.some(l => l.type === "checkpoint"));
+  if (noCheck.length) {
+    add("high", "no-checkpoint", noCheck.length + " module" + (noCheck.length > 1 ? "s have" : " has") + " no checkpoint",
+      "A module with nothing to hand in cannot be failed, which means it cannot be passed either. Progress becomes “videos watched”.",
+      "End each module with one deliverable and a stated standard for it.",
+      noCheck.map(m => m.title || "untitled").join(" · "));
+  }
+
+  const noOutcome = mods.filter(m => !(m.outcome || "").trim());
+  if (noOutcome.length) {
+    add("med", "no-outcome", noOutcome.length + " module" + (noOutcome.length > 1 ? "s have" : " has") + " no stated outcome",
+      "A module without an outcome is a folder. It is also the place scope creep enters, because nothing tells you what does not belong.",
+      "Write one sentence per module starting “By the end they can…”. Anything that does not serve it is a bonus.",
+      noOutcome.map(m => m.title || "untitled").join(" · "));
+  }
+
+  if (mods.length > 8) {
+    add("med", "too-many-modules", mods.length + " modules",
+      "Past about eight, the contents page itself reads as work. People buy on the size of the promise and quit on the size of the course.",
+      "Group into no more than 6–8 modules. Extra material becomes a bonus section, not module nine.",
+      "");
+  }
+
+  const thin = mods.filter(m => m.lessons.length === 1);
+  if (thin.length && mods.length > 1) {
+    add("low", "thin-module", thin.length + " module" + (thin.length > 1 ? "s hold" : " holds") + " a single lesson",
+      "A one-lesson module is a lesson with extra clicks. It inflates the contents page without adding anything.",
+      "Fold it into a neighbouring module, or grow it to at least two lessons and a checkpoint.",
+      thin.map(m => m.title || "untitled").join(" · "));
+  }
+
+  if (mods.length >= 3) {
+    const mins = mods.map(m => moduleMinutes(m)).filter(x => x > 0);
+    if (mins.length >= 3) {
+      const max = Math.max.apply(null, mins), min = Math.min.apply(null, mins);
+      if (max > min * 2.5) {
+        const heavy = mods.filter(m => moduleMinutes(m) === max)[0];
+        add("med", "unbalanced", "Module runtimes are lopsided — " + hm(min) + " to " + hm(max),
+          "The long module is where a schedule breaks. Someone with 30 minutes free skips it, then skips it again.",
+          "Split the heaviest module, or move material out of it. Modules of roughly equal size are easier to plan a week around.",
+          "Heaviest: " + (heavy ? heavy.title : ""));
+      }
+    }
+  }
+
+  if (total > 0) {
+    const doingShare = doingMinutes() / total * 100;
+    if (doingShare < 30) {
+      add("high", "passive", "Only " + pct(doingShare, 0) + " of runtime asks them to do anything",
+        "A course that is watched rather than worked is a book with worse ergonomics. It is also the profile that produces the “I never finished it” refund.",
+        "Aim for at least a third of runtime in workshop and checkpoint lessons. Converting one teach lesson per module usually does it.",
+        num(doingMinutes()) + " of " + num(total) + " minutes");
+    }
+  }
+
+  if (state.format === "selfpaced" && total > 180 && !liveMinutes()) {
+    add("high", "no-deadline", "Nothing in this course has a deadline",
+      hm(total) + " of self-paced material with no date attached competes with everything else in someone's life, and loses.",
+      "Manufacture the deadline: drip the modules weekly, run it as a cohort the first time, or add one live call at the halfway point.",
+      "");
+  }
+
+  if (total > 360) {
+    add("med", "too-long", "The course runs " + hm(total),
+      "Long courses sell no better than short ones and finish far worse. Every extra hour is build time you pay for and completion you lose.",
+      "Cut to the shortest route that still reaches the promise. Everything else ships later as a second course people ask for.",
+      "");
+  }
+
+  const bonus = allLessons().filter(x => x.lesson.core === false);
+  if (bonus.length) {
+    const bh = bonus.reduce((a, x) => a + lessonHours(x.lesson), 0);
+    add("med", "scope-creep", bonus.length + " lesson" + (bonus.length > 1 ? "s are" : " is") + " marked off the critical path",
+      "They cost " + hours(bh) + " to build and " + hm(bonusMinutes()) + " of someone's attention, and the promise is reached without them.",
+      "Ship the course without them. If buyers ask, add them later as a bonus module — that is a marketing beat you get for free.",
+      bonus.map(x => x.n + " " + x.lesson.title).join(" · "));
+  }
+
+  const order = { high: 0, med: 1, low: 2 };
+  return f.sort((a, b) => order[a.sev] - order[b.sev]);
+}
+
+const AUDIT_MECHANICS = [
+  ["The first session decides the refund", "Most abandonments happen in the first sitting, before any of the good material. That is why the checks weight lesson 1.1 and the first module so heavily."],
+  ["Completion is a design output, not a personality trait", "Shorter lessons, a visible deliverable per module and a deadline of some kind do more for completion than any amount of encouragement in the copy."],
+  ["A deadline is a feature you have to build", "Cohorts get deadlines free. Self-paced courses have to manufacture them — drip, live calls, a closing date on the community — or compete with everything else in the buyer's week."],
+  ["Watching is not learning, and buyers know it", "Runtime spent producing something is the part people quote back to you. It is also the part that makes a testimonial possible."],
+  ["Length is a cost you pay twice", "Once in build hours, once in completion. A four-hour course that finishes beats an eight-hour course that does not, at the same price."]
+];
+
+/* ===========================================================================
+   TABS
+   =========================================================================== */
+
+const PANELS = ["outcome", "curriculum", "lesson", "production", "pricing", "platform", "audit", "launch", "brief"];
+const RENDERERS = {};
+
+function showTab(id, focus) {
+  if (PANELS.indexOf(id) < 0) id = "outcome";
+  state.tab = id;
+  PANELS.forEach(p => {
+    const tab = $("#tab-" + p), panel = $("#panel-" + p);
+    const on = p === id;
+    tab.setAttribute("aria-selected", on ? "true" : "false");
+    tab.setAttribute("tabindex", on ? "0" : "-1");
+    panel.hidden = !on;
+  });
+  if (RENDERERS[id]) RENDERERS[id]();
+  if (focus) $("#tab-" + id).focus();
+  save();
+}
+
+function initTabs() {
+  $$(".tab").forEach(t => {
+    t.addEventListener("click", () => showTab(t.dataset.panel));
+    t.addEventListener("keydown", e => {
+      const keys = { ArrowRight: 1, ArrowLeft: -1, Home: "first", End: "last" };
+      if (!(e.key in keys)) return;
+      e.preventDefault();
+      const i = PANELS.indexOf(t.dataset.panel);
+      let next;
+      if (keys[e.key] === "first") next = 0;
+      else if (keys[e.key] === "last") next = PANELS.length - 1;
+      else next = (i + keys[e.key] + PANELS.length) % PANELS.length;
+      showTab(PANELS[next], true);
+    });
+  });
+}
+
+/** Re-save and refresh whichever tab is showing. */
+function refresh() {
+  save();
+  const r = RENDERERS[state.tab];
+  if (r) r();
+}
+
+/** Bind an input to a state key. `after` runs once the value has landed. */
+function bind(sel, key, opts) {
+  const n = $(sel);
+  if (!n) return;
+  const o = opts || {};
+  const evt = o.event || (n.type === "checkbox" || n.tagName === "SELECT" ? "change" : "input");
+  const read = () => {
+    if (n.type === "checkbox") return n.checked;
+    if (n.type === "number") {
+      const v = n.value.trim();
+      return v === "" ? (o.empty === undefined ? null : o.empty) : numOr(v, o.empty === undefined ? null : o.empty);
+    }
+    return n.value;
+  };
+  n.addEventListener(evt, () => {
+    const v = read();
+    if (typeof key === "function") key(v);
+    else state[key] = v;
+    if (o.after) o.after(v);
+    refresh();
+  });
+}
+
+function setVal(sel, v) {
+  const n = $(sel);
+  if (!n) return;
+  if (n.type === "checkbox") n.checked = !!v;
+  else n.value = v === null || v === undefined ? "" : v;
+}
+
+/* ===========================================================================
+   OUTCOME
+   =========================================================================== */
+
+function initOutcome() {
+  const c = $("#o-currency");
+  CURRENCIES.forEach(x => c.appendChild(el("option", { value: x.code, text: x.code + " — " + x.name })));
+
+  bind("#o-title", "title");
+  bind("#o-audience", "audience");
+  bind("#o-before", "before");
+  bind("#o-after", "after");
+  bind("#o-metric", "metric");
+  bind("#o-timeframe", "timeframe");
+  bind("#o-currency", "currency");
+  bind("#o-price", "price");
+  bind("#o-revtarget", "revTarget");
+  bind("#o-launch", "launchDate");
+  bind("#o-capacity", "capacity");
+  bind("#o-audience-size", "audienceSize");
+  bind("#o-conv", "conv");
+  bind("#o-refund", "refund");
+  bind("#g-c1", v => { state.gate.c1 = v; });
+  bind("#g-c2", v => { state.gate.c2 = v; });
+  bind("#g-c3", v => { state.gate.c3 = v; });
+  bind("#g-evidence", "evidence");
+
+  $$("#o-format button").forEach(b => b.addEventListener("click", () => {
+    state.format = b.dataset.format;
+    refresh();
+  }));
+
+  const ol = $("#o-validation");
+  VALIDATION.forEach(v => ol.appendChild(el("li", { html: "<b>" + esc(v.t) + "</b> — " + esc(v.what), style: "margin-bottom:8px" })));
+}
+
+function renderOutcome() {
+  setVal("#o-title", state.title);
+  setVal("#o-audience", state.audience);
+  setVal("#o-before", state.before);
+  setVal("#o-after", state.after);
+  setVal("#o-metric", state.metric);
+  setVal("#o-timeframe", state.timeframe);
+  setVal("#o-currency", state.currency);
+  setVal("#o-price", state.price);
+  setVal("#o-revtarget", state.revTarget);
+  setVal("#o-launch", state.launchDate);
+  setVal("#o-capacity", state.capacity);
+  setVal("#o-audience-size", state.audienceSize);
+  setVal("#o-conv", state.conv);
+  setVal("#o-refund", state.refund);
+  setVal("#g-c1", state.gate.c1);
+  setVal("#g-c2", state.gate.c2);
+  setVal("#g-c3", state.gate.c3);
+  setVal("#g-evidence", state.evidence);
+
+  $$("#o-format button").forEach(b => b.setAttribute("aria-pressed", b.dataset.format === state.format ? "true" : "false"));
+  $("#o-format-note").textContent = fmt().note;
+
+  /* the promise, assembled */
+  const miss = [];
+  if (!(state.audience || "").trim()) miss.push("who it is for");
+  if (!(state.after || "").trim()) miss.push("where they end up");
+  if (!(state.metric || "").trim()) miss.push("the proof");
+  if (!(state.timeframe || "").trim()) miss.push("how long it takes");
+  const note = $("#o-promise-note");
+  if (miss.length) {
+    note.className = "note warn";
+    note.innerHTML = "<b>Your promise is missing " + miss.length + " part" + (miss.length > 1 ? "s" : "") + ":</b> " +
+      esc(miss.join(", ")) + ". Until all four are written down, the outline has nothing to be designed backwards from.";
+  } else {
+    note.className = "note good";
+    note.innerHTML = "<b>The promise:</b> " + esc(promiseSentence());
+  }
+
+  /* validation gate */
+  const passed = gatePassed(), score = gateScore();
+  const pill = $("#o-gate-pill");
+  pill.className = "pill " + (passed ? "green" : score ? "amber" : "grey");
+  pill.textContent = passed ? "Validated" : score + " of 3";
+  const out = $("#o-gate-out");
+  if (passed) {
+    out.innerHTML = '<div class="note good"><b>Gate open.</b> You have all three criteria and something that happened in the real world. ' +
+      'Build hours are now an investment rather than a bet.</div>';
+  } else {
+    const need = [];
+    if (score < 3) need.push((3 - score) + " criterion" + (3 - score > 1 ? "s" : "") + " unticked");
+    if ((state.evidence || "").trim().length < 15) need.push("no evidence written down");
+    out.innerHTML = '<div class="note warn"><b>Gate closed — ' + esc(need.join(", ")) + '.</b> ' +
+      'The production tab estimates <b>' + esc(hours(buildHours())) + '</b> of work for this outline. ' +
+      'Thirty minutes of validation first is the cheapest thing in this app.</div>';
+  }
+
+  /* stats */
+  const s = $("#o-stats");
+  s.innerHTML = "";
+  const d = daysToLaunch();
+  stat(s, "Runtime", hm(totalMinutes()), state.modules.length + " modules · " + allLessons().length + " lessons");
+  stat(s, "Build", hours(buildHours()), isFinite(weeksToBuild()) ? num(weeksToBuild(), 1) + " weeks at " + num(state.capacity, 1) + " h/wk" : "set your weekly hours");
+  stat(s, "Sales needed", salesNeeded() === null ? "—" : num(salesNeeded()), "for " + money(state.revTarget) + " net");
+  stat(s, "To launch", d === null ? "—" : num(d) + " days", d === null ? "no date set" : fmtDate(parseDate(state.launchDate)),
+    d !== null && d < 0 ? "bad" : null);
+}
+
+function daysToLaunch() {
+  const L = parseDate(state.launchDate);
+  return L ? daysBetween(today(), L) : null;
+}
+
+function promiseSentence() {
+  const a = (state.audience || "people").trim();
+  const t = (state.title || "This course").trim();
+  const from = (state.before || "").trim();
+  const to = (state.after || "").trim();
+  const m = (state.metric || "").trim();
+  const tf = (state.timeframe || "").trim();
+  return t + " takes " + a + (from ? " from " + from : "") + (to ? " to " + to : "") +
+    (m ? ", proved by " + m : "") + (tf ? ", in " + tf : "") + ".";
+}
+
+/** One stat tile. */
+function stat(parent, k, v, d, tone, small) {
+  parent.appendChild(el("div", {
+    cls: "stat" + (tone ? " " + tone : ""),
+    html: '<div class="k">' + esc(k) + '</div><div class="v' + (small ? " sm" : "") + '">' + esc(v) + '</div>' +
+          (d ? '<div class="d">' + d + '</div>' : "")
+  }));
+  return parent.lastChild;
+}
+
+/* ===========================================================================
+   CURRICULUM
+   =========================================================================== */
+
+function initCurriculum() {
+  const sel = $("#c-archetype");
+  ARCHETYPES.forEach(a => sel.appendChild(el("option", { value: a.id, text: a.label })));
+  sel.value = state.archetype;
+  sel.addEventListener("change", () => { state.archetype = sel.value; save(); });
+
+  $("#c-apply-archetype").addEventListener("click", () => {
+    const a = ARCHETYPES.find(x => x.id === state.archetype);
+    if (!a) return;
+    if (!confirm("Replace the current outline with the “" + a.label + "” structure?\n\nEverything in the outline is overwritten. Back up first if you want to keep it.")) return;
+    state.modules = seedModules(a.id);
+    state.lessonSel = null;
+    refresh();
+    toast("Loaded: " + a.label);
+  });
+
+  $("#c-add-module").addEventListener("click", () => {
+    state.modules.push({ id: uid("m"), title: "Module " + (state.modules.length + 1), outcome: "", lessons: [] });
+    refresh();
+  });
+
+  // delegated once — renderOutline replaces the children, not the container
+  $("#c-outline").addEventListener("click", onOutlineClick);
+
+  const tb = $("#c-types tbody");
+  TYPES.forEach(t => tb.appendChild(el("tr", {
+    html: "<td><b>" + esc(t.label) + "</b></td><td>" + esc(t.job) + "</td><td class='nowrap'>" + esc(t.guide) + "</td>"
+  })));
+}
+
+function renderCurriculum() {
+  renderCStatsOnly();
+
+  /* scope guard */
+  const scope = $("#c-scope");
+  const nomod = !state.modules.length;
+  if (nomod) {
+    scope.innerHTML = '<div class="note warn">No modules yet. Pick a starting structure above, or add one and build it out.</div>';
+  } else if (!(state.metric || "").trim()) {
+    scope.innerHTML = '<div class="note warn"><b>Backward design needs a destination.</b> Fill in “The proof” on the Outcome tab, ' +
+      'then ask of every lesson: is this needed to get there? If not, mark it off the path with the ✂ button.</div>';
+  } else {
+    scope.innerHTML = '<div class="note"><b>The test for every lesson:</b> is it needed for <i>' + esc(state.metric) +
+      '</i>? If not, it is a bonus. Mark it with ✂ and it stops pretending to be part of the course.</div>';
+  }
+
+  renderOutline();
+  renderBalance();
+}
+
+function outlineControls(l, mi, li) {
+  const typeOpts = TYPES.map(t => '<option value="' + t.id + '"' + (t.id === l.type ? " selected" : "") + ">" + esc(t.label) + "</option>").join("");
+  const styleOpts = STYLES.map(t => '<option value="' + t.id + '"' + (t.id === l.style ? " selected" : "") + ">" + esc(t.label) + "</option>").join("");
+  return '<div class="ln">' + (mi + 1) + "." + (li + 1) + "</div>" +
+    '<input id="lt-' + l.id + '" type="text" value="' + esc(l.title) + '" aria-label="Lesson title">' +
+    '<select id="ly-' + l.id + '" aria-label="Lesson type">' + typeOpts + "</select>" +
+    '<select id="ls-' + l.id + '" aria-label="Production style">' + styleOpts + "</select>" +
+    '<input id="lm-' + l.id + '" type="number" min="0" step="1" inputmode="numeric" value="' + esc(l.mins) + '" aria-label="Minutes">' +
+    '<div class="acts noprint">' +
+      '<button class="xs ghost" data-act="cut" data-id="' + l.id + '" title="' + (l.core === false ? "Put back on the critical path" : "Mark as a bonus — off the critical path") + '" aria-label="Toggle critical path">' + (l.core === false ? "↩" : "✂") + "</button>" +
+      '<button class="xs ghost" data-act="up" data-id="' + l.id + '" title="Move up" aria-label="Move lesson up">↑</button>' +
+      '<button class="xs ghost" data-act="down" data-id="' + l.id + '" title="Move down" aria-label="Move lesson down">↓</button>' +
+      '<button class="xs ghost danger" data-act="del" data-id="' + l.id + '" title="Delete lesson" aria-label="Delete lesson">×</button>' +
+    "</div>";
+}
+
+function renderOutline(focusId) {
+  const box = $("#c-outline");
+  box.innerHTML = "";
+  if (!state.modules.length) {
+    box.appendChild(el("div", { cls: "empty", text: "No modules yet." }));
+    return;
+  }
+
+  state.modules.forEach((m, mi) => {
+    const mins = moduleMinutes(m);
+    const wrap = el("div", { cls: "module" });
+    wrap.innerHTML =
+      '<div class="module-head">' +
+        '<div class="idx">' + (mi + 1) + "</div>" +
+        '<div class="mh-body">' +
+          '<input id="mt-' + m.id + '" type="text" value="' + esc(m.title) + '" aria-label="Module title">' +
+          '<div class="module-outcome"><input id="mo-' + m.id + '" type="text" value="' + esc(m.outcome) +
+            '" placeholder="By the end of this module they can…" aria-label="Module outcome"></div>' +
+        "</div>" +
+        '<div class="mh-acts noprint">' +
+          '<button class="xs ghost" data-mact="up" data-id="' + m.id + '" title="Move module up" aria-label="Move module up">↑</button>' +
+          '<button class="xs ghost" data-mact="down" data-id="' + m.id + '" title="Move module down" aria-label="Move module down">↓</button>' +
+          '<button class="xs ghost danger" data-mact="del" data-id="' + m.id + '" title="Delete module" aria-label="Delete module">×</button>' +
+        "</div>" +
+      "</div>" +
+      '<div class="module-meta">' +
+        '<span class="pill grey">' + hm(mins) + "</span>" +
+        "<span>" + m.lessons.length + " lesson" + (m.lessons.length === 1 ? "" : "s") + "</span>" +
+        "<span>" + hours(m.lessons.reduce((a, l) => a + lessonHours(l), 0)) + " to build</span>" +
+        (m.lessons.some(l => l.type === "checkpoint") ? '<span class="pill green">checkpoint</span>' : '<span class="pill amber">no checkpoint</span>') +
+      "</div>";
+
+    const list = el("ul", { cls: "lessons" });
+    if (m.lessons.length) {
+      list.appendChild(el("li", {
+        cls: "lesson-head", "aria-hidden": "true",
+        html: "<div></div><div>Lesson</div><div>Type</div><div>Production</div><div>Min</div><div></div>"
+      }));
+    }
+    m.lessons.forEach((l, li) => {
+      list.appendChild(el("li", {
+        cls: "lesson" + (l.core === false ? " flagged" : ""),
+        html: outlineControls(l, mi, li)
+      }));
+    });
+    list.appendChild(el("li", { cls: "row noprint", style: "padding:8px" }, [
+      el("button", { cls: "sm", text: "+ Lesson", onclick: () => addLesson(m.id) })
+    ]));
+    wrap.appendChild(list);
+    box.appendChild(wrap);
+  });
+
+  /* wiring — text inputs update in place so typing never loses focus */
+  state.modules.forEach(m => {
+    const t = $("#mt-" + m.id), o = $("#mo-" + m.id);
+    if (t) t.addEventListener("input", () => { m.title = t.value; save(); renderCStatsOnly(); });
+    if (o) o.addEventListener("input", () => { m.outcome = o.value; save(); });
+    m.lessons.forEach(l => {
+      const lt = $("#lt-" + l.id), ly = $("#ly-" + l.id), ls = $("#ls-" + l.id), lm = $("#lm-" + l.id);
+      if (lt) lt.addEventListener("input", () => { l.title = lt.value; save(); });
+      if (ly) ly.addEventListener("change", () => { l.type = ly.value; save(); renderCurriculumKeepFocus("ly-" + l.id); });
+      if (ls) ls.addEventListener("change", () => { l.style = ls.value; save(); renderCurriculumKeepFocus("ls-" + l.id); });
+      if (lm) lm.addEventListener("change", () => { l.mins = Math.max(0, numOr(lm.value, 0)); save(); renderCurriculumKeepFocus("lm-" + l.id); });
+    });
+  });
+
+  if (focusId) { const n = $("#" + focusId); if (n) n.focus(); }
+}
+
+function renderCurriculumKeepFocus(id) {
+  renderCStatsOnly();
+  renderOutline(id);
+  renderBalance();
+}
+
+function renderCStatsOnly() {
+  const s = $("#c-stats");
+  if (!s) return;
+  s.innerHTML = "";
+  const L = allLessons(), total = totalMinutes();
+  const avg = L.length ? total / L.length : 0;
+  const doing = total ? doingMinutes() / total * 100 : 0;
+  stat(s, "Total runtime", hm(total), state.modules.length + " modules · " + L.length + " lessons");
+  stat(s, "Average lesson", hm(avg), avg > 15 ? "long — split the big ones" : "under 15 min is the target", avg > 15 ? "warn" : null);
+  stat(s, "Doing vs watching", pct(doing, 0), hm(doingMinutes()) + " where they produce something", doing < 30 ? "bad" : "good");
+  stat(s, "Off the path", hm(bonusMinutes()), bonusMinutes() ? "marked bonus — costs build hours" : "everything serves the promise",
+    bonusMinutes() ? "warn" : null);
+}
+
+function onOutlineClick(e) {
+  const lb = e.target.closest("button[data-act]");
+  if (lb) {
+    const id = lb.dataset.id, act = lb.dataset.act;
+    const found = lessonById(id);
+    if (!found) return;
+    const arr = found.module.lessons, i = found.li;
+    if (act === "del") {
+      if (!confirm("Delete “" + (found.lesson.title || "this lesson") + "”?")) return;
+      arr.splice(i, 1);
+      if (state.lessonSel === id) state.lessonSel = null;
+    } else if (act === "up" && i > 0) {
+      arr.splice(i - 1, 0, arr.splice(i, 1)[0]);
+    } else if (act === "down" && i < arr.length - 1) {
+      arr.splice(i + 1, 0, arr.splice(i, 1)[0]);
+    } else if (act === "cut") {
+      found.lesson.core = found.lesson.core === false;
+    }
+    refresh();
+    return;
+  }
+  const mb = e.target.closest("button[data-mact]");
+  if (mb) {
+    const id = mb.dataset.id, act = mb.dataset.mact;
+    const i = state.modules.findIndex(m => m.id === id);
+    if (i < 0) return;
+    if (act === "del") {
+      if (!confirm("Delete “" + (state.modules[i].title || "this module") + "” and its lessons?")) return;
+      state.modules.splice(i, 1);
+    } else if (act === "up" && i > 0) {
+      state.modules.splice(i - 1, 0, state.modules.splice(i, 1)[0]);
+    } else if (act === "down" && i < state.modules.length - 1) {
+      state.modules.splice(i + 1, 0, state.modules.splice(i, 1)[0]);
+    }
+    refresh();
+  }
+}
+
+function addLesson(moduleId) {
+  const m = state.modules.find(x => x.id === moduleId);
+  if (!m) return;
+  const last = m.lessons[m.lessons.length - 1];
+  m.lessons.push({
+    id: uid("l"),
+    title: "New lesson",
+    type: "teach",
+    style: last ? last.style : "talking",
+    mins: 8, core: true
+  });
+  refresh();
+}
+
+function renderBalance() {
+  const box = $("#c-balance");
+  box.innerHTML = "";
+  const total = totalMinutes();
+  if (!total) { box.appendChild(el("div", { cls: "empty", text: "Add a lesson and the shape of the course appears here." })); return; }
+
+  const colours = ["var(--acc)", "var(--teal)", "var(--pink)", "var(--green)", "var(--amber)", "var(--acc-2)"];
+  const bar = el("div", { cls: "stackbar" });
+  state.modules.forEach((m, i) => {
+    const w = moduleMinutes(m) / total * 100;
+    if (w <= 0) return;
+    bar.appendChild(el("span", {
+      style: "width:" + w.toFixed(2) + "%;background:" + colours[i % colours.length],
+      title: (m.title || "Module " + (i + 1)) + " — " + hm(moduleMinutes(m))
+    }));
+  });
+  box.appendChild(bar);
+
+  const legend = el("div", { cls: "legend" });
+  state.modules.forEach((m, i) => {
+    legend.appendChild(el("div", {
+      html: '<i style="background:' + colours[i % colours.length] + '"></i>' + esc(m.title || "Module " + (i + 1)) +
+        ' <span class="muted">' + esc(hm(moduleMinutes(m))) + "</span>"
+    }));
+  });
+  box.appendChild(legend);
+
+  const mins = state.modules.map(moduleMinutes).filter(x => x > 0);
+  if (mins.length >= 3) {
+    const max = Math.max.apply(null, mins), min = Math.min.apply(null, mins);
+    box.appendChild(el("div", {
+      cls: "note" + (max > min * 2.5 ? " warn" : ""),
+      style: "margin-top:16px",
+      html: max > min * 2.5
+        ? "<b>Lopsided.</b> Your heaviest module is " + (max / min).toFixed(1) + "× the lightest. The long one is where a weekly schedule breaks."
+        : "<b>Evenly weighted.</b> Longest module is " + (max / min).toFixed(1) + "× the shortest, which makes the course easy to plan a week around."
+    }));
+  }
+}
+
+/* ===========================================================================
+   LESSON DESIGN
+   =========================================================================== */
+
+/** Text block with light Markdown highlighting. Escape first, then decorate —
+    never the other way round. */
+function mdbox(name, text, buttons) {
+  const body = esc(text)
+    .replace(/^(#{1,6} .*)$/gm, '<span class="h">$1</span>')
+    .replace(/\b(\d{1,2}:\d{2})\b/g, '<span class="t">$1</span>')
+    .replace(/^(&gt;.*)$/gm, '<span class="c">$1</span>');
+  const box = el("div", { cls: "codebox" });
+  box.innerHTML =
+    '<div class="codebox-head"><span class="name">' + esc(name) + "</span></div>" +
+    "<pre>" + body + "</pre>";
+  if (buttons) box.querySelector(".codebox-head").appendChild(buttons);
+  return box;
+}
+
+function currentLesson() {
+  let found = state.lessonSel ? lessonById(state.lessonSel) : null;
+  if (!found) {
+    const all = allLessons();
+    found = all.length ? all[0] : null;
+    state.lessonSel = found ? found.lesson.id : null;
+  }
+  return found;
+}
+
+function beatsFor(l) {
+  const spec = BEATS[l.type] || BEATS.teach;
+  const totalSecs = numOr(l.mins, 0) * 60;
+  let cum = 0;
+  return spec.map(b => {
+    const dur = totalSecs * b.p;
+    const row = { n: b.n, what: b.what, start: cum, dur: dur, words: Math.round(dur / 60 * numOr(state.wpm, 140)) };
+    cum += dur;
+    return row;
+  });
+}
+
+function scriptMarkdown(found) {
+  const l = found.lesson;
+  const beats = beatsFor(l);
+  const wpm = numOr(state.wpm, 140);
+  const out = [];
+  out.push("# " + found.n + " " + (l.title || "Untitled lesson"));
+  out.push("");
+  out.push("**Module:** " + (found.module.title || "—") +
+    "  |  **Type:** " + typeOf(l.type).label +
+    "  |  **Production:** " + styleOf(l.style).label);
+  out.push("**Runtime target:** " + hm(l.mins) +
+    "  |  **Word budget:** ~" + num(Math.round(numOr(l.mins, 0) * wpm)) + " words at " + num(wpm) + " wpm" +
+    "  |  **Build estimate:** " + hours(lessonHours(l)));
+  if ((found.module.outcome || "").trim()) {
+    out.push("");
+    out.push("**Module outcome:** " + found.module.outcome);
+  }
+  out.push("");
+  beats.forEach(b => {
+    out.push("## " + mmss(b.start) + "–" + mmss(b.start + b.dur) + " · " + b.n +
+      "  (" + Math.round(b.dur) + "s, ~" + num(b.words) + " words)");
+    out.push("");
+    out.push("> " + b.what);
+    out.push("");
+    out.push("_[write this beat]_");
+    out.push("");
+  });
+  out.push("---");
+  out.push("");
+  out.push("**Before recording:** read it aloud once against a timer. If you overrun, cut the example, never the checkpoint.");
+  if (l.type === "workshop" || l.type === "checkpoint") {
+    out.push("");
+    out.push("**Deliverable:** state exactly what they should have when this lesson ends, and what it looks like when it is right.");
+  }
+  return out.join("\n");
+}
+
+function scriptPrompt(found) {
+  const l = found.lesson;
+  const beats = beatsFor(l);
+  const wpm = numOr(state.wpm, 140);
+  const aud = (state.audience || "the learner").trim();
+  const lines = [];
+  lines.push("Role: You are an instructional designer who writes spoken course scripts. You write plainly, in short sentences, with no throat-clearing.");
+  lines.push("");
+  lines.push("Context: This is lesson " + found.n + " of the course \"" + (state.title || "untitled") + "\", which takes " + aud +
+    (state.after ? " to " + state.after : "") + (state.metric ? ", proved by " + state.metric : "") + ".");
+  lines.push("The module it belongs to is \"" + (found.module.title || "—") + "\"" +
+    (found.module.outcome ? ", whose outcome is: " + found.module.outcome : "") + ".");
+  lines.push("This lesson is a " + typeOf(l.type).label.toLowerCase() + " lesson: " + typeOf(l.type).job);
+  lines.push("");
+  lines.push("Audience: " + aud + (state.before ? ", who currently " + state.before : "") +
+    ". Assume they are competent adults, short of time, and sceptical of courses.");
+  lines.push("");
+  lines.push("Length: " + hm(l.mins) + " spoken, which is about " + num(Math.round(numOr(l.mins, 0) * wpm)) +
+    " words at " + num(wpm) + " words per minute. Hit these beats in this order and stay inside each word budget:");
+  beats.forEach(b => {
+    lines.push("  - " + b.n + " (~" + num(b.words) + " words): " + b.what);
+  });
+  lines.push("");
+  lines.push("Example: where you need one, use a concrete case from " + aud + "'s actual work — real numbers, real wording, no placeholders like [insert example].");
+  lines.push("");
+  lines.push("Write the script as spoken words only. No slide directions, no “in this lesson we will”, no summary of what you are about to say. Open on the specific failure this lesson removes.");
+  lines.push("");
+  lines.push("Then run the 3-Pass Method on your own draft: pass one for accuracy, pass two for cuts, pass three for voice. Show me the third pass only.");
+  return lines.join("\n");
+}
+
+function initLesson() {
+  $("#l-pick").addEventListener("change", e => { state.lessonSel = e.target.value; refresh(); });
+  bind("#l-wpm", "wpm");
+  bind("#l-show-prompt", "showPrompt");
+  $("#l-copy-script").addEventListener("click", () => {
+    const f = currentLesson();
+    if (f) copyText(scriptMarkdown(f), "Script");
+  });
+  $("#l-dl-script").addEventListener("click", () => {
+    const f = currentLesson();
+    if (!f) return;
+    download(slug(f.n + "-" + f.lesson.title) + ".md", scriptMarkdown(f), "text/markdown");
+  });
+  $("#l-copy-prompt").addEventListener("click", () => {
+    const f = currentLesson();
+    if (f) copyText(scriptPrompt(f), "Prompt");
+  });
+}
+
+function slug(s) {
+  return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "lesson";
+}
+
+function renderLesson() {
+  setVal("#l-wpm", state.wpm);
+  setVal("#l-show-prompt", state.showPrompt);
+
+  const pick = $("#l-pick");
+  pick.innerHTML = "";
+  const all = allLessons();
+  if (!all.length) {
+    pick.appendChild(el("option", { value: "", text: "No lessons yet" }));
+    $("#l-meta").innerHTML = '<div class="empty">Build an outline on the Curriculum tab first.</div>';
+    $("#l-beats").innerHTML = "";
+    $("#l-script").innerHTML = "";
+    $("#l-budget").textContent = "";
+    ["#l-copy-script", "#l-dl-script"].forEach(s => { $(s).disabled = true; });
+    return;
+  }
+  ["#l-copy-script", "#l-dl-script"].forEach(s => { $(s).disabled = false; });
+
+  all.forEach(x => pick.appendChild(el("option", {
+    value: x.lesson.id,
+    text: x.n + "  " + (x.lesson.title || "untitled") + "  ·  " + hm(x.lesson.mins)
+  })));
+  const found = currentLesson();
+  pick.value = found.lesson.id;
+
+  const l = found.lesson;
+  const wpm = numOr(state.wpm, 140);
+  $("#l-meta").innerHTML =
+    '<div class="stack">' +
+      '<div class="row"><span class="pill acc">' + esc(typeOf(l.type).label) + '</span>' +
+      '<span class="pill grey">' + esc(styleOf(l.style).label) + '</span>' +
+      (l.core === false ? '<span class="pill amber">bonus</span>' : "") + "</div>" +
+      '<div class="muted" style="font-size:13.5px">' + esc(typeOf(l.type).job) + "</div>" +
+      '<div class="muted" style="font-size:13.5px">' + esc(styleOf(l.style).what) + "</div>" +
+      '<div class="row" style="gap:18px;font-size:13.5px">' +
+        "<span><b>" + esc(hm(l.mins)) + "</b> runtime</span>" +
+        "<span><b>" + esc(hours(lessonHours(l))) + "</b> to build</span>" +
+        "<span><b>" + esc(num(Math.round(numOr(l.mins, 0) * wpm))) + "</b> words</span>" +
+      "</div>" +
+      '<div class="muted" style="font-size:13px">In ' + esc(found.module.title || "—") + "</div>" +
+    "</div>";
+
+  const beats = beatsFor(l);
+  $("#l-budget").textContent = num(Math.round(numOr(l.mins, 0) * wpm)) + " words · " + hm(l.mins);
+  const ul = $("#l-beats");
+  ul.innerHTML = "";
+  beats.forEach(b => {
+    ul.appendChild(el("li", {
+      cls: "beat",
+      html: '<span class="clock">' + mmss(b.start) + "–" + mmss(b.start + b.dur) + "</span>" +
+            '<span class="bname">' + esc(b.n) + "</span>" +
+            '<span class="bwhat">' + esc(b.what) + ' <span class="muted">(~' + num(b.words) + " words)</span></span>"
+    }));
+  });
+
+  const sc = $("#l-script");
+  sc.innerHTML = "";
+  sc.appendChild(mdbox(slug(found.n + "-" + l.title) + ".md", scriptMarkdown(found)));
+
+  $("#l-prompt-card").hidden = !state.showPrompt;
+  if (state.showPrompt) {
+    const pr = $("#l-prompt");
+    pr.innerHTML = "";
+    pr.appendChild(mdbox("scripting-prompt.txt", scriptPrompt(found)));
+  }
+}
+
+/* ===========================================================================
+   PRODUCTION
+   =========================================================================== */
+
+function initProduction() {
+  bind("#p-contingency", "contingency");
+
+  const cs = $("#p-cal-style");
+  STYLES.forEach(s => cs.appendChild(el("option", { value: s.id, text: s.label })));
+
+  $("#p-cal-apply").addEventListener("click", () => {
+    const mins = numOr($("#p-cal-mins").value, 0);
+    const hrs = numOr($("#p-cal-hours").value, 0);
+    const style = $("#p-cal-style").value;
+    if (mins <= 0 || hrs <= 0) { toast("Enter both the finished minutes and the hours it took.", true); return; }
+    const ratio = hrs * 60 / mins;
+    state.calibration = { mins: mins, hours: hrs, style: style, ratio: ratio };
+    state.ratios[style] = Math.round(ratio * 10) / 10;
+    refresh();
+    toast("Measured ratio: " + ratio.toFixed(1) + " minutes of work per finished minute");
+  });
+  $("#p-cal-clear").addEventListener("click", () => {
+    state.calibration = null;
+    $("#p-cal-mins").value = "";
+    $("#p-cal-hours").value = "";
+    refresh();
+  });
+  $("#p-reset-ratios").addEventListener("click", () => {
+    state.ratios = {};
+    refresh();
+    toast("Ratios back to defaults");
+  });
+}
+
+/** Extra build hours caused by one extra finished minute of course, including
+    contingency and the overheads that scale with runtime. */
+function marginalHoursPerMinute() {
+  const perHourOverheads = OVERHEADS
+    .filter(o => o.perHour !== undefined && overheadOn(o.k))
+    .reduce((a, o) => a + numOr((state.overheads[o.k] || {}).hours, o.perHour), 0);
+  return blendedRatio() / 60 * (1 + numOr(state.contingency, 0) / 100) + perHourOverheads / 60;
+}
+
+function renderProduction() {
+  setVal("#p-contingency", state.contingency);
+  if (state.calibration) setVal("#p-cal-style", state.calibration.style);
+
+  /* gate banner */
+  const g = $("#p-gate");
+  if (gatePassed()) {
+    g.innerHTML = "";
+  } else {
+    g.innerHTML = '<div class="note bad"><b>The validation gate is still closed.</b> ' +
+      'This outline is <b>' + esc(hours(buildHours())) + '</b> of work — ' +
+      (isFinite(weeksToBuild()) ? esc(num(weeksToBuild(), 1)) + ' weeks at your stated capacity' : 'an unknown number of weeks') +
+      '. Spend thirty minutes on the Outcome tab before you spend those.</div>';
+  }
+
+  /* stats */
+  const s = $("#p-stats");
+  s.innerHTML = "";
+  const bh = buildHours(), w = weeksToBuild(), fd = finishDate(), conflict = scheduleConflict();
+  stat(s, "Total build", hours(bh), hm(totalMinutes()) + " of finished course", "accent");
+  stat(s, "Blended ratio", num(blendedRatio(), 1) + "×", "minutes of work per finished minute");
+  stat(s, "At " + num(state.capacity, 1) + " h/week", isFinite(w) ? num(w, 1) + " weeks" : "—",
+    isFinite(w) ? "of calendar time" : "set your weekly hours");
+  stat(s, "Ready by", fd ? fmtDate(fd) : "—",
+    conflict ? (conflict.ok ? "beats the deadline by " + num(-conflict.slip) + " days" : num(conflict.slip) + " days too late") : "no launch date set",
+    conflict ? (conflict.ok ? "good" : "bad") : null, true);
+
+  /* breakdown */
+  const bd = $("#p-breakdown");
+  bd.innerHTML = "";
+  const parts = [
+    { label: "Recording & writing", h: productionHours(), c: "var(--acc)" },
+    { label: "Contingency", h: contingencyHours(), c: "var(--amber)" },
+    { label: "Everything else", h: overheadTotal(), c: "var(--teal)" }
+  ].filter(p => p.h > 0);
+  if (!parts.length) {
+    bd.appendChild(el("div", { cls: "empty", text: "Nothing to build yet." }));
+  } else {
+    const bar = el("div", { cls: "stackbar" });
+    parts.forEach(p => bar.appendChild(el("span", { style: "width:" + (p.h / bh * 100).toFixed(2) + "%;background:" + p.c, title: p.label + " — " + hours(p.h) })));
+    bd.appendChild(bar);
+    const legend = el("div", { cls: "legend" });
+    parts.forEach(p => legend.appendChild(el("div", {
+      html: '<i style="background:' + p.c + '"></i>' + esc(p.label) + ' <span class="muted">' + esc(hours(p.h)) +
+        " · " + esc(pct(p.h / bh * 100, 0)) + "</span>"
+    })));
+    bd.appendChild(legend);
+
+    const byStyle = hoursByStyle();
+    if (byStyle.length) {
+      const t = el("div", { cls: "tablewrap", style: "margin-top:16px" });
+      t.innerHTML = "<table><thead><tr><th>Production style</th><th class='num'>Runtime</th><th class='num'>Ratio</th><th class='num'>Hours</th></tr></thead><tbody>" +
+        byStyle.map(r => {
+          const mins = allLessons().filter(x => x.lesson.style === r.style.id).reduce((a, x) => a + numOr(x.lesson.mins, 0), 0);
+          return "<tr><td>" + esc(r.style.label) + "</td><td class='num'>" + esc(hm(mins)) + "</td><td class='num'>" +
+            esc(num(ratioFor(r.style.id), 1)) + "×</td><td class='num'>" + esc(hours(r.h)) + "</td></tr>";
+        }).join("") + "</tbody></table>";
+      bd.appendChild(t);
+    }
+    if (liveMinutes() > 0) {
+      bd.appendChild(el("div", {
+        cls: "note warn", style: "margin-top:16px",
+        html: "<b>" + esc(hm(liveMinutes())) + " of this is live.</b> The prep is counted above once. Delivering it costs a further <b>" +
+          esc(hours(deliveryHoursPerCohort())) + "</b> <i>every time you run the cohort</i> — that is a cost of sale, not a cost of build, " +
+          "and it is why cohort pricing has to be higher than self-paced pricing for the same material."
+      }));
+    }
+  }
+
+  /* ratios */
+  const rt = $("#p-ratios tbody");
+  rt.innerHTML = "";
+  STYLES.forEach(st => {
+    const tr = el("tr");
+    const overridden = state.ratios[st.id] !== undefined && state.ratios[st.id] !== null;
+    tr.innerHTML = "<td><b>" + esc(st.label) + "</b><div class='muted' style='font-size:12.5px;margin-top:2px'>" + esc(st.what) + "</div></td>" +
+      "<td class='num'><input type='number' min='0' step='0.5' inputmode='decimal' id='ratio-" + st.id + "' value='" + esc(ratioFor(st.id)) + "'" +
+      (overridden ? " style='border-color:var(--acc)'" : "") + " aria-label='Ratio for " + esc(st.label) + "'></td>" +
+      "<td class='num muted nowrap'>" + st.lo + "–" + st.hi + "×</td>";
+    rt.appendChild(tr);
+    tr.querySelector("input").addEventListener("change", e => {
+      const v = numOr(e.target.value, 0);
+      if (v > 0) state.ratios[st.id] = v; else delete state.ratios[st.id];
+      refresh();
+    });
+  });
+
+  /* calibration output */
+  const co = $("#p-cal-out");
+  if (state.calibration) {
+    const c = state.calibration;
+    const def = styleOf(c.style).ratio;
+    const delta = c.ratio / def;
+    co.innerHTML = '<div class="note ' + (delta > 1.25 ? "warn" : "good") + '"><b>' + esc(num(c.ratio, 1)) + '× measured</b> — ' +
+      esc(num(c.hours, 2)) + ' hours for ' + esc(num(c.mins, 1)) + ' finished minutes of ' + esc(styleOf(c.style).label.toLowerCase()) + '. ' +
+      (delta > 1.25
+        ? "That is " + num(delta, 1) + "× the planning default, and it is the number to believe. Your build estimate has moved to " + hours(buildHours()) + "."
+        : "Close to or below the planning default, which is unusual and worth confirming on a second lesson before you count on it.") +
+      '</div>';
+  } else {
+    co.innerHTML = '<p class="muted" style="font-size:13px;margin:0">Nothing measured yet. Every number on this tab is a default until you do this.</p>';
+  }
+
+  /* overheads */
+  const ot = $("#p-overheads tbody");
+  ot.innerHTML = "";
+  OVERHEADS.forEach(o => {
+    const on = overheadOn(o.k);
+    const cfg = state.overheads[o.k] || {};
+    const val = o.perHour !== undefined ? numOr(cfg.hours, o.perHour) : numOr(cfg.hours, o.fixed);
+    const tr = el("tr");
+    tr.innerHTML =
+      "<td><label class='check'><input type='checkbox' id='oh-on-" + o.k + "'" + (on ? " checked" : "") + "><span><b>" + esc(o.label) + "</b>" +
+        (o.note ? "<div class='muted' style='font-size:12.5px'>" + esc(o.note) + "</div>" : "") + "</span></label></td>" +
+      "<td class='num'><input type='number' min='0' step='0.5' inputmode='decimal' id='oh-h-" + o.k + "' value='" + esc(val) + "'" +
+        (on ? "" : " disabled") + " aria-label='Hours for " + esc(o.label) + "'></td>" +
+      "<td class='num muted nowrap'>" + (o.perHour !== undefined ? "per finished hour<br><b>" + esc(hours(overheadHours(o.k))) + "</b>" : "fixed") + "</td>";
+    ot.appendChild(tr);
+    tr.querySelector("#oh-on-" + o.k).addEventListener("change", e => {
+      state.overheads[o.k] = Object.assign({}, state.overheads[o.k], { on: e.target.checked });
+      refresh();
+    });
+    tr.querySelector("#oh-h-" + o.k).addEventListener("change", e => {
+      state.overheads[o.k] = Object.assign({}, state.overheads[o.k], { hours: Math.max(0, numOr(e.target.value, 0)) });
+      refresh();
+    });
+  });
+
+  renderSchedule();
+  renderLevers();
+}
+
+function renderSchedule() {
+  const box = $("#p-schedule");
+  const conflict = scheduleConflict();
+  const fd = finishDate();
+  if (!parseDate(state.launchDate)) {
+    box.innerHTML = '<div class="note">Set a target launch date on the Outcome tab and this becomes a yes-or-no answer. ' +
+      'On today\'s numbers the build finishes ' + (fd ? "around <b>" + esc(fmtDate(fd)) + "</b>" : "at an unknown date") + '.</div>';
+    return;
+  }
+  if (!conflict) { box.innerHTML = '<div class="note warn">Set your weekly build hours on the Outcome tab.</div>'; return; }
+  const rows = [
+    ["Build finishes", fmtDate(conflict.got)],
+    ["Build must finish by", fmtDate(conflict.need)],
+    ["Launch day", fmtDate(parseDate(state.launchDate))]
+  ];
+  box.innerHTML =
+    '<div class="note ' + (conflict.ok ? "good" : "bad") + '">' +
+      (conflict.ok
+        ? "<b>It fits, with " + esc(num(-conflict.slip)) + " days spare.</b> That margin is where the first re-record and the week you lose to something else will come from."
+        : "<b>It does not fit — you are " + esc(num(conflict.slip)) + " days over.</b> Nothing below fixes this except the three levers, and picking none of them picks the last one anyway.") +
+    "</div>" +
+    '<div class="tablewrap"><table><tbody>' +
+      rows.map(r => "<tr><td>" + esc(r[0]) + "</td><td class='num nowrap'><b>" + esc(r[1]) + "</b></td></tr>").join("") +
+    "</tbody></table></div>" +
+    '<p class="muted" style="font-size:12.5px;margin-top:10px">The deadline is ' +
+      (state.beta ? "eight weeks" : "four weeks") + ' before launch, because ' +
+      (state.beta ? "the beta cohort has to run against a finished course." : "test users, the sales page and the waitlist all sit between “recorded” and “on sale”.") +
+    "</p>";
+}
+
+function renderLevers() {
+  const box = $("#p-levers");
+  const conflict = scheduleConflict();
+  if (!conflict || conflict.ok) {
+    box.innerHTML = '<p class="muted" style="margin:0;font-size:13.5px">' +
+      (conflict ? "Nothing to fix — the plan fits the date." : "Set a launch date and weekly hours, and the levers appear here if the plan does not fit.") +
+      "</p>";
+    return;
+  }
+  const weeksAvailable = Math.max(0.1, daysBetween(today(), conflict.need) / 7);
+  const hoursAvailable = weeksAvailable * numOr(state.capacity, 0);
+  const excess = buildHours() - hoursAvailable;
+  const mh = marginalHoursPerMinute();
+  const cutMins = mh > 0 ? excess / mh : null;
+  const capNeeded = weeksAvailable > 0 ? buildHours() / weeksAvailable : null;
+  const newLaunch = finishDate() ? shiftDays(finishDate(), state.beta ? 56 : 28) : null;
+
+  /* Cutting runtime only reaches the hours that scale with runtime. Past that
+     the estimate is fixed work, and saying "cut 3 hours" from a 2-hour course
+     would be arithmetic nobody can act on. */
+  const maxCutSaving = totalMinutes() * mh;
+  const avgLesson = totalMinutes() / Math.max(1, allLessons().length);
+  const lever1 = (cutMins !== null && cutMins < totalMinutes())
+    ? "Remove about <b>" + esc(hm(cutMins)) + "</b> of finished course — roughly " +
+      esc(num(Math.ceil(cutMins / Math.max(1, avgLesson)))) + " lessons at your current average. Start with anything marked off the critical path."
+    : "<b>This lever cannot close the gap on its own.</b> Deleting the whole course saves " + esc(hours(maxCutSaving)) +
+      " of the " + esc(hours(excess)) + " you are over — the remaining " + esc(hours(Math.max(0, buildHours() - maxCutSaving))) +
+      " is fixed work that does not shrink with runtime. Cut what you can, then use levers 2 and 3 for the rest.";
+
+  box.innerHTML =
+    '<p class="sub">You are <b>' + esc(hours(excess)) + '</b> over what the calendar allows. Exactly three things change that.</p>' +
+    '<div class="stack">' +
+      '<div class="note"><b>1 · Cut runtime.</b> ' + lever1 + "</div>" +
+      '<div class="note"><b>2 · Find more hours.</b> You would need <b>' + esc(capNeeded ? num(capNeeded, 1) + " h/week" : "—") +
+        '</b> instead of ' + esc(num(state.capacity, 1)) + '. Be honest about whether that exists; the plan that assumed it is why the date slipped.</div>' +
+      '<div class="note"><b>3 · Move the date.</b> On these numbers the earliest honest launch is <b>' +
+        esc(newLaunch ? fmtDate(newLaunch) : "—") + '</b>. Moving it now costs nothing. Moving it in week six costs the launch.</div>' +
+    "</div>" +
+    '<p class="muted" style="font-size:13px;margin-top:12px">There is a fourth thing people try — recording faster and skipping the edit — which is the same as lever one, taken out of quality instead of scope.</p>';
+}
+
+/* ===========================================================================
+   PRICING
+   =========================================================================== */
+
+function initPricing() {
+  $("#pv-mode").addEventListener("change", e => { state.value.mode = e.target.value; refresh(); });
+  bind("#pr-hourly", "hourly");
+}
+
+function renderPricing() {
+  setVal("#pv-mode", state.value.mode);
+  setVal("#pr-hourly", state.hourly);
+
+  const plat = selectedPlatform();
+  const net = effectiveNet();
+  const need = salesNeeded(), people = peopleNeeded();
+  const reach = numOr(state.audienceSize, 0);
+  const rph = revenuePerBuildHour();
+
+  const s = $("#pr-stats");
+  s.innerHTML = "";
+  stat(s, "Net per sale", money(net),
+    money(state.price) + " less " + esc(plat.label.toLowerCase()) + " fees and " + pct(numOr(state.refund, 0), 0) + " refunds", "accent");
+  stat(s, "Sales needed", need === null ? "—" : num(need), "to net " + money(state.revTarget));
+  stat(s, "People needed", people === null ? "—" : num(people),
+    people === null ? "set a buy rate" : (people <= reach ? "you can reach " + num(reach) : num(people - reach) + " more than you have"),
+    people === null ? null : (people <= reach ? "good" : "bad"));
+  stat(s, "Per build hour", rph === null ? "—" : money(rph),
+    "from the audience you have today, over " + hours(buildHours()), rph !== null && rph < numOr(state.hourly, 0) ? "warn" : null);
+
+  renderValueAnchor();
+  renderOpportunity();
+  renderFunnel();
+  renderLadder();
+  renderSensitivity();
+}
+
+function renderValueAnchor() {
+  const box = $("#pv-inputs");
+  const v = state.value;
+  if (v.mode === "time") {
+    box.innerHTML =
+      '<div class="field-row">' +
+        '<div class="field"><label for="pv-hpm">Hours saved a month</label><input id="pv-hpm" type="number" min="0" step="0.5" inputmode="decimal" value="' + esc(v.hpm) + '"></div>' +
+        '<div class="field"><label for="pv-rate">Their hourly value</label><input id="pv-rate" type="number" min="0" step="1" inputmode="decimal" value="' + esc(v.rate) + '"></div>' +
+      "</div>";
+    $("#pv-hpm").addEventListener("change", e => { state.value.hpm = numOr(e.target.value, 0); refresh(); });
+    $("#pv-rate").addEventListener("change", e => { state.value.rate = numOr(e.target.value, 0); refresh(); });
+  } else if (v.mode === "money") {
+    box.innerHTML = '<div class="field"><label for="pv-peryear">Earned or saved in year one</label>' +
+      '<input id="pv-peryear" type="number" min="0" step="1" inputmode="decimal" value="' + esc(v.peryear) + '"></div>';
+    $("#pv-peryear").addEventListener("change", e => { state.value.peryear = numOr(e.target.value, 0); refresh(); });
+  } else {
+    box.innerHTML = '<div class="field"><label for="pv-manual">Value of the outcome, year one</label>' +
+      '<input id="pv-manual" type="number" min="0" step="1" inputmode="decimal" value="' + esc(v.manual) + '"></div>';
+    $("#pv-manual").addEventListener("change", e => { state.value.manual = numOr(e.target.value, 0); refresh(); });
+  }
+
+  const val = outcomeValue(), share = priceAsShareOfValue();
+  const out = $("#pv-out");
+  if (!val) { out.innerHTML = '<div class="note warn">Put a number on the outcome and the price stops being a guess.</div>'; return; }
+  let verdict, tone;
+  if (share === null) { verdict = ""; tone = ""; }
+  else if (share <= 10) { verdict = "An easy yes. You are leaving room on the table — which is the right trade for a first course, and the wrong one for the third."; tone = "good"; }
+  else if (share <= 20) { verdict = "The normal band. It sells on proof: a case study, a beta result, or a guarantee that removes the risk."; tone = ""; }
+  else if (share <= 40) { verdict = "You are asking them to bet. It can work, but only with strong proof and a specific, believable outcome."; tone = "warn"; }
+  else { verdict = "Above about 40% of first-year value, buyers stop doing the sum and start doubting the claim. Either the price comes down or the promise gets bigger."; tone = "bad"; }
+  out.innerHTML = '<div class="note ' + tone + '"><b>' + esc(money(state.price)) + " is " + esc(pct(share, 0)) +
+    " of " + esc(money(val)) + " of first-year value.</b> " + esc(verdict) + "</div>" +
+    '<p class="muted" style="font-size:13px;margin:10px 0 0">Chapter 11 makes this argument for coaching: price the transformation, not the hours. ' +
+    "A course is the same trade with the delivery cost removed, which is why the same outcome supports a lower price and far more of them.</p>";
+}
+
+function renderOpportunity() {
+  const box = $("#pr-opportunity");
+  const cost = opportunityCost(), be = breakEvenSales();
+  const rate = numOr(state.hourly, 0);
+  if (!rate) { box.innerHTML = '<p class="muted" style="margin:0;font-size:13.5px">Put a rate in and the build gets a price tag.</p>'; return; }
+  const reach = reachableSales();
+  box.innerHTML =
+    '<div class="grid two" style="gap:12px">' +
+      '<div class="stat"><div class="k">The build costs you</div><div class="v sm">' + esc(money(cost)) + '</div><div class="d">' + esc(hours(buildHours())) + " at " + esc(money(rate)) + "/h</div></div>" +
+      '<div class="stat"><div class="k">Break-even</div><div class="v sm">' + esc(be === null ? "—" : num(be) + " sales") + '</div><div class="d">before the course has paid for your time</div></div>' +
+    "</div>" +
+    '<div class="note ' + (be !== null && reach >= be ? "good" : "warn") + '" style="margin-top:14px">' +
+      (be === null ? "Set a price to see this."
+        : reach >= be
+          ? "<b>Your current reach covers it.</b> " + esc(num(Math.floor(reach))) + " expected sales against a break-even of " + esc(num(be)) + "."
+          : "<b>Your current reach does not cover it.</b> " + esc(num(Math.floor(reach))) + " expected sales against a break-even of " + esc(num(be)) +
+            ". A course only beats billable work if it sells more than once, so the audience is the project — not the recording.") +
+    "</div>";
+}
+
+function renderFunnel() {
+  const box = $("#pr-funnel");
+  const need = salesNeeded(), people = peopleNeeded();
+  const reach = numOr(state.audienceSize, 0), conv = numOr(state.conv, 0);
+  const expected = reachableSales(), expectedRev = reachableRevenue();
+  if (need === null) { box.innerHTML = '<div class="note warn">Set a price and a revenue target on the Outcome tab.</div>'; return; }
+
+  const rows = [
+    ["Revenue target", money(state.revTarget), "net, after fees and refunds"],
+    ["Net per sale", money(effectiveNet()), selectedPlatform().label + " · " + pct(numOr(state.refund, 0), 0) + " refunds"],
+    ["Sales needed", num(need), "target ÷ net per sale"],
+    ["At a " + pct(conv, 1) + " buy rate", people === null ? "—" : num(people) + " people", "sales ÷ buy rate"],
+    ["You can reach", num(reach), "today, without paid traffic"]
+  ];
+  const gap = people !== null ? people - reach : null;
+  box.innerHTML =
+    '<div class="tablewrap"><table><tbody>' +
+      rows.map(r => "<tr><td>" + esc(r[0]) + "</td><td class='num nowrap'><b>" + esc(r[1]) + "</b></td><td class='muted'>" + esc(r[2]) + "</td></tr>").join("") +
+    "</tbody></table></div>" +
+    '<div class="note ' + (gap !== null && gap <= 0 ? "good" : "bad") + '" style="margin-top:14px">' +
+      (gap === null ? "Set a buy rate."
+        : gap <= 0
+          ? "<b>The target is reachable.</b> Your audience should produce about " + esc(num(Math.floor(expected))) + " sales — " + esc(money(expectedRev)) + " net."
+          : "<b>You are " + esc(num(gap)) + " people short.</b> Your audience should produce about " + esc(num(Math.floor(expected))) +
+            " sales — " + esc(money(expectedRev)) + " net, against a target of " + esc(money(state.revTarget)) + ". " +
+            "Three ways out: grow the audience before launch, raise the price, or lower the target to what the audience can actually deliver.") +
+    "</div>" +
+    '<p class="muted" style="font-size:13px;margin-top:10px">A 1–3% buy rate on a warm audience is the usual range; a cold one is a fraction of that. ' +
+    "If you have launched before, use your own number and ignore both.</p>";
+}
+
+function renderLadder() {
+  const tb = $("#pr-ladder tbody");
+  tb.innerHTML = "";
+  const here = bandFor(numOr(state.price, 0));
+  BANDS.forEach(b => {
+    const range = b.hi === null ? money(b.lo) + "+" : (b.lo === 0 && b.hi === 0 ? money(0) : money(b.lo) + "–" + money(b.hi));
+    const on = b === here;
+    tb.appendChild(el("tr", {
+      html: "<td" + (on ? " style='background:var(--acc-bg)'" : "") + "><b>" + esc(b.label) + "</b>" +
+            (on ? ' <span class="pill acc">you</span>' : "") + "<div class='muted mono' style='font-size:12.5px'>" + esc(range) + "</div></td>" +
+            "<td>" + esc(b.shape) + "</td><td>" + esc(b.expects) + "</td>"
+    }));
+  });
+}
+
+function renderSensitivity() {
+  const tb = $("#pr-sens tbody");
+  tb.innerHTML = "";
+  const base = numOr(state.price, 0);
+  if (base <= 0) { tb.innerHTML = "<tr><td colspan='5' class='muted'>Set a price first.</td></tr>"; return; }
+  const reach = numOr(state.audienceSize, 0);
+  const points = [0.5, 0.75, 1, 1.5, 2].map(f => Math.max(1, Math.round(base * f)));
+  Array.from(new Set(points)).sort((a, b) => a - b).forEach(p => {
+    const n = effectiveNet(p);
+    const sales = n > 0 ? Math.ceil(numOr(state.revTarget, 0) / n) : null;
+    const c = numOr(state.conv, 0) / 100;
+    const ppl = sales !== null && c > 0 ? Math.ceil(sales / c) : null;
+    const ok = ppl !== null && ppl <= reach;
+    tb.appendChild(el("tr", {
+      html: "<td class='num'" + (p === base ? " style='font-weight:700'" : "") + ">" + esc(money(p)) + (p === base ? " ←" : "") + "</td>" +
+            "<td class='num'>" + esc(money(n)) + "</td>" +
+            "<td class='num'>" + esc(sales === null ? "—" : num(sales)) + "</td>" +
+            "<td class='num'>" + esc(ppl === null ? "—" : num(ppl)) + "</td>" +
+            "<td class='" + (ok ? "win" : "") + "'>" + (ppl === null ? "—" : ok ? "within reach" : num(ppl - reach) + " short") + "</td>"
+    }));
+  });
+}
+
+/* ===========================================================================
+   PLATFORM
+   =========================================================================== */
+
+function initPlatform() {
+  bind("#pf-volume", "volume");
+  $("#pf-reset").addEventListener("click", () => {
+    state.platforms = {};
+    refresh();
+    toast("Fees back to defaults");
+  });
+}
+
+function renderPlatform() {
+  setVal("#pf-volume", state.volume);
+  const vol = numOr(state.volume, 0);
+  const price = numOr(state.price, 0);
+  const rows = allPlatforms();
+  const best = rows.reduce((b, r) => netPerSale(r) * vol - r.monthly > netPerSale(b) * vol - b.monthly ? r : b, rows[0]);
+
+  const tb = $("#pf-table tbody");
+  tb.innerHTML = "";
+  rows.forEach(r => {
+    const per = netPerSale(r);
+    const monthly = per * vol - r.monthly;
+    const be = platformBreakEven(r);
+    const sel = r.id === state.platformSel;
+    const tr = el("tr");
+    tr.innerHTML =
+      "<td>" +
+        "<label class='check'><input type='radio' name='platsel' value='" + r.id + "'" + (sel ? " checked" : "") + " aria-label='Use " + esc(r.label) + " in the pricing maths'>" +
+        "<span><b>" + esc(r.label) + "</b>" + (r.id === best.id ? " <span class='pill green'>best at " + esc(num(vol)) + "/mo</span>" : "") + "</span></label>" +
+      "</td>" +
+      "<td class='num'><input type='number' min='0' max='100' step='0.1' inputmode='decimal' value='" + esc(r.take) + "' data-pf='take' data-id='" + r.id + "' aria-label='Take percent'></td>" +
+      "<td class='num'><input type='number' min='0' step='0.05' inputmode='decimal' value='" + esc(r.fixed) + "' data-pf='fixed' data-id='" + r.id + "' aria-label='Fixed fee per sale'></td>" +
+      "<td class='num'><input type='number' min='0' step='1' inputmode='decimal' value='" + esc(r.monthly) + "' data-pf='monthly' data-id='" + r.id + "' aria-label='Monthly fee'></td>" +
+      "<td class='num nowrap'><b>" + esc(money(per)) + "</b></td>" +
+      "<td class='num nowrap" + (monthly === Math.max.apply(null, rows.map(x => netPerSale(x) * vol - x.monthly)) ? " win" : "") + "'>" + esc(money(monthly)) + "</td>" +
+      "<td class='num nowrap muted'>" + (be === null ? "—" : be === Infinity ? "never" : num(Math.ceil(be)) + "/mo") + "</td>";
+    tb.appendChild(tr);
+    tr.querySelector("input[type=radio]").addEventListener("change", () => { state.platformSel = r.id; refresh(); });
+    Array.from(tr.querySelectorAll("input[data-pf]")).forEach(inp => {
+      inp.addEventListener("change", e => {
+        const id = e.target.dataset.id, k = e.target.dataset.pf;
+        state.platforms[id] = Object.assign({}, state.platforms[id], { [k]: Math.max(0, numOr(e.target.value, 0)) });
+        refresh();
+      });
+    });
+  });
+
+  const notes = $("#pf-notes");
+  notes.innerHTML = rows.map(r => {
+    const def = PLATFORM_DEFAULTS.find(p => p.id === r.id);
+    return '<details class="disclosure"><summary>' + esc(r.label) + " — " + esc(money(netPerSale(r))) + " per sale</summary>" +
+      '<div class="dbody"><p>' + esc(def.what) + "</p><p><b>The cost:</b> " + esc(def.cost) + "</p></div></details>";
+  }).join("");
+
+  const mk = rows.find(r => r.id === "marketplace");
+  const own = bestFreeRow();
+  const mkNet = netPerSale(mk), ownNet = own ? netPerSale(own) : 0;
+  const ratio = mkNet > 0 ? ownNet / mkNet : null;
+  $("#pf-marketplace").innerHTML =
+    "<p>At " + esc(money(price)) + ", a marketplace leaves you <b>" + esc(money(mkNet)) + "</b> and selling it yourself leaves <b>" + esc(money(ownNet)) + "</b> — " +
+      (ratio ? esc(num(ratio, 1)) + "× more" : "—") + ". That gap is what the marketplace charges for the buyer.</p>" +
+    "<p>Which makes the question arithmetic rather than principle: <b>can you find " +
+      (ratio ? esc(num(1 / ratio * 100, 0)) + "%" : "—") +
+      " as many buyers as the marketplace would?</b> If you have no audience, the answer is usually no, and half of something beats all of nothing.</p>" +
+    "<p class='muted' style='font-size:13px'>The second-order effect matters more than the first: on a marketplace you get a sale, on your own site you get a customer — " +
+      "an email address you can sell the next course to, at no acquisition cost. One is revenue, the other is an asset.</p>" +
+    (state.format !== "selfpaced"
+      ? "<p class='muted' style='font-size:13px'><b>Note for your format:</b> marketplaces are built for self-paced video. A cohort with live calls does not fit their model and usually cannot be sold there at all.</p>"
+      : "");
+}
+
+/* ===========================================================================
+   DROP-OFF AUDIT
+   =========================================================================== */
+
+function initAudit() {
+  const box = $("#a-mechanics");
+  box.innerHTML = AUDIT_MECHANICS.map(m =>
+    '<details class="disclosure"><summary>' + esc(m[0]) + "</summary><div class=\"dbody\"><p>" + esc(m[1]) + "</p></div></details>"
+  ).join("");
+}
+
+function renderAudit() {
+  const f = auditFindings();
+  const high = f.filter(x => x.sev === "high").length;
+  const med = f.filter(x => x.sev === "med").length;
+  const L = allLessons();
+  const longest = L.reduce((a, x) => numOr(x.lesson.mins, 0) > numOr(a && a.lesson.mins, -1) ? x : a, null);
+  const total = totalMinutes();
+  const hasDeadline = fmt().deadline || liveMinutes() > 0;
+
+  const s = $("#a-stats");
+  s.innerHTML = "";
+  stat(s, "Serious", num(high), high ? "fix before you record" : "nothing serious", high ? "bad" : "good");
+  stat(s, "Worth fixing", num(med), "structural, not cosmetic", med ? "warn" : null);
+  stat(s, "Longest lesson", longest ? hm(longest.lesson.mins) : "—",
+    longest ? esc(longest.n + " " + (longest.lesson.title || "untitled")) : "no lessons yet",
+    longest && numOr(longest.lesson.mins, 0) > 15 ? "warn" : null);
+  stat(s, "Deadline", hasDeadline ? "Yes" : "None",
+    hasDeadline ? "cohort or live element" : "nothing creates urgency", hasDeadline ? "good" : "warn");
+
+  $("#a-count").textContent = f.length ? f.length + " finding" + (f.length === 1 ? "" : "s") + ", most serious first" : "";
+
+  const box = $("#a-findings");
+  box.innerHTML = "";
+  if (!f.length) {
+    box.appendChild(el("div", { cls: "note good", html: "<b>Nothing flagged.</b> Every structural check passed: the first lesson is short, each module has something to hand in, the runtime is doing-heavy, and there is a deadline somewhere in the design. That is the structure done — the teaching is still on you." }));
+    return;
+  }
+  const sevLabel = { high: "Serious", med: "Worth fixing", low: "Minor" };
+  f.forEach(x => {
+    box.appendChild(el("div", {
+      cls: "finding " + x.sev,
+      html: '<div class="fh"><b>' + esc(x.title) + '</b><span class="pill ' + (x.sev === "high" ? "red" : x.sev === "med" ? "amber" : "acc") + '">' + sevLabel[x.sev] + "</span></div>" +
+            '<div class="cost">' + esc(x.cost) + "</div>" +
+            '<div class="fix"><b>Fix:</b> ' + esc(x.fix) + "</div>" +
+            (x.where ? '<div class="where">' + esc(x.where) + "</div>" : "")
+    }));
+  });
+}
+
+/* ===========================================================================
+   LAUNCH
+   =========================================================================== */
+
+function initLaunch() {
+  bind("#lp-beta", "beta");
+  bind("#lp-listconv", "listConv");
+  bind("#lp-signup", "signupRate");
+  $("#lp-copy-emails").addEventListener("click", () => copyText(emailsMarkdown(), "Email outline"));
+
+  const tb = $("#lp-emails tbody");
+  EMAILS.forEach(e => tb.appendChild(el("tr", {
+    html: "<td class='nowrap'><b>" + esc(e.when) + "</b></td><td>" + esc(e.job) + "</td><td class='muted'>" + esc(e.subject) + "</td>"
+  })));
+}
+
+function emailsMarkdown() {
+  const L = parseDate(state.launchDate);
+  const offsets = [0, 1, 2, 3, 4, 5, 6];
+  return ["# Launch emails — " + (state.title || "untitled course"), ""]
+    .concat(EMAILS.map((e, i) => {
+      const d = L ? shiftDays(L, offsets[i]) : null;
+      return "## " + e.when + (d ? " — " + fmtDate(d) : "") + "\n**Job:** " + e.job + "\n**Subject pattern:** " + e.subject + "\n";
+    })).join("\n");
+}
+
+function renderLaunch() {
+  setVal("#lp-beta", state.beta);
+  setVal("#lp-listconv", state.listConv);
+  setVal("#lp-signup", state.signupRate);
+
+  /* conflict with the production estimate */
+  const c = scheduleConflict();
+  const cbox = $("#lp-conflict");
+  if (!parseDate(state.launchDate)) {
+    cbox.innerHTML = '<div class="note warn">No launch date set. Put one on the Outcome tab and this schedule fills in with real dates.</div>';
+  } else if (!c) {
+    cbox.innerHTML = "";
+  } else if (c.ok) {
+    cbox.innerHTML = '<div class="note good"><b>The build clears the deadline by ' + esc(num(-c.slip)) + ' days.</b> Everything below is achievable at your current pace.</div>';
+  } else {
+    cbox.innerHTML = '<div class="note bad"><b>This schedule is already broken.</b> The build finishes ' + esc(fmtDate(c.got)) +
+      ', which is ' + esc(num(c.slip)) + ' days after the point everything below depends on. Fix it on the Production tab before working through this list.</div>';
+  }
+
+  /* timeline */
+  const ul = $("#lp-timeline");
+  ul.innerHTML = "";
+  const now = today();
+  launchPlan().forEach(s => {
+    let cls = "dot";
+    if (s.date) {
+      if (s.gate && c && !c.ok) cls += " late";
+      else if (s.date < now) cls += " late";
+    }
+    ul.appendChild(el("li", {
+      html: '<span class="' + cls + '"></span><div class="tlb">' +
+        '<div class="when">' + esc(s.date ? fmtDate(s.date) : (s.d === 0 ? "launch day" : (s.d < 0 ? s.d + " days" : "+" + s.d + " days"))) +
+          (s.date ? '  <span class="muted">' + esc(s.d === 0 ? "launch day" : (s.d < 0 ? s.d + " days" : "+" + s.d + " days")) + "</span>" : "") + "</div>" +
+        '<div class="what">' + esc(s.what) + (s.gate ? ' <span class="pill acc">gate</span>' : "") + "</div>" +
+        '<div class="why">' + esc(s.why) + "</div></div>"
+    }));
+  });
+
+  /* waitlist */
+  const w = waitlistNeeded(), r = reachForWaitlist(), reach = numOr(state.audienceSize, 0);
+  const wb = $("#lp-waitlist");
+  if (w === null) {
+    wb.innerHTML = '<div class="note warn">Set a price, a revenue target and a waitlist buy rate.</div>';
+  } else {
+    wb.innerHTML =
+      '<div class="grid two" style="gap:12px">' +
+        '<div class="stat"><div class="k">Waitlist needed</div><div class="v sm">' + esc(num(w)) + '</div><div class="d">' + esc(num(salesNeeded())) + " sales at " + esc(pct(numOr(state.listConv, 0), 1)) + "</div></div>" +
+        '<div class="stat"><div class="k">Reach needed</div><div class="v sm">' + esc(r === null ? "—" : num(r)) + '</div><div class="d">to fill that list at ' + esc(pct(numOr(state.signupRate, 0), 1)) + " signup</div></div>" +
+      "</div>" +
+      '<div class="note ' + (r !== null && r <= reach ? "good" : "warn") + '" style="margin-top:14px">' +
+        (r === null ? "Set a signup rate."
+          : r <= reach
+            ? "<b>Your reach of " + esc(num(reach)) + " covers it.</b> The waitlist is a formality rather than a growth project."
+            : "<b>You would need to reach " + esc(num(r)) + " people</b> against the " + esc(num(reach)) + " you have. " +
+              "That gap is the real work between now and launch, and it takes longer than recording does. Start it in parallel, today, not after the course is finished.") +
+      "</div>" +
+      '<p class="muted" style="font-size:13px;margin-top:10px">A warm waitlist that opted in specifically for this course converts far better than a general list — ' +
+      "5–10% is common for a genuinely targeted one, low single digits for a broad one. Use your own figure once you have one.</p>";
+  }
+
+  /* beta */
+  const bn = $("#lp-betanote");
+  if (state.beta) {
+    const seats = 10, betaPrice = Math.round(numOr(state.price, 0) * 0.5);
+    bn.innerHTML =
+      "<p>Ten seats at about " + esc(money(betaPrice)) + " buys you the three things a first course cannot get any other way: " +
+      "proof the material works, testimonials with numbers in them, and a list of every place people got stuck.</p>" +
+      "<p>The terms that make it work: they pay (free beta testers give free-quality feedback), they commit to a weekly reply, " +
+      "and they know it is a beta — unfinished sections and all.</p>" +
+      "<p class='muted' style='font-size:13px'>" + esc(money(seats * betaPrice)) + " of revenue at " + esc(money(betaPrice)) +
+      " × " + seats + " seats, which is usually the first money the course makes and often the money that funds the rest of the build.</p>";
+  } else {
+    bn.innerHTML =
+      "<p><b>No beta in this plan.</b> That takes eight weeks out of the schedule and puts the first real feedback after launch, " +
+      "when fixing it costs refunds instead of an email.</p>" +
+      "<p>If the date genuinely cannot move, do the cheap version: five people, watching them use it, unedited. " +
+      "It catches most of what a beta would.</p>";
+  }
+
+  /* after */
+  const total = totalMinutes();
+  $("#lp-after").innerHTML =
+    "<p>Three weeks after close, you have to decide what this becomes:</p>" +
+    "<ul style='margin:0 0 12px;padding-left:20px'>" +
+      "<li><b>Evergreen.</b> Always available, sold by content and search. Lower conversion, no launch spikes, no delivery cost. " +
+      "Suits self-paced material like this " + esc(hm(total)) + " course.</li>" +
+      "<li><b>Cohorts.</b> Two to four a year, each with a deadline. Higher price, higher completion, and " +
+      (liveMinutes() ? esc(hours(deliveryHoursPerCohort())) + " of live delivery" : "live delivery hours") + " every single run.</li>" +
+      "<li><b>Neither.</b> Some courses earn out in one launch and should be left alone. That is a result, not a failure.</li>" +
+    "</ul>" +
+    "<p class='muted' style='font-size:13px'>Whichever you pick, the post-mortem numbers to write down are: refund rate, " +
+    "how far the median buyer got, and the question you were asked most. The third one is your next course.</p>";
+}
+
+/* ===========================================================================
+   BRIEF
+   =========================================================================== */
+
+function initBrief() {
+  const box = $("#b-options");
+  BRIEF_SECTIONS.forEach(s => {
+    const id = "bo-" + s.k;
+    const lab = el("label", { cls: "check", html: '<input type="checkbox" id="' + id + '"><span>' + esc(s.label) + "</span>" });
+    box.appendChild(lab);
+    lab.querySelector("input").addEventListener("change", e => { state.brief[s.k] = e.target.checked; save(); });
+  });
+
+  $("#b-build").addEventListener("click", () => {
+    const md = briefMarkdown();
+    $("#b-preview").innerHTML = "";
+    $("#b-preview").appendChild(mdbox(slug(state.title || "course") + "-brief.md", md));
+    $("#b-preview-card").hidden = false;
+    $("#b-size").textContent = num(md.length) + " characters · " + num(md.split("\n").length) + " lines";
+    ["#b-copy", "#b-download", "#b-csv", "#b-print"].forEach(s => { $(s).disabled = false; });
+    toast("Brief built");
+  });
+  $("#b-copy").addEventListener("click", () => copyText(briefMarkdown(), "Brief"));
+  $("#b-download").addEventListener("click", () => download(slug(state.title || "course") + "-brief.md", briefMarkdown(), "text/markdown"));
+  $("#b-csv").addEventListener("click", () => download(slug(state.title || "course") + "-outline.csv", outlineCsv(), "text/csv"));
+  $("#b-print").addEventListener("click", () => window.print());
+}
+
+function renderBrief() {
+  BRIEF_SECTIONS.forEach(s => setVal("#bo-" + s.k, state.brief[s.k]));
+}
+
+function csvCell(v) {
+  const s = String(v === null || v === undefined ? "" : v);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+
+function outlineCsv() {
+  const rows = [["Module #", "Module", "Module outcome", "Lesson #", "Lesson", "Type", "Production", "Minutes", "Build hours", "On critical path"]];
+  allLessons().forEach(x => {
+    rows.push([
+      x.mi + 1, x.module.title, x.module.outcome, x.n, x.lesson.title,
+      typeOf(x.lesson.type).label, styleOf(x.lesson.style).label,
+      numOr(x.lesson.mins, 0), lessonHours(x.lesson).toFixed(2), x.lesson.core === false ? "no" : "yes"
+    ]);
+  });
+  return rows.map(r => r.map(csvCell).join(",")).join("\n");
+}
+
+function mdTable(head, rows) {
+  return [
+    "| " + head.join(" | ") + " |",
+    "|" + head.map(() => " --- ").join("|") + "|"
+  ].concat(rows.map(r => "| " + r.join(" | ") + " |")).join("\n");
+}
+
+function briefMarkdown() {
+  const b = state.brief, o = [];
+  const title = (state.title || "Untitled course").trim();
+  o.push("# " + title + " — build brief");
+  o.push("");
+  o.push("_Generated with Course Creation Systems. Every figure below is arithmetic on the inputs recorded here — " +
+    "effort ratios, price bands and fee models are planning defaults unless marked as measured. Nothing here forecasts sales._");
+  o.push("");
+
+  if (b.outcome) {
+    o.push("## The promise");
+    o.push("");
+    o.push(promiseSentence());
+    o.push("");
+    o.push(mdTable(["", ""], [
+      ["**Audience**", state.audience || "—"],
+      ["**From**", state.before || "—"],
+      ["**To**", state.after || "—"],
+      ["**Proof**", state.metric || "—"],
+      ["**Timeframe**", state.timeframe || "—"],
+      ["**Format**", fmt().label],
+      ["**Price**", money(state.price)],
+      ["**Launch**", state.launchDate ? fmtDate(parseDate(state.launchDate)) : "—"]
+    ]));
+    o.push("");
+    o.push("**Validation gate:** " + (gatePassed() ? "passed" : "NOT PASSED — " + gateScore() + " of 3 criteria ticked"));
+    if ((state.evidence || "").trim()) {
+      o.push("");
+      o.push("**Evidence of demand:** " + state.evidence.trim());
+    }
+    o.push("");
+  }
+
+  if (b.curriculum) {
+    o.push("## Curriculum");
+    o.push("");
+    o.push(hm(totalMinutes()) + " across " + state.modules.length + " modules and " + allLessons().length + " lessons · " +
+      pct(totalMinutes() ? doingMinutes() / totalMinutes() * 100 : 0, 0) + " of runtime spent producing something.");
+    o.push("");
+    state.modules.forEach((m, mi) => {
+      o.push("### " + (mi + 1) + ". " + (m.title || "Untitled module") +
+        "  _(" + hm(moduleMinutes(m)) + " · " + hours(m.lessons.reduce((a, l) => a + lessonHours(l), 0)) + " to build)_");
+      o.push("");
+      if ((m.outcome || "").trim()) { o.push("**Outcome:** " + m.outcome.trim()); o.push(""); }
+      if (!m.lessons.length) { o.push("_No lessons._"); o.push(""); return; }
+      o.push(mdTable(["#", "Lesson", "Type", "Production", "Min", "Build"],
+        m.lessons.map((l, li) => [
+          (mi + 1) + "." + (li + 1),
+          (l.title || "—") + (l.core === false ? " _(bonus)_" : ""),
+          typeOf(l.type).label, styleOf(l.style).label, numOr(l.mins, 0), hours(lessonHours(l))
+        ])));
+      o.push("");
+    });
+  }
+
+  if (b.scripts) {
+    o.push("## Beat sheets");
+    o.push("");
+    allLessons().forEach(x => {
+      o.push(scriptMarkdown(x).replace(/^# /, "### "));
+      o.push("");
+    });
+  }
+
+  if (b.production) {
+    o.push("## Production plan");
+    o.push("");
+    o.push(mdTable(["", ""], [
+      ["**Recording & writing**", hours(productionHours())],
+      ["**Contingency (" + num(state.contingency) + "%)**", hours(contingencyHours())],
+      ["**Everything else**", hours(overheadTotal())],
+      ["**Total build**", "**" + hours(buildHours()) + "**"],
+      ["**Blended ratio**", num(blendedRatio(), 1) + " minutes of work per finished minute"],
+      ["**Weekly capacity**", num(state.capacity, 1) + " h"],
+      ["**Calendar time**", isFinite(weeksToBuild()) ? num(weeksToBuild(), 1) + " weeks" : "—"],
+      ["**Ready by**", finishDate() ? fmtDate(finishDate()) : "—"]
+    ]));
+    o.push("");
+    if (state.calibration) {
+      o.push("Ratios calibrated against a real lesson: " + num(state.calibration.hours, 2) + " hours for " +
+        num(state.calibration.mins, 1) + " finished minutes of " + styleOf(state.calibration.style).label.toLowerCase() +
+        " = **" + num(state.calibration.ratio, 1) + "×**.");
+      o.push("");
+    } else {
+      o.push("_Ratios are planning defaults — not yet calibrated against a recorded lesson._");
+      o.push("");
+    }
+    if (liveMinutes() > 0) {
+      o.push("Live delivery costs a further **" + hours(deliveryHoursPerCohort()) + " every cohort**, on top of the one-off build.");
+      o.push("");
+    }
+    const c = scheduleConflict();
+    if (c) {
+      o.push(c.ok
+        ? "Build clears its deadline (" + fmtDate(c.need) + ") by " + num(-c.slip) + " days."
+        : "**Build misses its deadline (" + fmtDate(c.need) + ") by " + num(c.slip) + " days.** Cut runtime, raise capacity, or move the launch.");
+      o.push("");
+    }
+  }
+
+  if (b.pricing) {
+    o.push("## Pricing");
+    o.push("");
+    o.push(mdTable(["", ""], [
+      ["**Price**", money(state.price)],
+      ["**Band**", bandFor(numOr(state.price, 0)).label],
+      ["**Platform assumed**", selectedPlatform().label],
+      ["**Net per sale**", money(effectiveNet()) + " (after fees and " + pct(numOr(state.refund, 0), 0) + " refunds)"],
+      ["**Revenue target**", money(state.revTarget)],
+      ["**Sales needed**", salesNeeded() === null ? "—" : num(salesNeeded())],
+      ["**People needed**", peopleNeeded() === null ? "—" : num(peopleNeeded()) + " at a " + pct(numOr(state.conv, 0), 1) + " buy rate"],
+      ["**Audience today**", num(state.audienceSize)],
+      ["**Revenue per build hour**", revenuePerBuildHour() === null ? "—" : money(revenuePerBuildHour())],
+      ["**Outcome value (year 1)**", money(outcomeValue()) + (priceAsShareOfValue() !== null ? " — price is " + pct(priceAsShareOfValue(), 0) + " of it" : "")]
+    ]));
+    o.push("");
+  }
+
+  if (b.platform) {
+    o.push("## Platform comparison");
+    o.push("");
+    o.push("At " + money(state.price) + " and " + num(state.volume) + " sales a month:");
+    o.push("");
+    o.push(mdTable(["Model", "Take %", "Per sale", "Monthly", "Net / sale", "Net / month", "Break-even"],
+      allPlatforms().map(r => {
+        const be = platformBreakEven(r);
+        return [
+          r.label + (r.id === state.platformSel ? " _(assumed)_" : ""),
+          num(r.take, 1), money(r.fixed), money(r.monthly),
+          money(netPerSale(r)), money(netPerSale(r) * numOr(state.volume, 0) - r.monthly),
+          be === null ? "—" : be === Infinity ? "never" : num(Math.ceil(be)) + "/mo"
+        ];
+      })));
+    o.push("");
+    o.push("_Fees are editable defaults, not quotes. Confirm current rates and your local card processing before choosing._");
+    o.push("");
+  }
+
+  if (b.audit) {
+    o.push("## Drop-off audit");
+    o.push("");
+    const f = auditFindings();
+    if (!f.length) {
+      o.push("No structural findings.");
+      o.push("");
+    } else {
+      const sevLabel = { high: "Serious", med: "Worth fixing", low: "Minor" };
+      f.forEach(x => {
+        o.push("### " + sevLabel[x.sev] + " — " + x.title);
+        o.push("");
+        o.push(x.cost);
+        o.push("");
+        o.push("**Fix:** " + x.fix);
+        if (x.where) { o.push(""); o.push("_" + x.where + "_"); }
+        o.push("");
+      });
+    }
+  }
+
+  if (b.launch) {
+    o.push("## Launch");
+    o.push("");
+    if (parseDate(state.launchDate)) {
+      o.push(mdTable(["Date", "Day", "Step", "Why"],
+        launchPlan().map(s => [
+          s.date ? fmtDate(s.date) : "—",
+          s.d === 0 ? "launch" : (s.d < 0 ? String(s.d) : "+" + s.d),
+          s.what, s.why
+        ])));
+    } else {
+      o.push("_No launch date set._");
+    }
+    o.push("");
+    o.push("### Waitlist");
+    o.push("");
+    o.push("- Waitlist needed: " + (waitlistNeeded() === null ? "—" : num(waitlistNeeded())) + " at a " + pct(numOr(state.listConv, 0), 1) + " buy rate");
+    o.push("- People to reach to fill it: " + (reachForWaitlist() === null ? "—" : num(reachForWaitlist())) + " at a " + pct(numOr(state.signupRate, 0), 1) + " signup rate");
+    o.push("");
+    o.push("### Emails");
+    o.push("");
+    o.push(mdTable(["When", "Job", "Subject pattern"], EMAILS.map(e => [e.when, e.job, e.subject])));
+    o.push("");
+  }
+
+  return o.join("\n").replace(/\n{3,}/g, "\n\n") + "\n";
+}
+
+/* ===========================================================================
+   BOOT
+   =========================================================================== */
+
+RENDERERS.outcome    = renderOutcome;
+RENDERERS.curriculum = renderCurriculum;
+RENDERERS.lesson     = renderLesson;
+RENDERERS.production = renderProduction;
+RENDERERS.pricing    = renderPricing;
+RENDERERS.platform   = renderPlatform;
+RENDERERS.audit      = renderAudit;
+RENDERERS.launch     = renderLaunch;
+RENDERERS.brief      = renderBrief;
+
+function applyTheme() {
+  if (state.theme === "light" || state.theme === "dark") {
+    document.documentElement.setAttribute("data-theme", state.theme);
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+  }
+}
+
+function backupName() { return slug(state.title || "course") + "-course-plan.json"; }
+
+function initChrome() {
+  $("#btn-theme").addEventListener("click", () => {
+    const order = [null, "light", "dark"];
+    const i = order.indexOf(state.theme === undefined ? null : state.theme);
+    state.theme = order[(i + 1) % order.length];
+    applyTheme();
+    save();
+    toast("Theme: " + (state.theme || "follow system"));
+  });
+
+  $("#btn-backup").addEventListener("click", () => {
+    download(backupName(), JSON.stringify(state, null, 2), "application/json");
+  });
+
+  $("#btn-restore").addEventListener("click", () => $("#restore-file").click());
+  $("#restore-file").addEventListener("change", e => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      let parsed = null;
+      try { parsed = JSON.parse(String(rd.result)); }
+      catch (err) { toast("That file isn't valid JSON.", true); return; }
+      if (!parsed || typeof parsed !== "object" || !Array.isArray(parsed.modules)) {
+        toast("That doesn't look like a backup from this app.", true);
+        return;
+      }
+      if (!confirm("Replace everything currently in the app with this file?")) return;
+      state = defaultState();
+      applySaved(parsed);
+      applyTheme();
+      save();
+      renderEverything();
+      showTab(state.tab || "outcome");
+      toast("Restored " + file.name);
+    };
+    rd.onerror = () => toast("Couldn't read that file.", true);
+    rd.readAsText(file);
+    e.target.value = "";
+  });
+
+  $("#btn-clear").addEventListener("click", () => {
+    if (!confirm("Erase everything you've entered?\n\nA backup file downloads first.")) return;
+    download(backupName(), JSON.stringify(state, null, 2), "application/json");
+    setTimeout(() => {
+      Store.wipe();
+      const t = state.theme;
+      state = defaultState();
+      state.theme = t;
+      $("#p-cal-mins").value = "";
+      $("#p-cal-hours").value = "";
+      $("#c-archetype").value = state.archetype;
+      $("#b-preview-card").hidden = true;
+      $("#b-size").textContent = "";
+      ["#b-copy", "#b-download", "#b-csv", "#b-print"].forEach(s => { $(s).disabled = true; });
+      applyTheme();
+      renderEverything();
+      showTab("outcome");
+      toast("Cleared");
+    }, 400);
+  });
+
+  $("#foot-storage").textContent = Store.available
+    ? "Use ⬇ Back up to keep a copy outside the browser."
+    : "This browser is blocking local storage, so nothing will be remembered after you close the tab.";
+}
+
+/** Every panel renders once at boot so nothing is stale when first shown. */
+function renderEverything() {
+  PANELS.forEach(p => { if (RENDERERS[p]) RENDERERS[p](); });
+}
+
+function boot() {
+  load();
+  applyTheme();
+
+  initTabs();
+  initChrome();
+  initOutcome();
+  initCurriculum();
+  initLesson();
+  initProduction();
+  initPricing();
+  initPlatform();
+  initAudit();
+  initLaunch();
+  initBrief();
+
+  renderEverything();
+  showTab(state.tab || "outcome");
+
+  if (!Store.available) {
+    toast("This browser is blocking local storage, so nothing will be remembered after you close the tab.", true);
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", boot);
+} else {
+  boot();
+}
+</script>
+</body>
+</html>
