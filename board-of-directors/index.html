@@ -1,0 +1,2976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLEAR AI Board of Directors — fifteen directors, one decision, no cheerleading</title>
+<meta name="description" content="Put a real decision in front of a fifteen-seat board. Each director scores it against its own mandate using your numbers, the board argues, the risks get quantified, and you leave with a resolution, conditions, a roadmap and a confidence score you can defend. Single file, fully offline.">
+<meta name="color-scheme" content="light dark">
+<style>
+/* ===========================================================================
+   CLEAR AI BOARD OF DIRECTORS
+   Single file. No external requests unless you switch on AI mode and supply
+   your own API key. No CDN scripts, no web fonts, no images, no analytics.
+   =========================================================================== */
+
+:root {
+  --ink:       #14181f;
+  --ink-2:     #414b5c;
+  --ink-3:     #6f7a8d;
+  --bg:        #f2f4f8;
+  --surface:   #ffffff;
+  --surface-2: #f7f9fc;
+  --surface-3: #eaeef5;
+  --line:      #dce2ec;
+  --line-2:    #c2cbdb;
+
+  --navy:      #1a3a6b;
+  --navy-2:    #2b5697;
+  --navy-bg:   #e9eff9;
+  --brass:     #8a6512;
+  --brass-2:   #a97d1c;
+  --brass-bg:  #fbf2dd;
+  --green:     #166b41;
+  --green-bg:  #e4f4ec;
+  --amber:     #8a5606;
+  --amber-bg:  #fdf2df;
+  --red:       #a12424;
+  --red-bg:    #fdebeb;
+  --violet:    #59399f;
+  --violet-bg: #efeafc;
+  --teal:      #0d6b70;
+  --teal-bg:   #e1f3f4;
+
+  --code-bg:   #101520;
+  --code-ink:  #dee5f1;
+
+  --shadow:    0 1px 2px rgba(14,20,32,.06), 0 8px 24px -14px rgba(14,20,32,.24);
+  --shadow-lg: 0 2px 6px rgba(14,20,32,.08), 0 28px 56px -24px rgba(14,20,32,.34);
+  --radius:    14px;
+  --radius-sm: 9px;
+
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+}
+
+html[data-theme="dark"] {
+  --ink:       #e6ebf4;
+  --ink-2:     #b0bacb;
+  --ink-3:     #838da0;
+  --bg:        #0d1018;
+  --surface:   #161a24;
+  --surface-2: #1c212c;
+  --surface-3: #232936;
+  --line:      #2b3140;
+  --line-2:    #3c4557;
+
+  --navy:      #8fb2f0;
+  --navy-2:    #7099e0;
+  --navy-bg:   #16223c;
+  --brass:     #d9ad4d;
+  --brass-2:   #c1963a;
+  --brass-bg:  #2a2210;
+  --green:     #6ccd99;
+  --green-bg:  #12281d;
+  --amber:     #e6b45f;
+  --amber-bg:  #2a2011;
+  --red:       #ef8985;
+  --red-bg:    #2b1616;
+  --violet:    #b09ae6;
+  --violet-bg: #201933;
+  --teal:      #5fc7ca;
+  --teal-bg:   #0f2729;
+
+  --code-bg:   #080b12;
+  --shadow:    0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.7);
+  --shadow-lg: 0 2px 6px rgba(0,0,0,.5), 0 28px 56px -24px rgba(0,0,0,.8);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --ink:       #e6ebf4;
+    --ink-2:     #b0bacb;
+    --ink-3:     #838da0;
+    --bg:        #0d1018;
+    --surface:   #161a24;
+    --surface-2: #1c212c;
+    --surface-3: #232936;
+    --line:      #2b3140;
+    --line-2:    #3c4557;
+
+    --navy:      #8fb2f0;
+    --navy-2:    #7099e0;
+    --navy-bg:   #16223c;
+    --brass:     #d9ad4d;
+    --brass-2:   #c1963a;
+    --brass-bg:  #2a2210;
+    --green:     #6ccd99;
+    --green-bg:  #12281d;
+    --amber:     #e6b45f;
+    --amber-bg:  #2a2011;
+    --red:       #ef8985;
+    --red-bg:    #2b1616;
+    --violet:    #b09ae6;
+    --violet-bg: #201933;
+    --teal:      #5fc7ca;
+    --teal-bg:   #0f2729;
+
+    --code-bg:   #080b12;
+    --shadow:    0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.7);
+    --shadow-lg: 0 2px 6px rgba(0,0,0,.5), 0 28px 56px -24px rgba(0,0,0,.8);
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 74rem; margin: 0 auto; padding: 0 1.1rem; }
+
+a { color: var(--navy); }
+:focus-visible { outline: 2px solid var(--navy-2); outline-offset: 2px; border-radius: 6px; }
+
+.skip {
+  position: absolute; left: -9999px; top: 0; background: var(--navy); color: #fff;
+  padding: .6rem 1rem; z-index: 99; border-radius: 0 0 8px 0;
+}
+.skip:focus { left: 0; }
+
+/* --------------------------------------------------------------- top bar -- */
+.topbar {
+  background: var(--surface); border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 30;
+}
+.topbar .wrap {
+  display: flex; align-items: center; gap: .5rem; min-height: 3.4rem; flex-wrap: wrap;
+  padding-top: .4rem; padding-bottom: .4rem;
+}
+.brand { display: flex; flex-direction: column; margin-right: auto; line-height: 1.25; }
+.brand b {
+  font-family: var(--serif); font-size: 1.06rem; letter-spacing: -.01em; font-weight: 700;
+}
+.brand span { font-size: .74rem; color: var(--ink-3); letter-spacing: .04em; }
+
+button {
+  font-family: inherit; font-size: .88rem; cursor: pointer; border-radius: var(--radius-sm);
+  border: 1px solid var(--line-2); background: var(--surface); color: var(--ink);
+  padding: .45rem .8rem; transition: background .15s, border-color .15s, color .15s;
+}
+button:hover { background: var(--surface-3); }
+button.sm { font-size: .78rem; padding: .32rem .6rem; }
+button.ghost { background: transparent; border-color: var(--line); color: var(--ink-2); }
+button.ghost:hover { background: var(--surface-3); color: var(--ink); }
+button.danger:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+button.primary {
+  background: var(--navy); border-color: var(--navy); color: #fff; font-weight: 620;
+}
+button.primary:hover { background: var(--navy-2); border-color: var(--navy-2); }
+html[data-theme="dark"] button.primary,
+button.primary { color: #fff; }
+html[data-theme="dark"] button.primary { color: #0d1018; }
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) button.primary { color: #0d1018; }
+}
+button:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ----------------------------------------------------------------- tabs -- */
+.tabstrip {
+  background: var(--surface); border-bottom: 1px solid var(--line);
+  position: sticky; top: 3.4rem; z-index: 25; overflow-x: auto; scrollbar-width: thin;
+}
+.tabstrip .wrap { display: flex; gap: .15rem; }
+.tab {
+  border: 0; background: transparent; border-bottom: 2px solid transparent; border-radius: 0;
+  padding: .7rem .8rem; font-size: .86rem; color: var(--ink-3); white-space: nowrap; font-weight: 550;
+}
+.tab:hover { background: transparent; color: var(--ink); }
+.tab[aria-selected="true"] { color: var(--navy); border-bottom-color: var(--navy); font-weight: 660; }
+.tab .pip {
+  display: inline-block; min-width: 1.15rem; padding: 0 .25rem; margin-left: .35rem;
+  border-radius: 999px; background: var(--surface-3); color: var(--ink-3);
+  font-size: .68rem; font-weight: 700; text-align: center; vertical-align: 1px;
+}
+.tab[aria-selected="true"] .pip { background: var(--navy-bg); color: var(--navy); }
+
+main { padding: 1.6rem 0 5rem; }
+.panel { display: none; }
+.panel.on { display: block; }
+
+/* ------------------------------------------------------------ typography -- */
+h1.page {
+  font-family: var(--serif); font-size: clamp(1.5rem, 3.4vw, 2.05rem); line-height: 1.15;
+  letter-spacing: -.02em; margin: 0 0 .4rem;
+}
+p.lede { color: var(--ink-2); max-width: 52rem; margin: 0 0 1.3rem; font-size: .98rem; }
+h2.sec {
+  font-size: .73rem; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-3);
+  font-weight: 750; margin: 2.1rem 0 .8rem; display: flex; align-items: center; gap: .75rem;
+}
+h2.sec::after { content: ""; flex: 1 1 auto; height: 1px; background: var(--line); }
+h3.card-h { font-size: 1rem; margin: 0 0 .3rem; font-family: var(--serif); letter-spacing: -.01em; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.1rem 1.2rem; margin-bottom: 1rem;
+}
+.card.pad-lg { padding: 1.4rem 1.5rem; }
+.grid { display: grid; gap: 1rem; }
+.g2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); }
+.g3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+.g4 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 11.5rem), 1fr)); }
+
+.muted { color: var(--ink-3); }
+.small { font-size: .82rem; }
+.tiny  { font-size: .74rem; }
+.mono  { font-family: var(--mono); }
+.nowrap { white-space: nowrap; }
+.center { text-align: center; }
+.right { text-align: right; }
+
+/* ---------------------------------------------------------------- forms -- */
+label.f { display: block; margin-bottom: .85rem; }
+label.f > .lab {
+  display: flex; align-items: baseline; gap: .4rem; font-size: .8rem; font-weight: 620;
+  color: var(--ink-2); margin-bottom: .25rem;
+}
+label.f > .lab .hint { font-weight: 400; color: var(--ink-3); font-size: .74rem; }
+input[type=text], input[type=number], input[type=password], select, textarea {
+  width: 100%; font-family: inherit; font-size: .9rem; color: var(--ink);
+  background: var(--surface-2); border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  padding: .45rem .6rem;
+}
+input[type=number] { font-family: var(--mono); }
+textarea { resize: vertical; min-height: 4.5rem; line-height: 1.5; }
+input:focus, select:focus, textarea:focus { background: var(--surface); }
+input[type=range] { width: 100%; accent-color: var(--navy); }
+.rangerow { display: flex; align-items: center; gap: .6rem; }
+.rangerow output {
+  font-family: var(--mono); font-size: .85rem; font-weight: 700; min-width: 2.2rem;
+  text-align: right; color: var(--navy);
+}
+.inline { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.checks { display: flex; flex-wrap: wrap; gap: .45rem; }
+.checks label {
+  display: inline-flex; align-items: center; gap: .35rem; font-size: .82rem;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px;
+  padding: .28rem .65rem; cursor: pointer;
+}
+.checks input { accent-color: var(--navy); }
+
+/* evidence tag selector */
+.ev {
+  font-family: var(--mono); font-size: .66rem; font-weight: 700; letter-spacing: .04em;
+  border-radius: 5px; padding: .05rem .3rem; border: 1px solid transparent; cursor: pointer;
+  background: var(--surface-3); color: var(--ink-3);
+}
+.ev[data-v="M"] { background: var(--green-bg); color: var(--green); }
+.ev[data-v="E"] { background: var(--amber-bg); color: var(--amber); }
+.ev[data-v="G"] { background: var(--red-bg); color: var(--red); }
+
+/* ----------------------------------------------------------------- bits -- */
+.pill {
+  display: inline-flex; align-items: center; gap: .3rem; font-size: .72rem; font-weight: 650;
+  padding: .16rem .5rem; border-radius: 999px; background: var(--surface-3); color: var(--ink-2);
+  white-space: nowrap;
+}
+.pill.green  { background: var(--green-bg);  color: var(--green); }
+.pill.amber  { background: var(--amber-bg);  color: var(--amber); }
+.pill.red    { background: var(--red-bg);    color: var(--red); }
+.pill.navy   { background: var(--navy-bg);   color: var(--navy); }
+.pill.violet { background: var(--violet-bg); color: var(--violet); }
+.pill.teal   { background: var(--teal-bg);   color: var(--teal); }
+.pill.brass  { background: var(--brass-bg);  color: var(--brass); }
+
+.note {
+  background: var(--surface-2); border-left: 3px solid var(--line-2); border-radius: 0 8px 8px 0;
+  padding: .7rem .9rem; font-size: .85rem; color: var(--ink-2); margin: .8rem 0;
+}
+.note.warn  { background: var(--amber-bg); border-left-color: var(--amber); color: var(--ink); }
+.note.bad   { background: var(--red-bg);   border-left-color: var(--red);   color: var(--ink); }
+.note.good  { background: var(--green-bg); border-left-color: var(--green); color: var(--ink); }
+.note.info  { background: var(--navy-bg);  border-left-color: var(--navy);  color: var(--ink); }
+.note b { color: var(--ink); }
+
+.stat { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .7rem .8rem; }
+.stat .k { font-size: .72rem; color: var(--ink-3); font-weight: 600; letter-spacing: .02em; }
+.stat .v { font-family: var(--mono); font-size: 1.25rem; font-weight: 700; line-height: 1.25; margin-top: .1rem; }
+.stat .s { font-size: .72rem; color: var(--ink-3); }
+.stat.green .v { color: var(--green); }
+.stat.amber .v { color: var(--amber); }
+.stat.red   .v { color: var(--red); }
+.stat.navy  .v { color: var(--navy); }
+
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-sm); margin: .6rem 0; }
+table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+th, td { padding: .45rem .65rem; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { background: var(--surface-2); font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); font-weight: 700; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-family: var(--mono); white-space: nowrap; }
+
+/* ------------------------------------------------------------- director -- */
+.dir {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  overflow: hidden; margin-bottom: .8rem;
+}
+.dir-head {
+  display: flex; align-items: center; gap: .75rem; padding: .75rem .95rem; cursor: pointer;
+  background: var(--surface); border: 0; width: 100%; text-align: left; border-radius: 0;
+}
+.dir-head:hover { background: var(--surface-2); }
+.dir-glyph {
+  width: 2.3rem; height: 2.3rem; flex: 0 0 auto; border-radius: 10px; display: grid;
+  place-items: center; font-size: 1.1rem; background: var(--surface-3);
+}
+.dir-id { flex: 1 1 auto; min-width: 0; }
+.dir-id .t { display: block; font-weight: 660; font-size: .93rem; line-height: 1.3; }
+.dir-id .r { display: block; font-size: .75rem; color: var(--ink-3); }
+.dir-score { font-family: var(--mono); font-weight: 700; font-size: 1.05rem; min-width: 2.4rem; text-align: right; }
+.dir-body { padding: 0 .95rem 1rem; border-top: 1px solid var(--line); }
+.dir-body[hidden] { display: none; }
+.dir-body h4 {
+  font-size: .72rem; text-transform: uppercase; letter-spacing: .09em; color: var(--ink-3);
+  margin: .9rem 0 .35rem; font-weight: 750;
+}
+.finding { display: flex; gap: .5rem; margin: .3rem 0; font-size: .87rem; align-items: baseline; }
+.finding .ic { flex: 0 0 auto; width: 1.1rem; text-align: center; }
+.finding.c .ic { color: var(--red); }
+.finding.o .ic { color: var(--green); }
+.finding.a .ic { color: var(--ink-3); }
+.finding b { color: var(--ink); }
+.finding .fig { font-family: var(--mono); font-weight: 650; }
+
+.meter { display: block; height: 6px; border-radius: 3px; background: var(--surface-3); overflow: hidden; margin-top: .35rem; max-width: 22rem; }
+.meter i { display: block; height: 100%; border-radius: 3px; }
+
+.vote-STRONG_SUPPORT { color: var(--green); }
+.vote-SUPPORT        { color: var(--green); }
+.vote-CONDITIONAL    { color: var(--amber); }
+.vote-OPPOSE         { color: var(--red); }
+.vote-STRONG_OPPOSE  { color: var(--red); }
+
+/* ------------------------------------------------------------- verdict --- */
+.verdict {
+  border-radius: var(--radius); padding: 1.5rem 1.6rem; border: 2px solid var(--line);
+  background: var(--surface); text-align: center; margin-bottom: 1.1rem;
+}
+.verdict .kicker { font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); font-weight: 750; }
+.verdict .big { font-family: var(--serif); font-size: clamp(1.6rem, 4.6vw, 2.5rem); line-height: 1.1; margin: .35rem 0 .5rem; letter-spacing: -.02em; }
+.verdict .sub { color: var(--ink-2); max-width: 44rem; margin: 0 auto; font-size: .95rem; }
+.verdict.go     { border-color: var(--green); background: var(--green-bg); }
+.verdict.cond   { border-color: var(--amber); background: var(--amber-bg); }
+.verdict.modify { border-color: var(--brass); background: var(--brass-bg); }
+.verdict.defer  { border-color: var(--navy);  background: var(--navy-bg); }
+.verdict.no     { border-color: var(--red);   background: var(--red-bg); }
+.verdict.go .big     { color: var(--green); }
+.verdict.cond .big   { color: var(--amber); }
+.verdict.modify .big { color: var(--brass); }
+.verdict.defer .big  { color: var(--navy); }
+.verdict.no .big     { color: var(--red); }
+
+.bars { display: flex; flex-direction: column; gap: .3rem; }
+.bar-row { display: grid; grid-template-columns: 11.5rem 1fr 2.6rem; gap: .6rem; align-items: center; font-size: .82rem; }
+.bar-row .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-row .tr { background: var(--surface-3); border-radius: 4px; height: 15px; overflow: hidden; position: relative; }
+.bar-row .tr i { display: block; height: 100%; border-radius: 4px; }
+.bar-row .tr::after {
+  content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px;
+  background: var(--line-2);
+}
+.bar-row .vv { font-family: var(--mono); font-weight: 700; text-align: right; }
+
+/* ---------------------------------------------------------------- misc --- */
+.exchange {
+  border-left: 3px solid var(--line-2); padding: .1rem 0 .1rem .85rem; margin: .9rem 0;
+}
+.exchange .who { font-weight: 660; font-size: .85rem; }
+.exchange .who .em { font-style: normal; }
+.exchange p { margin: .15rem 0 .7rem; font-size: .89rem; color: var(--ink-2); }
+.exchange p:last-child { margin-bottom: 0; }
+.exchange.clash { border-left-color: var(--red); }
+.exchange.accord { border-left-color: var(--green); }
+
+pre.out {
+  background: var(--code-bg); color: var(--code-ink); border-radius: var(--radius-sm);
+  padding: .9rem 1rem; overflow: auto; font-family: var(--mono); font-size: .78rem;
+  line-height: 1.55; max-height: 34rem; white-space: pre-wrap; word-break: break-word;
+}
+
+ol.steps { padding-left: 1.15rem; margin: .4rem 0; }
+ol.steps li { margin: .35rem 0; font-size: .89rem; }
+ul.plain { list-style: none; padding: 0; margin: .3rem 0; }
+ul.plain li { margin: .3rem 0; font-size: .88rem; display: flex; gap: .5rem; }
+ul.plain li::before { content: "▸"; color: var(--ink-3); flex: 0 0 auto; }
+
+.toast {
+  position: fixed; left: 50%; bottom: 1.5rem; transform: translateX(-50%) translateY(1rem);
+  background: var(--ink); color: var(--bg); padding: .55rem 1rem; border-radius: 999px;
+  font-size: .85rem; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s;
+  z-index: 60; box-shadow: var(--shadow-lg); max-width: 90vw; text-align: center;
+}
+.toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.empty {
+  text-align: center; padding: 3rem 1rem; color: var(--ink-3); border: 1px dashed var(--line-2);
+  border-radius: var(--radius); background: var(--surface-2);
+}
+.empty .big { font-size: 2rem; margin-bottom: .4rem; }
+
+footer.foot {
+  border-top: 1px solid var(--line); margin-top: 3rem; padding: 1.4rem 0 3rem;
+  font-size: .8rem; color: var(--ink-3);
+}
+footer.foot p { margin: .4rem 0; max-width: 54rem; }
+
+details.disc { margin: .6rem 0; }
+details.disc > summary {
+  cursor: pointer; font-size: .84rem; font-weight: 620; color: var(--ink-2); padding: .3rem 0;
+}
+details.disc > summary:hover { color: var(--ink); }
+details.disc > div { padding: .3rem 0 .3rem .9rem; border-left: 2px solid var(--line); }
+
+.spinner {
+  display: inline-block; width: .85rem; height: .85rem; border: 2px solid var(--line-2);
+  border-top-color: var(--navy); border-radius: 50%; animation: spin .7s linear infinite;
+  vertical-align: -2px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media print {
+  .topbar, .tabstrip, .toast, button, .no-print { display: none !important; }
+  .panel { display: block !important; page-break-before: always; }
+  body { background: #fff; font-size: 11pt; }
+  .card, .dir { break-inside: avoid; }
+}
+
+@media (max-width: 560px) {
+  .bar-row { grid-template-columns: 7.5rem 1fr 2.4rem; font-size: .76rem; }
+  .topbar .wrap { min-height: auto; }
+  .brand { width: 100%; margin-bottom: .3rem; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <b>CLEAR AI Board of Directors</b>
+      <span>fifteen directors · one decision · no cheerleading</span>
+    </div>
+    <button id="btn-example" class="sm ghost" title="Load a worked example so you can see what the board produces">📎 Example</button>
+    <button id="btn-backup"  class="sm ghost" title="Download everything you've entered as a JSON file">⬇ Back up</button>
+    <button id="btn-restore" class="sm ghost" title="Load a backup file back in">⬆ Restore</button>
+    <button id="btn-clear"   class="sm ghost danger" title="Erase all saved data">🗑 Clear</button>
+    <button id="btn-theme"   class="sm ghost" aria-label="Switch colour theme" title="Switch colour theme">◐ Theme</button>
+  </div>
+</header>
+
+<nav class="tabstrip" aria-label="Board sections">
+  <div class="wrap" role="tablist">
+    <button class="tab" role="tab" id="tab-brief"  aria-controls="panel-brief"  data-panel="brief">📋 Brief</button>
+    <button class="tab" role="tab" id="tab-nums"   aria-controls="panel-nums"   data-panel="nums">🧮 Numbers</button>
+    <button class="tab" role="tab" id="tab-board"  aria-controls="panel-board"  data-panel="board">🏛 Board<span class="pip" id="pip-board">15</span></button>
+    <button class="tab" role="tab" id="tab-debate" aria-controls="panel-debate" data-panel="debate">⚔️ Debate</button>
+    <button class="tab" role="tab" id="tab-risk"   aria-controls="panel-risk"   data-panel="risk">🎲 Risk</button>
+    <button class="tab" role="tab" id="tab-res"    aria-controls="panel-res"    data-panel="res">⚖️ Resolution</button>
+    <button class="tab" role="tab" id="tab-road"   aria-controls="panel-road"   data-panel="road">🗺 Roadmap</button>
+    <button class="tab" role="tab" id="tab-ai"     aria-controls="panel-ai"     data-panel="ai">🤖 AI mode</button>
+    <button class="tab" role="tab" id="tab-min"    aria-controls="panel-min"    data-panel="min">📄 Minutes</button>
+  </div>
+</nav>
+
+<main id="main">
+<div class="wrap">
+
+<!-- =====================================================================
+     BRIEF
+     ===================================================================== -->
+<section class="panel" id="panel-brief" role="tabpanel" aria-labelledby="tab-brief">
+  <h1 class="page">The matter before the board</h1>
+  <p class="lede">
+    The board cannot deliberate on a vibe. Write the decision as something that can be
+    voted on — a thing you will either do or not do, by a date, with money attached.
+    Everything on this page is the <b>C</b>, <b>L</b>, <b>E</b>, <b>A</b> and <b>R</b> of the
+    CLEAR framework; the next page is the arithmetic the directors actually score.
+  </p>
+
+  <div class="card pad-lg">
+    <label class="f">
+      <span class="lab">The decision <span class="hint">one sentence, in the form "should we ___ by ___"</span></span>
+      <input type="text" id="i-decision" placeholder="Should we launch a $39/month AI bookkeeping tool for Nigerian SMEs by March?">
+    </label>
+
+    <div class="grid g2">
+      <label class="f">
+        <span class="lab">R — your role <span class="hint">whose seat you occupy</span></span>
+        <select id="i-role">
+          <option value="founder">Founder / owner</option>
+          <option value="cofounder">Co-founder in a team</option>
+          <option value="operator">Operator / executive at someone else's company</option>
+          <option value="solo">Solo creator / freelancer</option>
+          <option value="investor">Investor evaluating someone else's business</option>
+          <option value="employee">Employee proposing this internally</option>
+          <option value="agency">Agency / consultancy owner</option>
+          <option value="nonprofit">Non-profit or public sector</option>
+        </select>
+      </label>
+      <label class="f">
+        <span class="lab">A — audience <span class="hint">who has to be convinced by the output</span></span>
+        <select id="i-audience">
+          <option value="self">Just me — I decide alone</option>
+          <option value="team">My co-founders / leadership team</option>
+          <option value="investors">Investors or a real board</option>
+          <option value="lender">A bank or lender</option>
+          <option value="boss">My manager / an internal approval body</option>
+          <option value="partner">A prospective partner or client</option>
+          <option value="family">My family — this is household money</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="grid g2">
+      <label class="f">
+        <span class="lab">L — report length</span>
+        <select id="i-length">
+          <option value="full">Full board report — every director, in full</option>
+          <option value="exec">Executive briefing — summary, dissent, resolution only</option>
+          <option value="onepage">One page — resolution and conditions only</option>
+        </select>
+      </label>
+      <label class="f">
+        <span class="lab">Decision class <span class="hint">changes how hard the board leans on reversibility</span></span>
+        <select id="i-class">
+          <option value="launch">Launch something new</option>
+          <option value="pivot">Pivot or kill an existing thing</option>
+          <option value="price">Pricing or packaging change</option>
+          <option value="hire">Hire, team or structure</option>
+          <option value="spend">A specific spend or investment</option>
+          <option value="market">Enter a new market or channel</option>
+          <option value="build">Build vs buy vs partner</option>
+          <option value="raise">Raise capital / take on debt</option>
+        </select>
+      </label>
+    </div>
+
+    <label class="f">
+      <span class="lab">C — context <span class="hint">what the business is, where it stands, what forced this decision now</span></span>
+      <textarea id="i-context" rows="5" placeholder="Two-person team. We sell bookkeeping services manually to 40 SMEs in Lagos at $80/month. Reconciliation eats 60% of our delivery hours. We think the same customers would pay less for software that does 80% of it, but we'd be cannibalising our own service revenue…"></textarea>
+    </label>
+
+    <label class="f">
+      <span class="lab">E — examples <span class="hint">who has tried this, what happened, and what you're benchmarking against — one per line</span></span>
+      <textarea id="i-examples" rows="4" placeholder="Wave Accounting — free, US/Canada only, no local bank feeds&#10;Kippa — Nigerian, raised $8m, went broad then narrowed to payments&#10;Our own 2023 spreadsheet template — 200 downloads, 3 people paid"></textarea>
+    </label>
+
+    <div class="grid g2">
+      <label class="f">
+        <span class="lab">Constraints <span class="hint">what you cannot change — one per line</span></span>
+        <textarea id="i-constraints" rows="4" placeholder="Cannot raise outside capital this year&#10;I have 20 hours a week, not 50&#10;No developer on the team"></textarea>
+      </label>
+      <label class="f">
+        <span class="lab">What success looks like <span class="hint">the concrete state that means this worked</span></span>
+        <textarea id="i-success" rows="4" placeholder="100 paying accounts at $39 by month 9, service revenue not down more than 20%, and I'm no longer doing reconciliation by hand"></textarea>
+      </label>
+    </div>
+
+    <label class="f">
+      <span class="lab">The strongest argument <em>against</em> this <span class="hint">the board will find one anyway — showing your own raises the quality of the debate</span></span>
+      <textarea id="i-against" rows="3" placeholder="I'm a services business with no software distribution and no engineer. The version of me that wins here doesn't exist yet."></textarea>
+    </label>
+  </div>
+
+  <div class="note info">
+    <b>Nothing here leaves this file.</b> Everything you type is saved in this browser only.
+    The app makes no network requests at all unless you deliberately switch on
+    <b>🤖 AI mode</b> and supply your own API key.
+  </div>
+
+  <div class="inline" style="margin-top:1rem">
+    <button class="primary" id="btn-to-nums">Next: the numbers →</button>
+    <span class="small muted" id="brief-status"></span>
+  </div>
+</section>
+
+<!-- =====================================================================
+     NUMBERS
+     ===================================================================== -->
+<section class="panel" id="panel-nums" role="tabpanel" aria-labelledby="tab-nums">
+  <h1 class="page">The arithmetic</h1>
+  <p class="lede">
+    Every figure carries an evidence tag. Click it to cycle
+    <span class="ev" data-v="M">MEASURED</span>
+    <span class="ev" data-v="E">ESTIMATED</span>
+    <span class="ev" data-v="G">GUESSED</span>.
+    This is not decoration: the board's confidence score is discounted by how much of its
+    input is guesswork, and directors will say so out loud. A board that is very sure about
+    numbers you invented is worse than useless.
+  </p>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3 class="card-h">The offer</h3>
+      <p class="small muted" style="margin-top:0">What one customer pays you, and what's left after delivering.</p>
+
+      <div class="grid g2">
+        <label class="f">
+          <span class="lab">Currency</span>
+          <select id="i-currency">
+            <option value="$">$ — US dollar</option>
+            <option value="₦">₦ — Naira</option>
+            <option value="R">R — Rand</option>
+            <option value="KSh">KSh — Kenyan shilling</option>
+            <option value="GH₵">GH₵ — Cedi</option>
+            <option value="£">£ — Pound</option>
+            <option value="€">€ — Euro</option>
+            <option value="₹">₹ — Rupee</option>
+          </select>
+        </label>
+        <label class="f">
+          <span class="lab">Billing</span>
+          <select id="i-billing">
+            <option value="monthly">Subscription — monthly</option>
+            <option value="annual">Subscription — annual</option>
+            <option value="oneoff">One-off purchase</option>
+            <option value="retainer">Service retainer — monthly</option>
+            <option value="project">Project fee — per engagement</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="f" data-ev="price">
+        <span class="lab">Price per customer <span class="hint">per billing period above</span> <button class="ev" data-for="price">GUESSED</button></span>
+        <input type="number" id="i-price" min="0" step="any" value="39">
+      </label>
+
+      <label class="f" data-ev="margin">
+        <span class="lab">Gross margin % <span class="hint">after delivery cost: hosting, support, fulfilment, payment fees</span> <button class="ev" data-for="margin">GUESSED</button></span>
+        <div class="rangerow"><input type="range" id="i-margin" min="0" max="98" step="1" value="70"><output id="o-margin">70</output>%</div>
+      </label>
+
+      <label class="f" data-ev="churn" id="wrap-churn">
+        <span class="lab">Monthly churn % <span class="hint">share of customers who leave each month</span> <button class="ev" data-for="churn">GUESSED</button></span>
+        <div class="rangerow"><input type="range" id="i-churn" min="0.5" max="25" step="0.5" value="6"><output id="o-churn">6</output>%</div>
+      </label>
+
+      <label class="f" data-ev="repeat" id="wrap-repeat" hidden>
+        <span class="lab">Repeat purchases per customer per year <span class="hint">1 means they never buy again</span> <button class="ev" data-for="repeat">GUESSED</button></span>
+        <input type="number" id="i-repeat" min="1" step="0.1" value="1">
+      </label>
+    </div>
+
+    <div class="card">
+      <h3 class="card-h">Getting the customer</h3>
+      <p class="small muted" style="margin-top:0">The half of the model most decks leave blank.</p>
+
+      <label class="f">
+        <span class="lab">Sales motion</span>
+        <select id="i-motion">
+          <option value="selfserve">Self-serve — they find it and buy without talking to anyone</option>
+          <option value="inbound">Inbound — content/audience brings them, you close</option>
+          <option value="outbound">Outbound — you contact them cold</option>
+          <option value="partner">Partner / reseller / distributor</option>
+          <option value="retail">Retail or marketplace shelf</option>
+          <option value="referral">Referral and word of mouth only</option>
+        </select>
+      </label>
+
+      <label class="f" data-ev="cac">
+        <span class="lab">Cost to acquire one paying customer <span class="hint">ad spend, commission, and your own time at a real hourly rate</span> <button class="ev" data-for="cac">GUESSED</button></span>
+        <input type="number" id="i-cac" min="0" step="any" value="45">
+      </label>
+
+      <label class="f" data-ev="audience">
+        <span class="lab">Audience you can reach today <span class="hint">list, followers, existing customers, warm contacts — people you can put an offer in front of this month for free</span> <button class="ev" data-for="audience">GUESSED</button></span>
+        <input type="number" id="i-audience-size" min="0" step="1" value="400">
+      </label>
+
+      <label class="f" data-ev="market">
+        <span class="lab">Reachable market <span class="hint">how many buyers exist that you could realistically ever serve — not the whole industry</span> <button class="ev" data-for="market">GUESSED</button></span>
+        <input type="number" id="i-market" min="0" step="1" value="25000">
+      </label>
+
+      <label class="f">
+        <span class="lab">Evidence that they will pay</span>
+        <select id="i-wtp">
+          <option value="0">None — this is a hypothesis</option>
+          <option value="1">I asked people and they said they'd buy</option>
+          <option value="2">A waitlist or signups, no money</option>
+          <option value="3">Pre-orders or deposits taken</option>
+          <option value="4">Paying customers already, at this price</option>
+          <option value="5">Paying customers, and they've renewed</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3 class="card-h">Money and time</h3>
+
+      <label class="f" data-ev="capital">
+        <span class="lab">Capital available for this <span class="hint">what you can actually lose</span> <button class="ev" data-for="capital">GUESSED</button></span>
+        <input type="number" id="i-capital" min="0" step="any" value="6000">
+      </label>
+
+      <label class="f" data-ev="required">
+        <span class="lab">Capital required before first revenue <span class="hint">build, tooling, inventory, legal, launch spend</span> <button class="ev" data-for="required">GUESSED</button></span>
+        <input type="number" id="i-required" min="0" step="any" value="3500">
+      </label>
+
+      <label class="f" data-ev="burn">
+        <span class="lab">Fixed monthly cost while doing this <span class="hint">including what you must pay yourself to live</span> <button class="ev" data-for="burn">GUESSED</button></span>
+        <input type="number" id="i-burn" min="0" step="any" value="1200">
+      </label>
+
+      <label class="f" data-ev="revenue">
+        <span class="lab">Current monthly revenue of the business <span class="hint">0 if this is the whole business</span> <button class="ev" data-for="revenue">GUESSED</button></span>
+        <input type="number" id="i-revenue" min="0" step="any" value="3200">
+      </label>
+
+      <label class="f" data-ev="ttr">
+        <span class="lab">Months until the first paying customer</span>
+        <div class="rangerow"><input type="range" id="i-ttr" min="0" max="24" step="1" value="3"><output id="o-ttr">3</output>mo</div>
+      </label>
+
+      <label class="f">
+        <span class="lab">Hours a week you can give this</span>
+        <div class="rangerow"><input type="range" id="i-hours" min="2" max="80" step="1" value="20"><output id="o-hours">20</output>h</div>
+      </label>
+    </div>
+
+    <div class="card">
+      <h3 class="card-h">The judgement calls</h3>
+      <p class="small muted" style="margin-top:0">Score yourself honestly. Every one of these is a real input to a real director.</p>
+
+      <label class="f">
+        <span class="lab">How badly does the customer feel this problem? <span class="hint">1 = mild annoyance · 10 = they are already paying someone to fix it</span></span>
+        <div class="rangerow"><input type="range" id="i-pain" min="1" max="10" step="1" value="7"><output id="o-pain">7</output></div>
+      </label>
+      <label class="f">
+        <span class="lab">How different is this from what already exists? <span class="hint">1 = identical · 10 = nobody can copy it in a year</span></span>
+        <div class="rangerow"><input type="range" id="i-diff" min="1" max="10" step="1" value="5"><output id="o-diff">5</output></div>
+      </label>
+      <label class="f">
+        <span class="lab">Founder–market fit <span class="hint">experience, network and credibility in this exact market</span></span>
+        <div class="rangerow"><input type="range" id="i-fmf" min="1" max="10" step="1" value="7"><output id="o-fmf">7</output></div>
+      </label>
+      <label class="f">
+        <span class="lab">Build complexity <span class="hint">1 = a spreadsheet and a form · 10 = a real engineering programme</span></span>
+        <div class="rangerow"><input type="range" id="i-complex" min="1" max="10" step="1" value="6"><output id="o-complex">6</output></div>
+      </label>
+      <label class="f">
+        <span class="lab">How much of the delivery can be automated? <span class="hint">1 = every sale needs your hands · 10 = it runs without you</span></span>
+        <div class="rangerow"><input type="range" id="i-auto" min="1" max="10" step="1" value="6"><output id="o-auto">6</output></div>
+      </label>
+      <label class="f">
+        <span class="lab">Reversibility <span class="hint">1 = one-way door, money and reputation gone · 10 = you can stop next week and lose almost nothing</span></span>
+        <div class="rangerow"><input type="range" id="i-rev" min="1" max="10" step="1" value="6"><output id="o-rev">6</output></div>
+      </label>
+      <label class="f">
+        <span class="lab">Direct competitors you can name</span>
+        <input type="number" id="i-competitors" min="0" step="1" value="4">
+      </label>
+      <label class="f">
+        <span class="lab">People working on this, including you</span>
+        <input type="number" id="i-team" min="1" step="1" value="2">
+      </label>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3 class="card-h">Legal, people, and the ground it stands on</h3>
+      <div class="grid g2">
+        <label class="f">
+          <span class="lab">Regulatory exposure</span>
+          <select id="i-reg">
+            <option value="0">None — nobody regulates this</option>
+            <option value="1">Light — normal business registration and tax</option>
+            <option value="2">Moderate — personal data, consumer contracts, ads rules</option>
+            <option value="3">Heavy — money, health, credit, children, licensing</option>
+          </select>
+        </label>
+        <label class="f">
+          <span class="lab">What protects it from being copied</span>
+          <select id="i-ip">
+            <option value="0">Nothing</option>
+            <option value="1">A brand people trust</option>
+            <option value="2">Proprietary data or process nobody else has</option>
+            <option value="3">Contracts, exclusivity or a registered right</option>
+            <option value="4">Network effects — it gets better as it grows</option>
+          </select>
+        </label>
+      </div>
+      <div class="grid g2">
+        <label class="f">
+          <span class="lab">Key-person risk</span>
+          <select id="i-keyperson">
+            <option value="3">Everything depends on me personally</option>
+            <option value="2">Mostly me, some documented</option>
+            <option value="1">Two or more people can run it</option>
+            <option value="0">It runs without any one person</option>
+          </select>
+        </label>
+        <label class="f">
+          <span class="lab">Do you need to hire for this?</span>
+          <select id="i-hire">
+            <option value="0">No — existing people can do it</option>
+            <option value="1">One freelancer or part-timer</option>
+            <option value="2">One full-time hire</option>
+            <option value="3">A small team — two or more</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-h">Market and ground truth</h3>
+      <label class="f">
+        <span class="lab">Primary market</span>
+        <select id="i-geo">
+          <option value="africa">Africa — one country</option>
+          <option value="africa-multi">Africa — several countries</option>
+          <option value="global-africa">Global, but Africa is the first market</option>
+          <option value="diaspora">Diaspora / cross-border</option>
+          <option value="global">Global / mostly US &amp; Europe</option>
+          <option value="local-other">A single non-African local market</option>
+        </select>
+      </label>
+      <label class="f">
+        <span class="lab">Which of these does the business depend on to work?</span>
+        <div class="checks" id="i-infra">
+          <label><input type="checkbox" value="power"> Reliable mains power</label>
+          <label><input type="checkbox" value="net"> Fast, cheap internet</label>
+          <label><input type="checkbox" value="cards"> Card payments</label>
+          <label><input type="checkbox" value="mobilemoney"> Mobile money</label>
+          <label><input type="checkbox" value="logistics"> Physical delivery</label>
+          <label><input type="checkbox" value="bank"> Bank/API integrations</label>
+          <label><input type="checkbox" value="fx"> Cross-border FX</label>
+          <label><input type="checkbox" value="appstore"> An app store</label>
+          <label><input type="checkbox" value="ads"> Paid ad platforms</label>
+          <label><input type="checkbox" value="devices"> Customers owning smartphones</label>
+        </div>
+      </label>
+      <label class="f">
+        <span class="lab">Who is the customer?</span>
+        <select id="i-customer">
+          <option value="b2c">Consumers</option>
+          <option value="smb">Small businesses</option>
+          <option value="mid">Mid-market companies</option>
+          <option value="ent">Large enterprises</option>
+          <option value="gov">Government or institutions</option>
+          <option value="creator">Creators / freelancers</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <h2 class="sec">What the numbers already say</h2>
+  <div class="grid g4" id="derived-stats"></div>
+  <div id="derived-notes"></div>
+
+  <div class="inline" style="margin-top:1.2rem">
+    <button class="primary" id="btn-convene">🏛 Convene the board</button>
+    <button class="ghost" id="btn-reset-nums">Reset numbers to defaults</button>
+  </div>
+</section>
+
+<!-- =====================================================================
+     BOARD
+     ===================================================================== -->
+<section class="panel" id="panel-board" role="tabpanel" aria-labelledby="tab-board">
+  <h1 class="page">Director reports</h1>
+  <p class="lede">
+    Each director scores the matter against its own mandate only. They do not moderate
+    themselves to agree with each other — where two directors reach opposite conclusions from
+    the same facts, that disagreement is the finding, and you will see it argued out on the
+    <b>⚔️ Debate</b> page.
+  </p>
+  <div id="board-summary"></div>
+  <div class="inline no-print" style="margin:.8rem 0 1rem">
+    <button class="sm ghost" id="btn-expand-all">Expand all</button>
+    <button class="sm ghost" id="btn-collapse-all">Collapse all</button>
+    <button class="sm ghost" id="btn-sort-score">Sort by score</button>
+    <button class="sm ghost" id="btn-sort-seat">Sort by seat</button>
+  </div>
+  <div id="board-list"></div>
+</section>
+
+<!-- =====================================================================
+     DEBATE
+     ===================================================================== -->
+<section class="panel" id="panel-debate" role="tabpanel" aria-labelledby="tab-debate">
+  <h1 class="page">Board debate</h1>
+  <p class="lede">
+    Where the seats agree, where they collide, and the trade-offs nobody gets to avoid.
+    A board that agrees on everything has one director wearing fifteen hats.
+  </p>
+  <div id="debate-out"></div>
+</section>
+
+<!-- =====================================================================
+     RISK
+     ===================================================================== -->
+<section class="panel" id="panel-risk" role="tabpanel" aria-labelledby="tab-risk">
+  <h1 class="page">Risk assessment</h1>
+  <p class="lede">
+    Three scenarios, run through your own unit economics rather than adjectives, plus a
+    pre-mortem: it is eighteen months from now and this failed — here is the ranked list of
+    what killed it.
+  </p>
+  <div id="risk-out"></div>
+</section>
+
+<!-- =====================================================================
+     RESOLUTION
+     ===================================================================== -->
+<section class="panel" id="panel-res" role="tabpanel" aria-labelledby="tab-res">
+  <h1 class="page">Board resolution</h1>
+  <div id="res-out"></div>
+</section>
+
+<!-- =====================================================================
+     ROADMAP
+     ===================================================================== -->
+<section class="panel" id="panel-road" role="tabpanel" aria-labelledby="tab-road">
+  <h1 class="page">Implementation</h1>
+  <p class="lede">
+    Generated from the conditions the board attached, in the order that kills the biggest
+    unknown first. Tick items off — progress is saved.
+  </p>
+  <div id="road-out"></div>
+</section>
+
+<!-- =====================================================================
+     AI MODE
+     ===================================================================== -->
+<section class="panel" id="panel-ai" role="tabpanel" aria-labelledby="tab-ai">
+  <h1 class="page">AI mode</h1>
+  <p class="lede">
+    Everything else in this file runs offline on a scoring engine you can read. This page is
+    the optional other half: hand the same brief to a language model and let the directors
+    speak in prose. Two ways to do it — one needs no key at all.
+  </p>
+
+  <div class="card">
+    <h3 class="card-h">1 · Copy the prompt <span class="pill green">no key needed</span></h3>
+    <p class="small muted" style="margin-top:.2rem">
+      This builds the complete board prompt with your brief and your numbers already in it.
+      Paste it into ChatGPT, Claude, Gemini, Copilot — anything. This is also the file you
+      would sell as a prompt product or load into a custom GPT.
+    </p>
+    <div class="inline" style="margin-bottom:.6rem">
+      <button class="primary" id="btn-build-prompt">Build the board prompt</button>
+      <button class="ghost sm" id="btn-copy-prompt">📋 Copy</button>
+      <button class="ghost sm" id="btn-dl-prompt">⬇ Download .md</button>
+      <label class="inline small" style="margin-left:.4rem">
+        <input type="checkbox" id="i-prompt-sys" checked> include the full 15-seat system prompt
+      </label>
+    </div>
+    <pre class="out" id="prompt-out">Press “Build the board prompt”.</pre>
+  </div>
+
+  <div class="card">
+    <h3 class="card-h">2 · Live directors <span class="pill amber">your own API key</span></h3>
+    <p class="small muted" style="margin-top:.2rem">
+      Calls the provider directly from this page. The key is stored in this browser only and
+      is sent to nobody but the provider you choose. There is no server in this product to
+      send it to. Costs land on your own account.
+    </p>
+
+    <div class="grid g3">
+      <label class="f">
+        <span class="lab">Provider</span>
+        <select id="i-provider">
+          <option value="openai">OpenAI</option>
+          <option value="anthropic">Anthropic</option>
+          <option value="compatible">Any OpenAI-compatible endpoint</option>
+        </select>
+      </label>
+      <label class="f">
+        <span class="lab">Model</span>
+        <input type="text" id="i-model" placeholder="gpt-4o-mini">
+      </label>
+      <label class="f" id="wrap-baseurl" hidden>
+        <span class="lab">Base URL</span>
+        <input type="text" id="i-baseurl" placeholder="https://openrouter.ai/api/v1">
+      </label>
+    </div>
+    <label class="f">
+      <span class="lab">API key <span class="hint">stored in this browser's local storage, nowhere else</span></span>
+      <input type="password" id="i-apikey" placeholder="sk-…" autocomplete="off">
+    </label>
+    <div class="inline">
+      <button class="primary" id="btn-run-ai">▶ Run the live board</button>
+      <button class="ghost sm" id="btn-forget-key">Forget my key</button>
+      <span class="small muted" id="ai-status"></span>
+    </div>
+    <div class="note warn" style="margin-top:.9rem">
+      <b>Browser calls can be blocked.</b> Some providers refuse requests made directly from a
+      web page (CORS), and some corporate networks block them too. If the live run fails, the
+      copy-the-prompt route above always works. Anthropic requires you to opt in to direct
+      browser access; this page sends that header for you.
+    </div>
+    <div id="ai-out"></div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     MINUTES
+     ===================================================================== -->
+<section class="panel" id="panel-min" role="tabpanel" aria-labelledby="tab-min">
+  <h1 class="page">Board minutes</h1>
+  <p class="lede">
+    The entire deliberation as one document, in the ten-section format: summary, context,
+    director reports, debate, risk, resolution, recommendations, roadmap, KPIs, confidence.
+    Markdown, so it pastes into anything.
+  </p>
+  <div class="inline" style="margin-bottom:.8rem">
+    <button class="primary" id="btn-build-min">Generate minutes</button>
+    <button class="ghost sm" id="btn-copy-min">📋 Copy</button>
+    <button class="ghost sm" id="btn-dl-min">⬇ Download .md</button>
+    <button class="ghost sm" id="btn-print">🖨 Print / save as PDF</button>
+  </div>
+  <pre class="out" id="min-out">Press “Generate minutes”.</pre>
+</section>
+
+<footer class="foot">
+  <div class="inline" style="gap:1rem">
+    <span class="pill navy">CLEAR AI Board of Directors</span>
+    <span class="tiny" id="foot-storage"></span>
+  </div>
+  <p class="tiny">
+    <b>What this is.</b> A scoring and deliberation engine, not an oracle. It applies a fixed set of
+    rules — which you can read in this file — to figures you supply. Its confidence score measures
+    how much the seats agree and how good your inputs are. It cannot measure whether you are right.
+  </p>
+  <p class="tiny">
+    <b>What it is not.</b> Not financial, legal, tax or investment advice, and not a substitute for a
+    real board, an accountant or a lawyer. Decisions involving other people's money, regulated
+    activity or debt should be checked by someone qualified and accountable.
+  </p>
+</footer>
+
+</div>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+"use strict";
+
+/* ===========================================================================
+   CLEAR AI BOARD OF DIRECTORS — engine
+   ---------------------------------------------------------------------------
+   Nothing in here is a black box on purpose. Every number the board quotes is
+   computed from your inputs by the functions below, and every constant that
+   isn't your input is declared in CONST and shown in the UI.
+   =========================================================================== */
+
+const $  = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+
+const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+const num   = (v, d) => { const n = parseFloat(v); return Number.isFinite(n) ? n : (d || 0); };
+const round = (v, p) => { const f = Math.pow(10, p || 0); return Math.round(v * f) / f; };
+
+/* score helpers: tables are read top to bottom, first match wins */
+function bandGte(v, table, fallback) { for (const [cut, s] of table) if (v >= cut) return s; return fallback; }
+function bandLte(v, table, fallback) { for (const [cut, s] of table) if (v <= cut) return s; return fallback; }
+
+/* ---------------------------------------------------------------- constants */
+const CONST = {
+  /* hours of your time one customer consumes per month at automation = 1..10 */
+  deliveryHoursAt1: 3.2,
+  deliveryHoursAt10: 0.15,
+  /* hours of selling per customer acquired, by motion */
+  sellHours: { selfserve: 0.15, inbound: 0.6, outbound: 3.0, partner: 1.1, retail: 0.35, referral: 0.5 },
+  /* build effort in hours per point of complexity */
+  buildHoursPerComplexity: 78,
+  /* share of the warm audience that converts in the first 3 months, before WTP evidence */
+  audienceBaseConv: { selfserve: 0.012, inbound: 0.030, outbound: 0.020, partner: 0.010, retail: 0.008, referral: 0.035 },
+  /* how much of remaining reachable market you can win per month at full tilt */
+  marketVelocity: 0.012,
+  /* share of cash on hand you are willing to spend on acquisition in a month */
+  cashToAcquisition: 0.30,
+  /* share of last month's gross profit reinvested into acquisition */
+  reinvest: 0.45,
+  /* horizon used to value a non-subscription customer, in months */
+  oneOffHorizonMonths: 24,
+  /* simulation length */
+  horizon: 36,
+  /* the return the same capital would make elsewhere, annual, for the Investment seat */
+  alternativeReturn: 0.12
+};
+
+const SCENARIOS = {
+  best:     { label: "Best case",     cac: 0.65, churn: 0.60, velocity: 1.55, ttr: 0.75, required: 0.90 },
+  expected: { label: "Expected case", cac: 1.00, churn: 1.00, velocity: 1.00, ttr: 1.00, required: 1.00 },
+  worst:    { label: "Worst case",    cac: 1.95, churn: 1.75, velocity: 0.45, ttr: 1.65, required: 1.35 }
+};
+
+/* ============================================================ default state */
+function defaults() {
+  return {
+    v: 1, tab: "brief", theme: null, sort: "seat",
+    decision: "", role: "founder", audience: "self", length: "full", cls: "launch",
+    context: "", examples: "", constraints: "", success: "", against: "",
+    currency: "$", billing: "monthly",
+    price: 39, margin: 70, churn: 6, repeat: 1,
+    motion: "selfserve", cac: 45, audienceSize: 400, market: 25000, wtp: "0",
+    capital: 14000, required: 2500, burn: 1200, revenue: 3200, ttr: 5, hours: 25,
+    pain: 7, diff: 5, fmf: 7, complex: 4, auto: 7, rev: 6, competitors: 4, team: 2,
+    reg: "1", ip: "0", keyperson: "3", hire: "0",
+    geo: "africa", infra: [], customer: "smb",
+    ev: { price: "G", margin: "G", churn: "G", repeat: "G", cac: "G", audience: "G",
+          market: "G", capital: "G", required: "G", burn: "G", revenue: "G" },
+    convened: false, done: {}, notes: {},
+    provider: "openai", model: "", baseurl: "", apikey: ""
+  };
+}
+
+let state = defaults();
+
+/* ================================================================= storage */
+const Store = {
+  KEY: "clear-board-v1",
+  available: (() => { try { localStorage.setItem("__t", "1"); localStorage.removeItem("__t"); return true; } catch (e) { return false; } })(),
+  read() { if (!this.available) return null; try { const r = localStorage.getItem(this.KEY); return r ? JSON.parse(r) : null; } catch (e) { return null; } },
+  write(v) { if (!this.available) return; try { localStorage.setItem(this.KEY, JSON.stringify(v)); } catch (e) {} },
+  wipe() { if (!this.available) return; try { localStorage.removeItem(this.KEY); } catch (e) {} }
+};
+
+let saveTimer = null;
+function save() { clearTimeout(saveTimer); saveTimer = setTimeout(() => Store.write(state), 220); }
+
+/* ============================================================== formatting */
+function money(v, dp) {
+  if (!Number.isFinite(v)) return "—";
+  const c = state.currency || "$";
+  const neg = v < 0; v = Math.abs(v);
+  let s;
+  if (dp === undefined) dp = v < 10 && v !== Math.round(v) ? 2 : 0;
+  if (v >= 1e9) s = (v / 1e9).toFixed(1) + "bn";
+  else if (v >= 1e6) s = (v / 1e6).toFixed(v >= 1e7 ? 0 : 1) + "m";
+  else s = v.toLocaleString(undefined, { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  return (neg ? "−" : "") + c + s;
+}
+function pct(v, dp) { return Number.isFinite(v) ? (v * 100).toFixed(dp === undefined ? 1 : dp) + "%" : "—"; }
+function n(v, dp) { return Number.isFinite(v) ? v.toLocaleString(undefined, { maximumFractionDigits: dp === undefined ? 0 : dp }) : "—"; }
+function mo(v) { return !Number.isFinite(v) || v > 900 ? "never" : v < 1 ? "<1 mo" : round(v, 1) + " mo"; }
+function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+function fig(s) { return '<span class="fig">' + s + "</span>"; }
+
+/* ==========================================================================
+   THE MODEL
+   ========================================================================== */
+function buildModel(s) {
+  const m = {};
+  m.isSub      = ["monthly", "annual", "retainer"].includes(s.billing);
+  m.perMonth   = s.billing === "monthly" || s.billing === "retainer";
+  m.gm         = clamp(s.margin, 0, 98) / 100;
+  m.contribution = s.price * m.gm;                       // gross profit per billing event
+
+  /* gross profit one customer produces per month */
+  if (m.perMonth)                     m.monthlyGP = m.contribution;
+  else if (s.billing === "annual")    m.monthlyGP = m.contribution / 12;
+  else                                m.monthlyGP = m.contribution * (Math.max(1, s.repeat) / 12);
+
+  /* how long a customer lasts, and what they are worth */
+  m.churnM      = m.isSub ? clamp(s.churn, 0.1, 90) / 100 : 0;
+  m.lifetimeMo  = m.isSub ? 1 / m.churnM : CONST.oneOffHorizonMonths;
+  m.ltv         = m.isSub ? m.monthlyGP * m.lifetimeMo
+                          : m.contribution * Math.max(1, s.repeat) * (CONST.oneOffHorizonMonths / 12);
+  m.ltvCac      = s.cac > 0 ? m.ltv / s.cac : Infinity;
+  m.paybackMo   = m.monthlyGP > 0 ? s.cac / m.monthlyGP : Infinity;
+  m.cacPrice    = s.price > 0 ? s.cac / s.price : Infinity;
+
+  /* what it takes to stand still */
+  m.breakevenCustomers = m.monthlyGP > 0 ? Math.ceil(s.burn / m.monthlyGP) : Infinity;
+  m.penetration        = s.market > 0 ? m.breakevenCustomers / s.market : Infinity;
+  m.acqCostToBreakeven = m.breakevenCustomers * s.cac;
+
+  /* capital */
+  m.capitalGap    = s.required - s.capital;
+  m.postBuildCash = s.capital - s.required;
+  m.runwayMo      = s.burn > 0 ? s.capital / s.burn : Infinity;
+  m.runwayAfter   = s.burn > 0 ? m.postBuildCash / s.burn : Infinity;
+  m.totalAtRisk   = s.required + s.burn * Math.max(1, s.ttr);
+
+  /* your time is a hard ceiling nobody puts in the spreadsheet */
+  m.hoursMonth        = s.hours * 4.33;
+  const a             = clamp(s.auto, 1, 10);
+  m.deliveryHrs       = CONST.deliveryHoursAt1 + (a - 1) / 9 * (CONST.deliveryHoursAt10 - CONST.deliveryHoursAt1);
+  m.sellHrs           = CONST.sellHours[s.motion] || 0.5;
+  m.capacityCeiling   = m.deliveryHrs > 0 ? Math.floor((m.hoursMonth * 0.7) / m.deliveryHrs) : Infinity;
+  m.buildHours        = s.complex * CONST.buildHoursPerComplexity;
+  m.buildMonths       = m.hoursMonth > 0 ? m.buildHours / (m.hoursMonth * 0.6) : Infinity;
+
+  /* market */
+  m.marketValueYr = s.market * m.monthlyGP * 12;
+  m.wtpLevel      = parseInt(s.wtp, 10) || 0;
+  const wtpMult   = [0.35, 0.6, 0.85, 1.25, 1.7, 2.1][m.wtpLevel];
+  m.audienceConv  = (CONST.audienceBaseConv[s.motion] || 0.015) * wtpMult;
+  m.audienceYield = Math.floor(s.audienceSize * m.audienceConv);
+
+  /* evidence quality: how much of this is actually known? */
+  const evs = Object.values(s.ev || {});
+  const evScore = evs.length ? evs.reduce((t, v) => t + (v === "M" ? 1 : v === "E" ? 0.55 : 0.12), 0) / evs.length : 0.12;
+  const wtpQuality = [0.1, 0.3, 0.45, 0.7, 0.9, 1][m.wtpLevel];
+  m.evidence = clamp(evScore * 0.65 + wtpQuality * 0.35, 0, 1);
+  m.guessed  = evs.filter(v => v === "G").length;
+  m.measured = evs.filter(v => v === "M").length;
+
+  /* scenarios */
+  m.sim = {};
+  for (const k of Object.keys(SCENARIOS)) m.sim[k] = simulate(s, m, SCENARIOS[k]);
+
+  const q = m.evidence;
+  m.pBest  = round(0.10 + 0.16 * q, 2);
+  m.pWorst = round(0.42 - 0.22 * q, 2);
+  m.pExp   = round(1 - m.pBest - m.pWorst, 2);
+  m.expectedValue24 =
+      m.pBest * m.sim.best.cashAt24 + m.pExp * m.sim.expected.cashAt24 + m.pWorst * m.sim.worst.cashAt24;
+  m.ruinProbability = (m.sim.worst.deathMonth ? m.pWorst : 0) + (m.sim.expected.deathMonth ? m.pExp : 0) + (m.sim.best.deathMonth ? m.pBest : 0);
+
+  return m;
+}
+
+/* ------------------------------------------------------------- simulation */
+/* A deliberately simple month-by-month run. Customers arrive subject to three
+   ceilings — cash, your hours, and the size of the market left — and leave at
+   the churn rate. Cash pays the build first, then the burn, then acquisition. */
+function simulate(s, m, sc) {
+  const ttr    = Math.round(s.ttr * sc.ttr);
+  const cac    = Math.max(0.01, s.cac * sc.cac);
+  const churn  = m.isSub ? clamp(s.churn * sc.churn, 0.1, 90) / 100 : 0;
+  const req    = s.required * sc.required;
+
+  let cash = s.capital - req;
+  let customers = 0, remainingMarket = Math.max(0, s.market);
+  let peakDeficit = Math.min(0, cash), deathMonth = 0, breakevenMonth = 0;
+  let warmLeft = Math.floor(s.audienceSize * m.audienceConv * sc.velocity);
+  const series = [];
+  let lastGP = 0;
+
+  for (let month = 1; month <= CONST.horizon; month++) {
+    let added = 0;
+
+    if (month > ttr) {
+      const acqBudget   = Math.max(0, cash * CONST.cashToAcquisition) + lastGP * CONST.reinvest;
+      const cashCeiling = cac > 0 ? acqBudget / cac : Infinity;
+      const sellCeiling = m.sellHrs > 0 ? (m.hoursMonth * 0.3) / m.sellHrs : Infinity;
+      const mktCeiling  = remainingMarket * CONST.marketVelocity * sc.velocity;
+      const warm        = month <= ttr + 3 ? warmLeft / 3 : 0;
+
+      added = Math.max(0, Math.min(cashCeiling, sellCeiling, mktCeiling) + warm);
+      /* your own hands are the last ceiling: you cannot serve more than capacity */
+      const room = Math.max(0, m.capacityCeiling - customers);
+      added = Math.min(added, room);
+      remainingMarket = Math.max(0, remainingMarket - added);
+    }
+
+    const lost = customers * churn;
+    customers = Math.max(0, customers + added - lost);
+
+    const gp   = customers * m.monthlyGP;
+    const spend = month > ttr ? Math.min(cash * CONST.cashToAcquisition + lastGP * CONST.reinvest, added * cac) : 0;
+    cash = cash + gp - s.burn - spend;
+    lastGP = gp;
+
+    if (cash < peakDeficit) peakDeficit = cash;
+    if (cash < 0 && !deathMonth) deathMonth = month;
+    if (!breakevenMonth && gp >= s.burn && customers > 0) breakevenMonth = month;
+    series.push({ month, customers: Math.round(customers), gp, cash });
+  }
+
+  const at = i => series[Math.min(i, series.length) - 1] || { customers: 0, gp: 0, cash: 0 };
+  return {
+    label: sc.label, series, deathMonth, breakevenMonth,
+    peakDeficit, customersAt12: at(12).customers, customersAt24: at(24).customers, customersAt36: at(36).customers,
+    mrrAt12: at(12).gp, mrrAt24: at(24).gp, cashAt24: at(24).cash, cashAt36: at(36).cash,
+    ttr
+  };
+}
+
+/* ==========================================================================
+   THE FIFTEEN SEATS
+   Each scorer returns 0–100 for its own mandate only, plus findings, the
+   conditions it would attach, and the one thing that would change its vote.
+   ========================================================================== */
+const AFRICA_GEOS = ["africa", "africa-multi", "global-africa", "diaspora"];
+
+/* a sane pilot size even when breakeven volume is infinite (price or burn of zero) */
+function pilotCount(m) {
+  return Number.isFinite(m.breakevenCustomers) ? Math.max(5, Math.ceil(m.breakevenCustomers * 0.1)) : 10;
+}
+function quarterTarget(m) {
+  return Number.isFinite(m.breakevenCustomers) ? Math.max(3, Math.ceil(m.breakevenCustomers * 0.25)) : 25;
+}
+
+function C(sev, t) { return { k: "c", sev, t }; }   // concern
+function O(t)      { return { k: "o", sev: 0, t }; } // opportunity
+function A(t)      { return { k: "a", sev: 0, t }; } // assessment
+
+const DIRECTORS = [
+/* ------------------------------------------------------------------ 1 CEO */
+{
+  id: "ceo", seat: 1, glyph: "♟", title: "CEO & Strategy Chair", role: "Long-term strategy", weight: 1.3,
+  run(s, m) {
+    const f = [], asks = [], recs = [];
+    let sc = 50;
+    sc += bandGte(s.diff, [[8, 22], [6, 12], [4, 2], [2, -8]], -18);
+    sc += bandGte(s.fmf, [[8, 14], [6, 7], [4, 0]], -12);
+    sc += bandGte(m.marketValueYr / Math.max(1, s.burn * 12), [[30, 12], [10, 6], [4, 0]], -14);
+
+    f.push(A("Reading this as a <b>" + labelOf("cls", s.cls) + "</b> decision taken by a <b>" + labelOf("role", s.role) + "</b>, to be defended to <b>" + labelOf("audience", s.audience) + "</b>."));
+
+    if (s.diff <= 3) {
+      f.push(C(2, "Differentiation is " + fig(s.diff + "/10") + ". Nothing here is hard to copy, which means whatever works gets copied by month six and the winner is decided by distribution, not by the product."));
+      asks.push("Name the one thing a competitor cannot replicate within twelve months, or accept that this is a distribution bet and resource it as one.");
+    } else if (s.diff >= 8) {
+      f.push(O("Differentiation of " + fig(s.diff + "/10") + " is the strategic asset here. Everything else in the plan should be organised around protecting and compounding it."));
+    }
+
+    if (s.revenue > 0 && ["launch", "market", "build"].includes(s.cls)) {
+      const ratio = m.monthlyGP > 0 ? (s.revenue / m.monthlyGP) : 0;
+      f.push(C(ratio > 30 ? 2 : 1, "You already earn " + fig(money(s.revenue)) + " a month. This new thing produces " + fig(money(m.monthlyGP)) + " of gross profit per customer, so it needs " + fig(n(Math.ceil(s.revenue / Math.max(0.01, m.monthlyGP)))) + " customers just to replace what exists. The second-order effect is attention: every hour here is an hour not spent on revenue that already works."));
+      asks.push("State explicitly what the existing business loses while this is being built, and whether you accept that loss.");
+      sc -= ratio > 30 ? 8 : 3;
+    }
+
+    if (m.marketValueYr < s.burn * 12 * 4) {
+      f.push(C(3, "The entire reachable market is worth " + fig(money(m.marketValueYr)) + " a year at your own numbers. Even at total domination this business is small relative to what it costs to run. That is a strategy problem, not a marketing problem."));
+      sc -= 14;
+    } else if (m.marketValueYr > s.burn * 12 * 40) {
+      f.push(O("Reachable market is worth " + fig(money(m.marketValueYr)) + " a year — roughly " + fig(n(m.marketValueYr / Math.max(1, s.burn * 12)) + "×") + " your annual cost base. There is room here for the thing to matter."));
+    }
+
+    if (s.rev <= 3 && m.totalAtRisk > s.capital * 0.6) {
+      f.push(C(3, "Reversibility " + fig(s.rev + "/10") + " and " + fig(money(m.totalAtRisk)) + " committed before the market answers. This is a one-way door being walked through on an assumption. Boards exist to slow that down."));
+      sc -= 12;
+      asks.push("Find a version of this that is reversible for the first 90 days, even if it is uglier and slower.");
+    }
+
+    recs.push(s.diff >= 6
+      ? "Write the positioning statement first — one sentence a customer would repeat to a colleague — and make every later decision serve it."
+      : "Pick the distribution channel before writing another line of the product. In an undifferentiated market, the channel is the strategy.");
+    if (s.revenue > 0) recs.push("Ring-fence the existing revenue: a fixed number of hours a week that this project may never touch.");
+
+    return { sc, f, asks, recs };
+  }
+},
+/* ------------------------------------------------------------------ 2 CFO */
+{
+  id: "cfo", seat: 2, glyph: "💷", title: "Chief Financial Officer", role: "Financial analysis", weight: 1.3,
+  run(s, m) {
+    const f = [], asks = [], recs = [];
+    let sc = 46, fatal = null;
+
+    sc += bandGte(m.ltvCac, [[5, 24], [3, 17], [2, 8], [1, -6]], -22);
+    sc += bandLte(m.paybackMo, [[3, 14], [6, 9], [12, 3], [18, -4]], -14);
+    sc += bandGte(m.gm, [[0.8, 10], [0.6, 6], [0.4, 0], [0.25, -8]], -16);
+
+    f.push(A("One customer is worth " + fig(money(m.ltv)) + " in gross profit" + (m.isSub ? " over an expected " + fig(mo(m.lifetimeMo)) + " life" : " over " + fig(CONST.oneOffHorizonMonths + " months")) + " and costs " + fig(money(s.cac)) + " to acquire. Ratio " + fig(Number.isFinite(m.ltvCac) ? round(m.ltvCac, 1) + ":1" : "∞") + "."));
+
+    if (m.ltvCac < 1) {
+      f.push(C(3, "You lose " + fig(money(s.cac - m.ltv)) + " on every customer you acquire. Growth makes this worse, not better. Nothing else on this page matters until that inverts."));
+      fatal = "Unit economics are inverted: LTV " + money(m.ltv) + " against CAC " + money(s.cac) + ".";
+    } else if (m.ltvCac < 3) {
+      f.push(C(2, "At " + fig(round(m.ltvCac, 1) + ":1") + " there is no margin for the CAC to rise, and CAC always rises once the warm audience is used up. The conventional floor is 3:1 and it exists for this reason."));
+      asks.push("Show a route to 3:1 — either price up, churn down, or CAC down — with the specific lever named.");
+    } else if (Number.isFinite(m.ltvCac)) {
+      f.push(O("At " + fig(round(m.ltvCac, 1) + ":1") + " the unit economics survive a CAC increase of " + fig(round((m.ltvCac / 3 - 1) * 100) + "%") + " before hitting the 3:1 floor."));
+    } else {
+      f.push(C(2, "Acquisition cost is entered as zero, which is never true. Even referrals cost the hours you spend earning them — put your own time in at a real rate and the ratio becomes meaningful."));
+      sc -= 6;
+    }
+
+    if (m.paybackMo > 18 && m.isSub) {
+      f.push(C(2, "CAC payback of " + fig(mo(m.paybackMo)) + " means every customer is a loan you make to yourself, repaid slower than most small businesses can survive. Cash dies long before the LTV arrives."));
+      sc -= 6;
+    }
+
+    if (m.capitalGap > 0) {
+      f.push(C(3, "You need " + fig(money(s.required)) + " and have " + fig(money(s.capital)) + ". The plan is short " + fig(money(m.capitalGap)) + " before it begins."));
+      fatal = fatal || "Funding gap of " + money(m.capitalGap) + " before launch.";
+      sc -= 18;
+    }
+
+    const survivable = m.runwayAfter;
+    if (survivable < s.ttr + 3) {
+      f.push(C(3, "After building, " + fig(money(m.postBuildCash)) + " is left against " + fig(money(s.burn)) + " a month — " + fig(mo(survivable)) + " of runway for a plan whose first revenue is " + fig(s.ttr + " months") + " away. You run out before you find out."));
+      fatal = fatal || "Runway (" + mo(survivable) + ") is shorter than time to first revenue plus a margin.";
+      sc -= 20;
+    } else {
+      f.push(A("Runway after build: " + fig(mo(survivable)) + " at " + fig(money(s.burn)) + " a month, against " + fig(s.ttr + " months") + " to first revenue."));
+    }
+
+    f.push(A("Breakeven needs " + fig(n(m.breakevenCustomers) + " customers") + " paying " + fig(money(s.price)) + " — that is " + fig(pct(m.penetration, 2)) + " of the reachable market and " + fig(money(m.acqCostToBreakeven)) + " of acquisition spend to get there."));
+
+    if (m.acqCostToBreakeven > Math.max(0, m.postBuildCash) * 2.5) {
+      f.push(C(2, "Reaching breakeven costs " + fig(money(m.acqCostToBreakeven)) + " in acquisition alone, against " + fig(money(Math.max(0, m.postBuildCash))) + " of cash after the build. The gap has to come from revenue you don't have yet, which is the definition of a slow start."));
+      sc -= 8;
+    }
+
+    if (m.gm < 0.4) {
+      f.push(C(2, "Gross margin of " + fig(pct(m.gm, 0)) + " leaves " + fig(money(m.contribution)) + " per sale to pay for everything — acquisition, your time, and the mistake budget."));
+    }
+
+    if (m.guessed >= 6) {
+      f.push(C(2, fig(m.guessed + " of " + Object.keys(s.ev).length) + " financial inputs are tagged GUESSED. This board's arithmetic is exactly as good as those guesses, and it will not pretend otherwise."));
+      asks.push("Replace the three guesses that move the answer most — price, CAC and churn — with measured figures before capital is committed.");
+    }
+
+    recs.push("Set a kill number now: if CAC exceeds " + money(m.ltv / 3) + " or churn exceeds " + (m.isSub ? round(s.churn * 1.5, 1) + "%" : "the modelled repeat rate") + " for two consecutive months, the project stops and is reviewed.");
+    recs.push("Track cash weekly against the expected-case curve on the Risk page, not monthly against your feelings.");
+
+    return { sc, f, asks, recs, fatal };
+  }
+},
+/* ------------------------------------------------------------------ 3 COO */
+{
+  id: "coo", seat: 3, glyph: "⚙", title: "Chief Operating Officer", role: "Execution", weight: 1.0,
+  run(s, m) {
+    const f = [], asks = [], recs = [];
+    let sc = 52, fatal = null;
+
+    f.push(A("At automation " + fig(s.auto + "/10") + " each customer consumes about " + fig(round(m.deliveryHrs, 2) + " hours") + " of your month. With " + fig(s.hours + " hours a week") + " you can serve roughly " + fig(n(m.capacityCeiling) + " customers") + " before quality breaks."));
+
+    if (m.capacityCeiling < m.breakevenCustomers) {
+      f.push(C(3, "This is the finding that decides the meeting: breakeven needs " + fig(n(m.breakevenCustomers) + " customers") + " and your hands top out at " + fig(n(m.capacityCeiling)) + ". The plan cannot reach breakeven at any level of sales success. It has to be automated, priced higher, or staffed — those are the only three doors."));
+      fatal = "Delivery capacity (" + n(m.capacityCeiling) + ") is below breakeven volume (" + n(m.breakevenCustomers) + ").";
+      sc -= 26;
+      asks.push("Raise automation, raise price, or add delivery capacity until the ceiling clears breakeven with 30% headroom.");
+    } else if (m.capacityCeiling < m.breakevenCustomers * 2) {
+      f.push(C(2, "Capacity of " + fig(n(m.capacityCeiling)) + " clears breakeven of " + fig(n(m.breakevenCustomers)) + " but with less than 2× headroom. Success arrives as an operations crisis roughly one quarter after it arrives as good news."));
+      sc -= 8;
+    } else {
+      f.push(O("Capacity headroom is " + fig(round(m.capacityCeiling / Math.max(1, m.breakevenCustomers), 1) + "×") + " breakeven. Growth will not immediately break delivery."));
+      sc += 10;
+    }
+
+    if (m.buildMonths > s.ttr) {
+      f.push(C(m.buildMonths > s.ttr * 2 ? 3 : 2, "Complexity " + fig(s.complex + "/10") + " implies roughly " + fig(n(m.buildHours) + " hours") + " of build. At " + fig(s.hours + "h/week") + " with 60% of it productive, that is " + fig(mo(m.buildMonths)) + " — against a stated " + fig(s.ttr + " months") + " to first revenue. One of those two numbers is wrong, and it is usually the optimistic one."));
+      sc -= m.buildMonths > s.ttr * 2 ? 16 : 8;
+      asks.push("Cut scope until the build fits inside " + s.ttr + " months, or move the revenue date to month " + Math.ceil(m.buildMonths) + " and re-check the runway.");
+    } else {
+      f.push(A("Build estimate " + fig(mo(m.buildMonths)) + " fits inside the " + fig(s.ttr + "-month") + " window to first revenue, with " + fig(mo(s.ttr - m.buildMonths)) + " of slack."));
+      sc += 8;
+    }
+
+    const sellHrsAtBE = m.breakevenCustomers * m.sellHrs;
+    if (Number.isFinite(sellHrsAtBE) && sellHrsAtBE > m.hoursMonth * 0.5) {
+      f.push(C(2, "Selling into breakeven costs about " + fig(n(sellHrsAtBE) + " hours") + " at " + fig(round(m.sellHrs, 2) + "h") + " per customer on a " + labelOf("motion", s.motion).toLowerCase() + " motion — more than half your available month, on top of delivery and build."));
+      sc -= 6;
+    }
+
+    if (s.team === 1) {
+      f.push(C(1, "One person is holding build, sell and deliver simultaneously. That is possible, but it means the three activities happen in series, not in parallel — every timeline in this plan should be read as sequential."));
+    }
+
+    recs.push("Write the delivery process down before the tenth customer, not the hundredth. The document is what lets you hand it over.");
+    recs.push("Instrument two operational numbers from day one: hours per customer served, and days from signup to first value.");
+    return { sc, f, asks, recs, fatal };
+  }
+},
+/* ------------------------------------------------------------ 4 MARKETING */
+{
+  id: "mkt", seat: 4, glyph: "📣", title: "Marketing Director", role: "Market demand", weight: 1.0,
+  run(s, m) {
+    const f = [], asks = [], recs = [];
+    let sc = 50;
+
+    f.push(A("Warm audience of " + fig(n(s.audienceSize)) + " on a " + labelOf("motion", s.motion).toLowerCase() + " motion converts to roughly " + fig(n(m.audienceYield) + " customers") + " in the first quarter at " + fig(pct(m.audienceConv, 2)) + " — adjusted for how much evidence you have that they'll pay."));
+
+    const coverage = m.breakevenCustomers > 0 ? m.audienceYield / m.breakevenCustomers : 0;
+    if (coverage >= 1) {
+      f.push(O("Your existing audience alone covers " + fig(pct(coverage, 0)) + " of breakeven. That is the cheapest launch there is — use it before spending a currency unit on ads."));
+      sc += 18;
+    } else if (coverage >= 0.25) {
+      f.push(A("Existing audience covers " + fig(pct(coverage, 0)) + " of breakeven. The remainder — " + fig(n(m.breakevenCustomers - m.audienceYield) + " customers") + " — has to be bought or earned from strangers, at " + fig(money(s.cac)) + " each."));
+      sc += 6;
+    } else {
+      f.push(C(2, "Your audience covers only " + fig(pct(coverage, 0)) + " of breakeven. This is effectively a cold start: " + fig(n(m.breakevenCustomers)) + " customers from people who have never heard of you, at " + fig(money(m.acqCostToBreakeven)) + " of spend."));
+      sc -= 12;
+      asks.push("Build the audience first, or fund the cold-start budget explicitly. Do not plan on discovering distribution after launch.");
+    }
+
+    if (Number.isFinite(m.cacPrice) && m.cacPrice > 1.5 && m.perMonth) {
+      f.push(C(2, "CAC of " + fig(money(s.cac)) + " is " + fig(round(m.cacPrice, 1) + "×") + " the monthly price. Every customer is " + fig(round(m.cacPrice, 1) + " months") + " underwater on acquisition alone, before any delivery cost."));
+      sc -= 8;
+    }
+
+    if (s.competitors >= 8 && s.diff <= 4) {
+      f.push(C(3, fig(s.competitors + " competitors") + " and differentiation of " + fig(s.diff + "/10") + ". This is a commodity position: you will compete on price and ad spend against people with more of both."));
+      sc -= 16;
+      asks.push("Narrow the audience until you are the obvious first choice for someone specific. 'Better' is not a position; 'only' is.");
+    }
+
+    if (s.diff >= 7 && s.pain >= 7) {
+      f.push(O("High differentiation against high pain is the combination that lets messaging do the work. Say what it replaces, not what it does."));
+      sc += 10;
+    }
+
+    if (["ent", "gov", "mid"].includes(s.customer) && s.motion === "selfserve") {
+      f.push(C(2, "Self-serve motion aimed at " + labelOf("customer", s.customer).toLowerCase() + ". Buyers at that size do not put a card in a form; they run a procurement process. The channel and the customer are mismatched."));
+      sc -= 10;
+    }
+
+    recs.push("Write the single sentence a customer would use to describe this to a colleague. If you can't, the positioning isn't finished.");
+    recs.push("Pick one channel and go deep for 90 days. Two channels at half depth reliably produce nothing on both.");
+    return { sc, f, asks, recs };
+  }
+},
+/* ---------------------------------------------------------------- 5 SALES */
+{
+  id: "sales", seat: 5, glyph: "🤝", title: "Sales Director", role: "Revenue generation", weight: 1.0,
+  run(s, m) {
+    const f = [], asks = [], recs = [];
+    let sc = 50;
+    const acv = m.perMonth ? s.price * 12 : s.billing === "annual" ? s.price : s.price * Math.max(1, s.repeat);
+
+    f.push(A("Annual value of one customer is " + fig(money(acv)) + " on a " + labelOf("motion", s.motion).toLowerCase() + " motion."));
+
+    if (s.motion === "outbound" && acv < 600) {
+      f.push(C(3, "Outbound selling at " + fig(money(acv)) + " a year does not pay for the person doing it. Cold outreach economics need roughly " + fig(money(600)) + "+ of annual value per customer, and comfortably more if a human runs the call."));
+      sc -= 18;
+      asks.push("Either raise price or annual commitment above " + money(600) + ", or change the motion to something that doesn't require a human per sale.");
+    }
+    if (s.motion === "selfserve" && acv > 4000) {
+      f.push(C(1, "Self-serve at " + fig(money(acv)) + " a year leaves money on the table — at that price buyers expect a conversation, and a conversation raises both conversion and price."));
+    }
+
+    const wtpText = ["no evidence at all — this is a hypothesis with a price tag on it",
+                     "people told you they would buy, which is the least reliable evidence in commerce",
+                     "a waitlist, which measures curiosity rather than willingness to pay",
+                     "pre-orders — real money, which is the first honest signal",
+                     "paying customers at this price",
+                     "paying customers who renewed, which is the only proof that matters"][m.wtpLevel];
+    f.push(m.wtpLevel <= 1 ? C(3, "Willingness to pay rests on " + wtpText + ".") : m.wtpLevel >= 4 ? O("Willingness to pay is backed by " + wtpText + ".") : A("Willingness to pay rests on " + wtpText + "."));
+    sc += [-20, -12, -2, 10, 20, 26][m.wtpLevel];
+    if (m.wtpLevel <= 2) asks.push("Take money from " + pilotCount(m) + " customers before the build is finished. A pre-order is a vote; a survey is a rumour.");
+
+    const objections = [];
+    if (s.diff <= 5) objections.push("“How is this different from " + (s.competitors > 0 ? "the " + s.competitors + " other options" : "what I already use") + "?”");
+    if (s.price > 0) objections.push("“" + money(s.price) + " is more than I want to spend on this” — answer it with the cost of the problem, not the features of the product.");
+    if (m.wtpLevel <= 2) objections.push("“Who else is using it?” — with no reference customers, the honest answer costs you the sale. Get three, at a discount if necessary.");
+    if ((parseInt(s.reg, 10) || 0) >= 2) objections.push("“Is my data safe / are you allowed to do this?”");
+    if (["smb", "mid", "ent"].includes(s.customer)) objections.push("“I'd have to change how my team works” — switching cost is usually the real objection hiding behind price.");
+    if (objections.length) f.push(A("Objections you will hear, in order: " + objections.join(" &nbsp;")));
+
+    if (m.paybackMo <= 3 && m.perMonth) { f.push(O("Payback inside " + fig(mo(m.paybackMo)) + " means you can reinvest fast — a discount for annual prepay would fund its own growth.")); sc += 8; }
+
+    recs.push(m.perMonth ? "Offer annual prepay at two months free. It converts cash-flow risk into cash today and cuts churn." : "Design one upsell now — the second thing they buy is cheaper to sell than the first.");
+    recs.push("Write the price on the page. Hiding it filters out exactly the self-serve buyers this motion depends on.");
+    return { sc, f, asks, recs };
+  }
+},
+/* -------------------------------------------------------------- 6 PRODUCT */
+{
+  id: "prod", seat: 6, glyph: "🧩", title: "Product Director", role: "Product excellence", weight: 1.1,
+  run(s, m) {
+    const f = [], asks = [], recs = [];
+    let sc = 48;
+    sc += bandGte(s.pain, [[8, 22], [6, 12], [4, 0]], -16);
+    sc += bandGte(m.wtpLevel, [[4, 12], [3, 8], [2, 0]], -8);
+
+    f.push(A("Pain severity " + fig(s.pain + "/10") + " against build complexity " + fig(s.complex + "/10") + " — roughly " + fig(n(m.buildHours) + " hours") + " of work."));
+
+    if (s.pain <= 4) {
+      f.push(C(3, "A pain of " + fig(s.pain + "/10") + " is a preference, not a problem. People do not change what they do for a preference, and they certainly do not pay " + fig(money(s.price)) + " for one."));
+      asks.push("Find the version of this that solves something the customer is already spending money or hours on.");
+    }
+    if (s.complex >= 7 && s.pain <= 6) {
+      f.push(C(3, "You are proposing " + fig(n(m.buildHours) + " hours") + " of build against a pain of " + fig(s.pain + "/10") + ". The effort and the urgency are pointing in opposite directions."));
+      sc -= 14;
+    }
+    if (s.complex >= 8 && s.team <= 2) {
+      f.push(C(2, "Complexity " + fig(s.complex + "/10") + " with " + fig(s.team + (s.team === 1 ? " person" : " people")) + ". Scope will not survive contact with reality; decide now which third of it you are prepared to cut."));
+      asks.push("Define the smallest version that a customer would pay for, and ship only that.");
+    }
+    if (s.complex <= 3 && s.pain >= 7) {
+      f.push(O("Low build cost against high pain — the best shape a first product can have. Ship the thin version and let customers pull the rest out of you."));
+      sc += 14;
+    }
+
+    f.push(A("The first release should do one thing completely rather than five things partially. On these numbers that means the feature that gets a customer from signup to the first moment of value inside " + fig(s.complex <= 4 ? "one session" : "one week") + "."));
+
+    recs.push("Define 'first value' as an event you can measure, then optimise the time to it above every other product metric.");
+    recs.push("Ship to ten customers who know it is unfinished before shipping to a hundred who don't.");
+    return { sc, f, asks, recs };
+  }
+},
+/* ----------------------------------------------------------- 7 TECHNOLOGY */
+{
+  id: "tech", seat: 7, glyph: "🖥", title: "Technology Director", role: "Technology & automation", weight: 0.9,
+  run(s, m) {
+    const f = [], asks = [], recs = [];
+    let sc = 52;
+    sc += bandGte(s.auto, [[8, 18], [6, 10], [4, 0]], -12);
+
+    f.push(A("Automation potential " + fig(s.auto + "/10") + ", which is what sets the delivery cost of " + fig(round(m.deliveryHrs, 2) + " hours") + " per customer per month and therefore the capacity ceiling of " + fig(n(m.capacityCeiling)) + "."));
+
+    if (s.auto <= 4) {
+      f.push(C(2, "At automation " + fig(s.auto + "/10") + " this is a service wearing a product's pricing. Revenue and hours rise together, which caps the business at the size of your calendar."));
+      asks.push("Identify the single most repeated manual step and automate that one before launch — not all of them, that one.");
+    } else if (s.auto >= 8) {
+      f.push(O("High automation means the marginal customer is nearly free. Every improvement in conversion drops almost entirely to the bottom line."));
+    }
+
+    if (s.complex >= 7 && s.team <= 2 && s.hire === "0") {
+      f.push(C(2, "Complexity " + fig(s.complex + "/10") + ", team of " + fig(s.team) + ", and no plan to hire. The technical risk here is not the code — it is that one person becomes the only one who understands it."));
+    }
+
+    const infra = s.infra || [];
+    if (infra.includes("bank") || infra.includes("cards") || infra.includes("mobilemoney")) {
+      f.push(C(2, "The plan depends on payment or banking integrations. Those are the slowest external dependencies in any build: approval timelines are outside your control and routinely take longer than the build itself."));
+      asks.push("Start the payment/bank integration application in week one, in parallel with everything else.");
+    }
+    if (infra.includes("appstore")) {
+      f.push(C(1, "App store distribution adds a review gate to every release and a 15–30% cut to every transaction. Model both before pricing."));
+    }
+    if (infra.includes("ads")) {
+      f.push(C(1, "Dependence on paid ad platforms means your CAC is set by an auction you don't control. Assume it rises."));
+    }
+    if (m.gm >= 0.8) f.push(O("Gross margin of " + fig(pct(m.gm, 0)) + " implies genuinely low marginal cost — the scaling shape of software rather than services."));
+
+    recs.push("Buy every non-differentiating component. Build only the part that is the reason a customer chooses you.");
+    recs.push("Put usage logging in before launch. The questions you'll want answered in month three cannot be answered retroactively.");
+    return { sc, f, asks, recs };
+  }
+},
+/* ----------------------------------------------------------------- 8 RISK */
+{
+  id: "risk", seat: 8, glyph: "⚠", title: "Risk Director", role: "Risk management", weight: 1.2,
+  run(s, m) {
+    const f = [], asks = [], recs = [];
+    let sc = 55, fatal = null;
+    const w = m.sim.worst;
+
+    f.push(A("Total exposure before the market answers: " + fig(money(m.totalAtRisk)) + " — the build plus " + fig(s.ttr + " months") + " of burn. That is " + fig(pct(m.totalAtRisk / Math.max(1, s.capital), 0)) + " of the capital you said you can lose."));
+
+    if (m.totalAtRisk > s.capital) {
+      f.push(C(3, "The exposure exceeds the capital. Something in this plan is funded by hope: either the timeline shortens, the build shrinks, or money arrives from somewhere not yet named."));
+      fatal = "Exposure (" + money(m.totalAtRisk) + ") exceeds available capital (" + money(s.capital) + ").";
+      sc -= 25;
+    } else if (m.totalAtRisk > s.capital * 0.75) {
+      f.push(C(2, "Exposure consumes " + fig(pct(m.totalAtRisk / s.capital, 0)) + " of available capital before the first customer. There is no second attempt in this plan."));
+      sc -= 12;
+      asks.push("Reserve at least 25% of capital as an untouchable reserve for the second attempt.");
+    }
+
+    if (w.deathMonth) {
+      f.push(C(3, "In the worst case the cash runs out in " + fig("month " + w.deathMonth) + " with " + fig(n(w.customersAt12) + " customers") + " at twelve months. Estimated probability of that branch: " + fig(pct(m.pWorst, 0)) + "."));
+      sc -= 14;
+    } else {
+      f.push(O("Even the worst-case run survives 36 months, bottoming at " + fig(money(w.peakDeficit)) + ". The downside is a waste of time and money, not ruin."));
+      sc += 12;
+    }
+
+    if (s.rev <= 3) { f.push(C(2, "Reversibility " + fig(s.rev + "/10") + ". Whatever this costs, assume you cannot get it back.")); sc -= 8; }
+    else if (s.rev >= 8) { f.push(O("Reversibility " + fig(s.rev + "/10") + " — you can stop cheaply, which is worth more than most people price it. It justifies moving faster with less certainty.")); sc += 10; }
+
+    const conc = [];
+    if (s.keyperson === "3") conc.push("one person");
+    if (["africa", "local-other"].includes(s.geo)) conc.push("one country");
+    if (["selfserve", "referral", "partner"].includes(s.motion)) conc.push("one channel");
+    if (s.competitors === 0) conc.push("an unproven market");
+    if (conc.length >= 2) {
+      f.push(C(2, "Concentration risk on " + conc.join(", ") + ". Each is survivable alone; together they mean one bad event takes the whole thing down."));
+      sc -= 8;
+    }
+
+    f.push(A("Probability weighting used here: best " + fig(pct(m.pBest, 0)) + ", expected " + fig(pct(m.pExp, 0)) + ", worst " + fig(pct(m.pWorst, 0)) + " — derived from your evidence quality, not from optimism."));
+
+    recs.push("Define the stopping rule in writing before you start, with a date and a number. Nobody has ever defined one halfway through and obeyed it.");
+    recs.push("Run the pre-mortem on the Risk page with someone who has no stake in this going ahead.");
+    return { sc, f, asks, recs, fatal };
+  }
+},
+/* ---------------------------------------------------------------- 9 LEGAL */
+{
+  id: "legal", seat: 9, glyph: "⚖", title: "Legal & Compliance Director", role: "Governance", weight: 0.9,
+  run(s, m) {
+    const f = [], asks = [], recs = [];
+    let sc = 62, fatal = null;
+    const reg = parseInt(s.reg, 10) || 0, ip = parseInt(s.ip, 10) || 0;
+    const infra = s.infra || [];
+
+    if (reg === 3) {
+      f.push(C(3, "Heavy regulation — money, health, credit, children or licensing. Operating without the licence is not a risk you manage, it is a business you are not allowed to have. Licensing timelines routinely exceed the runway in this plan."));
+      sc -= 30;
+      fatal = "Heavy regulatory exposure with no licensing plan or budget stated.";
+      asks.push("Get a written opinion on what licence or registration applies, what it costs and how long it takes, before spending on the build.");
+    } else if (reg === 2) {
+      f.push(C(2, "Moderate exposure: personal data, consumer contracts and advertising rules apply. The cost of compliance is small; the cost of ignoring it lands after you have customers to lose."));
+      sc -= 8;
+      asks.push("Publish terms and a privacy policy that match what the product actually does, before the first paying customer.");
+    } else {
+      f.push(A("Regulatory exposure is " + labelOf("reg", s.reg).toLowerCase() + ". Standard registration, tax and contract hygiene apply."));
+    }
+
+    if (infra.includes("cards") || infra.includes("mobilemoney") || infra.includes("bank") || infra.includes("fx")) {
+      f.push(C(reg >= 2 ? 2 : 1, "You touch money movement. Even as a merchant rather than a processor, that brings KYC obligations, settlement terms, chargeback exposure and — for cross-border FX — reporting rules that differ per country."));
+    }
+    if (ip === 0) {
+      f.push(C(2, "Nothing protects this from being copied. That is survivable for a small business, but it means the brand and the customer relationship are the only assets — protect those deliberately."));
+      sc -= 6;
+      asks.push("Register the trading name and secure the domain and handles this week. It costs little and is unrecoverable once taken.");
+    } else if (ip >= 3) { f.push(O("A registered right or exclusivity is a real asset — it belongs on the balance sheet and in the pitch.")); sc += 10; }
+
+    if (["ent", "gov"].includes(s.customer)) {
+      f.push(C(2, "Selling to " + labelOf("customer", s.customer).toLowerCase() + " means their paper, not yours: procurement, insurance requirements, indemnity clauses and payment terms of 60–90 days. Model the cash-flow effect of getting paid late."));
+      sc -= 6;
+    }
+    if (s.team > 1 && ["founder", "cofounder"].includes(s.role)) {
+      f.push(C(2, "More than one person and no ownership agreement mentioned. Founder disputes kill more small companies than competitors do, and they are cheap to prevent and ruinous to resolve."));
+      asks.push("Put ownership, vesting and what happens if someone leaves in writing before revenue exists to argue over.");
+    }
+
+    recs.push("Keep business money in a separate account from personal money from day one. Everything downstream — tax, valuation, disputes — depends on it.");
+    return { sc, f, asks, recs, fatal };
+  }
+},
+/* -------------------------------------------------------- 10 HUMAN CAPITAL */
+{
+  id: "hr", seat: 10, glyph: "👥", title: "Human Capital Director", role: "People", weight: 0.8,
+  run(s, m) {
+    const f = [], asks = [], recs = [];
+    let sc = 55;
+    const hire = parseInt(s.hire, 10) || 0, kp = parseInt(s.keyperson, 10) || 0;
+
+    f.push(A(fig(s.team + (s.team === 1 ? " person" : " people")) + " with " + fig(s.hours + " hours a week") + " each of committed time, on a build estimated at " + fig(n(m.buildHours) + " hours") + "."));
+
+    if (kp === 3) {
+      f.push(C(2, "Everything depends on you personally. That caps the value of the business at whatever a buyer thinks you'll stay for, and it means illness, burnout or a good job offer are business risks rather than personal ones."));
+      sc -= 12;
+      asks.push("Document the two processes only you can do, so the answer to 'what if you stop' is a document rather than a shrug.");
+    }
+    if (hire > 0) {
+      const cost = hire === 3 ? s.burn * 1.6 : s.burn * 0.8;
+      f.push(C(hire >= 2 ? 2 : 1, "The plan needs " + labelOf("hire", s.hire).toLowerCase() + ". Budget the true cost — recruitment, unproductive ramp of 4–8 weeks, and the management time that comes out of your " + fig(s.hours + " hours") + ", not out of nowhere."));
+      if (hire >= 2 && m.postBuildCash < cost * 4) {
+        f.push(C(3, "A full-time hire against " + fig(money(Math.max(0, m.postBuildCash))) + " of post-build cash is a bet that revenue arrives before payroll does. It usually doesn't."));
+        sc -= 14;
+      }
+    } else if (s.complex >= 7) {
+      f.push(C(2, "No hiring planned against complexity " + fig(s.complex + "/10") + ". Either the complexity is overstated or the staffing is."));
+      sc -= 8;
+    }
+
+    if (s.hours <= 10 && m.buildHours > 200) {
+      f.push(C(3, fig(s.hours + " hours a week") + " against " + fig(n(m.buildHours) + " hours") + " of build is " + fig(mo(m.buildMonths)) + " of part-time work before revenue. Motivation, not money, is the resource that runs out first at that duration."));
+      sc -= 14;
+    }
+    if (s.fmf >= 8) { f.push(O("Founder–market fit of " + fig(s.fmf + "/10") + " is the single best predictor available here. It shortens every learning cycle in the plan.")); sc += 12; }
+    else if (s.fmf <= 4) { f.push(C(2, "Founder–market fit " + fig(s.fmf + "/10") + ". You will be paying tuition to learn things a practitioner already knows — budget time for it, or buy the knowledge by bringing one in.")); sc -= 10; }
+
+    recs.push("Decide now what you are paying yourself. Unpaid founder time is the most expensive financing there is because it never appears in the numbers.");
+    return { sc, f, asks, recs };
+  }
+},
+/* ----------------------------------------------------------- 11 INNOVATION */
+{
+  id: "innov", seat: 11, glyph: "💡", title: "Innovation Director", role: "Future opportunities", weight: 0.7,
+  run(s, m) {
+    const f = [], asks = [], recs = [];
+    let sc = 55;
+
+    if (s.auto >= 7 && s.complex <= 6) {
+      f.push(O("This has a productisation path: " + fig(s.auto + "/10") + " automation at moderate complexity means today's service can become tomorrow's self-serve tier without rebuilding."));
+      sc += 14;
+    }
+    if (s.diff <= 4) {
+      f.push(C(2, "A generic offer in a market where the tooling is getting cheaper every quarter. The thing that is hard today is a feature in someone's product next year — assume the technical advantage decays to zero and plan for the durable one, which is the customer relationship."));
+      sc -= 10;
+    }
+    const dep = (s.infra || []);
+    if (dep.includes("ads")) f.push(C(1, "Paid-acquisition dependence is a bet that platform economics stay where they are. They have never stayed where they are."));
+    if (["b2c", "creator"].includes(s.customer)) f.push(A("Consumer and creator markets move fast in both directions — cheap to enter, cheap for the next entrant too. Speed of iteration matters more than plan quality here."));
+    if (["ent", "gov"].includes(s.customer)) f.push(A("Institutional buyers move slowly, which cuts both ways: long sales cycles, but incumbency once you are in the stack."));
+
+    f.push(A("Two adjacent opportunities this creates if it works: the data you accumulate about " + labelOf("customer", s.customer).toLowerCase() + " behaviour, and the distribution to the same audience for a second offer. Both are usually worth more than the first product."));
+    if (s.wtp === "0") { f.push(C(1, "Innovation without a paying customer is a hobby. The novelty is not the risk here — the absence of proof is.")); sc -= 6; }
+
+    recs.push("Keep a written list of everything you learn that surprised you. That list, not the product, is what you will eventually sell against.");
+    return { sc, f, asks, recs };
+  }
+},
+/* ----------------------------------------------------------- 12 INVESTMENT */
+{
+  id: "inv", seat: 12, glyph: "📈", title: "Investment Director", role: "Capital deployment", weight: 1.0,
+  run(s, m) {
+    const f = [], asks = [], recs = [];
+    let sc = 48;
+    const invested = m.totalAtRisk;
+    const gain24 = m.sim.expected.cashAt24 - (s.capital - invested);
+    const roi24 = invested > 0 ? gain24 / invested : 0;
+    const alt24 = invested * (Math.pow(1 + CONST.alternativeReturn, 2) - 1);
+
+    f.push(A("Capital deployed " + fig(money(invested)) + ". Expected case returns cash of " + fig(money(m.sim.expected.cashAt24)) + " by month 24 — a two-year return of " + fig(pct(roi24, 0)) + " on the money at risk."));
+    f.push(A("The same " + fig(money(invested)) + " left in a boring 12%-a-year alternative makes " + fig(money(alt24)) + " over the same period with none of the work. That is the bar, not zero."));
+
+    if (gain24 > alt24 * 3) { f.push(O("Expected return clears the do-nothing alternative by more than 3×. On a probability-weighted basis this is worth the capital.")); sc += 22; }
+    else if (gain24 > alt24) { f.push(A("Expected return beats the alternative, but not by enough to compensate for the risk and the labour. Small businesses need a wide margin over the passive option because the founder's time is not free.")); sc += 4; }
+    else { f.push(C(2, "On the expected case this returns less than leaving the money alone, before valuing a single hour of your time.")); sc -= 16; }
+
+    f.push(A("Probability-weighted cash position at 24 months across all three scenarios: " + fig(money(m.expectedValue24)) + "."));
+    if (m.expectedValue24 < 0) { f.push(C(3, "The probability-weighted outcome is negative. The board is being asked to fund a coin-flip that loses on average.")); sc -= 18; }
+
+    const alts = ["Do nothing and put the " + money(invested) + " into what already earns"];
+    if (s.required > 500) alts.push("Run a " + money(Math.max(200, Math.round(s.required * 0.12 / 50) * 50)) + " test of the single riskiest assumption first, and spend the rest only if it survives");
+    if (s.complex >= 5) alts.push("Buy or licence an existing product instead of building — at " + money(m.buildHours * 25) + " of implied build labour, buying is often cheaper");
+    if (s.diff <= 5) alts.push("Partner with one of the " + Math.max(1, s.competitors) + " existing players rather than becoming the " + (s.competitors + 1) + "th");
+    if (s.revenue > 0) alts.push("Spend the same money growing the existing " + money(s.revenue) + "/month, where the model is already proven");
+    f.push(A("Alternatives that must be rejected explicitly, not ignored: " + alts.map((a, i) => (i + 1) + ") " + a).join("; ") + "."));
+
+    asks.push("State in one sentence why the best alternative above is worse than this proposal.");
+    recs.push("Stage the capital. Release it against evidence milestones rather than a calendar — the first tranche buys proof, not product.");
+    return { sc, f, asks, recs };
+  }
+},
+/* ------------------------------------------------------- 13 CUSTOMER ADVOCATE */
+{
+  id: "cust", seat: 13, glyph: "🫱", title: "Customer Advocate", role: "Voice of the customer", weight: 1.2,
+  run(s, m) {
+    const f = [], asks = [], recs = [];
+    let sc = 46;
+    sc += bandGte(s.pain, [[8, 24], [6, 14], [4, 0]], -18);
+    sc += [-18, -10, -2, 10, 18, 24][m.wtpLevel];
+
+    f.push(A("The customer here is " + labelOf("customer", s.customer).toLowerCase() + ", being asked for " + fig(money(s.price)) + (m.perMonth ? " every month" : "") + " for something rated " + fig(s.pain + "/10") + " on how much it hurts them."));
+
+    if (m.wtpLevel <= 1) {
+      f.push(C(3, "Nobody has paid for this. Every number on the Numbers page is therefore a story about a person who does not exist yet. The customer's actual opinion is the only input that can overturn this board's view, and it has not been collected."));
+      asks.push("Speak to ten of them. Not about the product — about what they did last time this problem happened, and what it cost them.");
+    }
+    if (s.pain <= 5) {
+      f.push(C(2, "At " + fig(s.pain + "/10") + " they are coping fine. People do not buy solutions to problems they have already worked around; they buy relief from problems they are actively bleeding from."));
+    }
+    if (s.competitors === 0) {
+      f.push(C(2, "Zero competitors is not a green light. Either nobody wants this, or you have not found the spreadsheet, WhatsApp group or intern that is currently doing the job. Name what they do today instead — that is your real competitor and its price is usually 'free and annoying'."));
+      sc -= 10;
+      asks.push("Write down exactly what the customer does today instead of buying this, and why that stops being good enough.");
+    } else {
+      f.push(A("They currently solve this with one of " + fig(s.competitors + " alternatives") + ". Switching costs them time and risk, so 'slightly better' loses. The offer has to be worth the disruption, not just worth the money."));
+    }
+
+    if (m.perMonth && s.churn > 8) {
+      f.push(C(3, "Assumed churn of " + fig(s.churn + "% a month") + " means the average customer is gone in " + fig(mo(m.lifetimeMo)) + ". That is not a pricing problem or a marketing problem — it is the customer telling you the product did not do what they hoped."));
+      sc -= 12;
+    }
+    if (s.pain >= 8 && m.wtpLevel >= 3) { f.push(O("High pain plus real money already changing hands. This is the configuration where customers forgive an unfinished product.")); sc += 10; }
+
+    f.push(A("What they actually want is not the product — it is the outcome " + (s.success ? "you described as: “" + esc(s.success.split("\n")[0]).slice(0, 120) + "”" : "you have not yet written down on the Brief page") + ". Sell that."));
+
+    recs.push("Talk to five customers who said no. They will tell you more in an hour than five who said yes.");
+    recs.push("Put one sentence of verbatim customer language on the landing page. Yours will always be worse than theirs.");
+    return { sc, f, asks, recs };
+  }
+},
+/* ------------------------------------------------- 14 COMPETITIVE INTELLIGENCE */
+{
+  id: "comp", seat: 14, glyph: "🔭", title: "Competitive Intelligence Director", role: "Competitive analysis", weight: 1.0,
+  run(s, m) {
+    const f = [], asks = [], recs = [];
+    let sc = 52;
+    const ip = parseInt(s.ip, 10) || 0;
+
+    f.push(A(fig(s.competitors + " named competitors") + " against differentiation " + fig(s.diff + "/10") + " and a moat rated " + fig(labelOf("ip", s.ip).toLowerCase()) + "."));
+
+    if (s.competitors >= 10) { f.push(C(2, "A crowded market. That proves demand — the useful half of the news — but it means every acquisition channel is already priced by people who have been bidding longer than you.")); sc -= 8; }
+    else if (s.competitors >= 3 && s.diff >= 6) { f.push(O("Proven demand with a real point of difference. This is the most workable competitive shape on the board's list.")); sc += 16; }
+    else if (s.competitors === 0) { f.push(C(2, "No named competitor usually means the search was not thorough. Look for the incumbent that is not a company: the spreadsheet, the agency, the WhatsApp group, the status quo.")); sc -= 8; }
+
+    if (ip === 0 && s.diff >= 7) {
+      f.push(C(2, "You claim differentiation of " + fig(s.diff + "/10") + " with nothing protecting it. If it is that good and that copyable, expect a competitor's version within two quarters of your first traction."));
+      asks.push("Decide which of speed, brand or accumulated data is going to be the moat, and start building it in month one.");
+    }
+    if (ip === 4) { f.push(O("Network effects, if real, are the only moat that strengthens with scale. Everything in the roadmap should be sequenced to reach the density where it starts working.")); sc += 14; }
+
+    if (s.examples && s.examples.trim()) {
+      const ex = s.examples.split("\n").map(x => x.trim()).filter(Boolean).slice(0, 4);
+      f.push(A("Benchmarks you supplied: " + ex.map(e => "“" + esc(e).slice(0, 80) + "”").join(", ") + ". For each of these, the board wants to know what they got wrong that you will get right — 'we'll execute better' is not an answer, it is a wish."));
+    } else {
+      f.push(C(2, "No comparables supplied. Someone has tried a version of this before; not finding them is a research failure, not evidence of a virgin market."));
+      sc -= 8;
+      asks.push("Name three prior attempts at this and what happened to each.");
+    }
+
+    f.push(A("Your likely wedge on these numbers: " + (s.diff >= 7 ? "the capability nobody else has" : s.fmf >= 7 ? "your credibility with this specific audience — the incumbents cannot buy that quickly" : m.gm >= 0.75 ? "price, funded by a margin structure the incumbents don't have" : "a narrower customer than anyone else is willing to serve properly") + "."));
+
+    recs.push("Buy a competitor's product this week and go through their onboarding. Their churn reasons are your positioning.");
+    return { sc, f, asks, recs };
+  }
+},
+/* --------------------------------------------------------- 15 AFRICA MARKET */
+{
+  id: "africa", seat: 15, glyph: "🌍", title: "Africa Market Director", role: "African market realities", weight: 1.2,
+  run(s, m) {
+    const f = [], asks = [], recs = [];
+    let sc = 55;
+    const infra = s.infra || [];
+    const relevant = AFRICA_GEOS.includes(s.geo);
+
+    if (!relevant) {
+      f.push(A("Primary market is " + labelOf("geo", s.geo).toLowerCase() + ", so this seat carries reduced weight in the vote. The observation it still makes: an Africa-first version of this is usually cheaper to test and less contested than the market you have chosen — worth costing as an alternative rather than an afterthought."));
+      return { sc: 60, f, asks, recs, weightOverride: 0.4 };
+    }
+
+    f.push(A("Primary market " + fig(labelOf("geo", s.geo)) + ", selling to " + labelOf("customer", s.customer).toLowerCase() + " at " + fig(money(s.price)) + (m.perMonth ? " a month" : "") + "."));
+
+    if (infra.includes("power")) {
+      f.push(C(2, "The plan assumes reliable mains power. In most of the target market that assumption costs money — customers budget for fuel and inverters, and any product that competes with those for the same wallet loses."));
+      asks.push("Test the product under six hours of no power and on a phone at 15% battery. That is the real operating environment.");
+    }
+    if (infra.includes("net")) {
+      f.push(C(2, "Fast, cheap internet is assumed. Data is metered and expensive relative to income across the region — a heavy app is a recurring cost the customer pays to use your product."));
+      asks.push("Set a page-weight budget and make the core function work offline or on 3G.");
+      sc -= 6;
+    }
+    if (infra.includes("cards") && !infra.includes("mobilemoney")) {
+      f.push(C(3, "Card payments without mobile money. Card penetration is low and card failure rates on recurring charges are high across much of the continent; mobile money is the default rail for the customer you have described."));
+      sc -= 14;
+      asks.push("Add a mobile money option (M-Pesa, MoMo, Paystack/Flutterwave local methods) before launch, not after the first failed renewals.");
+    } else if (infra.includes("mobilemoney")) {
+      f.push(O("Mobile money in the plan. That is the correct rail — it also collapses the onboarding friction that kills card-based signup rates locally."));
+      sc += 10;
+    }
+    if (m.perMonth) {
+      f.push(C(2, "Monthly subscription billing is a cultural as much as a technical choice. Recurring card mandates fail often, and many customers prefer to pay when they use rather than commit monthly. Expect involuntary churn on top of the " + fig(s.churn + "%") + " you modelled."));
+      asks.push("Offer a pay-as-you-go or 3-month prepaid option alongside the subscription and compare retention.");
+    }
+    if (infra.includes("fx") || s.geo === "africa-multi" || s.geo === "diaspora") {
+      f.push(C(2, "Cross-border exposure. Currency moves, repatriation rules and per-country registration all apply, and each country is a separate market with its own regulator, rails and language of business — not a region you enter once."));
+      sc -= 8;
+      asks.push("Pick one country, win it, and only then treat the second as a new launch with its own budget.");
+    }
+    if (infra.includes("logistics")) f.push(C(2, "Physical delivery: last-mile costs and address informality make unit economics location-specific. Model delivery cost per order per city, not per country."));
+    if (infra.includes("devices")) f.push(C(1, "Smartphone ownership is assumed. Check that assumption against the specific customer — for many SMB owners the business phone is shared and mid-range."));
+
+    if (s.price > 25 && ["b2c", "creator"].includes(s.customer) && m.perMonth) {
+      f.push(C(2, fig(money(s.price)) + " a month to a consumer in this market is a meaningful share of discretionary income. Price against a local monthly budget rather than a US comparison."));
+      sc -= 10;
+    }
+    if (s.fmf >= 7 && relevant) { f.push(O("Local founder–market fit is the advantage foreign entrants cannot buy — distribution here runs through trust and networks more than through ad platforms.")); sc += 12; }
+
+    recs.push("Price in local currency and hold it stable; re-pricing on every FX move destroys trust faster than the margin it protects.");
+    recs.push("Build the WhatsApp channel deliberately — it is the region's actual customer-service and distribution layer, not an afterthought.");
+    return { sc, f, asks, recs };
+  }
+}
+];
+
+/* label lookups for prose */
+const LABELS = {
+  cls: { launch: "launch", pivot: "pivot or kill", price: "pricing", hire: "hiring", spend: "spend", market: "market entry", build: "build vs buy", raise: "capital raise" },
+  role: { founder: "founder", cofounder: "co-founder", operator: "operator", solo: "solo creator", investor: "investor", employee: "internal proposer", agency: "agency owner", nonprofit: "non-profit lead" },
+  audience: { self: "yourself alone", team: "your leadership team", investors: "investors or a real board", lender: "a bank or lender", boss: "an internal approval body", partner: "a partner or client", family: "your family" },
+  motion: { selfserve: "Self-serve", inbound: "Inbound", outbound: "Outbound", partner: "Partner", retail: "Retail", referral: "Referral" },
+  customer: { b2c: "Consumers", smb: "Small businesses", mid: "Mid-market companies", ent: "Large enterprises", gov: "Government or institutions", creator: "Creators and freelancers" },
+  reg: { "0": "None", "1": "Light", "2": "Moderate", "3": "Heavy" },
+  ip: { "0": "Nothing", "1": "Brand", "2": "Proprietary data or process", "3": "Registered right or exclusivity", "4": "Network effects" },
+  hire: { "0": "no hiring", "1": "one freelancer or part-timer", "2": "one full-time hire", "3": "a small team" },
+  geo: { africa: "Africa — single country", "africa-multi": "Africa — multi-country", "global-africa": "Global, Africa first", diaspora: "Diaspora / cross-border", global: "Global (US & Europe)", "local-other": "A single non-African market" },
+  billing: { monthly: "monthly subscription", annual: "annual subscription", oneoff: "one-off purchase", retainer: "monthly retainer", project: "project fee" }
+};
+function labelOf(k, v) { return (LABELS[k] && LABELS[k][v]) || String(v); }
+
+/* ------------------------------------------------------------ vote mapping */
+function voteOf(score) {
+  return score >= 78 ? "STRONG_SUPPORT" : score >= 62 ? "SUPPORT" : score >= 45 ? "CONDITIONAL" : score >= 28 ? "OPPOSE" : "STRONG_OPPOSE";
+}
+function voteLabel(v) { return { STRONG_SUPPORT: "Strong support", SUPPORT: "Support", CONDITIONAL: "Conditional", OPPOSE: "Oppose", STRONG_OPPOSE: "Strong oppose" }[v]; }
+function scoreColour(sc) { return sc >= 70 ? "var(--green)" : sc >= 50 ? "var(--brass-2)" : sc >= 32 ? "var(--amber)" : "var(--red)"; }
+
+/* ------------------------------------------------------- run the whole board */
+function runBoard(s) {
+  const m = buildModel(s);
+  const reports = DIRECTORS.map(d => {
+    const r = d.run(s, m) || {};
+    /* a seat that has raised a blocking finding cannot also report a comfortable
+       score — the block is the headline, whatever else that mandate liked */
+    const sc = clamp(Math.round(r.fatal ? Math.min(r.sc, 32) : r.sc), 0, 100);
+    return {
+      id: d.id, seat: d.seat, glyph: d.glyph, title: d.title, role: d.role,
+      weight: r.weightOverride !== undefined ? r.weightOverride : d.weight,
+      score: sc, vote: voteOf(sc),
+      findings: r.f || [], asks: r.asks || [], recs: r.recs || [], fatal: r.fatal || null
+    };
+  });
+
+  const totalW = reports.reduce((t, r) => t + r.weight, 0);
+  const weighted = reports.reduce((t, r) => t + r.score * r.weight, 0) / totalW;
+  const mean = reports.reduce((t, r) => t + r.score, 0) / reports.length;
+  const sd = Math.sqrt(reports.reduce((t, r) => t + Math.pow(r.score - mean, 2), 0) / reports.length);
+  const fatals = reports.filter(r => r.fatal);
+
+  /* decision */
+  let decision, cls;
+  if (fatals.length >= 3 || weighted < 30)            { decision = "REJECT"; cls = "no"; }
+  else if (fatals.length >= 1 && weighted < 48)       { decision = "REJECT"; cls = "no"; }
+  else if (fatals.length >= 1)                        { decision = "MODIFY AND RESUBMIT"; cls = "modify"; }
+  else if (weighted >= 74)                            { decision = "PROCEED"; cls = "go"; }
+  else if (weighted >= 58)                            { decision = "PROCEED WITH CONDITIONS"; cls = "cond"; }
+  else if (weighted >= 45)                            { decision = "MODIFY AND RESUBMIT"; cls = "modify"; }
+  else                                                { decision = "DEFER"; cls = "defer"; }
+
+  /* confidence: agreement × evidence × completeness. Never certainty about outcome. */
+  const agreement = clamp(1 - sd / 30, 0, 1);
+  const filled = ["decision", "context", "examples", "success", "against"].filter(k => (s[k] || "").trim().length > 12).length / 5;
+  const confidence = Math.round(clamp(agreement * 0.4 + m.evidence * 0.45 + filled * 0.15, 0, 1) * 100);
+
+  return { m, reports, weighted, mean, sd, agreement, confidence, decision, cls, fatals, totalW };
+}
+/* ==========================================================================
+   DEBATE — where the seats collide
+   ========================================================================== */
+function topFinding(rep, kind) {
+  const pool = rep.findings.filter(f => f.k === kind);
+  pool.sort((a, b) => (b.sev || 0) - (a.sev || 0));
+  return pool[0] || null;
+}
+
+function buildDebate(B) {
+  const reps = B.reports.slice().sort((a, b) => b.score - a.score);
+  const high = reps.filter(r => r.score >= 62);
+  const low  = reps.filter(r => r.score <= 44);
+  const clashes = [], accords = [], tradeoffs = [];
+
+  /* clashes: the widest gaps where both sides have something concrete to say */
+  for (const h of high) {
+    for (const l of low) {
+      const gap = h.score - l.score;
+      if (gap < 28) continue;
+      const pro = topFinding(h, "o") || topFinding(h, "a");
+      const con = topFinding(l, "c");
+      if (!pro || !con) continue;
+      clashes.push({ gap, h, l, pro, con });
+    }
+  }
+  clashes.sort((a, b) => b.gap - a.gap);
+  const seen = new Set();
+  const picked = clashes.filter(c => {
+    const k = c.h.id + "|" + c.l.id, k2 = c.l.id;
+    if (seen.has(k) || seen.has(k2)) return false;
+    seen.add(k); seen.add(k2); return true;
+  }).slice(0, 4);
+
+  /* accords: seats that agree, and on what */
+  if (high.length >= 2) accords.push({ side: "support", members: high.slice(0, 5) });
+  if (low.length >= 2)  accords.push({ side: "oppose",  members: low.slice(0, 5) });
+
+  /* trade-offs the board cannot dissolve */
+  const s = state, m = B.m;
+  if (m.capacityCeiling < m.breakevenCustomers * 2)
+    tradeoffs.push(["Growth against your own hands", "Every customer added consumes " + round(m.deliveryHrs, 2) + " hours a month. Selling faster and serving well are, on these numbers, the same hour spent twice. One of price, automation or headcount has to move."]);
+  if (m.paybackMo > 6 && m.perMonth)
+    tradeoffs.push(["Growth speed against cash", "Payback of " + mo(m.paybackMo) + " means faster growth makes the cash position worse before it makes it better. Growing slower is not failure here — it is solvency."]);
+  if (s.revenue > 0)
+    tradeoffs.push(["The new thing against the thing that already pays", money(s.revenue) + " a month exists today and needs attention to stay. There is no version of this plan where the existing business gets the same hours it gets now."]);
+  if (s.diff <= 5 && s.competitors >= 3)
+    tradeoffs.push(["Speed against differentiation", "Undifferentiated in a market with " + s.competitors + " players means the only defensible advantages are distribution and speed. Waiting to build a better product spends the one advantage you have."]);
+  if (parseInt(s.reg, 10) >= 2)
+    tradeoffs.push(["Compliance cost against launch date", "Doing the regulatory work properly delays revenue; skipping it puts the whole thing at risk once it works. The board's position is that the second failure is unrecoverable and the first is only expensive."]);
+  if (m.wtpLevel <= 2 && s.required > 0)
+    tradeoffs.push(["Proof against momentum", "Getting evidence before committing " + money(s.required) + " costs weeks. Committing without it risks the whole amount. The board treats weeks as cheaper than capital."]);
+
+  return { picked, accords, tradeoffs, high, low };
+}
+
+function renderDebate(B) {
+  const d = buildDebate(B), out = [];
+
+  out.push('<div class="grid g3">' +
+    stat("Seats in support", B.reports.filter(r => r.score >= 62).length + " of 15", "scoring 62 or above", "green") +
+    stat("Seats opposed", B.reports.filter(r => r.score <= 44).length + " of 15", "scoring 44 or below", "red") +
+    stat("Spread", round(B.sd, 1), "standard deviation of scores — under 10 means the board is thinking alike", B.sd < 10 ? "amber" : "navy") +
+    '</div>');
+
+  if (B.sd < 8) out.push('<div class="note warn"><b>The board agrees too easily.</b> A spread of ' + round(B.sd, 1) + ' points across fifteen mandates usually means one or two inputs are dominating everything, or the brief is too vague for the seats to disagree about. Treat unanimity as a warning, not a result.</div>');
+
+  out.push('<h2 class="sec">Where the board agrees</h2>');
+  if (!d.accords.length) out.push('<p class="muted small">No group of seats reached the same position — see the clashes below.</p>');
+  for (const a of d.accords) {
+    const names = a.members.map(r => r.glyph + " " + r.title.replace(/ Director| & Strategy Chair| Officer/g, "")).join(", ");
+    out.push('<div class="exchange accord"><div class="who">' + (a.side === "support" ? "In favour" : "Against") + ' — ' + esc(names) + '</div><p>' +
+      a.members.map(r => { const f = topFinding(r, a.side === "support" ? "o" : "c"); return f ? f.t : null; }).filter(Boolean).slice(0, 3).join(" ") +
+      '</p></div>');
+  }
+
+  out.push('<h2 class="sec">Where the board collides</h2>');
+  if (!d.picked.length) {
+    out.push('<p class="muted small">No two seats reached opposite conclusions with a gap wide enough to argue about. That is unusual and is itself worth noting.</p>');
+  }
+  for (const c of d.picked) {
+    out.push('<div class="exchange clash">' +
+      '<div class="who">' + c.h.glyph + ' <span class="em">' + esc(c.h.title) + '</span> <span class="pill green">' + c.h.score + '</span></div>' +
+      '<p>' + c.pro.t + '</p>' +
+      '<div class="who">' + c.l.glyph + ' <span class="em">' + esc(c.l.title) + '</span> <span class="pill red">' + c.l.score + '</span></div>' +
+      '<p>' + c.con.t + '</p>' +
+      '<div class="who">♟ <span class="em">Chair</span></div>' +
+      '<p>' + chairRuling(c, B) + '</p>' +
+      '</div>');
+  }
+
+  out.push('<h2 class="sec">Trade-offs nobody gets to avoid</h2>');
+  if (!d.tradeoffs.length) out.push('<p class="muted small">No structural trade-off surfaced from these inputs.</p>');
+  else {
+    out.push('<div class="grid g2">' + d.tradeoffs.map(([t, b]) =>
+      '<div class="card"><h3 class="card-h">' + esc(t) + '</h3><p class="small" style="margin:.2rem 0 0">' + esc(b) + '</p></div>').join("") + '</div>');
+  }
+
+  $("#debate-out").innerHTML = out.join("");
+}
+
+function chairRuling(c, B) {
+  const l = c.l, h = c.h;
+  if (l.fatal) return "The chair does not put this to a vote. " + esc(l.title) + " has raised a blocking finding — " + esc(l.fatal) + " — and " + esc(h.title.replace(/ Director/, "")) + "'s case, however strong, is a case for doing this <em>after</em> that is fixed, not instead of fixing it.";
+  if (l.score <= 30) return "The chair sides with " + esc(l.title) + ". A mandate scoring " + l.score + " is not a reservation to be noted in the minutes; it is a defect in the plan. Optimism from " + esc(h.title.replace(/ Director/, "")) + " is welcome once the defect is addressed.";
+  if (c.gap >= 45) return "A " + c.gap + "-point gap between two mandates looking at identical facts means one of them is working from an assumption the other rejects. The chair's instruction: find the input they disagree about, and go and measure it.";
+  return "Both hold. The chair records this as a condition rather than a blocker — " + esc(h.title.replace(/ Director/, "")) + "'s upside is real and " + esc(l.title.replace(/ Director/, "")) + "'s objection is survivable, provided the condition attached in the resolution is met before capital is committed.";
+}
+
+/* ==========================================================================
+   RISK
+   ========================================================================== */
+function sparkline(series, key, w, h) {
+  const vals = series.map(p => p[key]);
+  const min = Math.min(0, ...vals), max = Math.max(1, ...vals);
+  const rng = max - min || 1;
+  const pts = vals.map((v, i) => [(i / (vals.length - 1)) * w, h - ((v - min) / rng) * h]);
+  const dd = pts.map((p, i) => (i ? "L" : "M") + round(p[0], 1) + " " + round(p[1], 1)).join(" ");
+  const zeroY = h - ((0 - min) / rng) * h;
+  return '<svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" height="' + h + '" preserveAspectRatio="none" role="img" aria-label="cash over 36 months">' +
+    (min < 0 ? '<line x1="0" y1="' + round(zeroY, 1) + '" x2="' + w + '" y2="' + round(zeroY, 1) + '" stroke="currentColor" stroke-opacity=".25" stroke-dasharray="3 3"/>' : "") +
+    '<path d="' + dd + '" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
+}
+
+function premortem(B) {
+  const items = [];
+  for (const r of B.reports) {
+    for (const f of r.findings) {
+      if (f.k !== "c" || (f.sev || 0) < 2) continue;
+      const likelihood = clamp((f.sev === 3 ? 0.6 : 0.35) + (1 - B.m.evidence) * 0.25, 0.05, 0.95);
+      const impact = r.fatal ? 3 : f.sev;
+      items.push({ dir: r, f, likelihood, impact, expo: likelihood * impact });
+    }
+  }
+  items.sort((a, b) => b.expo - a.expo);
+  return items.slice(0, 8);
+}
+
+function renderRisk(B) {
+  const m = B.m, out = [];
+  const probs = { best: m.pBest, expected: m.pExp, worst: m.pWorst };
+
+  out.push('<div class="grid g3">');
+  for (const k of ["best", "expected", "worst"]) {
+    const r = m.sim[k], colour = k === "best" ? "green" : k === "worst" ? "red" : "navy";
+    out.push('<div class="card"><div class="inline" style="justify-content:space-between">' +
+      '<h3 class="card-h">' + r.label + '</h3><span class="pill ' + colour + '">p ≈ ' + pct(probs[k], 0) + '</span></div>' +
+      '<div style="color:var(--' + (k === "worst" ? "red" : k === "best" ? "green" : "navy") + ');margin:.5rem 0">' + sparkline(r.series, "cash", 220, 42) + '</div>' +
+      '<div class="tiny muted" style="margin-bottom:.5rem">cash position, months 1–36</div>' +
+      '<table><tbody>' +
+      row("Customers at 12 mo", n(r.customersAt12)) +
+      row("Customers at 24 mo", n(r.customersAt24)) +
+      row("Gross profit / mo at 24", money(r.mrrAt24)) +
+      row("Breakeven", r.breakevenMonth ? "month " + r.breakevenMonth : "not within 36 months") +
+      row("Lowest cash point", money(r.peakDeficit)) +
+      row("Cash at 24 mo", money(r.cashAt24)) +
+      row("Runs out of money", r.deathMonth ? "yes — month " + r.deathMonth : "no") +
+      '</tbody></table></div>');
+  }
+  out.push('</div>');
+
+  out.push('<div class="grid g3" style="margin-top:.4rem">' +
+    stat("Probability-weighted cash at 24 mo", money(m.expectedValue24), "all three branches, weighted by evidence quality", m.expectedValue24 >= 0 ? "green" : "red") +
+    stat("Chance of running out of cash", pct(m.ruinProbability, 0), "sum of the branches that hit zero", m.ruinProbability > 0.35 ? "red" : m.ruinProbability > 0.1 ? "amber" : "green") +
+    stat("Total at risk before proof", money(m.totalAtRisk), "build plus " + state.ttr + " months of burn", "navy") +
+    '</div>');
+
+  out.push('<details class="disc"><summary>How these scenarios are built — the assumptions, in full</summary><div class="small muted">' +
+    '<p>The same month-by-month simulation runs three times with different multipliers. Customers arrive subject to whichever ceiling binds first — cash available for acquisition, hours you can spend selling, or the share of the remaining market anyone could win in a month — and leave at the churn rate. Nothing is smoothed.</p>' +
+    '<div class="tablewrap"><table><thead><tr><th>Multiplier</th><th class="num">Best</th><th class="num">Expected</th><th class="num">Worst</th></tr></thead><tbody>' +
+    ["cac", "churn", "velocity", "ttr", "required"].map(k =>
+      '<tr><td>' + ({ cac: "Cost to acquire", churn: "Churn", velocity: "Growth velocity", ttr: "Time to first revenue", required: "Capital required" })[k] + '</td>' +
+      ["best", "expected", "worst"].map(sc => '<td class="num">×' + SCENARIOS[sc][k] + '</td>').join("") + '</tr>').join("") +
+    '</tbody></table></div>' +
+    '<p>Fixed constants: ' + CONST.cashToAcquisition * 100 + '% of cash on hand and ' + CONST.reinvest * 100 + '% of last month\'s gross profit are available for acquisition each month; at most ' + CONST.marketVelocity * 100 + '% of the remaining reachable market can be won per month; 30% of your hours go to selling and 70% to delivery; a non-subscription customer is valued over ' + CONST.oneOffHorizonMonths + ' months.</p>' +
+    '<p>Probabilities are not market forecasts. They are derived from how much of your input is measured rather than guessed — evidence quality here is <b>' + pct(m.evidence, 0) + '</b>. Better inputs move the weight toward the expected case; they do not make the plan better.</p>' +
+    '</div></details>');
+
+  out.push('<h2 class="sec">Pre-mortem — it is month 18 and this failed</h2>');
+  const pm = premortem(B);
+  if (!pm.length) out.push('<p class="muted small">No finding rose above the severity threshold for the pre-mortem. That is rare; check that the Numbers page is filled in honestly.</p>');
+  else {
+    out.push('<div class="tablewrap"><table><thead><tr><th>What killed it</th><th>Raised by</th><th class="num">Likelihood</th><th class="num">Severity</th></tr></thead><tbody>' +
+      pm.map(i => '<tr><td>' + i.f.t + '</td><td class="nowrap small">' + i.dir.glyph + " " + esc(i.dir.title.replace(/ Director| & Strategy Chair| Officer/g, "")) + '</td>' +
+        '<td class="num">' + pct(i.likelihood, 0) + '</td><td class="num">' + ["—", "low", "high", "fatal"][i.impact] + '</td></tr>').join("") +
+      '</tbody></table></div>');
+    out.push('<div class="note"><b>How to use this.</b> Take the top three rows to someone who does not want this to succeed and ask them to argue for each. Every row you can cheaply disprove this month is worth more than a month of building.</div>');
+  }
+
+  $("#risk-out").innerHTML = out.join("");
+}
+function row(k, v) { return "<tr><td>" + k + '</td><td class="num">' + v + "</td></tr>"; }
+function stat(k, v, s, cls) {
+  return '<div class="stat ' + (cls || "") + '"><div class="k">' + k + '</div><div class="v">' + v + '</div>' + (s ? '<div class="s">' + s + "</div>" : "") + "</div>";
+}
+
+/* ==========================================================================
+   RESOLUTION
+   ========================================================================== */
+function conditionsOf(B) {
+  const conds = [];
+  for (const r of B.reports) {
+    if (r.fatal) for (const a of r.asks) conds.push({ dir: r, text: a, blocking: true });
+    else if (r.score < 62) for (const a of r.asks.slice(0, 2)) conds.push({ dir: r, text: a, blocking: false });
+  }
+  const seen = new Set();
+  return conds.filter(c => { const k = c.text.slice(0, 40); if (seen.has(k)) return false; seen.add(k); return true; })
+              .sort((a, b) => (b.blocking - a.blocking) || (a.dir.score - b.dir.score)).slice(0, 10);
+}
+
+function renderResolution(B) {
+  const m = B.m, out = [];
+  const sub = {
+    "PROCEED": "The board supports this as presented. The conditions below are improvements, not gates.",
+    "PROCEED WITH CONDITIONS": "The board supports the direction but not the plan as written. The blocking conditions below must be satisfied before capital is committed.",
+    "MODIFY AND RESUBMIT": "The board does not reject the idea. It rejects this version of it. Fix the named defects and bring it back — that is a matter of weeks, not a refusal.",
+    "DEFER": "The board declines to decide, because the inputs that would make this decidable have not been gathered. Deferral here is cheap; deciding blind is not.",
+    "REJECT": "The board's view is that this plan, on these numbers, loses money and time. That is a verdict on the plan, not on you or the idea."
+  }[B.decision];
+
+  out.push('<div class="verdict ' + B.cls + '">' +
+    '<div class="kicker">Resolution of the board</div>' +
+    '<div class="big">' + B.decision + '</div>' +
+    '<p class="sub">' + sub + '</p></div>');
+
+  out.push('<div class="grid g4">' +
+    stat("Weighted board score", round(B.weighted, 1) + " / 100", "mandate weights applied", B.weighted >= 62 ? "green" : B.weighted >= 45 ? "amber" : "red") +
+    stat("Confidence", B.confidence + "%", "agreement × evidence × completeness", B.confidence >= 65 ? "green" : B.confidence >= 40 ? "amber" : "red") +
+    stat("Blocking findings", B.fatals.length, B.fatals.length ? "must clear before proceeding" : "none raised", B.fatals.length ? "red" : "green") +
+    stat("Evidence quality", pct(m.evidence, 0), m.guessed + " of " + Object.keys(state.ev).length + " figures guessed", m.evidence >= 0.6 ? "green" : m.evidence >= 0.35 ? "amber" : "red") +
+    '</div>');
+
+  out.push('<div class="note ' + (B.confidence < 45 ? "warn" : "") + '"><b>What the confidence score means.</b> ' +
+    B.confidence + '% is a measure of how much the fifteen mandates agree (' + pct(B.agreement, 0) + '), how much of your input is measured rather than guessed (' + pct(m.evidence, 0) + '), and how completely the brief is written. It is <b>not</b> a probability that the decision is correct. A board can be confidently wrong, and this one has no access to your market.</div>');
+
+  if (B.fatals.length) {
+    out.push('<h2 class="sec">Blocking findings</h2>');
+    out.push('<div class="card" style="border-color:var(--red)">' + B.fatals.map(r =>
+      '<div class="finding c"><span class="ic">■</span><span><b>' + esc(r.title) + ':</b> ' + esc(r.fatal) + '</span></div>').join("") + '</div>');
+  }
+
+  out.push('<h2 class="sec">The vote</h2><div class="card"><div class="bars">' +
+    B.reports.slice().sort((a, b) => b.score - a.score).map(r =>
+      '<div class="bar-row"><span class="nm" title="' + esc(r.title) + '">' + r.glyph + " " + esc(r.title.replace(/ Director| & Strategy Chair| Officer/g, "")) + '</span>' +
+      '<span class="tr"><i style="width:' + r.score + '%;background:' + scoreColour(r.score) + '"></i></span>' +
+      '<span class="vv" style="color:' + scoreColour(r.score) + '">' + r.score + "</span></div>").join("") +
+    '</div><p class="tiny muted" style="margin:.7rem 0 0">The centre line is 50. Weights: Strategy and Finance 1.3 · Risk and Customer 1.2 · Product 1.1 · Africa 1.2 when Africa is the primary market, 0.4 otherwise · Innovation 0.7 · Human Capital 0.8 · Technology and Legal 0.9 · the rest 1.0.</p></div>');
+
+  const conds = conditionsOf(B);
+  out.push('<h2 class="sec">Conditions attached</h2>');
+  if (!conds.length) out.push('<p class="muted small">No seat attached a condition. Verify that the Numbers page is complete before treating that as good news.</p>');
+  else out.push('<div class="card">' + conds.map((c, i) =>
+    '<div class="finding ' + (c.blocking ? "c" : "a") + '"><span class="ic">' + (c.blocking ? "■" : (i + 1)) + '</span><span>' +
+    (c.blocking ? '<span class="pill red">blocking</span> ' : "") + esc(c.text) +
+    ' <span class="tiny muted nowrap">— ' + esc(c.dir.title) + '</span></span></div>').join("") + '</div>');
+
+  out.push('<h2 class="sec">Strategic recommendations</h2>');
+  const recs = [];
+  for (const r of B.reports.slice().sort((a, b) => b.weight - a.weight)) for (const x of r.recs) recs.push({ dir: r, t: x });
+  out.push('<div class="card">' + recs.slice(0, 14).map(r =>
+    '<div class="finding a"><span class="ic">▸</span><span>' + esc(r.t) + ' <span class="tiny muted nowrap">— ' + esc(r.dir.title.replace(/ Director| Officer/g, "")) + '</span></span></div>').join("") + '</div>');
+
+  $("#res-out").innerHTML = out.join("");
+}
+
+/* ==========================================================================
+   ROADMAP + KPIs
+   ========================================================================== */
+function buildRoadmap(B) {
+  const s = state, m = B.m;
+  const conds = conditionsOf(B);
+  const d30 = [], d90 = [], d365 = [];
+
+  conds.filter(c => c.blocking).forEach(c => d30.push(c.text));
+  if (m.wtpLevel <= 2) d30.push("Get " + pilotCount(m) + " people to pay something — a deposit, a pre-order, a paid pilot. This is the single cheapest way to move the board's confidence.");
+  d30.push("Write the offer on one page at " + money(s.price) + (m.perMonth ? "/month" : "") + " and put it in front of " + Math.max(20, Math.round(s.audienceSize * 0.2)) + " people from your existing audience.");
+  if (m.guessed >= 4) d30.push("Replace the " + m.guessed + " guessed figures on the Numbers page with measured ones — price and CAC first, they move the answer most.");
+  if (m.buildMonths > s.ttr) d30.push("Cut the build scope until it fits " + s.ttr + " months, and write down what was cut so it can come back later.");
+  conds.filter(c => !c.blocking).slice(0, 3).forEach(c => d30.push(c.text));
+  d30.push("Write the stopping rule: the date and the number at which this project ends. Sign it.");
+
+  d90.push("Ship the smallest version that " + (m.wtpLevel >= 3 ? "your pre-paying customers" : "ten named people") + " will use weekly.");
+  d90.push("Reach " + quarterTarget(m) + " paying customers — a quarter of the " + n(m.breakevenCustomers) + " needed for breakeven.");
+  d90.push("Measure real CAC against the " + money(s.cac) + " assumed here, and real " + (m.isSub ? "churn against " + s.churn + "%" : "repeat rate against " + s.repeat + "×") + ". Re-run this board with the actual figures.");
+  if (m.capacityCeiling < m.breakevenCustomers * 2) d90.push("Automate the delivery step that costs the most hours. Capacity ceiling is " + n(m.capacityCeiling) + " customers and breakeven needs " + n(m.breakevenCustomers) + ".");
+  if (parseInt(s.reg, 10) >= 2) d90.push("Close the compliance items: terms, privacy, and whatever registration applies to " + labelOf("customer", s.customer).toLowerCase() + ".");
+  d90.push("Document the delivery process end to end so somebody other than you could run it.");
+
+  d365.push("Reach breakeven at " + n(m.breakevenCustomers) + " customers — the expected case puts that at " + (m.sim.expected.breakevenMonth ? "month " + m.sim.expected.breakevenMonth : "beyond 36 months on current assumptions") + ".");
+  d365.push("Build the moat you named: " + (parseInt(s.ip, 10) === 4 ? "network density" : parseInt(s.ip, 10) >= 2 ? "the proprietary asset" : s.fmf >= 7 ? "brand and relationship in this specific market" : "a switching cost that does not depend on you being cheaper"));
+  if (s.keyperson === "3") d365.push("Remove yourself from one critical path entirely — hire, automate or document it away.");
+  d365.push("Add the second revenue line to the same customer. Selling again to " + n(Math.max(1, m.sim.expected.customersAt12)) + " existing customers is cheaper than finding the next " + n(Math.max(1, m.sim.expected.customersAt12)) + ".");
+  if (["africa", "local-other"].includes(s.geo)) d365.push("Only after the first market is genuinely won, cost a second market as a fresh launch with its own budget and its own board review.");
+
+  return { d30, d90, d365 };
+}
+
+function kpis(B) {
+  const m = B.m, s = state;
+  return [
+    ["Paying customers", n(quarterTarget(m)) + " by day 90 · " + n(m.breakevenCustomers) + " at breakeven", "Your own billing records", "The only number that cannot be argued with"],
+    ["Cost to acquire (CAC)", "≤ " + money(m.ltv / 3), "Total acquisition spend ÷ new customers, monthly", "The 3:1 floor. Above this, growth destroys cash"],
+    [m.isSub ? "Monthly churn" : "Repeat purchase rate", m.isSub ? "≤ " + s.churn + "%" : "≥ " + s.repeat + "× per year", "Customers lost ÷ customers at start of month", "Rises before revenue falls — the earliest warning you get"],
+    ["CAC payback", "≤ " + (m.perMonth ? "12 months" : "1 sale"), "CAC ÷ monthly gross profit per customer", "Currently " + mo(m.paybackMo)],
+    ["Gross margin", "≥ " + pct(m.gm, 0), "Revenue minus delivery cost, monthly", "Slips quietly as support load grows"],
+    ["Cash on hand", "never below " + money(Math.max(s.burn * 3, s.capital * 0.25)), "Bank balance, weekly", "Three months of burn is the reserve, not the buffer"],
+    ["Hours per customer served", "≤ " + round(m.deliveryHrs, 2) + " h/month", "Time tracked honestly for one week per month", "This is what decides whether it ever scales"],
+    ["Time to first value", m.buildMonths <= 2 ? "≤ 1 session" : "≤ 7 days", "Signup timestamp → first meaningful action", "Predicts retention better than any satisfaction survey"],
+    ["Evidence quality", "≥ 70%", "The Numbers page of this app", "Currently " + pct(m.evidence, 0) + " — re-run this board when it improves"]
+  ];
+}
+
+function renderRoadmap(B) {
+  const r = buildRoadmap(B), out = [];
+  const blocks = [["30 days", "Kill the biggest unknown. Nothing here is building.", r.d30, "red"],
+                  ["90 days", "Prove the model with real money from real people.", r.d90, "amber"],
+                  ["1 year", "Turn a proven model into something durable.", r.d365, "green"]];
+  out.push('<div class="grid g3">');
+  for (const [t, sub, items, colour] of blocks) {
+    out.push('<div class="card"><div class="inline" style="justify-content:space-between"><h3 class="card-h">' + t + '</h3><span class="pill ' + colour + '">' + items.length + " items</span></div>" +
+      '<p class="tiny muted" style="margin:.1rem 0 .7rem">' + esc(sub) + '</p>' +
+      items.map((x, i) => {
+        const id = t.replace(/\W/g, "") + "-" + i;
+        const on = !!state.done[id];
+        return '<label class="finding a" style="cursor:pointer"><span class="ic"><input type="checkbox" data-todo="' + id + '"' + (on ? " checked" : "") + '></span>' +
+          '<span style="' + (on ? "opacity:.5;text-decoration:line-through" : "") + '">' + esc(x) + "</span></label>";
+      }).join("") + "</div>");
+  }
+  out.push("</div>");
+
+  out.push('<h2 class="sec">KPI dashboard</h2><div class="tablewrap"><table><thead><tr><th>Metric</th><th>Target</th><th>Where it comes from</th><th>Why this one</th></tr></thead><tbody>' +
+    kpis(B).map(k => "<tr><td><b>" + esc(k[0]) + "</b></td><td>" + esc(k[1]) + "</td><td class='small muted'>" + esc(k[2]) + "</td><td class='small muted'>" + esc(k[3]) + "</td></tr>").join("") +
+    "</tbody></table></div>");
+
+  out.push('<div class="note info"><b>Review cadence.</b> Re-convene this board at day 30 and day 90 with the figures you actually observed, not the ones you assumed. The value is not in today\'s verdict — it is in watching which of your assumptions was wrong, and how fast you found out.</div>');
+
+  $("#road-out").innerHTML = out.join("");
+  $$("#road-out input[data-todo]").forEach(cb => cb.addEventListener("change", () => {
+    state.done[cb.dataset.todo] = cb.checked; save(); renderRoadmap(BOARD);
+  }));
+}
+
+/* ==========================================================================
+   BOARD PAGE
+   ========================================================================== */
+function renderBoard(B) {
+  const reps = state.sort === "score" ? B.reports.slice().sort((a, b) => b.score - a.score) : B.reports.slice().sort((a, b) => a.seat - b.seat);
+
+  $("#board-summary").innerHTML = '<div class="grid g4">' +
+    stat("Weighted score", round(B.weighted, 1), "out of 100", B.weighted >= 62 ? "green" : B.weighted >= 45 ? "amber" : "red") +
+    stat("Highest seat", Math.max(...B.reports.map(r => r.score)) + " — " + B.reports.slice().sort((a, b) => b.score - a.score)[0].title.replace(/ Director| Officer| & Strategy Chair/g, ""), "", "green") +
+    stat("Lowest seat", Math.min(...B.reports.map(r => r.score)) + " — " + B.reports.slice().sort((a, b) => a.score - b.score)[0].title.replace(/ Director| Officer| & Strategy Chair/g, ""), "", "red") +
+    stat("Blocking findings", B.fatals.length, B.fatals.length ? "see Resolution" : "none", B.fatals.length ? "red" : "green") +
+    "</div>";
+
+  $("#board-list").innerHTML = reps.map(r => {
+    const open = r.score <= 45 || r.fatal;
+    return '<div class="dir"><button class="dir-head" data-dir="' + r.id + '" aria-expanded="' + open + '">' +
+      '<span class="dir-glyph">' + r.glyph + "</span>" +
+      '<span class="dir-id"><span class="t">' + esc(r.title) + (r.fatal ? ' <span class="pill red">blocking</span>' : "") + "</span>" +
+      '<span class="r">Seat ' + r.seat + " · " + esc(r.role) + " · weight " + r.weight + "</span>" +
+      '<span class="meter"><i style="width:' + r.score + "%;background:" + scoreColour(r.score) + '"></i></span></span>' +
+      '<span class="dir-score" style="color:' + scoreColour(r.score) + '">' + r.score + "<br>" +
+      '<span class="tiny vote-' + r.vote + '" style="font-weight:600">' + voteLabel(r.vote) + "</span></span></button>" +
+      '<div class="dir-body" ' + (open ? "" : "hidden") + ">" +
+      (r.fatal ? '<div class="note bad" style="margin-top:.8rem"><b>Blocking finding.</b> ' + esc(r.fatal) + "</div>" : "") +
+      "<h4>Assessment</h4>" + r.findings.map(f =>
+        '<div class="finding ' + f.k + '"><span class="ic">' + (f.k === "c" ? "▲" : f.k === "o" ? "●" : "·") + "</span><span>" + f.t + "</span></div>").join("") +
+      (r.asks.length ? "<h4>What would change this vote</h4>" + r.asks.map(a => '<div class="finding a"><span class="ic">→</span><span>' + esc(a) + "</span></div>").join("") : "") +
+      (r.recs.length ? "<h4>Recommendations</h4>" + r.recs.map(a => '<div class="finding a"><span class="ic">▸</span><span>' + esc(a) + "</span></div>").join("") : "") +
+      "</div></div>";
+  }).join("");
+
+  $$("#board-list .dir-head").forEach(b => b.addEventListener("click", () => {
+    const body = b.nextElementSibling, open = b.getAttribute("aria-expanded") === "true";
+    b.setAttribute("aria-expanded", String(!open)); body.hidden = open;
+  }));
+  $("#pip-board").textContent = B.fatals.length ? "!" : "15";
+}
+
+/* ==========================================================================
+   MINUTES (Markdown)
+   ========================================================================== */
+function buildMinutes(B) {
+  const s = state, m = B.m, L = [];
+  const brief = s.length;
+  const date = new Date().toISOString().slice(0, 10);
+  const push = (...x) => L.push(...x);
+
+  push("# Board minutes — " + (s.decision || "untitled matter"), "", "*Convened " + date + " · CLEAR AI Board of Directors · 15 seats*", "");
+
+  push("## 1 · Executive summary", "",
+    "**Resolution: " + B.decision + "**  ", "Weighted board score " + round(B.weighted, 1) + "/100 · confidence " + B.confidence + "% · " + B.fatals.length + " blocking finding(s).", "",
+    "One customer is worth " + money(m.ltv) + " and costs " + money(s.cac) + " (" + (Number.isFinite(m.ltvCac) ? round(m.ltvCac, 1) + ":1" : "∞") + "). Breakeven needs " + n(m.breakevenCustomers) + " customers, which is " + pct(m.penetration, 2) + " of the reachable market. Delivery capacity tops out at " + n(m.capacityCeiling) + " customers. Total capital at risk before the market answers: " + money(m.totalAtRisk) + ".", "");
+  if (B.fatals.length) push("**Blocking findings**", "", ...B.fatals.map(f => "- **" + f.title + ":** " + f.fatal), "");
+
+  if (brief !== "onepage") {
+    push("## 2 · Context analysis", "",
+      "| | |", "|---|---|",
+      "| Decision class | " + labelOf("cls", s.cls) + " |",
+      "| Seat occupied by the proposer | " + labelOf("role", s.role) + " |",
+      "| Report is for | " + labelOf("audience", s.audience) + " |",
+      "| Customer | " + labelOf("customer", s.customer) + " |",
+      "| Market | " + labelOf("geo", s.geo) + " |",
+      "| Model | " + labelOf("billing", s.billing) + " at " + money(s.price) + ", " + pct(m.gm, 0) + " gross margin |",
+      "| Motion | " + labelOf("motion", s.motion) + " |",
+      "| Evidence of demand | " + ["none", "conversations", "waitlist", "pre-orders", "paying customers", "renewals"][m.wtpLevel] + " |",
+      "| Evidence quality | " + pct(m.evidence, 0) + " (" + m.measured + " measured, " + m.guessed + " guessed) |", "");
+    if (s.context) push("**Context as stated**", "", "> " + s.context.replace(/\n/g, "\n> "), "");
+    if (s.constraints) push("**Constraints**", "", ...s.constraints.split("\n").filter(Boolean).map(x => "- " + x), "");
+    if (s.against) push("**The proposer's own strongest counter-argument**", "", "> " + s.against.replace(/\n/g, "\n> "), "");
+
+    push("### Derived position", "",
+      "| Metric | Value |", "|---|---|",
+      "| Gross profit per customer per month | " + money(m.monthlyGP) + " |",
+      "| Lifetime value | " + money(m.ltv) + (m.isSub ? " over " + mo(m.lifetimeMo) : " over " + CONST.oneOffHorizonMonths + " months") + " |",
+      "| LTV : CAC | " + (Number.isFinite(m.ltvCac) ? round(m.ltvCac, 1) + ":1" : "∞") + " |",
+      "| CAC payback | " + mo(m.paybackMo) + " |",
+      "| Customers to breakeven | " + n(m.breakevenCustomers) + " |",
+      "| Market penetration required | " + pct(m.penetration, 2) + " |",
+      "| Delivery capacity ceiling | " + n(m.capacityCeiling) + " customers |",
+      "| Build estimate | " + n(m.buildHours) + " h ≈ " + mo(m.buildMonths) + " |",
+      "| Runway after build | " + mo(m.runwayAfter) + " |",
+      "| Reachable market value | " + money(m.marketValueYr) + "/year |", "");
+  }
+
+  if (brief === "full") {
+    push("## 3 · Director reports", "");
+    for (const r of B.reports.slice().sort((a, b) => a.seat - b.seat)) {
+      push("### Seat " + r.seat + " · " + r.title + " — " + r.score + "/100 (" + voteLabel(r.vote) + ")", "");
+      if (r.fatal) push("> **BLOCKING:** " + r.fatal, "");
+      for (const f of r.findings) push((f.k === "c" ? "- ⚠ " : f.k === "o" ? "- ✓ " : "- ") + stripTags(f.t));
+      if (r.asks.length) { push("", "*Would change this vote:*"); r.asks.forEach(a => push("- → " + a)); }
+      if (r.recs.length) { push("", "*Recommends:*"); r.recs.forEach(a => push("- " + a)); }
+      push("");
+    }
+  }
+
+  const d = buildDebate(B);
+  push("## 4 · Board debate", "", "Score spread " + round(B.sd, 1) + " points; " + d.high.length + " seats in support, " + d.low.length + " opposed.", "");
+  for (const c of d.picked) {
+    push("**" + c.h.title + " (" + c.h.score + ")** — " + stripTags(c.pro.t), "",
+         "**" + c.l.title + " (" + c.l.score + ")** — " + stripTags(c.con.t), "",
+         "**Chair** — " + stripTags(chairRuling(c, B)), "");
+  }
+  if (d.tradeoffs.length) { push("### Trade-offs", ""); d.tradeoffs.forEach(([t, b]) => push("- **" + t + ".** " + b)); push(""); }
+
+  push("## 5 · Risk analysis", "",
+    "| Scenario | p | Customers @24mo | Breakeven | Lowest cash | Cash @24mo | Runs out |", "|---|---|---|---|---|---|---|");
+  for (const k of ["best", "expected", "worst"]) {
+    const r = m.sim[k];
+    push("| " + r.label + " | " + pct(k === "best" ? m.pBest : k === "worst" ? m.pWorst : m.pExp, 0) + " | " + n(r.customersAt24) +
+      " | " + (r.breakevenMonth ? "month " + r.breakevenMonth : "—") + " | " + money(r.peakDeficit) + " | " + money(r.cashAt24) +
+      " | " + (r.deathMonth ? "month " + r.deathMonth : "no") + " |");
+  }
+  push("", "Probability-weighted cash at 24 months: **" + money(m.expectedValue24) + "**. Chance of running out of cash: **" + pct(m.ruinProbability, 0) + "**.", "");
+  push("### Pre-mortem", "");
+  premortem(B).forEach((i, idx) => push((idx + 1) + ". **" + pct(i.likelihood, 0) + " / " + ["—", "low", "high", "fatal"][i.impact] + "** — " + stripTags(i.f.t) + " *(" + i.dir.title + ")*"));
+  push("");
+
+  push("## 6 · Final resolution", "", "> ## " + B.decision, "");
+  push("Weighted score **" + round(B.weighted, 1) + "/100**. Confidence **" + B.confidence + "%** — which measures agreement between the seats (" + pct(B.agreement, 0) + "), evidence quality (" + pct(m.evidence, 0) + ") and completeness of the brief. It is not a probability of success.", "");
+  const conds = conditionsOf(B);
+  if (conds.length) { push("### Conditions", ""); conds.forEach((c, i) => push((c.blocking ? "- **[BLOCKING]** " : "- ") + c.text + " *(" + c.dir.title + ")*")); push(""); }
+
+  push("## 7 · Strategic recommendations", "");
+  const recs = []; for (const r of B.reports.slice().sort((a, b) => b.weight - a.weight)) for (const x of r.recs) recs.push("- " + x + " *(" + r.title + ")*");
+  push(...recs.slice(0, 14), "");
+
+  const road = buildRoadmap(B);
+  push("## 8 · Implementation roadmap", "", "### First 30 days — kill the biggest unknown", "");
+  road.d30.forEach(x => push("- [ ] " + x));
+  push("", "### Days 31–90 — prove the model", ""); road.d90.forEach(x => push("- [ ] " + x));
+  push("", "### Months 4–12 — make it durable", ""); road.d365.forEach(x => push("- [ ] " + x));
+
+  push("", "## 9 · KPI dashboard", "", "| Metric | Target | Source | Why |", "|---|---|---|---|");
+  kpis(B).forEach(k => push("| " + k[0] + " | " + k[1] + " | " + k[2] + " | " + k[3] + " |"));
+
+  push("", "## 10 · Board confidence", "",
+    "**" + B.confidence + "%**", "",
+    "| Component | Value |", "|---|---|",
+    "| Agreement between seats | " + pct(B.agreement, 0) + " (spread " + round(B.sd, 1) + ") |",
+    "| Evidence quality of inputs | " + pct(m.evidence, 0) + " |",
+    "| Completeness of the brief | " + (["decision", "context", "examples", "success", "against"].filter(k => (s[k] || "").trim().length > 12).length) + "/5 sections written |",
+    "", "---", "",
+    "*Produced by the CLEAR AI Board of Directors. A scoring engine applying fixed rules to figures supplied by the proposer. Not financial, legal or investment advice.*");
+
+  return L.join("\n");
+}
+function stripTags(h) { return String(h).replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#39;/g, "'").replace(/&quot;/g, '"'); }
+
+/* ==========================================================================
+   AI MODE
+   ========================================================================== */
+const SYSTEM_PROMPT = `You are the CLEAR AI BOARD OF DIRECTORS — fifteen permanent directors who deliberate on a decision put before them. You are a board, not a group of cheerleaders: you challenge assumptions, name blind spots, quantify risk, and are willing to return a REJECT.
+
+THE FIFTEEN SEATS
+1  CEO & Strategy Chair — vision, positioning, second-order effects. "Is this strategically sound?"
+2  Chief Financial Officer — unit economics, capital, cash. "Will this make money, and what is the downside?"
+3  Chief Operating Officer — systems, capacity, bottlenecks. "Can this actually be implemented with these resources?"
+4  Marketing Director — demand, positioning, acquisition. "Why would anyone choose this?"
+5  Sales Director — pricing, offer design, objections. "How does this get sold, and what will they say no to?"
+6  Product Director — product-market fit, scope, first value. "Does this solve a real problem?"
+7  Technology Director — automation, infrastructure, scale. "What here should be bought rather than built?"
+8  Risk Director — failure modes, scenarios, ruin. "What is the worst case and can it be survived?"
+9  Legal & Compliance Director — regulation, contracts, IP. "What is not allowed, and what is unprotected?"
+10 Human Capital Director — people, capacity, key-person risk. "Who does this work, and what happens when they stop?"
+11 Innovation Director — trends, decay of advantage, adjacent opportunity. "What makes this obsolete?"
+12 Investment Director — capital allocation against alternatives. "Is this the best use of this money?"
+13 Customer Advocate — the buyer's actual experience and evidence they will pay. "What do they do today instead?"
+14 Competitive Intelligence Director — competitors, moats, the wedge. "How do the incumbents respond?"
+15 Africa Market Director — infrastructure, payment rails, purchasing power, per-country regulation. "Does this survive local reality?"
+
+METHOD — work through all six phases in order:
+1 Context analysis · 2 Individual director reviews · 3 Board debate (name the real disagreements) · 4 Risk assessment (best / expected / worst, with numbers) · 5 Board resolution (decision + confidence + rationale) · 6 Implementation plan (30 days, 90 days, 1 year, KPIs)
+
+OUTPUT — ten sections: Executive summary · Context analysis · Director reports · Board debate · Risk analysis · Final resolution · Strategic recommendations · Implementation roadmap · KPI dashboard · Board confidence score.
+
+RULES
+- Use the proposer's own figures. Quote them. Where a figure is tagged GUESSED, say so and discount your confidence accordingly.
+- Directors must disagree where their mandates conflict. Unanimity is a defect, not a result.
+- Never give a recommendation without stating its risk, its trade-off, and at least one alternative that was rejected.
+- The resolution must be one of: PROCEED · PROCEED WITH CONDITIONS · MODIFY AND RESUBMIT · DEFER · REJECT.
+- The confidence score measures agreement between seats and quality of the inputs. It is not a probability of success. Say this.
+- No flattery, no hedging, no motivational language. If the numbers say this loses money, say it in the first paragraph.`;
+
+function buildPrompt(B, includeSystem) {
+  const s = state, m = B.m, L = [];
+  if (includeSystem) L.push(SYSTEM_PROMPT, "", "---", "");
+  L.push("# MATTER BEFORE THE BOARD", "", s.decision || "(not stated)", "");
+  L.push("## CLEAR", "",
+    "- **Context:** " + (s.context || "(not stated)"),
+    "- **Length required:** " + ({ full: "Full board report — every seat, in full", exec: "Executive briefing", onepage: "One page: resolution and conditions only" })[s.length],
+    "- **Examples / comparables:** " + (s.examples ? s.examples.replace(/\n/g, "; ") : "(none supplied — treat that as a research failure)"),
+    "- **Audience:** " + labelOf("audience", s.audience),
+    "- **Role of the proposer:** " + labelOf("role", s.role), "");
+  if (s.constraints) L.push("**Constraints:** " + s.constraints.replace(/\n/g, "; "), "");
+  if (s.success) L.push("**Definition of success:** " + s.success, "");
+  if (s.against) L.push("**Proposer's own counter-argument:** " + s.against, "");
+
+  const tag = k => ({ M: "MEASURED", E: "ESTIMATED", G: "GUESSED" })[s.ev[k]] || "GUESSED";
+  L.push("## FIGURES (with evidence tags)", "",
+    "| Figure | Value | Evidence |", "|---|---|---|",
+    "| Price | " + money(s.price) + " (" + labelOf("billing", s.billing) + ") | " + tag("price") + " |",
+    "| Gross margin | " + pct(m.gm, 0) + " | " + tag("margin") + " |",
+    (m.isSub ? "| Monthly churn | " + s.churn + "% | " + tag("churn") + " |" : "| Repeat purchases/yr | " + s.repeat + " | " + tag("repeat") + " |"),
+    "| Cost to acquire a customer | " + money(s.cac) + " | " + tag("cac") + " |",
+    "| Warm audience | " + n(s.audienceSize) + " | " + tag("audience") + " |",
+    "| Reachable market | " + n(s.market) + " | " + tag("market") + " |",
+    "| Capital available | " + money(s.capital) + " | " + tag("capital") + " |",
+    "| Capital required | " + money(s.required) + " | " + tag("required") + " |",
+    "| Monthly burn | " + money(s.burn) + " | " + tag("burn") + " |",
+    "| Existing revenue | " + money(s.revenue) + "/mo | " + tag("revenue") + " |",
+    "| Months to first revenue | " + s.ttr + " | — |",
+    "| Hours available per week | " + s.hours + " | — |", "");
+
+  L.push("**Judgement scores (1–10):** pain " + s.pain + " · differentiation " + s.diff + " · founder–market fit " + s.fmf +
+    " · build complexity " + s.complex + " · automation potential " + s.auto + " · reversibility " + s.rev, "");
+  L.push("**Situation:** " + labelOf("customer", s.customer) + " · " + labelOf("motion", s.motion) + " motion · " + labelOf("geo", s.geo) +
+    " · " + s.competitors + " competitors · team of " + s.team + " · " + labelOf("hire", s.hire) +
+    " · regulatory exposure " + labelOf("reg", s.reg) + " · moat: " + labelOf("ip", s.ip) +
+    " · demand evidence: " + ["none", "conversations", "waitlist", "pre-orders", "paying customers", "renewals"][m.wtpLevel] +
+    (s.infra && s.infra.length ? " · depends on: " + s.infra.join(", ") : ""), "");
+
+  L.push("## ARITHMETIC ALREADY DONE (verify it, do not repeat it)", "",
+    "- Gross profit per customer per month: " + money(m.monthlyGP),
+    "- Lifetime value: " + money(m.ltv) + " · LTV:CAC " + (Number.isFinite(m.ltvCac) ? round(m.ltvCac, 1) + ":1" : "∞") + " · payback " + mo(m.paybackMo),
+    "- Customers needed for breakeven: " + n(m.breakevenCustomers) + " = " + pct(m.penetration, 2) + " of the reachable market",
+    "- Delivery capacity ceiling at this automation level: " + n(m.capacityCeiling) + " customers",
+    "- Build estimate: " + n(m.buildHours) + " hours ≈ " + mo(m.buildMonths) + " against a stated " + s.ttr + " months to revenue",
+    "- Runway after build: " + mo(m.runwayAfter) + " · total at risk before proof: " + money(m.totalAtRisk),
+    "- Expected-case cash at 24 months: " + money(m.sim.expected.cashAt24) + " · worst case " + (m.sim.worst.deathMonth ? "runs out in month " + m.sim.worst.deathMonth : "survives"),
+    "- Evidence quality of these inputs: " + pct(m.evidence, 0) + " (" + m.guessed + " figures guessed)", "");
+
+  L.push("## THE OFFLINE BOARD'S OWN VERDICT (argue with it if you disagree — say why)", "",
+    "Resolution: **" + B.decision + "** · weighted score " + round(B.weighted, 1) + "/100 · confidence " + B.confidence + "%",
+    ...B.reports.slice().sort((a, b) => a.seat - b.seat).map(r => "- Seat " + r.seat + " " + r.title + ": " + r.score + " (" + voteLabel(r.vote) + ")" + (r.fatal ? " — BLOCKING: " + r.fatal : "")), "");
+
+  L.push("---", "", "Now convene. Work through all six phases and produce the ten sections. Be specific, use the figures above, and do not soften the verdict.");
+  return L.join("\n");
+}
+
+async function runLiveBoard(B) {
+  const s = state, status = $("#ai-status"), out = $("#ai-out");
+  const key = (s.apikey || "").trim();
+  if (!key) { toast("Enter an API key first"); return; }
+  const model = (s.model || "").trim() || (s.provider === "anthropic" ? "claude-sonnet-4-5" : "gpt-4o-mini");
+  const prompt = buildPrompt(B, false);
+
+  status.innerHTML = '<span class="spinner"></span> the board is deliberating…';
+  out.innerHTML = "";
+  $("#btn-run-ai").disabled = true;
+
+  try {
+    let url, headers, body;
+    if (s.provider === "anthropic") {
+      url = "https://api.anthropic.com/v1/messages";
+      headers = { "content-type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" };
+      body = { model, max_tokens: 8000, system: SYSTEM_PROMPT, messages: [{ role: "user", content: prompt }] };
+    } else {
+      const base = s.provider === "compatible" ? (s.baseurl || "").replace(/\/$/, "") : "https://api.openai.com/v1";
+      if (!base) throw new Error("Base URL is required for a compatible endpoint.");
+      url = base + "/chat/completions";
+      headers = { "content-type": "application/json", authorization: "Bearer " + key };
+      body = { model, messages: [{ role: "system", content: SYSTEM_PROMPT }, { role: "user", content: prompt }] };
+    }
+
+    const res = await fetch(url, { method: "POST", headers, body: JSON.stringify(body) });
+    const text = await res.text();
+    if (!res.ok) throw new Error("HTTP " + res.status + " — " + text.slice(0, 400));
+    const data = JSON.parse(text);
+    const md = s.provider === "anthropic"
+      ? (data.content || []).map(c => c.text || "").join("\n")
+      : ((data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || "");
+    if (!md) throw new Error("The provider returned no text.");
+
+    status.textContent = "";
+    out.innerHTML = '<h2 class="sec">Live board report</h2>' +
+      '<div class="inline" style="margin-bottom:.6rem"><button class="ghost sm" id="btn-copy-ai">📋 Copy</button>' +
+      '<button class="ghost sm" id="btn-dl-ai">⬇ Download .md</button>' +
+      '<span class="pill navy">' + esc(model) + '</span></div><pre class="out" id="ai-md"></pre>';
+    $("#ai-md").textContent = md;
+    $("#btn-copy-ai").addEventListener("click", () => copy(md));
+    $("#btn-dl-ai").addEventListener("click", () => download("board-report-ai.md", md));
+  } catch (e) {
+    status.textContent = "";
+    out.innerHTML = '<div class="note bad" style="margin-top:1rem"><b>The live run failed.</b> ' + esc(String(e.message || e)) +
+      '<br><br>Common causes: the provider blocks direct browser requests (CORS), the key is wrong or has no credit, or the model name does not exist for this provider. ' +
+      'The <b>copy the prompt</b> route above works regardless — it needs no key and no network.</div>';
+  } finally {
+    $("#btn-run-ai").disabled = false;
+  }
+}
+/* ==========================================================================
+   WIRING
+   ========================================================================== */
+let BOARD = null;
+
+const BIND = [
+  ["#i-decision", "decision", "text"], ["#i-role", "role", "text"], ["#i-audience", "audience", "text"],
+  ["#i-length", "length", "text"], ["#i-class", "cls", "text"], ["#i-context", "context", "text"],
+  ["#i-examples", "examples", "text"], ["#i-constraints", "constraints", "text"],
+  ["#i-success", "success", "text"], ["#i-against", "against", "text"],
+  ["#i-currency", "currency", "text"], ["#i-billing", "billing", "text"],
+  ["#i-price", "price", "num"], ["#i-margin", "margin", "num"], ["#i-churn", "churn", "num"], ["#i-repeat", "repeat", "num"],
+  ["#i-motion", "motion", "text"], ["#i-cac", "cac", "num"], ["#i-audience-size", "audienceSize", "num"],
+  ["#i-market", "market", "num"], ["#i-wtp", "wtp", "text"],
+  ["#i-capital", "capital", "num"], ["#i-required", "required", "num"], ["#i-burn", "burn", "num"],
+  ["#i-revenue", "revenue", "num"], ["#i-ttr", "ttr", "num"], ["#i-hours", "hours", "num"],
+  ["#i-pain", "pain", "num"], ["#i-diff", "diff", "num"], ["#i-fmf", "fmf", "num"],
+  ["#i-complex", "complex", "num"], ["#i-auto", "auto", "num"], ["#i-rev", "rev", "num"],
+  ["#i-competitors", "competitors", "num"], ["#i-team", "team", "num"],
+  ["#i-reg", "reg", "text"], ["#i-ip", "ip", "text"], ["#i-keyperson", "keyperson", "text"], ["#i-hire", "hire", "text"],
+  ["#i-geo", "geo", "text"], ["#i-customer", "customer", "text"],
+  ["#i-provider", "provider", "text"], ["#i-model", "model", "text"], ["#i-baseurl", "baseurl", "text"], ["#i-apikey", "apikey", "text"]
+];
+
+const RANGES = [["margin", "#o-margin"], ["churn", "#o-churn"], ["ttr", "#o-ttr"], ["hours", "#o-hours"],
+                ["pain", "#o-pain"], ["diff", "#o-diff"], ["fmf", "#o-fmf"], ["complex", "#o-complex"],
+                ["auto", "#o-auto"], ["rev", "#o-rev"]];
+
+function syncInputs() {
+  for (const [sel, key] of BIND) { const el = $(sel); if (el) el.value = state[key]; }
+  for (const [key, sel] of RANGES) { const o = $(sel); if (o) o.value = state[key]; }
+  $$("#i-infra input").forEach(cb => { cb.checked = (state.infra || []).indexOf(cb.value) >= 0; });
+  $$(".ev[data-for]").forEach(b => {
+    const v = (state.ev || {})[b.dataset.for] || "G";
+    b.dataset.v = v;
+    b.textContent = { M: "MEASURED", E: "ESTIMATED", G: "GUESSED" }[v];
+  });
+  toggleBilling();
+  $("#wrap-baseurl").hidden = state.provider !== "compatible";
+  $("#i-model").placeholder = state.provider === "anthropic" ? "claude-sonnet-4-5" : "gpt-4o-mini";
+}
+
+function toggleBilling() {
+  const sub = ["monthly", "annual", "retainer"].indexOf(state.billing) >= 0;
+  $("#wrap-churn").hidden = !sub;
+  $("#wrap-repeat").hidden = sub;
+}
+
+function initInputs() {
+  for (const [sel, key, kind] of BIND) {
+    const el = $(sel); if (!el) continue;
+    const ev = el.tagName === "SELECT" ? "change" : "input";
+    el.addEventListener(ev, () => {
+      state[key] = kind === "num" ? num(el.value, 0) : el.value;
+      const r = RANGES.find(x => x[0] === key); if (r) $(r[1]).value = state[key];
+      if (key === "billing") toggleBilling();
+      if (key === "provider") { $("#wrap-baseurl").hidden = state.provider !== "compatible"; $("#i-model").placeholder = state.provider === "anthropic" ? "claude-sonnet-4-5" : "gpt-4o-mini"; }
+      save();
+      if (["decision", "context", "examples", "success", "against"].indexOf(key) >= 0) briefStatus();
+      else renderDerived();
+      scheduleRerun();
+    });
+  }
+
+  $$("#i-infra input").forEach(cb => cb.addEventListener("change", () => {
+    const set = new Set(state.infra || []);
+    cb.checked ? set.add(cb.value) : set.delete(cb.value);
+    state.infra = Array.from(set); save(); renderDerived(); scheduleRerun();
+  }));
+
+  $$(".ev[data-for]").forEach(b => b.addEventListener("click", e => {
+    e.preventDefault();
+    const k = b.dataset.for, order = ["G", "E", "M"];
+    const next = order[(order.indexOf(state.ev[k] || "G") + 1) % 3];
+    state.ev[k] = next; b.dataset.v = next;
+    b.textContent = { M: "MEASURED", E: "ESTIMATED", G: "GUESSED" }[next];
+    save(); renderDerived(); scheduleRerun();
+  }));
+}
+
+let rerunTimer = null;
+function scheduleRerun() {
+  if (!state.convened) return;
+  clearTimeout(rerunTimer);
+  rerunTimer = setTimeout(() => { BOARD = runBoard(state); renderAll(BOARD); }, 350);
+}
+
+function briefStatus() {
+  const filled = ["decision", "context", "examples", "success", "against"].filter(k => (state[k] || "").trim().length > 12).length;
+  $("#brief-status").textContent = filled === 5 ? "All five sections written — the board has what it needs."
+    : filled + " of 5 sections written. Missing ones lower the confidence score.";
+}
+
+/* ------------------------------------------------------------ derived box */
+function renderDerived() {
+  const m = buildModel(state);
+  const cards = [
+    ["Gross profit / customer / mo", money(m.monthlyGP), "at " + pct(m.gm, 0) + " margin", m.monthlyGP > 0 ? "navy" : "red"],
+    ["Lifetime value", money(m.ltv), m.isSub ? "over " + mo(m.lifetimeMo) : "over " + CONST.oneOffHorizonMonths + " months", ""],
+    ["LTV : CAC", Number.isFinite(m.ltvCac) ? round(m.ltvCac, 1) + ":1" : "∞", "3:1 is the conventional floor", m.ltvCac >= 3 ? "green" : m.ltvCac >= 1 ? "amber" : "red"],
+    ["CAC payback", mo(m.paybackMo), "months of gross profit to repay acquisition", m.paybackMo <= 12 ? "green" : m.paybackMo <= 18 ? "amber" : "red"],
+    ["Customers to breakeven", n(m.breakevenCustomers), pct(m.penetration, 2) + " of reachable market", ""],
+    ["Your capacity ceiling", n(m.capacityCeiling), "customers your hours can serve", m.capacityCeiling >= m.breakevenCustomers * 2 ? "green" : m.capacityCeiling >= m.breakevenCustomers ? "amber" : "red"],
+    ["Build estimate", mo(m.buildMonths), n(m.buildHours) + " hours at " + state.hours + "h/week", m.buildMonths <= state.ttr ? "green" : "red"],
+    ["Runway after build", mo(m.runwayAfter), money(m.postBuildCash) + " ÷ " + money(state.burn) + "/mo", m.runwayAfter >= state.ttr + 3 ? "green" : "red"],
+    ["Reachable market value", money(m.marketValueYr), "per year at your own numbers", ""],
+    ["Total at risk", money(m.totalAtRisk), "before the market answers", m.totalAtRisk <= state.capital * 0.75 ? "green" : "red"],
+    ["Evidence quality", pct(m.evidence, 0), m.guessed + " guessed, " + m.measured + " measured", m.evidence >= 0.6 ? "green" : m.evidence >= 0.35 ? "amber" : "red"],
+    ["Warm audience yields", n(m.audienceYield), "customers in the first quarter", ""]
+  ];
+  $("#derived-stats").innerHTML = cards.map(c => stat(c[0], c[1], c[2], c[3])).join("");
+
+  const notes = [];
+  if (m.ltvCac < 1) notes.push(["bad", "You lose " + money(state.cac - m.ltv) + " on every customer. Fix this before anything else — no amount of growth repairs an inverted unit economic."]);
+  if (m.capacityCeiling < m.breakevenCustomers) notes.push(["bad", "Your hands cap you at " + n(m.capacityCeiling) + " customers and breakeven needs " + n(m.breakevenCustomers) + ". This plan cannot reach breakeven at any level of sales success."]);
+  if (m.capitalGap > 0) notes.push(["bad", "The build needs " + money(m.capitalGap) + " more than you have."]);
+  if (m.runwayAfter < state.ttr + 3 && m.capitalGap <= 0) notes.push(["warn", "Runway after the build is " + mo(m.runwayAfter) + " against " + state.ttr + " months to first revenue. You run out before you find out."]);
+  if (m.buildMonths > state.ttr * 1.5) notes.push(["warn", "The build looks like " + mo(m.buildMonths) + " of work but revenue is planned for month " + state.ttr + "."]);
+  if (m.guessed >= 8) notes.push(["warn", m.guessed + " of " + Object.keys(state.ev).length + " figures are guessed. The board will run, but its confidence score will be low and it will say why."]);
+  if (!notes.length) notes.push(["good", "No structural break in the arithmetic. That does not mean the plan is good — it means the board gets to argue about the interesting parts."]);
+  $("#derived-notes").innerHTML = notes.map(([c, t]) => '<div class="note ' + c + '">' + esc(t) + "</div>").join("");
+}
+
+/* ------------------------------------------------------------------ tabs */
+function showTab(name) {
+  state.tab = name; save();
+  $$(".tab").forEach(t => t.setAttribute("aria-selected", String(t.dataset.panel === name)));
+  $$(".panel").forEach(p => p.classList.toggle("on", p.id === "panel-" + name));
+  window.scrollTo(0, 0);
+  if (name === "nums") renderDerived();
+}
+function initTabs() {
+  $$(".tab").forEach(t => t.addEventListener("click", () => {
+    if (["board", "debate", "risk", "res", "road"].indexOf(t.dataset.panel) >= 0 && !state.convened) { convene(); }
+    showTab(t.dataset.panel);
+  }));
+}
+
+function convene() {
+  state.convened = true;
+  BOARD = runBoard(state);
+  renderAll(BOARD);
+  save();
+}
+function renderAll(B) {
+  renderBoard(B); renderDebate(B); renderRisk(B); renderResolution(B); renderRoadmap(B);
+}
+
+/* ------------------------------------------------------------- utilities */
+let toastTimer = null;
+function toast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("on"), 2600);
+}
+function copy(text) {
+  const done = () => toast("Copied to clipboard");
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+  else fallback();
+  function fallback() {
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); done(); } catch (e) { toast("Copy failed — select the text and copy manually"); }
+    document.body.removeChild(ta);
+  }
+}
+function download(name, text) {
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 200);
+  toast("Downloaded " + name);
+}
+
+/* --------------------------------------------------------------- theme */
+function applyTheme() {
+  if (state.theme) document.documentElement.setAttribute("data-theme", state.theme);
+  else document.documentElement.removeAttribute("data-theme");
+}
+
+/* -------------------------------------------------------------- example */
+const EXAMPLE = {
+  decision: "Should we turn our manual bookkeeping service into a $39/month software product for Lagos SMEs, launching by March?",
+  role: "cofounder", audience: "team", length: "full", cls: "build",
+  context: "Two of us. We do bookkeeping by hand for 40 small businesses in Lagos at $80/month each — $3,200/month, and reconciliation eats about 60% of our delivery hours. We believe the same customers, plus a much larger group who cannot afford $80, would pay $39 for software that does 80% of it. Neither of us writes code; we would hire a contract developer. The risk we keep arguing about is that we cannibalise a service business that works in order to chase a software business we have never run.",
+  examples: "Wave Accounting — free, US/Canada only, no Nigerian bank feeds, so it never took here\nKippa — Nigerian, raised ~$8m, started broad then narrowed to payments; bookkeeping alone did not hold\nOur own 2023 spreadsheet template — 200 downloads, 3 people paid for the paid version",
+  constraints: "No outside capital this year\n20 hours a week each, not 50\nNo developer on the team — has to be contracted\nCannot let the existing 40 clients drop",
+  success: "100 paying accounts at $39 by month 9, service revenue down no more than 20%, and neither of us doing manual reconciliation.",
+  against: "We are a services business with no software distribution, no engineer, and a customer base that pays us precisely because they do not want to do it themselves. Selling them a tool to do it themselves may be selling against our own value.",
+  currency: "$", billing: "monthly", price: 39, margin: 78, churn: 7, repeat: 1,
+  motion: "inbound", cac: 32, audienceSize: 620, market: 18000, wtp: "1",
+  capital: 9000, required: 6500, burn: 1400, revenue: 3200, ttr: 4, hours: 20,
+  pain: 8, diff: 6, fmf: 9, complex: 7, auto: 7, rev: 4, competitors: 5, team: 2,
+  reg: "2", ip: "2", keyperson: "2", hire: "1",
+  geo: "africa", infra: ["net", "cards", "mobilemoney", "bank", "devices"], customer: "smb",
+  ev: { price: "E", margin: "E", churn: "G", repeat: "G", cac: "G", audience: "M",
+        market: "G", capital: "M", required: "E", burn: "M", revenue: "M" }
+};
+
+/* ---------------------------------------------------------------- boot */
+function boot() {
+  const saved = Store.read();
+  if (saved && saved.v === 1) state = Object.assign(defaults(), saved, { ev: Object.assign(defaults().ev, saved.ev || {}) });
+  applyTheme();
+  syncInputs();
+  initInputs();
+  initTabs();
+  briefStatus();
+  renderDerived();
+
+  $("#btn-to-nums").addEventListener("click", () => showTab("nums"));
+  $("#btn-convene").addEventListener("click", () => { convene(); showTab("board"); toast("The board has convened"); });
+  $("#btn-reset-nums").addEventListener("click", () => {
+    const d = defaults(), keep = ["decision", "role", "audience", "length", "cls", "context", "examples", "constraints", "success", "against", "theme", "tab", "provider", "model", "baseurl", "apikey"];
+    for (const k of Object.keys(d)) if (keep.indexOf(k) < 0) state[k] = d[k];
+    syncInputs(); renderDerived(); save(); scheduleRerun(); toast("Numbers reset");
+  });
+
+  $("#btn-expand-all").addEventListener("click", () => $$("#board-list .dir-head").forEach(b => { b.setAttribute("aria-expanded", "true"); b.nextElementSibling.hidden = false; }));
+  $("#btn-collapse-all").addEventListener("click", () => $$("#board-list .dir-head").forEach(b => { b.setAttribute("aria-expanded", "false"); b.nextElementSibling.hidden = true; }));
+  $("#btn-sort-score").addEventListener("click", () => { state.sort = "score"; save(); if (BOARD) renderBoard(BOARD); });
+  $("#btn-sort-seat").addEventListener("click", () => { state.sort = "seat"; save(); if (BOARD) renderBoard(BOARD); });
+
+  $("#btn-build-prompt").addEventListener("click", () => {
+    if (!BOARD) convene();
+    $("#prompt-out").textContent = buildPrompt(BOARD, $("#i-prompt-sys").checked);
+    toast("Prompt built");
+  });
+  $("#btn-copy-prompt").addEventListener("click", () => copy($("#prompt-out").textContent));
+  $("#btn-dl-prompt").addEventListener("click", () => download("board-prompt.md", $("#prompt-out").textContent));
+  $("#btn-run-ai").addEventListener("click", () => { if (!BOARD) convene(); runLiveBoard(BOARD); });
+  $("#btn-forget-key").addEventListener("click", () => { state.apikey = ""; $("#i-apikey").value = ""; save(); toast("Key forgotten"); });
+
+  $("#btn-build-min").addEventListener("click", () => {
+    if (!BOARD) convene();
+    $("#min-out").textContent = buildMinutes(BOARD);
+    toast("Minutes generated");
+  });
+  $("#btn-copy-min").addEventListener("click", () => copy($("#min-out").textContent));
+  $("#btn-dl-min").addEventListener("click", () => download("board-minutes.md", $("#min-out").textContent));
+  $("#btn-print").addEventListener("click", () => { if (!BOARD) convene(); window.print(); });
+
+  $("#btn-example").addEventListener("click", () => {
+    Object.assign(state, JSON.parse(JSON.stringify(EXAMPLE)));
+    state.convened = true; state.done = {};
+    syncInputs(); briefStatus(); renderDerived();
+    BOARD = runBoard(state); renderAll(BOARD); save();
+    showTab("board");
+    toast("Worked example loaded — a real trade-off, not a demo");
+  });
+
+  $("#btn-backup").addEventListener("click", () => {
+    const copyState = Object.assign({}, state); delete copyState.apikey;
+    download("board-session.json", JSON.stringify(copyState, null, 2));
+  });
+  $("#btn-restore").addEventListener("click", () => {
+    const inp = document.createElement("input");
+    inp.type = "file"; inp.accept = "application/json,.json";
+    inp.addEventListener("change", () => {
+      const f = inp.files && inp.files[0]; if (!f) return;
+      const rd = new FileReader();
+      rd.onload = () => {
+        try {
+          const d = JSON.parse(rd.result);
+          const key = state.apikey;
+          state = Object.assign(defaults(), d, { apikey: key, ev: Object.assign(defaults().ev, d.ev || {}) });
+          syncInputs(); briefStatus(); renderDerived();
+          if (state.convened) { BOARD = runBoard(state); renderAll(BOARD); }
+          save(); toast("Session restored");
+        } catch (e) { toast("That file could not be read"); }
+      };
+      rd.readAsText(f);
+    });
+    inp.click();
+  });
+  $("#btn-clear").addEventListener("click", () => {
+    if (!confirm("Erase everything you have entered? Back up first if you want to keep it.")) return;
+    Store.wipe(); state = defaults();
+    syncInputs(); briefStatus(); renderDerived();
+    BOARD = null; $("#board-list").innerHTML = ""; $("#board-summary").innerHTML = "";
+    ["debate-out", "risk-out", "res-out", "road-out", "ai-out"].forEach(id => { const e = document.getElementById(id); if (e) e.innerHTML = ""; });
+    $("#min-out").textContent = "Press “Generate minutes”."; $("#prompt-out").textContent = "Press “Build the board prompt”.";
+    showTab("brief"); toast("Everything erased");
+  });
+  $("#btn-theme").addEventListener("click", () => {
+    state.theme = state.theme === "light" ? "dark" : state.theme === "dark" ? null : "light";
+    applyTheme(); save();
+    toast(state.theme ? state.theme[0].toUpperCase() + state.theme.slice(1) + " theme" : "Following your system setting");
+  });
+
+  if (state.convened) { BOARD = runBoard(state); renderAll(BOARD); }
+  else {
+    const emptyMsg = '<div class="empty"><div class="big">🏛</div><p>The board has not convened.<br>Fill in the <b>Brief</b> and the <b>Numbers</b>, then press <b>Convene the board</b> — or load the <b>📎 Example</b> from the top bar to see what it produces.</p></div>';
+    ["board-list", "debate-out", "risk-out", "res-out", "road-out"].forEach(id => { const e = document.getElementById(id); if (e) e.innerHTML = emptyMsg; });
+  }
+
+  showTab(state.tab || "brief");
+
+  $("#foot-storage").textContent = Store.available
+    ? "Saved in this browser only. No network requests are made unless you switch on AI mode with your own key."
+    : "This browser is blocking local storage — nothing will be remembered after you close the tab. Use ⬇ Back up before you leave.";
+}
+
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+else boot();
+</script>
+</body>
+</html>
