@@ -1,0 +1,2487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mosh Digital Studios — AI automation systems for small businesses</title>
+<meta name="description" content="The studio site: thirteen service lines, each shipping with a working tool you can open before you buy; a scoping estimator that prices a project on rates you can see and change; a payback calculator on your own figures; and a brief builder that turns an enquiry into a Markdown document. Single file, fully offline.">
+<meta name="color-scheme" content="light dark">
+<style>
+/* ===========================================================================
+   MOSH DIGITAL STUDIOS
+   One file. No external requests of any kind — no CDN, no web fonts, no
+   images, no analytics, no forms posting anywhere. Everything is inline and
+   everything you type stays in this browser.
+   =========================================================================== */
+
+:root {
+  --ink:       #14161c;
+  --ink-2:     #474d5a;
+  --ink-3:     #6f7684;
+  --bg:        #f7f7f9;
+  --surface:   #ffffff;
+  --surface-2: #f2f3f6;
+  --surface-3: #e8eaef;
+  --line:      #e2e4ea;
+  --line-2:    #c4c8d2;
+
+  --accent:    #2a45c8;
+  --accent-2:  #4460e6;
+  --accent-bg: #e9edfd;
+
+  --gold:      #90600f;
+  --gold-bg:   #fbf1de;
+
+  --good:      #16693f;
+  --good-bg:   #e3f3ea;
+  --warn:      #8a5806;
+  --warn-bg:   #fcf2df;
+  --bad:       #a02724;
+  --bad-bg:    #fbeceb;
+  --info:      #1f5399;
+  --info-bg:   #e8f0fb;
+
+  --code-bg:   #12141a;
+  --code-ink:  #e2e5ec;
+  --code-com:  #7f8797;
+
+  --shadow:    0 1px 2px rgba(16,18,26,.06), 0 10px 26px -16px rgba(16,18,26,.30);
+  --shadow-lg: 0 2px 6px rgba(16,18,26,.09), 0 30px 60px -28px rgba(16,18,26,.38);
+  --radius:    14px;
+  --radius-sm: 9px;
+
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html[data-theme="dark"] {
+  --ink:       #e9eaf0;
+  --ink-2:     #b3b8c6;
+  --ink-3:     #838a9a;
+  --bg:        #0d0f14;
+  --surface:   #161922;
+  --surface-2: #1d212b;
+  --surface-3: #252a36;
+  --line:      #2c313d;
+  --line-2:    #3e4453;
+
+  --accent:    #93a8ff;
+  --accent-2:  #7d93f5;
+  --accent-bg: #171d34;
+
+  --gold:      #e0ae63;
+  --gold-bg:   #2a2010;
+
+  --good:      #6ccf95;
+  --good-bg:   #10271b;
+  --warn:      #e6b45f;
+  --warn-bg:   #2a2010;
+  --bad:       #f08c84;
+  --bad-bg:    #2b1615;
+  --info:      #7fb0f2;
+  --info-bg:   #131f33;
+
+  --code-bg:   #08090c;
+  --shadow:    0 1px 2px rgba(0,0,0,.5), 0 10px 26px -16px rgba(0,0,0,.8);
+  --shadow-lg: 0 2px 6px rgba(0,0,0,.5), 0 30px 60px -28px rgba(0,0,0,.85);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --ink:       #e9eaf0;
+    --ink-2:     #b3b8c6;
+    --ink-3:     #838a9a;
+    --bg:        #0d0f14;
+    --surface:   #161922;
+    --surface-2: #1d212b;
+    --surface-3: #252a36;
+    --line:      #2c313d;
+    --line-2:    #3e4453;
+
+    --accent:    #93a8ff;
+    --accent-2:  #7d93f5;
+    --accent-bg: #171d34;
+
+    --gold:      #e0ae63;
+    --gold-bg:   #2a2010;
+
+    --good:      #6ccf95;
+    --good-bg:   #10271b;
+    --warn:      #e6b45f;
+    --warn-bg:   #2a2010;
+    --bad:       #f08c84;
+    --bad-bg:    #2b1615;
+    --info:      #7fb0f2;
+    --info-bg:   #131f33;
+
+    --code-bg:   #08090c;
+    --shadow:    0 1px 2px rgba(0,0,0,.5), 0 10px 26px -16px rgba(0,0,0,.8);
+    --shadow-lg: 0 2px 6px rgba(0,0,0,.5), 0 30px 60px -28px rgba(0,0,0,.85);
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 5rem; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { line-height: 1.18; letter-spacing: -.018em; margin: 0; font-weight: 680; }
+p { margin: 0 0 .85rem; }
+p:last-child { margin-bottom: 0; }
+a { color: var(--accent); text-underline-offset: .18em; }
+b, strong { font-weight: 650; }
+hr { border: 0; border-top: 1px solid var(--line); margin: 2rem 0; }
+
+:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; border-radius: 6px; }
+
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 100;
+  background: var(--surface); color: var(--ink); padding: .7rem 1rem;
+  border: 1px solid var(--line); border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip:focus { left: 0; }
+
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+.vh { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* --- site chrome ---------------------------------------------------------- */
+
+.site {
+  position: sticky; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+@supports not (backdrop-filter: blur(4px)) { .site { background: var(--surface); } }
+
+.site-in {
+  max-width: 78rem; margin: 0 auto; padding: .7rem 1.15rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+
+.brand { display: flex; align-items: center; gap: .65rem; margin-right: auto; min-width: 0; text-decoration: none; color: inherit; }
+.mark {
+  width: 2.3rem; height: 2.3rem; border-radius: 10px; flex: 0 0 auto;
+  background: var(--accent); color: #fff;
+  display: grid; place-items: center; font-weight: 750; font-size: .95rem; letter-spacing: -.03em;
+}
+html[data-theme="dark"] .mark { color: #10142a; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) .mark { color: #10142a; } }
+.brand-name { font-size: .98rem; font-weight: 700; letter-spacing: -.02em; white-space: nowrap; }
+.brand-sub { font-size: .72rem; color: var(--ink-3); white-space: nowrap; }
+
+.nav { display: flex; align-items: center; gap: .1rem; }
+.nav a {
+  font-size: .85rem; font-weight: 550; color: var(--ink-2); text-decoration: none;
+  padding: .42rem .6rem; border-radius: 8px; white-space: nowrap;
+  transition: background .15s, color .15s;
+}
+.nav a:hover { background: var(--surface-3); color: var(--ink); }
+.nav a.on { color: var(--accent); background: var(--accent-bg); }
+
+.site-actions { display: flex; align-items: center; gap: .4rem; }
+.nav-toggle { display: none; }
+
+@media (max-width: 60rem) {
+  .nav {
+    display: none; position: absolute; top: 100%; left: 0; right: 0;
+    background: var(--surface); border-bottom: 1px solid var(--line);
+    flex-direction: column; align-items: stretch; padding: .5rem .8rem .8rem; gap: .1rem;
+    box-shadow: var(--shadow);
+  }
+  .nav.open { display: flex; }
+  .nav a { padding: .6rem .7rem; }
+  .nav-toggle { display: inline-flex; }
+  .brand-sub { display: none; }
+}
+
+/* --- buttons -------------------------------------------------------------- */
+
+button, .btn {
+  font: inherit; font-size: .85rem; font-weight: 560;
+  color: var(--ink-2); background: var(--surface);
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  padding: .45rem .8rem; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
+  transition: background .15s, border-color .15s, color .15s, transform .1s;
+}
+button:hover, .btn:hover { background: var(--surface-3); border-color: var(--ink-3); color: var(--ink); }
+button:active, .btn:active { transform: translateY(1px); }
+button:disabled { opacity: .5; cursor: not-allowed; }
+
+button.primary, .btn.primary {
+  background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 620;
+}
+html[data-theme="dark"] button.primary, html[data-theme="dark"] .btn.primary { color: #10142a; }
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) button.primary, html:not([data-theme="light"]) .btn.primary { color: #10142a; }
+}
+button.primary:hover, .btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+button.ghost { background: transparent; border-color: transparent; }
+button.ghost:hover { background: var(--surface-3); }
+button.sm, .btn.sm { font-size: .78rem; padding: .3rem .58rem; }
+.btn-row { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+/* --- layout --------------------------------------------------------------- */
+
+.wrap { max-width: 78rem; margin: 0 auto; padding: 0 1.15rem; }
+.narrow { max-width: 46rem; }
+
+section.band { padding: clamp(3rem, 7vw, 5.5rem) 0; border-top: 1px solid var(--line); }
+section.band.alt { background: var(--surface-2); }
+section.band:first-of-type { border-top: 0; }
+
+.eyebrow {
+  font-size: .72rem; letter-spacing: .13em; text-transform: uppercase;
+  font-weight: 700; color: var(--accent); margin-bottom: .7rem;
+}
+.section-head { max-width: 48rem; margin-bottom: 2.2rem; }
+.section-head h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); margin-bottom: .7rem; }
+.section-head p { color: var(--ink-2); font-size: 1.02rem; }
+
+/* --- hero ----------------------------------------------------------------- */
+
+.hero { padding: clamp(3rem, 8vw, 6rem) 0 clamp(2.5rem, 6vw, 4rem); }
+.hero-grid { display: grid; gap: 2.5rem; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); align-items: start; }
+@media (max-width: 62rem) { .hero-grid { grid-template-columns: 1fr; } }
+
+.hero h1 {
+  font-size: clamp(2rem, 4.6vw, 3.05rem); letter-spacing: -.032em; margin-bottom: 1rem;
+}
+.hero h1 .hl { color: var(--accent); }
+.hero .lede { font-size: clamp(1.02rem, 2.1vw, 1.18rem); color: var(--ink-2); max-width: 34rem; margin-bottom: 1.5rem; }
+.hero .btn-row { margin-bottom: 1.6rem; }
+.hero-note { font-size: .84rem; color: var(--ink-3); max-width: 32rem; }
+
+.stat-strip {
+  display: grid; gap: 1px; grid-template-columns: repeat(3, 1fr);
+  background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+  margin-top: 2rem;
+}
+.stat-strip > div { background: var(--surface); padding: 1rem 1.1rem; }
+.stat-strip .v { font-size: 1.55rem; font-weight: 720; letter-spacing: -.03em; color: var(--accent); }
+.stat-strip .k { font-size: .78rem; color: var(--ink-3); margin-top: .1rem; }
+@media (max-width: 40rem) { .stat-strip { grid-template-columns: 1fr; } }
+
+.hero-panel {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.3rem 1.4rem; box-shadow: var(--shadow);
+}
+.hero-panel h3 { font-size: 1rem; margin-bottom: .3rem; }
+.hero-panel .sub { font-size: .82rem; color: var(--ink-3); margin-bottom: 1rem; }
+.hero-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; }
+.hero-list li { display: flex; gap: .65rem; align-items: flex-start; font-size: .89rem; color: var(--ink-2); }
+.hero-list .tick {
+  flex: 0 0 auto; width: 1.15rem; height: 1.15rem; border-radius: 50%; margin-top: .15rem;
+  background: var(--good-bg); color: var(--good); display: grid; place-items: center;
+  font-size: .68rem; font-weight: 800;
+}
+
+/* --- cards ---------------------------------------------------------------- */
+
+.grid { display: grid; gap: 1rem; }
+.grid.c2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+.grid.c3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 1fr)); }
+.grid.c4 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.25rem 1.3rem; display: flex; flex-direction: column; gap: .75rem;
+  transition: border-color .18s, transform .18s, box-shadow .18s;
+}
+.card.hoverable:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); }
+.card-top { display: flex; align-items: flex-start; gap: .8rem; }
+.glyph {
+  width: 2.5rem; height: 2.5rem; border-radius: 11px; flex: 0 0 auto; display: grid; place-items: center;
+  font-size: 1.2rem; background: var(--accent-bg);
+}
+.card h3 { font-size: 1.02rem; }
+.card .kicker { font-size: .74rem; color: var(--ink-3); margin-top: .15rem; }
+.card p { font-size: .9rem; color: var(--ink-2); margin: 0; }
+
+.svc-bullets { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
+.svc-bullets li { font-size: .84rem; color: var(--ink-2); padding-left: 1rem; position: relative; }
+.svc-bullets li::before {
+  content: "→"; position: absolute; left: 0; color: var(--accent); font-size: .8rem;
+}
+
+.card-foot {
+  margin-top: auto; padding-top: .85rem; border-top: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between; gap: .7rem; flex-wrap: wrap;
+  font-size: .8rem;
+}
+.card-foot .meta { color: var(--ink-3); }
+
+.chips { display: flex; flex-wrap: wrap; gap: .3rem; }
+.chip {
+  font-size: .72rem; padding: .18rem .5rem; border-radius: 999px;
+  background: var(--surface-3); color: var(--ink-2); white-space: nowrap;
+}
+.chip.accent { background: var(--accent-bg); color: var(--accent); font-weight: 600; }
+.chip.gold { background: var(--gold-bg); color: var(--gold); font-weight: 600; }
+.chip.good { background: var(--good-bg); color: var(--good); font-weight: 600; }
+
+/* --- filter bar ----------------------------------------------------------- */
+
+.filters { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.4rem; }
+.filters button {
+  border-radius: 999px; font-size: .82rem;
+}
+.filters button.on { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 620; }
+html[data-theme="dark"] .filters button.on { color: #10142a; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) .filters button.on { color: #10142a; } }
+
+/* --- notes / callouts ----------------------------------------------------- */
+
+.note {
+  border-radius: var(--radius-sm); padding: .85rem 1rem; font-size: .87rem;
+  border: 1px solid var(--line); background: var(--surface-2); color: var(--ink-2);
+}
+.note strong { color: var(--ink); }
+.note.info { background: var(--info-bg); border-color: color-mix(in srgb, var(--info) 30%, transparent); }
+.note.warn { background: var(--warn-bg); border-color: color-mix(in srgb, var(--warn) 32%, transparent); }
+.note.good { background: var(--good-bg); border-color: color-mix(in srgb, var(--good) 30%, transparent); }
+.note + .note { margin-top: .6rem; }
+
+/* --- process -------------------------------------------------------------- */
+
+.steps { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+/* Five steps: auto-fit lands on four and orphans the fifth, so take the five
+   columns explicitly once there is room for them. */
+@media (min-width: 72rem) { .steps { grid-template-columns: repeat(5, 1fr); } }
+.step {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.2rem 1.25rem; position: relative;
+  display: flex; flex-direction: column;
+}
+.step .n {
+  width: 1.9rem; height: 1.9rem; border-radius: 50%; background: var(--accent-bg); color: var(--accent);
+  display: grid; place-items: center; font-weight: 750; font-size: .85rem; margin-bottom: .8rem;
+}
+.step h3 { font-size: .98rem; margin-bottom: .35rem; }
+.step p { font-size: .86rem; color: var(--ink-2); }
+.step .who {
+  margin-top: auto; padding-top: .7rem; border-top: 1px dashed var(--line);
+  font-size: .78rem; color: var(--ink-3);
+}
+.step p + .who { margin-top: .8rem; }
+@media (min-width: 72rem) { .step p + .who { margin-top: auto; } }
+.step .who b { color: var(--ink-2); }
+
+/* --- forms ---------------------------------------------------------------- */
+
+.field { display: grid; gap: .3rem; }
+.field > label, .lbl { font-size: .8rem; font-weight: 600; color: var(--ink-2); }
+.field .hint { font-size: .75rem; color: var(--ink-3); }
+
+input[type="text"], input[type="email"], input[type="number"], input[type="url"], select, textarea {
+  font: inherit; font-size: .88rem; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  padding: .45rem .6rem; width: 100%; min-width: 0;
+}
+textarea { resize: vertical; min-height: 5rem; line-height: 1.5; }
+input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+input[type="number"] { font-variant-numeric: tabular-nums; }
+
+.form-grid { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+.form-grid .span-2 { grid-column: 1 / -1; }
+
+.opt-row { display: flex; flex-wrap: wrap; gap: .4rem; }
+.opt {
+  display: inline-flex; align-items: center; gap: .4rem; cursor: pointer;
+  font-size: .82rem; color: var(--ink-2); background: var(--surface);
+  border: 1px solid var(--line-2); border-radius: 999px; padding: .35rem .7rem;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.opt:hover { border-color: var(--ink-3); }
+.opt input { accent-color: var(--accent); margin: 0; }
+.opt.on { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+/* --- estimator ------------------------------------------------------------ */
+
+.est-grid { display: grid; gap: 1.2rem; grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr); align-items: start; }
+@media (max-width: 64rem) { .est-grid { grid-template-columns: 1fr; } }
+
+.panel {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.3rem 1.4rem;
+}
+.panel h3 { font-size: 1.02rem; margin-bottom: .2rem; }
+.panel .panel-sub { font-size: .82rem; color: var(--ink-3); margin-bottom: 1.1rem; }
+.panel + .panel { margin-top: 1rem; }
+
+.pick-list { display: grid; gap: .5rem; }
+.pick {
+  display: grid; grid-template-columns: auto 1fr auto; gap: .75rem; align-items: center;
+  border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .6rem .8rem;
+  cursor: pointer; background: var(--surface-2);
+  transition: border-color .15s, background .15s;
+}
+.pick:hover { border-color: var(--ink-3); }
+.pick.on { border-color: var(--accent); background: var(--accent-bg); }
+.pick input { accent-color: var(--accent); width: 1rem; height: 1rem; margin: 0; }
+.pick .nm { font-size: .88rem; font-weight: 600; }
+.pick .ds { font-size: .76rem; color: var(--ink-3); }
+.pick .pr { font-size: .82rem; color: var(--ink-2); text-align: right; white-space: nowrap; }
+.pick .pr b { display: block; font-weight: 650; color: var(--ink); }
+.pick .pr span { font-size: .72rem; color: var(--ink-3); }
+
+/* On a narrow phone the three-column row squeezes the name to two lines and
+   the price to nothing. Drop the price under the description instead. */
+@media (max-width: 30rem) {
+  .pick { grid-template-columns: auto 1fr; }
+  .pick .pr { grid-column: 2; text-align: left; margin-top: .3rem; }
+  .pick .pr b { display: inline; }
+  .pick .pr span::before { content: " · "; }
+}
+
+.summary { position: sticky; top: 5rem; }
+.sum-line { display: flex; justify-content: space-between; gap: 1rem; font-size: .87rem; padding: .35rem 0; }
+.sum-line .k { color: var(--ink-2); }
+.sum-line .v { font-variant-numeric: tabular-nums; font-weight: 600; }
+.sum-line.dim .k, .sum-line.dim .v { color: var(--ink-3); font-weight: 500; }
+.sum-line.credit .v { color: var(--good); }
+.sum-total {
+  margin-top: .7rem; padding-top: .8rem; border-top: 1px solid var(--line);
+  display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+}
+.sum-total .k { font-size: .82rem; color: var(--ink-3); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+.sum-total .v { font-size: 1.75rem; font-weight: 730; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.sum-total.care .v { font-size: 1.25rem; color: var(--accent); }
+
+.empty { font-size: .85rem; color: var(--ink-3); font-style: italic; padding: .5rem 0; }
+
+/* --- tables --------------------------------------------------------------- */
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-sm); }
+table { border-collapse: collapse; width: 100%; font-size: .85rem; background: var(--surface); }
+th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+thead th { background: var(--surface-2); font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); font-weight: 700; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td input[type="number"] { padding: .25rem .4rem; font-size: .82rem; text-align: right; }
+
+/* --- details / faq -------------------------------------------------------- */
+
+details.faq {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: .9rem 1.1rem; margin-bottom: .6rem;
+}
+details.faq[open] { border-color: var(--line-2); }
+details.faq summary {
+  cursor: pointer; font-weight: 620; font-size: .95rem; list-style: none;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+details.faq summary::-webkit-details-marker { display: none; }
+details.faq summary::after { content: "+"; color: var(--accent); font-size: 1.2rem; font-weight: 500; flex: 0 0 auto; }
+details.faq[open] summary::after { content: "−"; }
+details.faq .body { padding-top: .8rem; font-size: .89rem; color: var(--ink-2); }
+
+details.tuck {
+  border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .7rem .9rem;
+  background: var(--surface-2); margin-top: 1rem;
+}
+details.tuck summary { cursor: pointer; font-size: .84rem; font-weight: 600; color: var(--ink-2); }
+details.tuck .body { padding-top: .9rem; }
+
+/* --- output blocks -------------------------------------------------------- */
+
+.out {
+  background: var(--code-bg); color: var(--code-ink); border-radius: var(--radius-sm);
+  padding: 1rem 1.1rem; font-family: var(--mono); font-size: .78rem; line-height: 1.6;
+  white-space: pre-wrap; word-break: break-word; overflow-x: auto; max-height: 30rem; overflow-y: auto;
+  border: 1px solid var(--line);
+}
+
+/* --- contact -------------------------------------------------------------- */
+
+.contact-grid { display: grid; gap: 1.2rem; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+@media (max-width: 60rem) { .contact-grid { grid-template-columns: 1fr; } }
+
+.contact-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: .8rem; }
+.contact-lines li { display: flex; gap: .8rem; align-items: flex-start; }
+.contact-lines .ic {
+  width: 2.1rem; height: 2.1rem; border-radius: 9px; flex: 0 0 auto; display: grid; place-items: center;
+  background: var(--surface-3); font-size: 1rem;
+}
+.contact-lines .k { font-size: .74rem; color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+.contact-lines .v { font-size: .92rem; font-weight: 560; word-break: break-word; }
+
+/* --- footer --------------------------------------------------------------- */
+
+.foot { border-top: 1px solid var(--line); background: var(--surface-2); padding: 2.5rem 0 3rem; font-size: .85rem; color: var(--ink-3); }
+.foot .cols { display: grid; gap: 1.5rem; grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr)); margin-bottom: 2rem; }
+@media (max-width: 52rem) { .foot .cols { grid-template-columns: 1fr; } }
+.foot h4 { font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-2); margin-bottom: .7rem; }
+.foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; }
+.foot a { color: var(--ink-2); text-decoration: none; }
+.foot a:hover { color: var(--accent); text-decoration: underline; }
+.foot .fine { border-top: 1px solid var(--line); padding-top: 1.3rem; display: grid; gap: .6rem; }
+
+/* --- toast ---------------------------------------------------------------- */
+
+#toast {
+  position: fixed; left: 50%; bottom: 1.6rem; transform: translateX(-50%) translateY(1.5rem);
+  background: var(--ink); color: var(--bg); padding: .6rem 1.1rem; border-radius: 999px;
+  font-size: .85rem; font-weight: 560; box-shadow: var(--shadow-lg);
+  opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 90; max-width: 90vw;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media print {
+  .site, .nav, #toast, .btn-row, .filters { display: none !important; }
+  body { background: #fff; }
+  section.band { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site">
+  <div class="site-in">
+    <a class="brand" href="#top">
+      <div class="mark" aria-hidden="true">MD</div>
+      <div>
+        <div class="brand-name" id="brand-name">Mosh Digital Studios</div>
+        <div class="brand-sub" id="brand-tag">AI automation for small businesses</div>
+      </div>
+    </a>
+    <nav class="nav" id="nav" aria-label="Sections">
+      <a href="#services">Services</a>
+      <a href="#proof">See it working</a>
+      <a href="#process">Process</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#brief">Start a brief</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="site-actions">
+      <button id="btn-theme" class="ghost" type="button" title="Switch between light and dark" aria-label="Switch theme">🌗</button>
+      <button id="btn-nav" class="nav-toggle ghost" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div id="top"></div>
+
+<!-- ======================= HERO ======================= -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Mosh Digital Studios</div>
+        <h1>We build the boring machinery that <span class="hl">answers, books, chases and files</span> — so a small business stops doing it by hand.</h1>
+        <p class="lede">
+          Thirteen service lines, each one a system rather than a subscription: the assistant that
+          replies on WhatsApp, the booking engine that cannot double-book, the invoice chaser, the
+          order desk, the dashboard that shows the twelve numbers that matter.
+        </p>
+        <div class="btn-row">
+          <a class="btn primary" href="#services">See the service lines</a>
+          <a class="btn" href="#pricing">Price a project</a>
+          <a class="btn" href="#proof">Open a working tool</a>
+        </div>
+        <p class="hero-note">
+          Every service line on this page ships with a working tool in this repository. You can open
+          it, use it, and see exactly what the system does — before anyone quotes you anything.
+        </p>
+      </div>
+
+      <aside class="hero-panel">
+        <h3>How this site is different</h3>
+        <div class="sub">Three things agency sites normally do, that this one doesn't.</div>
+        <ul class="hero-list">
+          <li>
+            <span class="tick" aria-hidden="true">✓</span>
+            <span><b>No invented proof.</b> No stock testimonials, no logos we haven't earned, no
+            "300% uplift" case studies. The proof offered is software you can open and run.</span>
+          </li>
+          <li>
+            <span class="tick" aria-hidden="true">✓</span>
+            <span><b>No hidden pricing.</b> The estimator's rate card is on the page, editable, and
+            every multiplier that touches a number is shown next to the number.</span>
+          </li>
+          <li>
+            <span class="tick" aria-hidden="true">✓</span>
+            <span><b>No form that vanishes.</b> The brief builder produces a Markdown document you
+            keep. Nothing is posted anywhere — there is no server behind this page.</span>
+          </li>
+        </ul>
+      </aside>
+    </div>
+
+    <div class="stat-strip">
+      <div>
+        <div class="v num" id="stat-services">13</div>
+        <div class="k">Service lines, each shipping with a working tool</div>
+      </div>
+      <div>
+        <div class="v num">0</div>
+        <div class="k">Network requests this page makes, in total</div>
+      </div>
+      <div>
+        <div class="v num">100%</div>
+        <div class="k">Of the rates below are visible and editable</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= SERVICES ======================= -->
+<section class="band alt" id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">What we build</div>
+      <h2>Thirteen service lines, in three groups</h2>
+      <p>
+        Grouped by what they change about the business day: the ones that answer and convert, the
+        ones that bring people in, and the ones that run the back office. Pick a group, or read
+        them all.
+      </p>
+    </div>
+
+    <div class="filters" id="svc-filters" role="group" aria-label="Filter service lines"></div>
+    <div class="grid c3" id="svc-grid"></div>
+
+    <div class="note info" style="margin-top:1.4rem">
+      <strong>Where the descriptions come from.</strong> Each card describes the tool that ships
+      with it — the scope, the deliverable and the timeline are what that tool is built to produce.
+      Nothing on a card is a claim about results at another business.
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PROOF ======================= -->
+<section class="band" id="proof">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">See it working</div>
+      <h2>The portfolio is software, not screenshots</h2>
+      <p>
+        Every tool below is a single HTML file that runs offline in this browser, with no install,
+        no account and no network. They are the working models behind the service lines — open one
+        and you can see the engineering a project actually consists of.
+      </p>
+    </div>
+
+    <div class="grid c3" id="proof-grid"></div>
+
+    <div class="note" style="margin-top:1.4rem">
+      <strong>How to read this.</strong> These tools are how a project gets specified: the
+      configuration you build in the tool becomes the build brief. A client who has spent twenty
+      minutes in the booking tool knows exactly what their own booking rules are — which is most of
+      the discovery call, done before it starts.
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PROCESS ======================= -->
+<section class="band alt" id="process">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">How a project runs</div>
+      <h2>Five steps, and what each one costs you in time</h2>
+      <p>
+        The usual reason an automation project stalls is that the business owner turns out to be a
+        dependency nobody budgeted for. So each step below says what we do, and what you have to do.
+      </p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="n">1</div>
+        <h3>Configure, then talk</h3>
+        <p>
+          You open the tool for the service line you want and fill in your own reality — services,
+          hours, prices, policies, the way you actually work. It takes fifteen to thirty minutes and
+          it replaces a discovery questionnaire.
+        </p>
+        <div class="who"><b>You:</b> 20–30 minutes, alone, no meeting.</div>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <h3>Scope and fixed price</h3>
+        <p>
+          Your configuration exports as a brief. We turn it into a scope with a fixed price, a list
+          of what is explicitly not included, and the access we'll need. If the honest answer is that
+          the automation won't pay for itself, that is what the scope says.
+        </p>
+        <div class="who"><b>You:</b> one 45-minute call, then a yes or a no.</div>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <h3>Build against your configuration</h3>
+        <p>
+          The system gets built to the configuration you signed off, in a staging environment
+          connected to test data. Nothing touches a live customer, a live calendar or a live payment
+          until you have watched it work.
+        </p>
+        <div class="who"><b>You:</b> accounts and access, once. Then nothing for a week or two.</div>
+      </div>
+      <div class="step">
+        <div class="n">4</div>
+        <h3>Watch it fail on purpose</h3>
+        <p>
+          Before go-live we run the failure cases with you at the screen: the double-booking attempt,
+          the refund demand, the message at 2am, the customer who says something the system should
+          refuse to handle. You approve the escalation rules by seeing them fire.
+        </p>
+        <div class="who"><b>You:</b> one 60-minute session. The most important hour of the project.</div>
+      </div>
+      <div class="step">
+        <div class="n">5</div>
+        <h3>Handover, then care or leave</h3>
+        <p>
+          You get the runbook, the credentials, and a recorded walkthrough. The care plan is
+          optional and cancellable monthly — a system you can't leave isn't a system, it's a hostage
+          situation.
+        </p>
+        <div class="who"><b>You:</b> decide whether you want us next month.</div>
+      </div>
+    </div>
+
+    <div class="note warn" style="margin-top:1.4rem">
+      <strong>What we won't do.</strong> We won't put an AI in front of a customer without an
+      escalation path to a human, won't automate a process nobody has written down, and won't ship a
+      system whose failure is silent. Each of those is a way of moving a problem rather than fixing
+      it.
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PRICING ======================= -->
+<section class="band" id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Scoping estimator</div>
+      <h2>Price a project, with the rate card open</h2>
+      <p>
+        Pick the service lines, set the size of the business, and the arithmetic happens in front of
+        you. Every rate is editable, every multiplier is labelled, and the working is shown in full
+        underneath. This produces an estimate to argue with, not a quote.
+      </p>
+    </div>
+
+    <div class="est-grid">
+      <div>
+        <div class="panel">
+          <h3>1 · What do you want built?</h3>
+          <div class="panel-sub">Prices shown are the one-off build, then the optional monthly care.</div>
+          <div class="pick-list" id="est-picks"></div>
+        </div>
+
+        <div class="panel">
+          <h3>2 · What are we building it for?</h3>
+          <div class="panel-sub">These multipliers change the build price. Each one says by how much.</div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="est-scale">Size of the business</label>
+              <select id="est-scale"></select>
+              <div class="hint" id="hint-scale"></div>
+            </div>
+            <div class="field">
+              <label for="est-speed">How soon</label>
+              <select id="est-speed"></select>
+              <div class="hint" id="hint-speed"></div>
+            </div>
+            <div class="field">
+              <label for="est-stack">Existing systems to integrate with</label>
+              <select id="est-stack"></select>
+              <div class="hint" id="hint-stack"></div>
+            </div>
+            <div class="field">
+              <label for="est-care-term">Care plan term</label>
+              <select id="est-care-term"></select>
+              <div class="hint" id="hint-care"></div>
+            </div>
+            <div class="field">
+              <label for="est-currency">Currency</label>
+              <select id="est-currency"></select>
+              <div class="hint">Display only — no conversion is applied. Rates are entered in the currency you pick.</div>
+            </div>
+            <div class="field">
+              <label for="est-vat">Tax to show (%)</label>
+              <input type="number" id="est-vat" min="0" max="60" step="0.5" value="0">
+              <div class="hint">0 shows prices without tax. Set your own rate to see the gross figure.</div>
+            </div>
+          </div>
+
+          <details class="tuck">
+            <summary>Adjust the rate card — these are placeholders, not market rates</summary>
+            <div class="body">
+              <div class="note warn" style="margin-bottom:.9rem">
+                <strong>Read this before quoting anyone.</strong> The default figures below are
+                placeholders chosen to make the arithmetic legible. They are not a survey, a
+                benchmark, or a claim about what this work is worth in your market. Replace every
+                one of them with your own before this page goes near a client.
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Service line</th>
+                      <th class="n">Build (one-off)</th>
+                      <th class="n">Care (monthly)</th>
+                      <th class="n">Typical weeks</th>
+                    </tr>
+                  </thead>
+                  <tbody id="rate-body"></tbody>
+                </table>
+              </div>
+              <div class="btn-row" style="margin-top:.8rem">
+                <button type="button" id="btn-rates-reset">Reset to defaults</button>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <div class="panel">
+          <h3>3 · Is it worth it?</h3>
+          <div class="panel-sub">
+            Your figures only. This page has no idea what your time is worth or how many enquiries
+            you lose, so it asks, and then does nothing but arithmetic on the answers.
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="pb-hours">Hours a week currently spent on this work</label>
+              <input type="number" id="pb-hours" min="0" step="0.5" value="0">
+            </div>
+            <div class="field">
+              <label for="pb-rate">What an hour of that time costs you</label>
+              <input type="number" id="pb-rate" min="0" step="1" value="0">
+              <div class="hint">Wage plus on-costs, or your own billable rate. Whichever is honest.</div>
+            </div>
+            <div class="field">
+              <label for="pb-recover">Of those hours, how many would realistically go away (%)</label>
+              <input type="number" id="pb-recover" min="0" max="100" step="5" value="60">
+              <div class="hint">Rarely 100. Something always needs a human.</div>
+            </div>
+            <div class="field">
+              <label for="pb-leads">Enquiries lost a month to slow or missed replies</label>
+              <input type="number" id="pb-leads" min="0" step="1" value="0">
+            </div>
+            <div class="field">
+              <label for="pb-value">Average value of a won customer</label>
+              <input type="number" id="pb-value" min="0" step="1" value="0">
+            </div>
+            <div class="field">
+              <label for="pb-close">Of the recovered enquiries, how many you'd win (%)</label>
+              <input type="number" id="pb-close" min="0" max="100" step="5" value="20">
+            </div>
+          </div>
+          <div id="payback-out" style="margin-top:1.1rem"></div>
+        </div>
+      </div>
+
+      <div class="summary">
+        <div class="panel">
+          <h3>Estimate</h3>
+          <div class="panel-sub" id="sum-count">Nothing selected yet.</div>
+          <div id="sum-lines"></div>
+          <div class="sum-total">
+            <span class="k">Build</span>
+            <span class="v num" id="sum-build">—</span>
+          </div>
+          <div class="sum-total care">
+            <span class="k">Care</span>
+            <span class="v num" id="sum-care">—</span>
+          </div>
+          <div class="btn-row" style="margin-top:1.1rem">
+            <button type="button" class="primary" id="btn-est-brief">Use this in a brief</button>
+            <button type="button" id="btn-est-copy">Copy estimate</button>
+          </div>
+          <div class="note" style="margin-top:1rem; font-size:.8rem">
+            An estimate from a rate card, not a quote. A quote needs a conversation about the parts
+            of your business no web page can see.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= BRIEF ======================= -->
+<section class="band alt" id="brief">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Start a brief</div>
+      <h2>Turn the enquiry into a document you keep</h2>
+      <p>
+        Fill this in and it becomes a Markdown project brief — copy it, download it, send it to us
+        or to somebody else entirely. It never leaves this browser: there is no server behind this
+        page, and nothing here is submitted anywhere.
+      </p>
+    </div>
+
+    <div class="est-grid">
+      <div>
+        <div class="panel">
+          <h3>The business</h3>
+          <div class="panel-sub">Enough for someone to understand what they'd be building for.</div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="bf-name">Business name</label>
+              <input type="text" id="bf-name" placeholder="e.g. Northgate Dental">
+            </div>
+            <div class="field">
+              <label for="bf-sector">Sector</label>
+              <input type="text" id="bf-sector" placeholder="e.g. dental practice, two sites">
+            </div>
+            <div class="field">
+              <label for="bf-site">Website, if there is one</label>
+              <input type="url" id="bf-site" placeholder="https://">
+            </div>
+            <div class="field">
+              <label for="bf-people">People in the business</label>
+              <input type="text" id="bf-people" placeholder="e.g. 2 dentists, 3 front desk">
+            </div>
+            <div class="field span-2">
+              <label for="bf-pain">What is actually going wrong right now</label>
+              <textarea id="bf-pain" placeholder="Be specific and unflattering. &quot;Reception misses about 15 calls a day and nobody rings them back&quot; is worth more than &quot;we want to modernise&quot;."></textarea>
+            </div>
+            <div class="field span-2">
+              <label for="bf-tried">What you've already tried</label>
+              <textarea id="bf-tried" placeholder="Tools bought and abandoned, agencies used, the spreadsheet that half works. Saves everyone a fortnight."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>The work</h3>
+          <div class="panel-sub">Ticked service lines carry over from the estimator, and back.</div>
+          <div class="field" style="margin-bottom:1rem">
+            <span class="lbl">Service lines wanted</span>
+            <div class="opt-row" id="bf-services"></div>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="bf-when">When it needs to be live</label>
+              <input type="text" id="bf-when" placeholder="e.g. before the January intake">
+            </div>
+            <div class="field">
+              <label for="bf-budget">Budget you have in mind</label>
+              <input type="text" id="bf-budget" placeholder="A range is fine. &quot;Don't know&quot; is fine too.">
+            </div>
+            <div class="field span-2">
+              <label for="bf-success">What would make this obviously worth it</label>
+              <textarea id="bf-success" placeholder="One sentence. If it can be counted, count it."></textarea>
+            </div>
+            <div class="field span-2">
+              <label for="bf-constraints">Constraints anyone building this must know</label>
+              <textarea id="bf-constraints" placeholder="Regulated data, an owner who won't use a new app, a partner agency, a system that can't be replaced this year."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>You</h3>
+          <div class="panel-sub">Only used to head the document. It is not sent anywhere.</div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="bf-contact">Your name</label>
+              <input type="text" id="bf-contact">
+            </div>
+            <div class="field">
+              <label for="bf-email">Email</label>
+              <input type="email" id="bf-email">
+            </div>
+            <div class="field">
+              <label for="bf-phone">Phone, if you prefer that</label>
+              <input type="text" id="bf-phone">
+            </div>
+            <div class="field">
+              <label for="bf-best">Best way and time to reach you</label>
+              <input type="text" id="bf-best" placeholder="e.g. WhatsApp, after 6pm">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary">
+        <div class="panel">
+          <h3>Your brief</h3>
+          <div class="panel-sub">Regenerates as you type. Markdown, ready to paste anywhere.</div>
+          <div class="btn-row" style="margin-bottom:.9rem">
+            <button type="button" class="primary" id="btn-brief-copy">Copy</button>
+            <button type="button" id="btn-brief-dl">Download .md</button>
+            <button type="button" id="btn-brief-mail">Open in email</button>
+            <button type="button" id="btn-brief-clear">Clear</button>
+          </div>
+          <pre class="out" id="brief-out"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FAQ ======================= -->
+<section class="band" id="faq">
+  <div class="wrap narrow">
+    <div class="section-head">
+      <div class="eyebrow">Questions</div>
+      <h2>The ones worth answering honestly</h2>
+    </div>
+
+    <details class="faq">
+      <summary>Will an AI answering my customers embarrass me?</summary>
+      <div class="body">
+        <p>
+          It can, and the way it happens is always the same: the system is given no way to say "I
+          don't know", so it invents. That is why every conversational build here starts from a
+          refusal list and an escalation path rather than a personality.
+        </p>
+        <p>
+          The rule we hold to is that the assistant may only state things it can look up — a real
+          slot from the real diary, a real price from the real list. Anything else it hands to a
+          human. You approve those rules by watching them fire in step 4, before go-live.
+        </p>
+      </div>
+    </details>
+
+    <details class="faq">
+      <summary>Are the prices on this page what I'll pay?</summary>
+      <div class="body">
+        <p>
+          No, and the page says so wherever a number appears. The rate card is a set of placeholder
+          figures chosen so the arithmetic is legible; they are not a market survey. The estimator's
+          job is to show you how a price is <em>built</em> — which lines, which multipliers, what
+          discount — so that a real quote is something you can interrogate.
+        </p>
+      </div>
+    </details>
+
+    <details class="faq">
+      <summary>What happens to the data I type into this site?</summary>
+      <div class="body">
+        <p>
+          It stays in this browser. This page makes no network requests of any kind: no fonts, no
+          analytics, no CDN, no form endpoint. Your estimator selections and brief are saved to this
+          browser's local storage so you can come back to them, and they can be wiped with the Clear
+          button on the brief.
+        </p>
+        <p>
+          The "Open in email" button hands the text to whatever mail client your device uses. That
+          is the only moment anything leaves the page, and you are the one pressing it.
+        </p>
+      </div>
+    </details>
+
+    <details class="faq">
+      <summary>Why is there no client list or testimonials?</summary>
+      <div class="body">
+        <p>
+          Because the usual versions are unverifiable, and a stranger cannot tell an earned logo
+          from a decorative one. The alternative offered here is stronger and harder to fake:
+          thirteen working tools you can open, use offline, and read the source of. If the
+          engineering in them is good, that is evidence; if it isn't, no testimonial would have
+          fixed it.
+        </p>
+      </div>
+    </details>
+
+    <details class="faq">
+      <summary>What if the automation isn't worth it for my business?</summary>
+      <div class="body">
+        <p>
+          Then the scope should say so, and sometimes it does. The payback panel in the estimator is
+          built to be able to return a bad answer: if your own figures don't recover the build cost
+          in a sensible number of months, it prints that plainly rather than burying it.
+        </p>
+        <p>
+          Small businesses under a certain volume of enquiries genuinely are better served by a
+          cheap shared inbox and a rule about answering it. That is a legitimate outcome of a
+          scoping call.
+        </p>
+      </div>
+    </details>
+
+    <details class="faq">
+      <summary>Do I get locked in?</summary>
+      <div class="body">
+        <p>
+          The care plan is monthly and cancellable. At handover you receive the runbook, the
+          credentials, and a recorded walkthrough — the things you'd need to take the system to
+          somebody else. A system whose only documentation is the person who built it is a liability
+          that happens to be working at the moment.
+        </p>
+      </div>
+    </details>
+
+    <details class="faq">
+      <summary>Can I just use the tools and build it myself?</summary>
+      <div class="body">
+        <p>
+          Yes. They are complete, offline, and free to open. They were written to be genuinely
+          useful on their own, not as a demo that stops at the interesting part. If a capable person
+          in your business works through the relevant one and builds the thing, that is a good
+          outcome and costs you nothing.
+        </p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ======================= CONTACT ======================= -->
+<section class="band alt" id="contact">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Contact</div>
+      <h2>Start with a configured tool, not a call</h2>
+      <p>
+        The fastest way to a useful conversation is to spend twenty minutes in the tool for the
+        thing you want, export the brief, and send that. It turns a first call from an interview
+        into a review.
+      </p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="panel">
+        <h3>Studio details</h3>
+        <div class="panel-sub">
+          Set these once — they save to this browser and fill in throughout the page.
+        </div>
+        <ul class="contact-lines" id="contact-lines"></ul>
+        <details class="tuck">
+          <summary>Edit studio details</summary>
+          <div class="body">
+            <div class="form-grid">
+              <div class="field">
+                <label for="cfg-name">Studio name</label>
+                <input type="text" id="cfg-name">
+              </div>
+              <div class="field">
+                <label for="cfg-tag">Tagline</label>
+                <input type="text" id="cfg-tag">
+              </div>
+              <div class="field">
+                <label for="cfg-email">Email</label>
+                <input type="email" id="cfg-email">
+              </div>
+              <div class="field">
+                <label for="cfg-phone">Phone / WhatsApp</label>
+                <input type="text" id="cfg-phone">
+              </div>
+              <div class="field">
+                <label for="cfg-where">Where you are</label>
+                <input type="text" id="cfg-where">
+              </div>
+              <div class="field">
+                <label for="cfg-hours">Hours</label>
+                <input type="text" id="cfg-hours">
+              </div>
+            </div>
+            <div class="note warn" style="margin-top:.9rem">
+              <strong>These ship as placeholders.</strong> The defaults are deliberately fake
+              (<code>example.com</code>) so that nothing publishes a real address by accident. Fill
+              them in — here, or in the <code>STUDIO</code> block at the top of this file's script —
+              before the site goes anywhere.
+            </div>
+            <div class="btn-row" style="margin-top:.8rem">
+              <button type="button" id="btn-cfg-reset">Reset to placeholders</button>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div class="panel">
+        <h3>What to send</h3>
+        <div class="panel-sub">A first message that gets a useful reply has four things in it.</div>
+        <ul class="svc-bullets" style="gap:.6rem">
+          <li>The <b>brief</b> from the section above, or the export from whichever tool you used.</li>
+          <li>What is going wrong now, in a sentence you would be slightly embarrassed to publish.</li>
+          <li>The date something has to be working by, and what happens if it isn't.</li>
+          <li>Whether you want a build, a care plan, or someone to tell you it isn't worth doing.</li>
+        </ul>
+        <div class="btn-row" style="margin-top:1.2rem">
+          <a class="btn primary" href="#brief">Write the brief</a>
+          <a class="btn" href="#services">Pick a tool first</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h4 id="foot-brand">Mosh Digital Studios</h4>
+        <p style="max-width:26rem">
+          A studio that builds automation systems for small businesses, and publishes the working
+          models for all of them. This page is a single HTML file: no build step, no dependencies,
+          no requests, no tracking.
+        </p>
+      </div>
+      <div>
+        <h4>Sections</h4>
+        <ul>
+          <li><a href="#services">Service lines</a></li>
+          <li><a href="#proof">Working tools</a></li>
+          <li><a href="#process">Process</a></li>
+          <li><a href="#pricing">Estimator</a></li>
+          <li><a href="#brief">Brief builder</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Elsewhere in this repo</h4>
+        <ul>
+          <li><a href="../hub/index.html">All the apps →</a></li>
+          <li><a href="../agency-sops/index.html">Agency operations system</a></li>
+          <li><a href="../client-contracts/index.html">Proposals &amp; contracts</a></li>
+          <li><a href="README.md">This site's readme</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fine">
+      <p>
+        <strong>Nothing on this page is a claim about another business's results.</strong> There are
+        no testimonials, no client logos and no case-study figures, because none could be verified
+        by a reader. The rate card is placeholder arithmetic, labelled as such wherever it appears.
+      </p>
+      <p id="foot-time"></p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* ===========================================================================
+   STUDIO — fill these in before publishing.
+   Defaults are deliberate placeholders (example.com) so a real address is
+   never published by accident. Editing them here changes the shipped
+   defaults; the Contact section can also override them per browser.
+   =========================================================================== */
+
+const STUDIO_DEFAULTS = {
+  name:  "Mosh Digital Studios",
+  tag:   "AI automation for small businesses",
+  email: "hello@example.com",
+  phone: "+00 0000 000000",
+  where: "Remote — set your location",
+  hours: "Mon–Fri, 09:00–17:00"
+};
+
+/* ===========================================================================
+   SERVICE CATALOGUE
+   One entry per service line. `app` is the folder in this repository holding
+   the working tool; every one of them is a single offline HTML file.
+   Build/care figures are PLACEHOLDERS — see the note on the rate card.
+   =========================================================================== */
+
+const GROUPS = [
+  { id: "convert", label: "Answer & convert",  note: "The systems that talk to a customer and turn an enquiry into a booking or an order." },
+  { id: "grow",    label: "Get found",         note: "The systems that put the business in front of people who weren't looking for it." },
+  { id: "run",     label: "Run the back office", note: "The systems that do the filing, chasing and counting nobody wants to do." }
+];
+
+const SERVICES = [
+  {
+    id: "whatsapp", group: "convert", glyph: "💬",
+    name: "WhatsApp AI Sales Assistant",
+    line: "An assistant that answers on WhatsApp, qualifies, and hands over cleanly when it should.",
+    bullets: [
+      "System prompt, refusal list and escalation rules built from your own products and policies",
+      "Qualification flow that captures what your salespeople actually need to know",
+      "Handover to a human with the conversation attached, not a cold restart",
+      "Message templates within the 24-hour window rules"
+    ],
+    deliver: "A configured assistant, its guardrails, and the wiring guide for your provider.",
+    weeks: 3, build: 1800, care: 180,
+    app: "whatsapp-sales", appName: "WhatsApp AI Sales Assistant"
+  },
+  {
+    id: "booking", group: "convert", glyph: "🗓",
+    name: "AI Appointment Booking",
+    line: "A timezone-correct availability engine an agent can be trusted to book against.",
+    bullets: [
+      "Availability engine with buffers, capacity, notice and horizon — tested against double-booking",
+      "Agent tools defined so the assistant can only offer slots the engine returned",
+      "Confirmations, reminders and cancellations as templates, counted in SMS segments",
+      "Deposit and no-show policy wired through every message"
+    ],
+    deliver: "A booking system, the agent that drives it, and the failure tests it survived.",
+    weeks: 3, build: 1500, care: 140,
+    app: "appointment-booking", appName: "AI Appointment Booking System"
+  },
+  {
+    id: "website", group: "convert", glyph: "🌐",
+    name: "Website + CRM Automation",
+    line: "A site whose enquiries land in a CRM that chases them, rather than in an inbox that doesn't.",
+    bullets: [
+      "Lead capture wired to a pipeline with stages that mean something",
+      "Automatic follow-up on the enquiries nobody got round to",
+      "Source tracking, so you know which marketing to stop paying for",
+      "Build plan ordered by what pays back first"
+    ],
+    deliver: "The build plan, priced and sequenced, plus the CRM configuration.",
+    weeks: 4, build: 2400, care: 160,
+    app: "website-crm", appName: "AI Website + CRM Automation"
+  },
+  {
+    id: "localsite", group: "convert", glyph: "🏪",
+    name: "Local Business Website",
+    line: "A fast, honest site for a business whose customers are within ten miles.",
+    bullets: [
+      "Twelve trade-specific templates across four layouts",
+      "Everything a local search result needs: hours, area, prices, directions",
+      "Exports as a single file — no platform, no monthly hosting trap",
+      "Built to load on a bad phone connection in a car park"
+    ],
+    deliver: "A finished site file, plus the content structure behind it.",
+    weeks: 2, build: 1200, care: 90,
+    app: "local-business-templates", appName: "Local Business Website Studio"
+  },
+  {
+    id: "seo", group: "grow", glyph: "🔍",
+    name: "SEO & Content Systems",
+    line: "Keyword clusters, briefs and a publishing rhythm — with the arithmetic on whether it's worth it.",
+    bullets: [
+      "Keyword research grouped into clusters a real person could write",
+      "Content briefs specific enough to hand to a writer or a model",
+      "A publishing cadence sized to the resource you actually have",
+      "Traffic-to-revenue arithmetic on your own conversion rate"
+    ],
+    deliver: "The cluster map, the briefs, and the calendar.",
+    weeks: 3, build: 1400, care: 400,
+    app: "seo-content", appName: "SEO & Content Marketing Systems"
+  },
+  {
+    id: "ads", group: "grow", glyph: "🎯",
+    name: "Meta Ads & Tracking",
+    line: "Campaign structure and the pixel work that makes the numbers mean anything.",
+    bullets: [
+      "Pixel and conversions API set up so events survive the browser",
+      "Campaign structure that can actually be read after two weeks",
+      "Audience and creative plan matched to the budget available",
+      "Reporting that ties spend to enquiries, not to impressions"
+    ],
+    deliver: "The tracking setup, the campaign blueprint, and the reporting sheet.",
+    weeks: 2, build: 1200, care: 450,
+    app: "meta-ads", appName: "Meta Ads & Pixel Blueprints"
+  },
+  {
+    id: "social", group: "grow", glyph: "📱",
+    name: "Social Content Automation",
+    line: "One source asset in, a platform-native week of posts out.",
+    bullets: [
+      "A repeatable pipeline from one long asset to a week of posts",
+      "Platform-native formatting rather than the same square everywhere",
+      "A scheduling rhythm one person can sustain",
+      "Approval step, so nothing publishes unseen"
+    ],
+    deliver: "The content pipeline, the templates, and the schedule.",
+    weeks: 3, build: 1600, care: 380,
+    app: "social-automation", appName: "Social Media Content Automation"
+  },
+  {
+    id: "email", group: "grow", glyph: "✉️",
+    name: "Email Marketing Automation",
+    line: "Sequences that get delivered, and list arithmetic that says what they're worth.",
+    bullets: [
+      "Welcome, nurture, win-back and post-purchase sequences",
+      "Deliverability work — authentication, warming, list hygiene",
+      "Segmentation that reflects how people actually buy from you",
+      "Revenue-per-email arithmetic on your own list"
+    ],
+    deliver: "The sequences written, the automation configured, the deliverability fixed.",
+    weeks: 3, build: 1400, care: 260,
+    app: "email-marketing", appName: "Email Marketing Automation"
+  },
+  {
+    id: "store", group: "grow", glyph: "🛒",
+    name: "E-Commerce Store Setup",
+    line: "A store built to sell, not a theme installed and abandoned.",
+    bullets: [
+      "Catalogue structure, variants and collections that survive growth",
+      "Checkout, shipping and tax configured for where you actually sell",
+      "The apps worth paying for, and the ones that are a tax on revenue",
+      "Launch checklist that ends with a real test order"
+    ],
+    deliver: "A live store, configured, with the launch checklist signed off.",
+    weeks: 4, build: 2200, care: 180,
+    app: "ecommerce-setup", appName: "Store Setup Guides"
+  },
+  {
+    id: "orders", group: "run", glyph: "📦",
+    name: "E-Commerce Order Automation",
+    line: "What every order costs you to process by hand — and what to automate first.",
+    bullets: [
+      "Cost-per-order model built from your own steps and times",
+      "Automation sequenced by payback, so the cheapest win goes first",
+      "Exceptions designed deliberately: the refund, the wrong address, the missing stock",
+      "Notification flow that stops customers emailing to ask where things are"
+    ],
+    deliver: "The order pipeline automated, with the exception paths built.",
+    weeks: 4, build: 2000, care: 200,
+    app: "order-automation", appName: "E-Commerce Order Automation"
+  },
+  {
+    id: "invoice", group: "run", glyph: "🧾",
+    name: "Invoice & Payment Automation",
+    line: "Get the invoice out, then get it paid — the half of the business nobody sells a course about.",
+    bullets: [
+      "Invoices raised from the work record rather than from memory",
+      "A chase sequence with escalating firmness and a defined end",
+      "Payment links and reconciliation that closes the loop",
+      "The cost of late payment, on your own numbers"
+    ],
+    deliver: "Invoicing and chasing automated end to end.",
+    weeks: 2, build: 1100, care: 120,
+    app: "invoice-automation", appName: "Invoice & Payment Automation"
+  },
+  {
+    id: "dashboards", group: "run", glyph: "📊",
+    name: "Business Dashboards",
+    line: "The twelve numbers that run a business, in one place, updated without anyone typing.",
+    bullets: [
+      "The twelve figures chosen for your model, not a generic template",
+      "Automatic feeds from the systems that already hold the data",
+      "Thresholds that make a number shout when it should",
+      "One weekly view that fits on a phone"
+    ],
+    deliver: "A live dashboard and the definitions behind every figure on it.",
+    weeks: 2, build: 900, care: 110,
+    app: "business-dashboards", appName: "Business Dashboard Templates"
+  },
+  {
+    id: "sops", group: "run", glyph: "📋",
+    name: "Operations & SOP Build",
+    line: "Writing down how the business works, so it can be delegated or automated at all.",
+    bullets: [
+      "The processes documented in the order they cause problems",
+      "Delegation map: who owns what, and what they're allowed to decide",
+      "Pricing and capacity model, so work can be turned down on purpose",
+      "The prerequisite for every other line on this page"
+    ],
+    deliver: "The SOP set, the delegation map, and the pricing model.",
+    weeks: 3, build: 1300, care: 0,
+    app: "agency-sops", appName: "The Agency Operations System"
+  }
+];
+
+/* --- extra tools worth showing that aren't service lines ------------------ */
+
+const EXTRA_TOOLS = [
+  { glyph: "🧰", name: "AI Automation Kits", app: "automation-kits",
+    note: "How to package, price and sell automation as a product rather than as hours." },
+  { glyph: "📄", name: "Proposal & Contract Kit", app: "client-contracts",
+    note: "The client documents that get signed and paid, with the clauses that matter explained." },
+  { glyph: "🏛", name: "CLEAR AI Board of Directors", app: "board-of-directors",
+    note: "Fifteen directors score a real decision on your numbers, and are allowed to say no." },
+  { glyph: "🎬", name: "Commercial Production Kits", app: "commercial-kits",
+    note: "Brief, script, shot list and the cost per finished second of AI-made video." },
+  { glyph: "🧠", name: "Prompt Packs for Business", app: "prompt-packs",
+    note: "Prompt libraries built per role and per task, ready to sell or deploy internally." },
+  { glyph: "🎥", name: "Faceless YouTube Toolkit", app: "youtube-toolkit",
+    note: "The production system behind a faceless channel, end to end." }
+];
+
+/* --- multipliers ---------------------------------------------------------- */
+
+const SCALES = [
+  { id: "solo",  label: "Sole trader or one-person business", mult: 0.80, note: "−20%: one calendar, one inbox, one opinion. Fewer edge cases to design for." },
+  { id: "small", label: "Small team (2–10 people)",           mult: 1.00, note: "The baseline the rate card is written against." },
+  { id: "multi", label: "Multi-site or 11–50 people",         mult: 1.35, note: "+35%: multiple locations, resources and permission levels to model." },
+  { id: "group", label: "Group or 50+ people",                mult: 1.80, note: "+80%: procurement, security review, and more stakeholders than builders." }
+];
+
+const SPEEDS = [
+  { id: "std",   label: "Standard scheduling",          mult: 1.00, note: "Starts at the next free slot, usually 2–4 weeks out." },
+  { id: "prio",  label: "Priority — start within a week", mult: 1.25, note: "+25%: displaces other scheduled work." },
+  { id: "rush",  label: "Urgent — start immediately",   mult: 1.50, note: "+50%: evenings and weekends, and the quality risk that comes with them." }
+];
+
+const STACKS = [
+  { id: "clean", label: "Nothing to integrate with — clean start", mult: 0.90, note: "−10%: no legacy data to migrate, no other system's assumptions to honour." },
+  { id: "std",   label: "Mainstream tools with proper APIs",       mult: 1.00, note: "Baseline. Anything with documented, stable APIs." },
+  { id: "mixed", label: "A mix, including one awkward system",     mult: 1.20, note: "+20%: one integration will need building rather than configuring." },
+  { id: "bespoke", label: "Bespoke or on-premise systems",         mult: 1.45, note: "+45%: integration work that cannot be estimated confidently up front." }
+];
+
+const CARE_TERMS = [
+  { id: "none",   label: "No care plan — hand it over and go", mult: 0.00, note: "You get the runbook and the credentials. Nothing recurring." },
+  { id: "month",  label: "Monthly, cancel any time",           mult: 1.00, note: "The baseline monthly figure." },
+  { id: "annual", label: "Annual, paid up front",              mult: 0.90, note: "−10% on the monthly rate, in exchange for the commitment." }
+];
+
+const BUNDLES = [
+  { min: 5, pct: 0.12, label: "Five or more lines — 12% off the build" },
+  { min: 3, pct: 0.07, label: "Three or four lines — 7% off the build" }
+];
+
+const CURRENCIES = [
+  { code: "GBP", sym: "£",    name: "Pound sterling" },
+  { code: "USD", sym: "$",    name: "US dollar" },
+  { code: "EUR", sym: "€",    name: "Euro" },
+  { code: "CAD", sym: "CA$",  name: "Canadian dollar" },
+  { code: "AUD", sym: "A$",   name: "Australian dollar" },
+  { code: "NZD", sym: "NZ$",  name: "New Zealand dollar" },
+  { code: "ZAR", sym: "R",    name: "South African rand" },
+  { code: "NGN", sym: "₦",    name: "Nigerian naira" },
+  { code: "KES", sym: "KSh",  name: "Kenyan shilling" },
+  { code: "INR", sym: "₹",    name: "Indian rupee" },
+  { code: "AED", sym: "AED ", name: "UAE dirham" },
+  { code: "SGD", sym: "S$",   name: "Singapore dollar" }
+];
+
+/* ===========================================================================
+   STATE
+   =========================================================================== */
+
+const LS_KEY = "mds.site.v1";
+
+const state = {
+  studio: Object.assign({}, STUDIO_DEFAULTS),
+  rates: {},                 /* id -> {build, care, weeks} */
+  picked: [],                /* service ids */
+  scale: "small",
+  speed: "std",
+  stack: "std",
+  careTerm: "month",
+  currency: "GBP",
+  vat: 0,
+  filter: "all",
+  payback: { hours: 0, rate: 0, recover: 60, leads: 0, value: 0, close: 20 },
+  brief: {}
+};
+
+function defaultRates() {
+  const r = {};
+  SERVICES.forEach(function (s) { r[s.id] = { build: s.build, care: s.care, weeks: s.weeks }; });
+  return r;
+}
+
+state.rates = defaultRates();
+
+function save() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) { /* private mode */ }
+}
+
+function load() {
+  let raw = null;
+  try { raw = localStorage.getItem(LS_KEY); } catch (e) { return; }
+  if (!raw) return;
+  let saved;
+  try { saved = JSON.parse(raw); } catch (e) { return; }
+  if (!saved || typeof saved !== "object") return;
+
+  if (saved.studio) Object.assign(state.studio, saved.studio);
+  if (saved.rates) {
+    Object.keys(state.rates).forEach(function (id) {
+      if (saved.rates[id]) Object.assign(state.rates[id], saved.rates[id]);
+    });
+  }
+  if (Array.isArray(saved.picked)) {
+    state.picked = saved.picked.filter(function (id) { return SERVICES.some(function (s) { return s.id === id; }); });
+  }
+  ["scale", "speed", "stack", "careTerm", "currency", "filter"].forEach(function (k) {
+    if (typeof saved[k] === "string") state[k] = saved[k];
+  });
+  if (typeof saved.vat === "number") state.vat = saved.vat;
+  if (saved.payback) Object.assign(state.payback, saved.payback);
+  if (saved.brief) state.brief = saved.brief;
+}
+
+/* ===========================================================================
+   HELPERS
+   =========================================================================== */
+
+const $ = function (sel, root) { return (root || document).querySelector(sel); };
+const $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+
+function el(tag, attrs, children) {
+  const node = document.createElement(tag);
+  if (attrs) {
+    Object.keys(attrs).forEach(function (k) {
+      if (k === "class") node.className = attrs[k];
+      else if (k === "text") node.textContent = attrs[k];
+      else if (k === "html") node.innerHTML = attrs[k];
+      else if (k.slice(0, 2) === "on") node.addEventListener(k.slice(2), attrs[k]);
+      else if (attrs[k] !== null && attrs[k] !== undefined) node.setAttribute(k, attrs[k]);
+    });
+  }
+  (children || []).forEach(function (c) {
+    if (c === null || c === undefined) return;
+    node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+  });
+  return node;
+}
+
+function currency() {
+  return CURRENCIES.filter(function (c) { return c.code === state.currency; })[0] || CURRENCIES[0];
+}
+
+function money(n) {
+  const c = currency();
+  const rounded = Math.round(n);
+  return c.sym + rounded.toLocaleString(undefined, { maximumFractionDigits: 0 });
+}
+
+function byId(list, id) {
+  return list.filter(function (x) { return x.id === id; })[0] || list[0];
+}
+
+function svc(id) {
+  return SERVICES.filter(function (s) { return s.id === id; })[0];
+}
+
+let toastTimer = null;
+function toast(msg) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2200);
+}
+
+function copyText(text, okMsg) {
+  const done = function () { toast(okMsg || "Copied"); };
+  const fail = function () { toast("Copy blocked — select the text and copy manually"); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done, function () { legacyCopy(text) ? done() : fail(); });
+  } else {
+    legacyCopy(text) ? done() : fail();
+  }
+}
+
+function legacyCopy(text) {
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly", "");
+  ta.style.position = "fixed";
+  ta.style.left = "-9999px";
+  document.body.appendChild(ta);
+  ta.select();
+  let ok = false;
+  try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+  document.body.removeChild(ta);
+  return ok;
+}
+
+function download(filename, text) {
+  const blob = new Blob([text], { type: "text/markdown;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = el("a", { href: url, download: filename });
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+}
+
+function slug(s) {
+  return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "brief";
+}
+
+/* ===========================================================================
+   SERVICES SECTION
+   =========================================================================== */
+
+function renderFilters() {
+  const bar = $("#svc-filters");
+  bar.textContent = "";
+  const all = [{ id: "all", label: "Everything" }].concat(GROUPS);
+  all.forEach(function (g) {
+    const b = el("button", {
+      type: "button",
+      class: state.filter === g.id ? "on" : "",
+      text: g.label + (g.id === "all" ? " (" + SERVICES.length + ")" : " (" + SERVICES.filter(function (s) { return s.group === g.id; }).length + ")"),
+      "aria-pressed": state.filter === g.id ? "true" : "false",
+      onclick: function () { state.filter = g.id; save(); renderFilters(); renderServices(); }
+    });
+    bar.appendChild(b);
+  });
+}
+
+function renderServices() {
+  const grid = $("#svc-grid");
+  grid.textContent = "";
+  const list = state.filter === "all" ? SERVICES : SERVICES.filter(function (s) { return s.group === state.filter; });
+
+  list.forEach(function (s) {
+    const r = state.rates[s.id];
+    const group = byId(GROUPS, s.group);
+
+    const card = el("article", { class: "card hoverable" }, [
+      el("div", { class: "card-top" }, [
+        el("div", { class: "glyph", "aria-hidden": "true", text: s.glyph }),
+        el("div", {}, [
+          el("h3", { text: s.name }),
+          el("div", { class: "kicker", text: group.label + " · about " + r.weeks + " weeks" })
+        ])
+      ]),
+      el("p", { text: s.line }),
+      el("ul", { class: "svc-bullets" }, s.bullets.map(function (b) { return el("li", { text: b }); })),
+      el("p", { style: "font-size:.83rem;color:var(--ink-3)" }, [
+        el("b", { text: "You end up with: " }), s.deliver
+      ]),
+      el("div", { class: "card-foot" }, [
+        el("a", { class: "btn sm primary", href: "../" + s.app + "/index.html", text: "Open the tool" }),
+        el("span", { class: "meta", text: "from " + money(r.build) + (r.care ? " + " + money(r.care) + "/mo" : "") })
+      ])
+    ]);
+    grid.appendChild(card);
+  });
+
+  if (!list.length) grid.appendChild(el("p", { class: "empty", text: "No service lines in that group." }));
+}
+
+/* ===========================================================================
+   PROOF SECTION
+   =========================================================================== */
+
+function renderProof() {
+  const grid = $("#proof-grid");
+  grid.textContent = "";
+
+  SERVICES.forEach(function (s) {
+    grid.appendChild(el("article", { class: "card hoverable" }, [
+      el("div", { class: "card-top" }, [
+        el("div", { class: "glyph", "aria-hidden": "true", text: s.glyph }),
+        el("div", {}, [
+          el("h3", { text: s.appName }),
+          el("div", { class: "kicker", text: "Service line: " + s.name })
+        ])
+      ]),
+      el("p", { text: s.line }),
+      el("div", { class: "chips" }, [
+        el("span", { class: "chip good", text: "Works offline" }),
+        el("span", { class: "chip", text: "Single file" }),
+        el("span", { class: "chip", text: "No account" })
+      ]),
+      el("div", { class: "card-foot" }, [
+        el("a", { class: "btn sm", href: "../" + s.app + "/index.html", text: "Open →" }),
+        el("a", { class: "meta", href: "../" + s.app + "/README.md", text: "Read me" })
+      ])
+    ]));
+  });
+
+  EXTRA_TOOLS.forEach(function (t) {
+    grid.appendChild(el("article", { class: "card hoverable" }, [
+      el("div", { class: "card-top" }, [
+        el("div", { class: "glyph", "aria-hidden": "true", text: t.glyph }),
+        el("div", {}, [
+          el("h3", { text: t.name }),
+          el("div", { class: "kicker", text: "Studio tooling" })
+        ])
+      ]),
+      el("p", { text: t.note }),
+      el("div", { class: "chips" }, [
+        el("span", { class: "chip good", text: "Works offline" }),
+        el("span", { class: "chip", text: "Single file" })
+      ]),
+      el("div", { class: "card-foot" }, [
+        el("a", { class: "btn sm", href: "../" + t.app + "/index.html", text: "Open →" }),
+        el("a", { class: "meta", href: "../" + t.app + "/README.md", text: "Read me" })
+      ])
+    ]));
+  });
+}
+
+/* ===========================================================================
+   ESTIMATOR
+   =========================================================================== */
+
+function renderSelects() {
+  function fill(sel, list, current) {
+    sel.textContent = "";
+    list.forEach(function (o) {
+      sel.appendChild(el("option", { value: o.id, text: o.label, selected: o.id === current ? "selected" : null }));
+    });
+    sel.value = current;
+  }
+  fill($("#est-scale"), SCALES, state.scale);
+  fill($("#est-speed"), SPEEDS, state.speed);
+  fill($("#est-stack"), STACKS, state.stack);
+  fill($("#est-care-term"), CARE_TERMS, state.careTerm);
+
+  const cur = $("#est-currency");
+  cur.textContent = "";
+  CURRENCIES.forEach(function (c) {
+    cur.appendChild(el("option", { value: c.code, text: c.code + " — " + c.name }));
+  });
+  cur.value = state.currency;
+
+  $("#est-vat").value = state.vat;
+  renderHints();
+}
+
+function renderHints() {
+  $("#hint-scale").textContent = byId(SCALES, state.scale).note;
+  $("#hint-speed").textContent = byId(SPEEDS, state.speed).note;
+  $("#hint-stack").textContent = byId(STACKS, state.stack).note;
+  $("#hint-care").textContent = byId(CARE_TERMS, state.careTerm).note;
+}
+
+function renderPicks() {
+  const box = $("#est-picks");
+  box.textContent = "";
+
+  GROUPS.forEach(function (g) {
+    box.appendChild(el("div", {
+      style: "font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:var(--ink-3);margin-top:.5rem",
+      text: g.label
+    }));
+
+    SERVICES.filter(function (s) { return s.group === g.id; }).forEach(function (s) {
+      const on = state.picked.indexOf(s.id) !== -1;
+      const r = state.rates[s.id];
+      const label = el("label", { class: "pick" + (on ? " on" : ""), "data-pick": s.id }, [
+        el("input", {
+          type: "checkbox", checked: on ? "checked" : null, "data-svc": s.id,
+          onchange: function (e) { togglePick(s.id, e.target.checked); }
+        }),
+        el("div", {}, [
+          el("div", { class: "nm", text: s.glyph + "  " + s.name }),
+          el("div", { class: "ds", text: r.weeks + " weeks · " + s.deliver })
+        ]),
+        el("div", { class: "pr" }, [
+          el("b", { text: money(r.build) }),
+          el("span", { text: r.care ? money(r.care) + "/mo care" : "no care plan" })
+        ])
+      ]);
+      box.appendChild(label);
+    });
+  });
+}
+
+/* Toggling must not rebuild the lists: a rebuilt checkbox loses focus, which
+   strands anyone working through them on a keyboard. Update in place instead,
+   and keep the two lists (estimator and brief) in step with each other. */
+function syncPickStates() {
+  $$("[data-pick]").forEach(function (label) {
+    const on = state.picked.indexOf(label.getAttribute("data-pick")) !== -1;
+    label.classList.toggle("on", on);
+    const input = label.querySelector("input");
+    if (input && input.checked !== on) input.checked = on;
+  });
+}
+
+function togglePick(id, on) {
+  const i = state.picked.indexOf(id);
+  if (on && i === -1) state.picked.push(id);
+  if (!on && i !== -1) state.picked.splice(i, 1);
+  save();
+  syncPickStates();
+  computeAll();
+}
+
+function renderRateTable() {
+  const body = $("#rate-body");
+  body.textContent = "";
+  SERVICES.forEach(function (s) {
+    const r = state.rates[s.id];
+    body.appendChild(el("tr", {}, [
+      el("td", {}, [el("b", { text: s.name })]),
+      el("td", { class: "n" }, [el("input", {
+        type: "number", min: "0", step: "50", value: r.build,
+        oninput: function (e) { r.build = Math.max(0, Number(e.target.value) || 0); save(); refreshPrices(); }
+      })]),
+      el("td", { class: "n" }, [el("input", {
+        type: "number", min: "0", step: "10", value: r.care,
+        oninput: function (e) { r.care = Math.max(0, Number(e.target.value) || 0); save(); refreshPrices(); }
+      })]),
+      el("td", { class: "n" }, [el("input", {
+        type: "number", min: "1", max: "52", step: "1", value: r.weeks,
+        oninput: function (e) { r.weeks = Math.max(1, Number(e.target.value) || 1); save(); refreshPrices(); }
+      })])
+    ]));
+  });
+}
+
+function refreshPrices() {
+  renderPicks();
+  renderServices();
+  computeAll();
+}
+
+/* --- the arithmetic ------------------------------------------------------- */
+
+function estimate() {
+  const scale = byId(SCALES, state.scale);
+  const speed = byId(SPEEDS, state.speed);
+  const stack = byId(STACKS, state.stack);
+  const care = byId(CARE_TERMS, state.careTerm);
+
+  const lines = state.picked.map(function (id) {
+    const s = svc(id);
+    const r = state.rates[id];
+    return { id: id, name: s.name, build: r.build, care: r.care, weeks: r.weeks };
+  });
+
+  const rawBuild = lines.reduce(function (a, l) { return a + l.build; }, 0);
+  const rawCare = lines.reduce(function (a, l) { return a + l.care; }, 0);
+
+  const multiplier = scale.mult * speed.mult * stack.mult;
+  const adjusted = rawBuild * multiplier;
+
+  let bundle = null;
+  for (let i = 0; i < BUNDLES.length; i++) {
+    if (lines.length >= BUNDLES[i].min) { bundle = BUNDLES[i]; break; }
+  }
+  const discount = bundle ? adjusted * bundle.pct : 0;
+  const netBuild = adjusted - discount;
+
+  const careNet = rawCare * care.mult;
+
+  const vatRate = Math.max(0, Number(state.vat) || 0) / 100;
+  const buildTax = netBuild * vatRate;
+  const careTax = careNet * vatRate;
+
+  /* Weeks: the longest line, plus a third of each additional line — parallel
+     work, but not free. */
+  const sortedWeeks = lines.map(function (l) { return l.weeks; }).sort(function (a, b) { return b - a; });
+  let weeks = 0;
+  if (sortedWeeks.length) {
+    weeks = sortedWeeks[0];
+    for (let i = 1; i < sortedWeeks.length; i++) weeks += sortedWeeks[i] / 3;
+    weeks = Math.ceil(weeks * (speed.id === "rush" ? 0.7 : speed.id === "prio" ? 0.85 : 1));
+  }
+
+  return {
+    lines: lines, scale: scale, speed: speed, stack: stack, care: care,
+    rawBuild: rawBuild, rawCare: rawCare, multiplier: multiplier, adjusted: adjusted,
+    bundle: bundle, discount: discount, netBuild: netBuild, careNet: careNet,
+    vatRate: vatRate, buildTax: buildTax, careTax: careTax,
+    buildTotal: netBuild + buildTax, careTotal: careNet + careTax,
+    weeks: weeks
+  };
+}
+
+function renderSummary(e) {
+  const box = $("#sum-lines");
+  box.textContent = "";
+
+  $("#sum-count").textContent = e.lines.length
+    ? e.lines.length + (e.lines.length === 1 ? " service line" : " service lines") + " · about " + e.weeks + " weeks to live"
+    : "Nothing selected yet.";
+
+  if (!e.lines.length) {
+    box.appendChild(el("p", { class: "empty", text: "Tick a service line to see the arithmetic." }));
+    $("#sum-build").textContent = "—";
+    $("#sum-care").textContent = "—";
+    return;
+  }
+
+  function line(k, v, cls) {
+    box.appendChild(el("div", { class: "sum-line " + (cls || "") }, [
+      el("span", { class: "k", text: k }),
+      el("span", { class: "v num", text: v })
+    ]));
+  }
+
+  e.lines.forEach(function (l) { line(l.name, money(l.build), "dim"); });
+  line("Build subtotal", money(e.rawBuild));
+
+  if (e.scale.mult !== 1) line(e.scale.label, "× " + e.scale.mult.toFixed(2), "dim");
+  if (e.speed.mult !== 1) line(e.speed.label, "× " + e.speed.mult.toFixed(2), "dim");
+  if (e.stack.mult !== 1) line(e.stack.label, "× " + e.stack.mult.toFixed(2), "dim");
+  if (e.multiplier !== 1) line("After multipliers", money(e.adjusted));
+  if (e.bundle) line(e.bundle.label, "− " + money(e.discount), "credit");
+  if (e.vatRate > 0) line("Tax at " + (e.vatRate * 100).toFixed(1) + "%", money(e.buildTax), "dim");
+
+  if (e.careNet > 0) {
+    line("Care, monthly", money(e.rawCare), "dim");
+    if (e.care.mult !== 1) line(e.care.label, "× " + e.care.mult.toFixed(2), "dim");
+    if (e.vatRate > 0) line("Tax on care", money(e.careTax), "dim");
+  }
+
+  $("#sum-build").textContent = money(e.buildTotal);
+  $("#sum-care").textContent = e.careTotal > 0 ? money(e.careTotal) + "/mo" : "none";
+}
+
+/* --- payback -------------------------------------------------------------- */
+
+function renderPayback(e) {
+  const box = $("#payback-out");
+  box.textContent = "";
+
+  const p = state.payback;
+  const hours = Math.max(0, p.hours);
+  const rate = Math.max(0, p.rate);
+  const recover = Math.min(100, Math.max(0, p.recover)) / 100;
+  const leads = Math.max(0, p.leads);
+  const value = Math.max(0, p.value);
+  const close = Math.min(100, Math.max(0, p.close)) / 100;
+
+  const timeMonthly = hours * rate * recover * (52 / 12);
+  const leadMonthly = leads * value * close;
+  const gross = timeMonthly + leadMonthly;
+  const net = gross - e.careTotal;
+
+  if (!e.lines.length) {
+    box.appendChild(el("div", { class: "note", text: "Pick at least one service line above and this will compare the build cost against the monthly figures you enter." }));
+    return;
+  }
+
+  if (gross <= 0) {
+    box.appendChild(el("div", { class: "note", text: "Enter your own hours, rates or lost enquiries above. This panel deliberately has no defaults to fall back on — it will not invent a benchmark." }));
+    return;
+  }
+
+  const rows = el("div", {});
+  function row(k, v, cls) {
+    rows.appendChild(el("div", { class: "sum-line " + (cls || "") }, [
+      el("span", { class: "k", text: k }),
+      el("span", { class: "v num", text: v })
+    ]));
+  }
+
+  row("Time recovered — " + hours.toFixed(1) + "h/wk × " + money(rate) + " × " + Math.round(recover * 100) + "%", money(timeMonthly) + "/mo", "dim");
+  row("Enquiries recovered — " + leads + " × " + money(value) + " × " + Math.round(close * 100) + "%", money(leadMonthly) + "/mo", "dim");
+  row("Gross monthly benefit", money(gross) + "/mo");
+  if (e.careTotal > 0) row("Less the care plan", "− " + money(e.careTotal) + "/mo", "dim");
+  row("Net monthly benefit", money(net) + "/mo");
+
+  box.appendChild(rows);
+
+  let verdict;
+  if (net <= 0) {
+    verdict = el("div", { class: "note warn", style: "margin-top:.9rem" }, [
+      el("strong", { text: "On these figures, don't do it. " }),
+      "The care plan costs more than the benefit, so the build never pays back at all. Either the " +
+      "scope is wrong, the figures above are too pessimistic, or this genuinely isn't a problem worth " +
+      "automating yet."
+    ]);
+  } else {
+    const months = e.buildTotal / net;
+    const cls = months <= 12 ? "good" : months <= 24 ? "" : "warn";
+    const head = months <= 12
+      ? "Pays for itself in about " + Math.ceil(months) + " months. "
+      : months <= 24
+        ? "Pays back in about " + Math.ceil(months) + " months. "
+        : "Takes about " + Math.ceil(months) + " months to pay back. ";
+    const tail = months <= 12
+      ? "That is comfortably inside the range where this is worth doing on the numbers alone."
+      : months <= 24
+        ? "Defensible, but it depends on the figures above being honest rather than hopeful."
+        : "That is long enough that the business will have changed before it pays back. Consider a smaller first scope.";
+    verdict = el("div", { class: "note " + cls, style: "margin-top:.9rem" }, [
+      el("strong", { text: head }), tail
+    ]);
+    /* halve every assumption and show it again — the house habit */
+    const pessimistic = e.buildTotal / Math.max(0.0001, (gross / 2) - e.careTotal);
+    const line = (gross / 2) - e.careTotal <= 0
+      ? "Halve every assumption above and it never pays back at all."
+      : "Halve every assumption above and it takes about " + Math.ceil(pessimistic) + " months.";
+    box.appendChild(verdict);
+    box.appendChild(el("div", { class: "note", style: "margin-top:.6rem;font-size:.82rem" }, [
+      el("strong", { text: "The pessimistic version. " }), line
+    ]));
+    return;
+  }
+  box.appendChild(verdict);
+}
+
+/* ===========================================================================
+   BRIEF
+   =========================================================================== */
+
+const BRIEF_FIELDS = [
+  "name", "sector", "site", "people", "pain", "tried",
+  "when", "budget", "success", "constraints",
+  "contact", "email", "phone", "best"
+];
+
+function renderBriefServices() {
+  const box = $("#bf-services");
+  box.textContent = "";
+  SERVICES.forEach(function (s) {
+    const on = state.picked.indexOf(s.id) !== -1;
+    box.appendChild(el("label", { class: "opt" + (on ? " on" : ""), "data-pick": s.id }, [
+      el("input", {
+        type: "checkbox", checked: on ? "checked" : null,
+        onchange: function (ev) { togglePick(s.id, ev.target.checked); }
+      }),
+      s.name
+    ]));
+  });
+}
+
+function briefText() {
+  const e = estimate();
+  const b = state.brief;
+  const now = new Date();
+  const out = [];
+
+  out.push("# Project brief — " + (b.name || "(business name)"));
+  out.push("");
+  out.push("Prepared " + now.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }) +
+           " with the estimator on the " + state.studio.name + " site.");
+  out.push("");
+
+  out.push("## The business");
+  out.push("");
+  out.push("| | |");
+  out.push("|---|---|");
+  out.push("| Business | " + (b.name || "—") + " |");
+  out.push("| Sector | " + (b.sector || "—") + " |");
+  out.push("| Website | " + (b.site || "—") + " |");
+  out.push("| People | " + (b.people || "—") + " |");
+  out.push("| Size band | " + e.scale.label + " |");
+  out.push("");
+
+  out.push("### What is going wrong now");
+  out.push("");
+  out.push(b.pain || "_Not stated._");
+  out.push("");
+  out.push("### What has already been tried");
+  out.push("");
+  out.push(b.tried || "_Not stated._");
+  out.push("");
+
+  out.push("## The work wanted");
+  out.push("");
+  if (e.lines.length) {
+    out.push("| Service line | Deliverable | Weeks |");
+    out.push("|---|---|---|");
+    e.lines.forEach(function (l) {
+      out.push("| " + l.name + " | " + svc(l.id).deliver + " | " + l.weeks + " |");
+    });
+  } else {
+    out.push("_No service lines selected yet._");
+  }
+  out.push("");
+  out.push("- **Needed live:** " + (b.when || "not stated"));
+  out.push("- **Budget in mind:** " + (b.budget || "not stated"));
+  out.push("- **Existing systems:** " + e.stack.label);
+  out.push("- **Timing:** " + e.speed.label);
+  out.push("- **Care plan:** " + e.care.label);
+  out.push("");
+
+  out.push("### What would make this obviously worth it");
+  out.push("");
+  out.push(b.success || "_Not stated._");
+  out.push("");
+  out.push("### Constraints");
+  out.push("");
+  out.push(b.constraints || "_None stated._");
+  out.push("");
+
+  if (e.lines.length) {
+    out.push("## Indicative figures");
+    out.push("");
+    out.push("_From the published rate card, which is placeholder arithmetic rather than a quote._");
+    out.push("");
+    out.push("| | |");
+    out.push("|---|---:|");
+    out.push("| Build subtotal | " + money(e.rawBuild) + " |");
+    if (e.multiplier !== 1) out.push("| Multipliers (" + e.scale.mult.toFixed(2) + " × " + e.speed.mult.toFixed(2) + " × " + e.stack.mult.toFixed(2) + ") | " + money(e.adjusted) + " |");
+    if (e.bundle) out.push("| " + e.bundle.label + " | −" + money(e.discount) + " |");
+    if (e.vatRate > 0) out.push("| Tax at " + (e.vatRate * 100).toFixed(1) + "% | " + money(e.buildTax) + " |");
+    out.push("| **Build total** | **" + money(e.buildTotal) + "** |");
+    out.push("| **Care** | **" + (e.careTotal > 0 ? money(e.careTotal) + "/mo" : "none") + "** |");
+    out.push("| Estimated elapsed time | about " + e.weeks + " weeks |");
+    out.push("");
+
+    const p = state.payback;
+    const gross = (Math.max(0, p.hours) * Math.max(0, p.rate) * (Math.min(100, Math.max(0, p.recover)) / 100) * (52 / 12))
+                + (Math.max(0, p.leads) * Math.max(0, p.value) * (Math.min(100, Math.max(0, p.close)) / 100));
+    if (gross > 0) {
+      const net = gross - e.careTotal;
+      out.push("**Payback on the figures supplied:** " + money(gross) + "/mo gross" +
+        (e.careTotal > 0 ? ", " + money(net) + "/mo net of care" : "") + " — " +
+        (net > 0 ? "about " + Math.ceil(e.buildTotal / net) + " months to recover the build." : "the build never recovers on these figures."));
+      out.push("");
+    }
+  }
+
+  out.push("## Contact");
+  out.push("");
+  out.push("- " + (b.contact || "(name)") + (b.email ? " — " + b.email : "") + (b.phone ? " — " + b.phone : ""));
+  if (b.best) out.push("- Best reached: " + b.best);
+  out.push("");
+  out.push("---");
+  out.push("");
+  out.push("Written on the " + state.studio.name + " site. Nothing in this document was transmitted " +
+           "anywhere by that page — it was generated in the browser and saved by hand.");
+
+  return out.join("\n");
+}
+
+function renderBrief() {
+  $("#brief-out").textContent = briefText();
+}
+
+/* ===========================================================================
+   CONTACT / STUDIO DETAILS
+   =========================================================================== */
+
+function renderStudio() {
+  const s = state.studio;
+
+  $("#brand-name").textContent = s.name;
+  $("#brand-tag").textContent = s.tag;
+  $("#foot-brand").textContent = s.name;
+  document.title = s.name + " — AI automation systems for small businesses";
+
+  const box = $("#contact-lines");
+  box.textContent = "";
+
+  const isPlaceholder = /example\.com/i.test(s.email);
+
+  const rows = [
+    { ic: "✉️", k: "Email", v: s.email, href: "mailto:" + s.email },
+    { ic: "💬", k: "Phone / WhatsApp", v: s.phone, href: null },
+    { ic: "📍", k: "Where", v: s.where, href: null },
+    { ic: "🕘", k: "Hours", v: s.hours, href: null }
+  ];
+
+  rows.forEach(function (r) {
+    box.appendChild(el("li", {}, [
+      el("span", { class: "ic", "aria-hidden": "true", text: r.ic }),
+      el("div", {}, [
+        el("div", { class: "k", text: r.k }),
+        r.href
+          ? el("a", { class: "v", href: r.href, text: r.v })
+          : el("div", { class: "v", text: r.v })
+      ])
+    ]));
+  });
+
+  if (isPlaceholder) {
+    box.appendChild(el("li", {}, [
+      el("span", { class: "ic", "aria-hidden": "true", text: "⚠️" }),
+      el("div", {}, [
+        el("div", { class: "k", text: "Placeholder" }),
+        el("div", { class: "v", style: "font-weight:500;color:var(--warn)", text: "These are the shipped placeholders. Fill them in before publishing." })
+      ])
+    ]));
+  }
+
+  ["name", "tag", "email", "phone", "where", "hours"].forEach(function (k) {
+    const input = $("#cfg-" + k);
+    if (input && input.value !== s[k]) input.value = s[k];
+  });
+}
+
+/* ===========================================================================
+   WIRING
+   =========================================================================== */
+
+function computeAll() {
+  const e = estimate();
+  renderSummary(e);
+  renderPayback(e);
+  renderBrief();
+}
+
+function wireEstimator() {
+  $("#est-scale").addEventListener("change", function (e) { state.scale = e.target.value; save(); renderHints(); computeAll(); });
+  $("#est-speed").addEventListener("change", function (e) { state.speed = e.target.value; save(); renderHints(); computeAll(); });
+  $("#est-stack").addEventListener("change", function (e) { state.stack = e.target.value; save(); renderHints(); computeAll(); });
+  $("#est-care-term").addEventListener("change", function (e) { state.careTerm = e.target.value; save(); renderHints(); computeAll(); });
+  $("#est-currency").addEventListener("change", function (e) {
+    state.currency = e.target.value; save(); renderPicks(); renderServices(); renderRateTable(); computeAll();
+  });
+  $("#est-vat").addEventListener("input", function (e) {
+    state.vat = Math.max(0, Math.min(60, Number(e.target.value) || 0)); save(); computeAll();
+  });
+
+  const pb = { "pb-hours": "hours", "pb-rate": "rate", "pb-recover": "recover", "pb-leads": "leads", "pb-value": "value", "pb-close": "close" };
+  Object.keys(pb).forEach(function (id) {
+    const input = $("#" + id);
+    input.value = state.payback[pb[id]];
+    input.addEventListener("input", function (e) {
+      state.payback[pb[id]] = Math.max(0, Number(e.target.value) || 0);
+      save(); computeAll();
+    });
+  });
+
+  $("#btn-rates-reset").addEventListener("click", function () {
+    state.rates = defaultRates();
+    save(); renderRateTable(); refreshPrices();
+    toast("Rate card reset to the shipped placeholders");
+  });
+
+  $("#btn-est-copy").addEventListener("click", function () {
+    const e = estimate();
+    if (!e.lines.length) { toast("Nothing selected yet"); return; }
+    const lines = [];
+    lines.push(state.studio.name + " — indicative estimate");
+    lines.push("");
+    e.lines.forEach(function (l) { lines.push("  " + l.name + " — " + money(l.build) + (l.care ? " + " + money(l.care) + "/mo" : "")); });
+    lines.push("");
+    lines.push("  Subtotal            " + money(e.rawBuild));
+    if (e.multiplier !== 1) lines.push("  Multipliers ×" + e.multiplier.toFixed(2) + "   " + money(e.adjusted));
+    if (e.bundle) lines.push("  " + e.bundle.label + "  −" + money(e.discount));
+    if (e.vatRate > 0) lines.push("  Tax                 " + money(e.buildTax));
+    lines.push("  BUILD               " + money(e.buildTotal));
+    lines.push("  CARE                " + (e.careTotal > 0 ? money(e.careTotal) + "/mo" : "none"));
+    lines.push("  Elapsed             about " + e.weeks + " weeks");
+    lines.push("");
+    lines.push("An estimate from a published, editable rate card. Not a quote.");
+    copyText(lines.join("\n"), "Estimate copied");
+  });
+
+  $("#btn-est-brief").addEventListener("click", function () {
+    document.getElementById("brief").scrollIntoView({ behavior: "smooth", block: "start" });
+    setTimeout(function () { $("#bf-name").focus(); }, 400);
+  });
+}
+
+function wireBrief() {
+  BRIEF_FIELDS.forEach(function (k) {
+    const input = $("#bf-" + k);
+    if (!input) return;
+    if (state.brief[k]) input.value = state.brief[k];
+    input.addEventListener("input", function (e) {
+      state.brief[k] = e.target.value;
+      save(); renderBrief();
+    });
+  });
+
+  $("#btn-brief-copy").addEventListener("click", function () { copyText(briefText(), "Brief copied as Markdown"); });
+
+  $("#btn-brief-dl").addEventListener("click", function () {
+    download("brief-" + slug(state.brief.name) + ".md", briefText());
+    toast("Downloaded");
+  });
+
+  $("#btn-brief-mail").addEventListener("click", function () {
+    const to = /example\.com/i.test(state.studio.email) ? "" : state.studio.email;
+    const subject = "Project brief — " + (state.brief.name || "enquiry");
+    const body = briefText();
+    const href = "mailto:" + encodeURIComponent(to) + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    if (href.length > 8000) {
+      copyText(body, "Brief is too long for a mail link — copied instead, paste it into an email");
+      return;
+    }
+    window.location.href = href;
+  });
+
+  $("#btn-brief-clear").addEventListener("click", function () {
+    if (!window.confirm("Clear the brief, the estimator selections and the payback figures from this browser?")) return;
+    state.brief = {};
+    state.picked = [];
+    state.payback = { hours: 0, rate: 0, recover: 60, leads: 0, value: 0, close: 20 };
+    save();
+    BRIEF_FIELDS.forEach(function (k) { const i = $("#bf-" + k); if (i) i.value = ""; });
+    ["pb-hours", "pb-rate", "pb-leads", "pb-value"].forEach(function (id) { $("#" + id).value = 0; });
+    $("#pb-recover").value = 60;
+    $("#pb-close").value = 20;
+    renderPicks(); renderBriefServices(); computeAll();
+    toast("Cleared");
+  });
+}
+
+function wireStudio() {
+  ["name", "tag", "email", "phone", "where", "hours"].forEach(function (k) {
+    const input = $("#cfg-" + k);
+    input.value = state.studio[k];
+    input.addEventListener("input", function (e) {
+      state.studio[k] = e.target.value;
+      save(); renderStudio(); renderBrief();
+    });
+  });
+  $("#btn-cfg-reset").addEventListener("click", function () {
+    state.studio = Object.assign({}, STUDIO_DEFAULTS);
+    save(); renderStudio(); renderBrief();
+    toast("Studio details reset to placeholders");
+  });
+}
+
+function wireChrome() {
+  /* theme */
+  const btn = $("#btn-theme");
+  let stored = null;
+  try { stored = localStorage.getItem("mds.theme"); } catch (e) { /* ignore */ }
+  if (stored === "light" || stored === "dark") document.documentElement.setAttribute("data-theme", stored);
+
+  btn.addEventListener("click", function () {
+    const cur = document.documentElement.getAttribute("data-theme");
+    const systemDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = cur === "dark" || (!cur && systemDark);
+    const next = isDark ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("mds.theme", next); } catch (e) { /* ignore */ }
+    toast(next === "dark" ? "Dark" : "Light");
+  });
+
+  /* mobile nav */
+  const nav = $("#nav");
+  const navBtn = $("#btn-nav");
+  navBtn.addEventListener("click", function () {
+    const open = nav.classList.toggle("open");
+    navBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  nav.addEventListener("click", function (e) {
+    if (e.target.tagName === "A") {
+      nav.classList.remove("open");
+      navBtn.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  /* active section highlighting */
+  const links = $$("#nav a");
+  const sections = links.map(function (a) { return document.querySelector(a.getAttribute("href")); }).filter(Boolean);
+
+  if ("IntersectionObserver" in window && sections.length) {
+    const seen = {};
+    const io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { seen[en.target.id] = en.intersectionRatio; });
+      let bestId = null, best = 0;
+      Object.keys(seen).forEach(function (id) { if (seen[id] > best) { best = seen[id]; bestId = id; } });
+      links.forEach(function (a) { a.classList.toggle("on", best > 0 && a.getAttribute("href") === "#" + bestId); });
+    }, { rootMargin: "-20% 0px -60% 0px", threshold: [0, .1, .25, .5, 1] });
+    sections.forEach(function (s) { io.observe(s); });
+  }
+
+  $("#foot-time").textContent =
+    "This page was opened at " + new Date().toLocaleString() + ". It made no network requests to do so.";
+}
+
+/* ===========================================================================
+   BOOT
+   =========================================================================== */
+
+function boot() {
+  load();
+
+  $("#stat-services").textContent = String(SERVICES.length);
+
+  renderFilters();
+  renderServices();
+  renderProof();
+  renderSelects();
+  renderPicks();
+  renderRateTable();
+  renderBriefServices();
+  renderStudio();
+
+  wireChrome();
+  wireEstimator();
+  wireBrief();
+  wireStudio();
+
+  computeAll();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", boot);
+} else {
+  boot();
+}
+</script>
+</body>
+</html>
