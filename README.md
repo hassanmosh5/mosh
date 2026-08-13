@@ -24,6 +24,7 @@ neither — open the HTML file and they run, offline, with everything stored loc
 | [`product-factory/`](product-factory/) | **The studio's production console** — twelve products ranked by score per hour, three workflows with their human gates, seven agent briefs, eighteen category-specific accuracy checks, unit economics, funnel sensitivity, and a catalogue simulation that finds the size at which upkeep eats the whole week. |
 | [`launch-kit/`](launch-kit/) | Part Four's decision tools as working tools: Fit Matrix, 7-Day Validation Sprint, 30-Day Launch Plan, CLEAR builder, pricing sheet. |
 | [`prompt-generator/`](prompt-generator/) | The Wealth Ideas Matrix wired into the CLEAR Formula, plus a prompt-pack builder and listing-copy generator. |
+| [`digital-products/`](digital-products/) | **Chapter 7 as a working tool** — eight formats compared on how much AI really carries, the 3 criteria scored with hard floors, the 30-Minute Validation Method on a clock, the 8-step build workflow with prompts written from your answers, and the fee/refund/traffic arithmetic. Both gates can return a kill. |
 | [`workbook/`](workbook/) | Star Explorers — an interactive workbook for children aged 4–8. |
 | [`gpt/`](gpt/) | Digital Product Studio — a ChatGPT custom GPT built on Chapter 7 (instructions, config and knowledge file). |
 

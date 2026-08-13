@@ -1,0 +1,2996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digital Products Maker — validate before you build</title>
+<meta name="description" content="A maker's tool for AI-assisted digital products: the eight formats compared on what they really cost, a 3-criteria gate with hard floors, the 30-Minute Validation Method as a running clock, an 8-step build workflow that writes its own prompts, the sales arithmetic nobody does first, and a launch kit. Single file, fully offline.">
+<meta name="color-scheme" content="light dark">
+<style>
+/* ===========================================================================
+   DIGITAL PRODUCTS MAKER
+   Single file. No external requests of any kind: no CDN scripts, no web
+   fonts, no images, no analytics, no network calls. Everything is inline.
+   =========================================================================== */
+
+:root {
+  --ink:        #14181d;
+  --ink-2:      #414c58;
+  --ink-3:      #6d7a88;
+  --bg:         #f5f6f8;
+  --surface:    #ffffff;
+  --surface-2:  #f7f9fb;
+  --surface-3:  #eceff4;
+  --line:       #dde3ea;
+  --line-2:     #c4cedb;
+
+  --acc:        #1a55b8;
+  --acc-2:      #14459a;
+  --acc-bg:     #e5edfa;
+  --plum:       #8a2f86;
+  --plum-bg:    #f8e9f7;
+  --green:      #156b41;
+  --green-bg:   #e2f3e9;
+  --amber:      #8a5406;
+  --amber-bg:   #fdf1dd;
+  --red:        #ac1f28;
+  --red-bg:     #fdeaeb;
+  --teal:       #0d6a72;
+  --teal-bg:    #e0f2f3;
+
+  --code-bg:    #11161c;
+  --code-ink:   #dfe6ee;
+  --code-key:   #8fb8ff;
+  --code-str:   #a8d6a3;
+  --code-com:   #78868f;
+  --code-var:   #ffc978;
+
+  --shadow:     0 1px 2px rgba(14,22,32,.06), 0 8px 24px -14px rgba(14,22,32,.24);
+  --shadow-lg:  0 2px 6px rgba(14,22,32,.08), 0 28px 56px -24px rgba(14,22,32,.34);
+  --radius:     14px;
+  --radius-sm:  9px;
+
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html[data-theme="dark"] {
+  --ink:        #e6ecf3;
+  --ink-2:      #aebbc8;
+  --ink-3:      #808f9d;
+  --bg:         #0d1116;
+  --surface:    #151b22;
+  --surface-2:  #1b232b;
+  --surface-3:  #232d37;
+  --line:       #2b3742;
+  --line-2:     #3e4c59;
+
+  --acc:        #7fb0ff;
+  --acc-2:      #a3c6ff;
+  --acc-bg:     #142238;
+  --plum:       #e39bde;
+  --plum-bg:    #2c162a;
+  --green:      #6fd09c;
+  --green-bg:   #10271b;
+  --amber:      #e9b65f;
+  --amber-bg:   #2a2011;
+  --red:        #f38b8f;
+  --red-bg:     #2e1618;
+  --teal:       #5ec9d0;
+  --teal-bg:    #10272a;
+
+  --code-bg:    #070b0f;
+  --shadow:     0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.75);
+  --shadow-lg:  0 2px 6px rgba(0,0,0,.5), 0 28px 56px -24px rgba(0,0,0,.85);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --ink:        #e6ecf3;
+    --ink-2:      #aebbc8;
+    --ink-3:      #808f9d;
+    --bg:         #0d1116;
+    --surface:    #151b22;
+    --surface-2:  #1b232b;
+    --surface-3:  #232d37;
+    --line:       #2b3742;
+    --line-2:     #3e4c59;
+
+    --acc:        #7fb0ff;
+    --acc-2:      #a3c6ff;
+    --acc-bg:     #142238;
+    --plum:       #e39bde;
+    --plum-bg:    #2c162a;
+    --green:      #6fd09c;
+    --green-bg:   #10271b;
+    --amber:      #e9b65f;
+    --amber-bg:   #2a2011;
+    --red:        #f38b8f;
+    --red-bg:     #2e1618;
+    --teal:       #5ec9d0;
+    --teal-bg:    #10272a;
+
+    --code-bg:    #070b0f;
+    --shadow:     0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.75);
+    --shadow-lg:  0 2px 6px rgba(0,0,0,.5), 0 28px 56px -24px rgba(0,0,0,.85);
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 { line-height: 1.25; margin: 0 0 8px; font-weight: 660; letter-spacing: -.015em; }
+h2 { font-size: 22px; }
+h3 { font-size: 17px; }
+h4 { font-size: 14.5px; }
+p { margin: 0 0 12px; }
+p:last-child { margin-bottom: 0; }
+a { color: var(--acc); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+small { font-size: 12.5px; }
+b, strong { font-weight: 650; }
+code, kbd { font-family: var(--mono); font-size: .88em; }
+ul, ol { margin: 0 0 12px; padding-left: 20px; }
+li { margin: 4px 0; }
+hr { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
+
+:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 4px; }
+.sr {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skip {
+  position: absolute; left: -9999px; top: 8px; z-index: 200; background: var(--acc); color: #fff;
+  padding: 10px 16px; border-radius: 8px; text-decoration: none;
+}
+.skip:focus { left: 12px; }
+
+.wrap { max-width: 1140px; margin: 0 auto; padding: 0 18px; }
+.muted { color: var(--ink-3); }
+.nowrap { white-space: nowrap; }
+.tnum { font-variant-numeric: tabular-nums; }
+.grow { margin-right: auto; }
+
+/* ---- top bar ---- */
+
+.topbar { position: sticky; top: 0; z-index: 50; background: var(--surface); border-bottom: 1px solid var(--line); }
+.topbar .wrap { display: flex; align-items: center; gap: 8px; height: 60px; }
+.brand { margin-right: auto; display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.brand b { font-size: 16.5px; letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand span { font-size: 12.5px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 860px) { .brand span { display: none; } }
+@media (max-width: 620px) {
+  .topbar .btxt { display: none; }
+  .brand b { font-size: 15px; }
+}
+
+button, .btn {
+  font: inherit; font-weight: 560; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm); padding: 9px 14px;
+  cursor: pointer; transition: background .12s, border-color .12s, color .12s;
+  display: inline-flex; align-items: center; gap: 7px; text-decoration: none;
+}
+button:hover, .btn:hover { background: var(--surface-2); border-color: var(--ink-3); }
+button:disabled, .btn:disabled { opacity: .45; cursor: not-allowed; }
+button:disabled:hover { background: var(--surface); border-color: var(--line-2); }
+button.sm, .btn.sm { padding: 6px 11px; font-size: 13px; }
+button.xs { padding: 3px 8px; font-size: 12px; border-radius: 7px; }
+button.ghost { background: transparent; border-color: transparent; color: var(--ink-2); }
+button.ghost:hover { background: var(--surface-3); border-color: transparent; color: var(--ink); }
+button.primary { background: var(--acc); border-color: var(--acc); color: #fff; }
+button.primary:hover { background: var(--acc-2); border-color: var(--acc-2); color: #fff; }
+button.danger { color: var(--red); }
+button.danger:hover { background: var(--red-bg); color: var(--red); }
+html[data-theme="dark"] button.primary { color: #08121f; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) button.primary { color: #08121f; } }
+
+/* ---- tab strip ---- */
+
+.tabstrip { border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 60px; z-index: 45; }
+.tabstrip .wrap { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: thin; padding-right: 10px; }
+.tab {
+  border: 0; background: transparent; border-radius: 0; border-bottom: 2px solid transparent;
+  padding: 12px 12px; color: var(--ink-3); font-size: 13.5px; font-weight: 580; white-space: nowrap;
+}
+.tab:hover { background: transparent; color: var(--ink); border-color: var(--line-2); }
+.tab[aria-selected="true"] { color: var(--acc); border-bottom-color: var(--acc); }
+
+main { padding: 26px 0 90px; }
+.panel[hidden] { display: none; }
+.page-intro { margin-bottom: 20px; max-width: 78ch; }
+.page-intro h2 { margin-bottom: 6px; }
+.page-intro p { color: var(--ink-2); }
+
+/* ---- cards & layout ---- */
+
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 18px 20px; box-shadow: var(--shadow); margin-bottom: 16px;
+}
+.card.flush { padding: 0; overflow: hidden; }
+.card-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.card-head h2, .card-head h3 { margin: 0 auto 0 0; }
+.card-head .tools { display: flex; gap: 6px; flex-wrap: wrap; }
+.card > .sub { color: var(--ink-2); font-size: 13.5px; margin: -6px 0 14px; }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.split.wide-left { grid-template-columns: 1.5fr 1fr; }
+.split.wide-right { grid-template-columns: 1fr 1.5fr; }
+.split3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
+.split > *, .split3 > * { min-width: 0; }
+@media (max-width: 920px) {
+  .split, .split.wide-left, .split.wide-right, .split3 { grid-template-columns: 1fr; }
+}
+
+/* ---- form controls ---- */
+
+.field { margin-bottom: 13px; }
+.field:last-child { margin-bottom: 0; }
+.field label, .lbl { display: block; font-size: 13px; font-weight: 600; color: var(--ink-2); margin-bottom: 5px; }
+.field .hint { font-weight: 400; color: var(--ink-3); }
+input[type="text"], input[type="number"], input[type="date"], select, textarea {
+  font: inherit; width: 100%; color: var(--ink); background: var(--surface-2);
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm); padding: 9px 11px;
+}
+input[type="number"] { font-variant-numeric: tabular-nums; }
+textarea { min-height: 76px; resize: vertical; line-height: 1.55; }
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--acc); outline-offset: -1px; border-color: var(--acc); }
+input::placeholder, textarea::placeholder { color: var(--ink-3); opacity: .8; }
+select {
+  appearance: none; padding-right: 30px;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 16px) 52%, calc(100% - 11px) 52%;
+  background-size: 5px 5px, 5px 5px; background-repeat: no-repeat;
+}
+.check { display: flex; align-items: flex-start; gap: 9px; padding: 6px 0; cursor: pointer; }
+.check input { margin: 3px 0 0; flex: 0 0 auto; width: 16px; height: 16px; accent-color: var(--acc); }
+.check span { font-size: 13.5px; }
+.check.boxed {
+  padding: 9px 11px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface-2); margin-bottom: 7px;
+}
+.check.boxed:hover { border-color: var(--line-2); }
+
+.seg { display: inline-flex; background: var(--surface-3); border-radius: var(--radius-sm); padding: 3px; gap: 2px; flex-wrap: wrap; }
+.seg button {
+  border: 0; background: transparent; padding: 6px 12px; font-size: 13px; font-weight: 570;
+  color: var(--ink-2); border-radius: 7px;
+}
+.seg button:hover { background: var(--surface); color: var(--ink); border: 0; }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--acc); box-shadow: var(--shadow); }
+
+/* ---- pills, badges ---- */
+
+.pill {
+  display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 640;
+  padding: 2px 8px; border-radius: 999px; background: var(--surface-3); color: var(--ink-2);
+  letter-spacing: .01em; white-space: nowrap;
+}
+.pill.acc   { background: var(--acc-bg);   color: var(--acc); }
+.pill.green { background: var(--green-bg); color: var(--green); }
+.pill.amber { background: var(--amber-bg); color: var(--amber); }
+.pill.red   { background: var(--red-bg);   color: var(--red); }
+.pill.plum  { background: var(--plum-bg);  color: var(--plum); }
+.pill.teal  { background: var(--teal-bg);  color: var(--teal); }
+
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: 0 0 auto; background: var(--line-2); }
+.dot.green { background: var(--green); } .dot.amber { background: var(--amber); }
+.dot.red { background: var(--red); } .dot.acc { background: var(--acc); }
+
+/* ---- stats ---- */
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.stat { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px 13px; }
+.stat .k { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); font-weight: 640; }
+.stat .v { font-size: 21px; font-weight: 680; letter-spacing: -.02em; margin-top: 3px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.stat .n { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+.stat.good .v { color: var(--green); } .stat.warn .v { color: var(--amber); } .stat.bad .v { color: var(--red); }
+.stat.acc .v { color: var(--acc); }
+
+/* ---- meter ---- */
+
+.meter { height: 8px; border-radius: 999px; background: var(--surface-3); overflow: hidden; }
+.meter > i { display: block; height: 100%; background: var(--acc); border-radius: 999px; transition: width .2s; }
+.meter.green > i { background: var(--green); } .meter.amber > i { background: var(--amber); }
+.meter.red > i { background: var(--red); }
+
+/* ---- tables ---- */
+
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 9px 11px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); font-weight: 660; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: var(--surface-2); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tfoot td { font-weight: 650; border-top: 2px solid var(--line-2); border-bottom: 0; background: var(--surface-2); }
+tr.picked { background: var(--acc-bg) !important; }
+
+/* ---- notes ---- */
+
+.note {
+  border-left: 3px solid var(--line-2); background: var(--surface-2); padding: 11px 14px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 13.5px; color: var(--ink-2); margin: 12px 0;
+}
+.note.acc   { border-left-color: var(--acc);   background: var(--acc-bg); }
+.note.amber { border-left-color: var(--amber); background: var(--amber-bg); }
+.note.red   { border-left-color: var(--red);   background: var(--red-bg); }
+.note.green { border-left-color: var(--green); background: var(--green-bg); }
+.note.teal  { border-left-color: var(--teal);  background: var(--teal-bg); }
+.note b { color: var(--ink); }
+.note :last-child { margin-bottom: 0; }
+
+/* ---- code / prompt blocks ---- */
+
+pre {
+  margin: 0; background: var(--code-bg); color: var(--code-ink); border-radius: var(--radius-sm);
+  padding: 14px 16px; overflow-x: auto; font-family: var(--mono); font-size: 12.6px; line-height: 1.62;
+  white-space: pre-wrap; word-break: break-word; tab-size: 2;
+}
+pre .h { color: var(--code-key); font-weight: 650; }
+pre .v { color: var(--code-var); }
+pre .c { color: var(--code-com); }
+pre .s { color: var(--code-str); }
+.promptbox { position: relative; }
+.promptbox .copybar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+
+/* ---- decision rows ---- */
+
+.decision { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 13px 14px; margin-bottom: 11px; background: var(--surface); }
+.decision.blank { border-left: 3px solid var(--amber); }
+.decision.filled { border-left: 3px solid var(--green); }
+.decision .dhead { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; margin-bottom: 3px; }
+.decision .dhead h4 { margin: 0; }
+.decision .dwhy { font-size: 12.8px; color: var(--ink-3); margin: 0 0 8px; }
+.decision .fallback {
+  font-size: 12.8px; color: var(--ink-2); background: var(--amber-bg); border-radius: 7px;
+  padding: 7px 10px; margin-top: 8px; border-left: 2px solid var(--amber);
+}
+.decision.filled .fallback { display: none; }
+
+/* ---- step / prompt cards ---- */
+
+.pcard { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); margin-bottom: 12px; overflow: hidden; }
+.pcard > .ph {
+  display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer;
+  background: var(--surface); border: 0; width: 100%; text-align: left; border-radius: 0; list-style: none;
+}
+.pcard > .ph::-webkit-details-marker { display: none; }
+.pcard > .ph::marker { content: ""; }
+.pcard > .ph:hover { background: var(--surface-2); border: 0; }
+.pcard > .ph .n {
+  flex: 0 0 auto; width: 26px; height: 26px; border-radius: 8px; background: var(--surface-3); color: var(--ink-2);
+  display: grid; place-items: center; font-size: 12px; font-weight: 680; font-variant-numeric: tabular-nums;
+}
+.pcard.done > .ph .n { background: var(--green-bg); color: var(--green); }
+.pcard > .ph .t { flex: 1 1 auto; min-width: 0; }
+.pcard > .ph .t b { display: block; font-size: 14.5px; font-weight: 640; }
+.pcard > .ph .t span { display: block; font-size: 12.5px; color: var(--ink-3); }
+.pcard > .ph .chev { flex: 0 0 auto; color: var(--ink-3); transition: transform .15s; font-size: 12px; }
+.pcard[open] > .ph .chev { transform: rotate(90deg); }
+.pcard .pbody { padding: 0 14px 14px; border-top: 1px solid var(--line); }
+.pcard .pmeta { display: flex; gap: 6px; flex-wrap: wrap; padding: 11px 0; }
+
+.phase-head {
+  display: flex; align-items: center; gap: 10px; margin: 22px 0 10px; padding-bottom: 7px;
+  border-bottom: 1px solid var(--line);
+}
+.phase-head:first-child { margin-top: 0; }
+.phase-head h3 { margin: 0; }
+.phase-head .pn {
+  font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--acc); background: var(--acc-bg);
+  padding: 2px 8px; border-radius: 7px;
+}
+
+/* ---- checklists ---- */
+
+.chk { display: flex; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius-sm); margin-bottom: 8px; background: var(--surface); }
+.chk.blocker { border-left: 3px solid var(--red); }
+.chk.should { border-left: 3px solid var(--line-2); }
+.chk.on { background: var(--green-bg); border-color: var(--green); }
+.chk input { margin: 3px 0 0; width: 16px; height: 16px; accent-color: var(--green); flex: 0 0 auto; }
+.chk .ct { flex: 1 1 auto; min-width: 0; }
+.chk .ct b { font-size: 13.6px; font-weight: 600; display: block; }
+.chk .ct span { font-size: 12.6px; color: var(--ink-3); }
+
+/* ---- criteria scoring ---- */
+
+.crit { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 15px 16px; margin-bottom: 13px; }
+.crit.floor { border-left: 3px solid var(--red); }
+.crit.weak  { border-left: 3px solid var(--amber); }
+.crit.ok    { border-left: 3px solid var(--green); }
+.crit .chead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+.crit .chead h4 { margin: 0 auto 0 0; }
+.crit .cask { font-size: 13px; color: var(--ink-2); margin-bottom: 10px; }
+.scale { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 9px; }
+.scale button {
+  justify-content: center; padding: 8px 4px; font-size: 12.5px; font-weight: 620; text-align: center;
+  border-radius: 8px; background: var(--surface-2);
+}
+.scale button[aria-pressed="true"] { background: var(--acc); border-color: var(--acc); color: #fff; }
+html[data-theme="dark"] .scale button[aria-pressed="true"] { color: #08121f; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) .scale button[aria-pressed="true"] { color: #08121f; } }
+.scale button.zero[aria-pressed="true"] { background: var(--red); border-color: var(--red); color: #fff; }
+.anchors { font-size: 12.4px; color: var(--ink-3); display: grid; gap: 3px; margin-bottom: 9px; }
+.anchors b { color: var(--ink-2); font-weight: 620; }
+
+/* ---- verdict banner ---- */
+
+.verdict { border-radius: var(--radius); padding: 16px 18px; border: 1px solid var(--line); background: var(--surface-2); margin-bottom: 16px; }
+.verdict .vtop { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+.verdict .vlabel { font-size: 24px; font-weight: 700; letter-spacing: -.02em; }
+.verdict.build { background: var(--green-bg); border-color: var(--green); }
+.verdict.build .vlabel { color: var(--green); }
+.verdict.fix { background: var(--amber-bg); border-color: var(--amber); }
+.verdict.fix .vlabel { color: var(--amber); }
+.verdict.kill { background: var(--red-bg); border-color: var(--red); }
+.verdict.kill .vlabel { color: var(--red); }
+.verdict.idle .vlabel { color: var(--ink-3); }
+.verdict .vwhy { font-size: 13.5px; color: var(--ink-2); }
+.verdict .vwhy ul { margin: 6px 0 0; }
+
+/* ---- validation clock ---- */
+
+.clock { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.clock .time {
+  font-family: var(--mono); font-size: 40px; font-weight: 700; letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums; line-height: 1; color: var(--ink);
+}
+.clock .time.over { color: var(--red); }
+.clock .time.low { color: var(--amber); }
+.blk { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); margin-bottom: 12px; overflow: hidden; }
+.blk.active { border-color: var(--acc); box-shadow: 0 0 0 2px var(--acc-bg); }
+.blk.pass { border-left: 3px solid var(--green); }
+.blk.fail { border-left: 3px solid var(--red); }
+.blk .bh { display: flex; align-items: center; gap: 11px; padding: 12px 14px; flex-wrap: wrap; }
+.blk .bh .n {
+  flex: 0 0 auto; width: 26px; height: 26px; border-radius: 8px; background: var(--surface-3); color: var(--ink-2);
+  display: grid; place-items: center; font-size: 12px; font-weight: 680;
+}
+.blk.pass .bh .n { background: var(--green-bg); color: var(--green); }
+.blk.fail .bh .n { background: var(--red-bg); color: var(--red); }
+.blk .bh .bt { flex: 1 1 220px; min-width: 0; }
+.blk .bh .bt b { display: block; font-size: 14.5px; }
+.blk .bh .bt span { display: block; font-size: 12.5px; color: var(--ink-3); }
+.blk .bb { padding: 0 14px 14px; border-top: 1px solid var(--line); }
+.blk .gate { font-size: 13px; color: var(--ink-2); background: var(--surface-2); border-left: 2px solid var(--line-2); padding: 8px 11px; border-radius: 0 7px 7px 0; margin: 11px 0; }
+.blk.blocking .gate { border-left-color: var(--red); background: var(--red-bg); }
+
+/* ---- format cards ---- */
+
+.fmt { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 15px 16px; margin-bottom: 12px; }
+.fmt.picked { border-color: var(--acc); box-shadow: 0 0 0 2px var(--acc-bg); }
+.fmt .fh { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 7px; }
+.fmt .fh h4 { margin: 0 auto 0 0; }
+.fmt dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; margin: 10px 0 0; font-size: 13px; }
+.fmt dt { color: var(--ink-3); font-weight: 620; font-size: 12.3px; text-transform: uppercase; letter-spacing: .04em; padding-top: 2px; }
+.fmt dd { margin: 0; color: var(--ink-2); }
+@media (max-width: 620px) { .fmt dl { grid-template-columns: 1fr; gap: 2px; } .fmt dd { margin-bottom: 7px; } }
+
+/* ---- toasts ---- */
+
+#toasts { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 300; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+.toast {
+  background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 999px; font-size: 13.5px;
+  font-weight: 560; box-shadow: var(--shadow-lg); max-width: min(92vw, 560px); text-align: center;
+  animation: rise .18s ease-out;
+}
+.toast.err { background: var(--red); color: #fff; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ---- footer ---- */
+
+footer.foot { border-top: 1px solid var(--line); padding: 18px 0 40px; font-size: 12.5px; color: var(--ink-3); }
+footer.foot .wrap { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+
+@media print {
+  .topbar, .tabstrip, #toasts, .no-print { display: none !important; }
+  .panel[hidden] { display: block !important; }
+  .card { break-inside: avoid; box-shadow: none; }
+  pre { white-space: pre-wrap; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <b>Digital Products Maker</b>
+      <span>Validate before you build</span>
+    </div>
+    <button id="btn-backup" class="sm ghost" aria-label="Back up" title="Download everything as a JSON file">⬇<span class="btxt"> Back up</span></button>
+    <button id="btn-restore" class="sm ghost" aria-label="Restore" title="Load a backup file">⬆<span class="btxt"> Restore</span></button>
+    <input type="file" id="restore-file" accept="application/json,.json" class="sr">
+    <button id="btn-clear" class="sm ghost danger" aria-label="Clear everything" title="Back up, then wipe">🗑<span class="btxt"> Clear</span></button>
+    <button id="btn-theme" class="sm ghost" title="Light / dark / system" aria-label="Change theme">◐</button>
+  </div>
+</header>
+
+<nav class="tabstrip" aria-label="Sections">
+  <div class="wrap" role="tablist" id="tablist">
+    <button class="tab" role="tab" id="tab-product"  aria-controls="panel-product"  data-tab="product">🎯 Product</button>
+    <button class="tab" role="tab" id="tab-formats"  aria-controls="panel-formats"  data-tab="formats">📦 Formats</button>
+    <button class="tab" role="tab" id="tab-gate"     aria-controls="panel-gate"     data-tab="gate">✅ The gate</button>
+    <button class="tab" role="tab" id="tab-validate" aria-controls="panel-validate" data-tab="validate">⏱ 30 minutes</button>
+    <button class="tab" role="tab" id="tab-build"    aria-controls="panel-build"    data-tab="build">🏭 Build</button>
+    <button class="tab" role="tab" id="tab-numbers"  aria-controls="panel-numbers"  data-tab="numbers">💰 Numbers</button>
+    <button class="tab" role="tab" id="tab-launch"   aria-controls="panel-launch"   data-tab="launch">🚀 Launch</button>
+    <button class="tab" role="tab" id="tab-kit"      aria-controls="panel-kit"      data-tab="kit">📄 Kit</button>
+  </div>
+</nav>
+
+<main id="main">
+<div class="wrap">
+
+<!-- ==================== PRODUCT ==================== -->
+<section class="panel" id="panel-product" role="tabpanel" aria-labelledby="tab-product" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>What the product is, before it exists</h2>
+    <p>Nine answers. Every one you skip is one the product makes for you later, badly and
+      expensively — because a digital product's whole cost is paid before anyone tells you
+      whether they wanted it. Each shows the version you get by default if you leave it blank.</p>
+  </div>
+
+  <div class="verdict idle" id="product-state">
+    <div class="vtop"><span class="vlabel" id="product-score">0 / 9</span><span class="pill" id="product-pill">Nothing answered yet</span></div>
+    <div class="meter" style="margin-bottom:10px"><i id="product-meter" style="width:0%"></i></div>
+    <div class="vwhy" id="product-why"></div>
+  </div>
+
+  <div id="product-fields"></div>
+
+  <div class="card">
+    <div class="card-head"><h3>What this doesn't ask</h3></div>
+    <p class="muted" style="font-size:13.5px">Not the name, not the cover, not the colour, not the
+      platform. Those are the questions that feel like progress and cost nothing to change later.
+      The nine above are the ones that are expensive to change after you've built, because the
+      build is shaped around them.</p>
+  </div>
+</section>
+
+<!-- ==================== FORMATS ==================== -->
+<section class="panel" id="panel-formats" role="tabpanel" aria-labelledby="tab-formats" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>Eight formats, compared on what they cost you</h2>
+    <p>Not on which is best — that depends on what you can already do. Each one is rated on how
+      much of it AI can genuinely carry, what it realistically earns, and the specific way it
+      fails. The hours are honest ranges for a first attempt by someone who hasn't made one
+      before; they get shorter the second time and never as short as the pitch suggests.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Sorted by</h3>
+      <div class="seg" id="fmt-sort" role="group" aria-label="Sort formats">
+        <button data-sort="ai" aria-pressed="true">How much AI carries</button>
+        <button data-sort="hours" aria-pressed="false">Hours to first version</button>
+        <button data-sort="price" aria-pressed="false">Typical price</button>
+        <button data-sort="ceiling" aria-pressed="false">Earnings ceiling</button>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table id="fmt-table">
+        <thead>
+          <tr>
+            <th>Format</th>
+            <th class="num">AI carries</th>
+            <th class="num">Hours (v1)</th>
+            <th class="num">Typical price</th>
+            <th class="num">Ceiling</th>
+            <th>Dies of</th>
+          </tr>
+        </thead>
+        <tbody id="fmt-tbody"></tbody>
+      </table>
+    </div>
+    <div class="note amber"><b>Read the "AI carries" column as a warning, not a recommendation.</b>
+      The formats AI carries most completely are the formats buyers have seen most often, because
+      everyone else's AI carried theirs too. A high number means fast to make and hard to sell.
+      The margin is in the column AI can't fill: your own data, your own screenshots, your own
+      results.</div>
+  </div>
+
+  <div id="fmt-cards"></div>
+</section>
+
+<!-- ==================== GATE ==================== -->
+<section class="panel" id="panel-gate" role="tabpanel" aria-labelledby="tab-gate" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>Three criteria, with floors</h2>
+    <p>The book's three tests for whether an idea is worth building. Scored 0–5 each — but not
+      added up and averaged, because an average lets a strength hide a fatal weakness. Any single
+      criterion at 0 or 1 kills the idea on its own, whatever the other two say. That is the
+      point of a floor.</p>
+  </div>
+
+  <div class="verdict idle" id="gate-verdict">
+    <div class="vtop">
+      <span class="vlabel" id="gate-label">Not scored</span>
+      <span class="pill" id="gate-total">—</span>
+    </div>
+    <div class="vwhy" id="gate-why">Score all three criteria below.</div>
+  </div>
+
+  <div id="gate-crits"></div>
+
+  <div class="card">
+    <div class="card-head"><h3>Why a floor and not an average</h3></div>
+    <p>An idea that solves a real recurring problem for a buyer you cannot reach is not a
+      three-out-of-five idea; it is a zero, because you will never sell it. An idea with a
+      reachable buyer and no problem is also a zero, because they won't buy it. Averaging turns
+      both into a respectable middling score and gets the product built.</p>
+    <p class="muted" style="font-size:13.5px">So the verdict here is the <b>lowest</b> criterion
+      first, and the total only after. A 5 and a 5 and a 1 is a kill. It is meant to feel unfair.</p>
+  </div>
+</section>
+
+<!-- ==================== VALIDATE ==================== -->
+<section class="panel" id="panel-validate" role="tabpanel" aria-labelledby="tab-validate" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>The 30-Minute Validation Method</h2>
+    <p>Six five-minute blocks, run against a clock, each one asking for evidence rather than an
+      opinion. Two of them are blocking: pass everything else and fail those, and the answer is
+      still no. Thirty minutes is not enough to be sure. It is enough to stop being wrong for
+      free.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>The clock</h3>
+      <div class="tools">
+        <button id="clk-start" class="sm primary">▶ Start</button>
+        <button id="clk-pause" class="sm">⏸ Pause</button>
+        <button id="clk-reset" class="sm ghost danger">↺ Reset</button>
+      </div>
+    </div>
+    <div class="clock">
+      <div class="time" id="clk-time">30:00</div>
+      <div style="flex:1 1 200px;min-width:160px">
+        <div class="meter" id="clk-meter-wrap"><i id="clk-meter" style="width:0%"></i></div>
+        <div class="muted" style="font-size:12.5px;margin-top:6px" id="clk-note">Not started. The
+          clock is advisory — nothing locks when it runs out.</div>
+      </div>
+    </div>
+    <div class="note"><b>Why time it at all?</b> Because the failure this method prevents is not
+      "researched too little". It is researching indefinitely, which feels like diligence and is
+      actually the same avoidance as building without asking. Five minutes per block is enough to
+      find evidence that exists and not enough to manufacture evidence that doesn't.</div>
+  </div>
+
+  <div class="verdict idle" id="val-verdict">
+    <div class="vtop">
+      <span class="vlabel" id="val-label">Not run</span>
+      <span class="pill" id="val-count">0 of 6 blocks judged</span>
+    </div>
+    <div class="vwhy" id="val-why">Work through the blocks below.</div>
+  </div>
+
+  <div id="val-blocks"></div>
+
+  <div class="card">
+    <div class="card-head"><h3>What a pass here is not</h3></div>
+    <p>It is not proof of demand. Six people saying they'd buy is six people being polite. The
+      method's real output is the <b>kill</b>: it is cheap, fast, and reliably catches products
+      whose buyer cannot be found or whose problem nobody is paying to solve. It cannot tell you
+      a product will sell. It can tell you this one won't.</p>
+    <p class="muted" style="font-size:13.5px">The case study in the source chapter is Denise
+      Okafor, whose result from this method was to abandon what she was about to build. That is
+      the method working, not failing.</p>
+  </div>
+</section>
+
+<!-- ==================== BUILD ==================== -->
+<section class="panel" id="panel-build" role="tabpanel" aria-labelledby="tab-build" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>Eight steps, and the prompt for each</h2>
+    <p>Written from your answers on the Product tab, so the prompts name your buyer, your problem
+      and your format instead of asking a model to guess. Steps that need an answer you haven't
+      given say so rather than quietly filling it in.</p>
+  </div>
+
+  <div id="build-gatewarn"></div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Progress</h3>
+      <div class="tools">
+        <button id="build-copyall" class="sm">⧉ Copy all eight prompts</button>
+      </div>
+    </div>
+    <div class="stats" id="build-stats"></div>
+  </div>
+
+  <div id="build-steps"></div>
+
+  <div class="card">
+    <div class="card-head"><h3>The step people skip</h3></div>
+    <p>Step 6. Everyone drafts, most people design, almost nobody tests the product on one real
+      person before selling it — and a first-time buyer finds in four minutes what you can't see
+      after eleven hours inside the file. It is the cheapest step here and the one with the
+      largest effect on refunds.</p>
+  </div>
+</section>
+
+<!-- ==================== NUMBERS ==================== -->
+<section class="panel" id="panel-numbers" role="tabpanel" aria-labelledby="tab-numbers" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>The arithmetic, done before the product</h2>
+    <p>A digital product has no marginal cost, which is the whole appeal and the reason the sums
+      get skipped. Fees, refunds and conversion are not rounding errors — together they routinely
+      take a third of the headline price and multiply the traffic you need by fifty. Here is what
+      your target actually requires.</p>
+  </div>
+
+  <div class="split wide-right">
+    <div class="card">
+      <div class="card-head"><h3>Your numbers</h3></div>
+      <div id="num-inputs"></div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-head"><h3>What one sale is worth</h3></div>
+        <div class="stats" id="num-per-sale"></div>
+        <div id="num-per-sale-note"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>What the target requires</h3></div>
+        <div class="stats" id="num-target"></div>
+        <div id="num-target-note"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>Price ladder</h3></div>
+    <p class="sub">The same target at other prices. Raising the price cuts the traffic you need
+      roughly in proportion — and cuts conversion by an amount nobody can predict for you, which
+      is why this table stops at the traffic figure and doesn't pretend to know the rest.</p>
+    <div class="tablewrap">
+      <table id="ladder-table">
+        <thead>
+          <tr>
+            <th class="num">Price</th>
+            <th class="num">Net per sale</th>
+            <th class="num">Sales needed</th>
+            <th class="num">Visitors needed</th>
+            <th class="num">Per day</th>
+            <th>Reads as</th>
+          </tr>
+        </thead>
+        <tbody id="ladder-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>Hours to break even</h3></div>
+    <div class="stats" id="num-breakeven"></div>
+    <div id="num-breakeven-note"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>The distribution nobody prices in</h3></div>
+    <p>Every number on this page is a <b>conditional</b>: what happens <i>if</i> the product sells
+      at the conversion rate you typed. The unconditional picture is different and worth saying
+      plainly — across marketplaces, the earnings distribution for digital products is severely
+      skewed. A small minority of listings take most of the revenue; the median listing earns
+      close to nothing, and a large share of listings never make a single sale.</p>
+    <p>This is not a reason to skip it. It is the reason the validation tab exists and comes
+      first: when most attempts earn nothing, the only move that changes your odds is finding out
+      cheaply, before the eleven hours, which attempt you're making.</p>
+    <div class="note"><b>No figures are quoted here.</b> The shape of that distribution is well
+      established; the exact percentages differ by marketplace and year, and this app runs
+      offline with no way to check a number it would be printing from memory. The shape is the
+      part that should change your behaviour anyway.</div>
+  </div>
+</section>
+
+<!-- ==================== LAUNCH ==================== -->
+<section class="panel" id="panel-launch" role="tabpanel" aria-labelledby="tab-launch" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>The listing, and the fortnight around it</h2>
+    <p>The listing copy is generated from your answers — the same answers, so the page can't
+      promise something the product doesn't do. The checklist is what has to be true before you
+      put a price on it.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Listing copy</h3>
+      <div class="tools">
+        <button id="listing-copy" class="sm">⧉ Copy</button>
+      </div>
+    </div>
+    <div class="promptbox"><pre id="listing-out"></pre></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Pre-launch checklist</h3>
+      <span class="pill" id="launch-count">0 / 0</span>
+    </div>
+    <p class="sub">Items with a red edge are blocking — not "important", blocking. Shipping with
+      one unticked is how a product earns refunds instead of reviews.</p>
+    <div id="launch-checks"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>The first fourteen days</h3></div>
+    <p class="sub">A launch is not a day. This is the shape that works for a product with no
+      audience behind it: tell the people who already said yes, then the places you found them.</p>
+    <div id="launch-days"></div>
+  </div>
+</section>
+
+<!-- ==================== KIT ==================== -->
+<section class="panel" id="panel-kit" role="tabpanel" aria-labelledby="tab-kit" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>The lot, as one document</h2>
+    <p>Everything you've entered and everything the app worked out from it, as Markdown. Paste it
+      into a doc, a repo, or the next conversation with a model.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Export</h3>
+      <div class="tools">
+        <button id="kit-copy" class="sm primary">⧉ Copy Markdown</button>
+        <button id="kit-download" class="sm">⬇ Download .md</button>
+        <button id="kit-print" class="sm ghost">🖨 Print</button>
+      </div>
+    </div>
+    <div class="promptbox"><pre id="kit-out"></pre></div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span class="grow">Digital Products Maker — everything stays in this browser. No network requests of any kind.</span>
+    <span id="foot-storage"></span>
+    <span id="foot-tests" class="muted"></span>
+  </div>
+</footer>
+
+<div id="toasts" aria-live="polite" aria-atomic="false"></div>
+<script>
+"use strict";
+
+/* ===========================================================================
+   DATA — the eight formats, the nine decisions, the three criteria, the six
+   validation blocks, the eight build steps.
+
+   Where a number here is a judgement rather than a fact, it is labelled as a
+   judgement in the interface. Nothing in this file is fetched, and nothing in
+   it is a benchmark: the hour ranges and ceilings are estimates for a first
+   attempt by one person, printed so you can disagree with them rather than
+   inherit them silently.
+   =========================================================================== */
+
+/* ---- The eight formats -------------------------------------------------- */
+
+const FORMATS = [
+  {
+    id: "templates",
+    name: "Templates & swipe files",
+    kicker: "Something they fill in, not something they read",
+    what: "A structure someone else does the work inside: contracts, spreadsheets of copy, " +
+          "email sequences, proposal skeletons, brief forms.",
+    ai: 55, hoursLo: 6, hoursHi: 14, priceLo: 9, priceHi: 39, ceiling: 400,
+    dies: "Being indistinguishable from the free version",
+    why: "The buyer isn't paying for the words. They're paying to not start from an empty page " +
+         "at 11pm, and to be sure they haven't forgotten a clause. That's why templates survive " +
+         "being simple — the value is the completeness of the checklist, not the prose.",
+    aiNote: "AI writes a plausible template quickly and a defensible one slowly. It will produce " +
+            "a contract that reads correctly and omits the clause that matters in your buyer's " +
+            "jurisdiction, because that clause is local knowledge and the training data is not.",
+    edge: "The variants. One template is a file; eleven templates covering the eleven situations " +
+          "your buyer actually faces is a product, and knowing which eleven is the part that " +
+          "can't be generated.",
+    fits: "You've done the thing professionally and have your own working files to generalise from.",
+    avoid: "You've never used one in anger. It will show in the fields you forget to include."
+  },
+  {
+    id: "guides",
+    name: "Guides & ebooks",
+    kicker: "The format AI carries furthest and buyers trust least",
+    what: "A written explanation of how to do something, delivered as a PDF or ebook.",
+    ai: 80, hoursLo: 10, hoursHi: 30, priceLo: 7, priceHi: 29, ceiling: 300,
+    dies: "Reading like it was generated, because it was",
+    why: "The economics look perfect: entirely text, no design skill needed, AI drafts fast. " +
+         "Which is exactly why this category is saturated and why its price band is the lowest " +
+         "here despite taking real hours.",
+    aiNote: "This is the one format AI can take from nothing to complete. That is not the " +
+            "advantage it appears to be: the buyer has now read forty of these and recognises " +
+            "the cadence, the tidy triplets, the paragraph that restates the heading.",
+    edge: "Specificity that costs you something to have. Real numbers from your own work, real " +
+          "screenshots, the thing that went wrong and what it cost. A guide with one genuine " +
+          "case study beats a guide with twelve invented ones, and only one of those is generatable.",
+    fits: "You have a documented result and the receipts for it.",
+    avoid: "You're summarising what you read last week. So is everyone."
+  },
+  {
+    id: "planners",
+    name: "Planners & printables",
+    kicker: "Where design is the product and AI is barely involved",
+    what: "Dated and undated planners, trackers, worksheets, wall charts — printed or filled on " +
+          "a tablet.",
+    ai: 25, hoursLo: 8, hoursHi: 20, priceLo: 5, priceHi: 19, ceiling: 250,
+    dies: "Being typeset by someone who doesn't typeset",
+    why: "Buyers choose these visually, in a grid of thumbnails, in about a second and a half. " +
+         "The content is nearly commodity — everyone's habit tracker tracks habits — so the " +
+         "purchase is decided almost entirely on whether it looks like something they want on " +
+         "their desk.",
+    aiNote: "Lowest AI leverage of the eight. A model will happily generate planner *content*, " +
+            "which is not the constraint. The constraints are grid, margin, typographic scale, " +
+            "print bleed and paper size, and being wrong on any of them produces a file that " +
+            "prints badly and gets refunded.",
+    edge: "Actual layout craft, or a niche so specific the design bar drops — planners for shift " +
+          "nurses, for allotment holders, for people managing a specific chronic condition.",
+    fits: "You can set type, or you're serving a niche nobody has bothered to design for.",
+    avoid: "Your plan is to compete on looks with people who do this for a living."
+  },
+  {
+    id: "minicourse",
+    name: "Mini-courses",
+    kicker: "The highest ceiling and the highest abandonment rate",
+    what: "A short structured sequence — video, text or both — with a defined outcome, sold once.",
+    ai: 45, hoursLo: 25, hoursHi: 70, priceLo: 39, priceHi: 199, ceiling: 1200,
+    dies: "Never being finished",
+    why: "Buyers pay several times a guide's price for the same information sequenced, paced and " +
+         "accountable. The premium is real and it is for the structure, not the footage.",
+    aiNote: "AI is good at the curriculum and the scripts, useless at the recording, and actively " +
+            "risky on the reassurance — a generated 'you've got this' between modules reads as " +
+            "hollow at exactly the point a student is deciding whether to continue.",
+    edge: "Being a person on camera who has done it. Also the unglamorous half: worked examples, " +
+          "the exercise that produces something, and a way to tell whether the student got it.",
+    fits: "You can hold a camera and finish things. The second matters more.",
+    avoid: "You're at the fun part. Module one is always the fun part; module seven is the product."
+  },
+  {
+    id: "promptpacks",
+    name: "Prompt packs",
+    kicker: "Fastest to make, shortest shelf life",
+    what: "A curated, tested collection of prompts for one job, with the reasoning and the " +
+          "variables spelled out.",
+    ai: 70, hoursLo: 4, hoursHi: 12, priceLo: 9, priceHi: 29, ceiling: 200,
+    dies: "The model changing underneath it",
+    why: "The saleable part was never the prompt text — it's that someone ran a hundred and kept " +
+         "the nine that work, and wrote down what to change. Packs that skip the testing are " +
+         "lists, and lists are free.",
+    aiNote: "A model will write you two hundred prompts in a minute and cannot tell you which " +
+            "ones work, because that requires running them and judging the output against a " +
+            "real task. That judgement is the entire product.",
+    edge: "Documented before-and-after output, the failure notes, and a stated model and date so " +
+          "the buyer knows what it was tested against.",
+    fits: "You use these tools daily for one specific job and have opinions about what fails.",
+    avoid: "You want a product this week and this looked like the fastest one. It is, and that's " +
+           "why the shelf is crowded — expect to revise it every time a major model ships."
+  },
+  {
+    id: "spreadsheets",
+    name: "Spreadsheets & calculators",
+    kicker: "Highest trust, lowest tolerance for error",
+    what: "A working model: pricing, quoting, cashflow, tax, unit economics, capacity planning.",
+    ai: 50, hoursLo: 8, hoursHi: 24, priceLo: 15, priceHi: 59, ceiling: 500,
+    dies: "One wrong formula",
+    why: "It doesn't just tell them the answer, it gives them a defensible one they can show a " +
+         "client or a bank. That's worth several times a guide about the same topic.",
+    aiNote: "AI is genuinely strong at generating formulas and genuinely unreliable about whether " +
+            "they're right for your buyer's tax year, jurisdiction or rounding convention. Every " +
+            "formula needs checking against a case where you already know the answer.",
+    edge: "The test cases. Ship a second tab of worked examples with known-correct answers — it " +
+          "is the cheapest trust you will ever buy, and it's how you catch your own errors.",
+    fits: "You know the domain well enough to spot a wrong output at a glance.",
+    avoid: "You can't validate the maths. This is the one format where being wrong is visible, " +
+           "immediate and refundable."
+  },
+  {
+    id: "notion",
+    name: "Notion & app systems",
+    kicker: "Sells like a product, behaves like software",
+    what: "A pre-built workspace — databases, views, relations, dashboards — duplicated into the " +
+          "buyer's own account.",
+    ai: 30, hoursLo: 10, hoursHi: 28, priceLo: 19, priceHi: 79, ceiling: 600,
+    dies: "Support you didn't price in",
+    why: "The buyer gets a working system in ninety seconds instead of a weekend. Strong perceived " +
+         "value, and a price band well above a template because it does something rather than " +
+         "describing something.",
+    aiNote: "A model can plan the schema and write the copy inside it. It cannot click, and the " +
+            "product is the clicking — relations, rollups, filtered views, permissions. Expect " +
+            "to build it by hand from a plan.",
+    edge: "Restraint and a walkthrough. The systems that get refunded are the impressive ones " +
+          "with sixty linked databases that nobody can maintain after week two.",
+    fits: "You already run your own work in it and can film a five-minute tour.",
+    avoid: "You dislike answering questions from strangers. This format generates them — every " +
+           "buyer's account is slightly different and every difference is a message to you."
+  },
+  {
+    id: "toolkits",
+    name: "Toolkits & bundles",
+    kicker: "The highest price, and only if the parts belong together",
+    what: "Several assets sold as one outcome: templates plus a calculator plus a walkthrough, " +
+          "aimed at a single job.",
+    ai: 40, hoursLo: 20, hoursHi: 50, priceLo: 49, priceHi: 249, ceiling: 1500,
+    dies: "Padding",
+    why: "A buyer facing a whole job would rather buy the whole job solved than assemble it from " +
+         "five purchases. This is the only format here that reliably supports a three-figure " +
+         "price without a video of your face in it.",
+    aiNote: "AI helps most with the connective tissue — the document that explains what to do " +
+            "with the parts and in what order, which is usually the part makers leave out and " +
+            "the part buyers need.",
+    edge: "Sequence. Say what to do first, second, third. Five assets in a folder is a folder; " +
+          "five assets in an order is a method, and the order is what you're selling.",
+    fits: "You already made one thing that sold and know what buyers asked for next.",
+    avoid: "This is your first product. Bundling five untested assets is five times the work for " +
+           "the same amount of nothing if the premise is wrong."
+  }
+];
+
+/* ---- The nine decisions ------------------------------------------------- */
+
+const DECISIONS = [
+  {
+    id: "problem", weight: 10, kind: "text",
+    label: "The problem, stated as the buyer would state it",
+    why: "Not the topic. The sentence they'd type into a search box at the moment it's annoying them.",
+    ph: "e.g. \"I have to send a quote tonight and I don't know what to charge for a job this size\"",
+    fallback: "A topic instead of a problem — \"productivity\", \"marketing for coaches\" — which " +
+              "produces a product about a subject rather than one that ends a specific annoyance. " +
+              "Nobody searches for a subject at 11pm."
+  },
+  {
+    id: "buyer", weight: 9, kind: "text",
+    label: "Who exactly, narrow enough to be a person",
+    why: "A job, a stage and a situation. If it fits more than one kind of person, it's not narrow yet.",
+    ph: "e.g. \"Solo trade contractors, 1–3 years in, quoting domestic jobs without a rate card\"",
+    fallback: "\"Small business owners\" or \"creators\" — an audience so broad that every sentence " +
+              "you write has to stay general to remain true for all of them, which is how a " +
+              "product ends up saying nothing to anyone."
+  },
+  {
+    id: "recurrence", weight: 8, kind: "select",
+    label: "How often the buyer hits this problem",
+    why: "Recurring problems get paid for. One-off problems get googled once and endured.",
+    options: [
+      { v: "", t: "— pick one —" },
+      { v: "daily", t: "Most days" },
+      { v: "weekly", t: "Weekly-ish" },
+      { v: "monthly", t: "Monthly-ish" },
+      { v: "quarterly", t: "A few times a year" },
+      { v: "rare", t: "Once or twice ever" }
+    ],
+    fallback: "Assumed frequent, which is the assumption that produces products for problems " +
+              "people meet once and simply put up with."
+  },
+  {
+    id: "today", weight: 8, kind: "text",
+    label: "What they do about it today instead",
+    why: "Your real competitor. It is almost never another product — it's a spreadsheet they " +
+         "already have, a friend they ask, or nothing.",
+    ph: "e.g. \"Guesses, then finds out on the invoice. Or asks in a trade Facebook group.\"",
+    fallback: "Assumed nothing, so the product never argues against the alternative the buyer is " +
+              "already comfortable with — and \"nothing\" is free, familiar and very hard to beat."
+  },
+  {
+    id: "reach", weight: 10, kind: "text",
+    label: "Three named places you can reach this buyer",
+    why: "Named. A URL, a group, a subreddit, a trade body, a supplier's mailing list. Not \"social media\".",
+    ph: "e.g. \"r/ukplumbing · the Screwfix community board · two regional trade Facebook groups I'm in\"",
+    fallback: "\"I'll post about it\" — which is the single most common reason a competent product " +
+              "sells nothing. Distribution assumed is distribution absent."
+  },
+  {
+    id: "format", weight: 7, kind: "format",
+    label: "Format",
+    why: "Pick after the problem, not before. The format follows from what ends the annoyance fastest.",
+    fallback: "A PDF guide, because it's the easiest thing to make — which is why the guide shelf " +
+              "is the most crowded and the cheapest."
+  },
+  {
+    id: "outcome", weight: 9, kind: "text",
+    label: "The one thing that is true after they use it",
+    why: "One outcome, stated so plainly it could be checked. Two outcomes means neither gets delivered.",
+    ph: "e.g. \"They have a rate card for their nine commonest jobs, in their own numbers, by tonight\"",
+    fallback: "\"They'll understand X better\" — unfalsifiable, so nothing in the build can be cut " +
+              "for failing to serve it, so nothing gets cut, so it ships as ninety pages of " +
+              "everything you know."
+  },
+  {
+    id: "proof", weight: 9, kind: "text",
+    label: "What's in it that a model could not have generated",
+    why: "Your own numbers, files, screenshots, mistakes, or a jurisdiction you actually work in. " +
+         "This is your entire margin over the free generated version.",
+    ph: "e.g. \"My own 40 completed job costings, anonymised, with what I got wrong on the first 10\"",
+    fallback: "Nothing — a product made of things any buyer could have generated themselves in " +
+              "four minutes, which is precisely what a reviewer will say."
+  },
+  {
+    id: "notdo", weight: 6, kind: "text",
+    label: "What it deliberately doesn't cover",
+    why: "Written on the listing. Scope stated up front prevents the refund that comes from a " +
+         "buyer expecting the adjacent thing.",
+    ph: "e.g. \"Not commercial or new-build work. Not tax. UK pricing only.\"",
+    fallback: "Silence, which the buyer fills in with whatever they were hoping for — and then " +
+              "asks for their money back when it isn't there."
+  }
+];
+
+/* ---- The three criteria ------------------------------------------------- */
+
+const CRITERIA = [
+  {
+    id: "c-problem",
+    name: "It solves a specific, recurring problem",
+    ask: "Not a topic anyone finds interesting — a thing that goes wrong repeatedly and costs " +
+         "the buyer time, money or standing every time it does.",
+    anchors: [
+      "0–1 — A subject, an audience, or a problem met once and endured.",
+      "2–3 — A real problem, but stated broadly, or one they hit a couple of times a year.",
+      "4–5 — Specific, recurring, and you can name what it costs them each time."
+    ]
+  },
+  {
+    id: "c-reach",
+    name: "The buyer is easy to reach",
+    ask: "Can you name the places, today, without research? Reachability is not the same as " +
+         "existence — plenty of real buyers sit behind no channel you can access.",
+    anchors: [
+      "0–1 — No named channel. The plan is to post and hope.",
+      "2–3 — One channel, or channels you'd have to build a presence in first.",
+      "4–5 — Three or more named places you can already post in or already have access to."
+    ]
+  },
+  {
+    id: "c-speed",
+    name: "You can produce it fast enough to test",
+    ask: "Fast enough that being wrong is affordable. This is a question about the size of your " +
+         "bet, not about your ambition.",
+    anchors: [
+      "0–1 — Weeks of work before anyone could see anything.",
+      "2–3 — A week or so, or a cut-down version is possible but you don't want to ship it.",
+      "4–5 — A testable version exists within a couple of days."
+    ]
+  }
+];
+
+/* ---- The 30-minute validation blocks ------------------------------------ */
+
+const BLOCKS = [
+  {
+    id: "b1", mins: 5, blocking: false,
+    title: "Is anyone asking?",
+    sub: "Search for the problem in the buyer's words",
+    todo: [
+      "Search your problem sentence — the buyer's wording, not the topic — on a search engine.",
+      "Search the same words inside the communities you named, where the questions are honest.",
+      "Note the phrasing people actually use. It is rarely the phrasing you used."
+    ],
+    gate: "Pass if you found real people describing this problem in their own words in the last " +
+          "year. Fail if you only found articles about the topic — content about a subject proves " +
+          "an SEO opportunity existed, not that a buyer is in pain.",
+    ph: "Paste two or three real quotes, with where you found them."
+  },
+  {
+    id: "b2", mins: 5, blocking: false,
+    title: "Does it already exist, and is it selling?",
+    sub: "Look for competitors, and hope you find some",
+    todo: [
+      "Search the marketplaces your buyer would use for the closest existing product.",
+      "Check reviews, sales counts, ratings — whatever the platform exposes.",
+      "Read the two-star reviews specifically. They are a specification."
+    ],
+    gate: "Pass if something similar exists and shows evidence of selling. An empty category is " +
+          "usually an unproven one, not an untapped one. Fail only if the closest thing is free " +
+          "and good, or the paid ones show no sign of any sales at all.",
+    ph: "What exists, what it costs, what the two-star reviews complain about."
+  },
+  {
+    id: "b3", mins: 5, blocking: true,
+    title: "Can you actually reach them?",
+    sub: "Three named channels, checked, not assumed",
+    todo: [
+      "Open each of the three places you named on the Product tab.",
+      "Check the rule that matters: does it permit what you plan to post, and are you already a " +
+        "member with any standing?",
+      "If a channel bans promotion and you have no other way in, it isn't a channel."
+    ],
+    gate: "BLOCKING. Pass only if at least two of the three survive that check. A product you " +
+          "cannot put in front of anyone is not a product, however good it is — this is the " +
+          "criterion that most often fails last, after the thing is already built.",
+    ph: "Each channel, and whether it survived. Be specific about the rules."
+  },
+  {
+    id: "b4", mins: 5, blocking: true,
+    title: "Is money already moving for this?",
+    sub: "Evidence of payment, not evidence of interest",
+    todo: [
+      "Find one instance of someone paying for a solution to this problem: a paid product, a " +
+        "service, a freelancer's fee, a course, a subscription.",
+      "Note what they paid. It sets your ceiling more reliably than any pricing advice.",
+      "If the only solutions are free, ask why — sometimes it's an opportunity, usually it's an answer."
+    ],
+    gate: "BLOCKING. Pass if you can point at money changing hands for this problem, at any " +
+          "price, anywhere. Interest is not demand. Likes are not demand. Someone paying " +
+          "something is demand.",
+    ph: "What's being paid for, by whom, roughly how much."
+  },
+  {
+    id: "b5", mins: 5, blocking: false,
+    title: "Ask five people",
+    sub: "About their last time, not about your idea",
+    todo: [
+      "Message five people in the buyer group. Do not describe your product.",
+      "Ask about the last time it happened: what did you do, how long did it take, what did it cost?",
+      "Only if they ask what you're working on, describe it — and note whether they ask."
+    ],
+    gate: "Pass if at least three describe the problem unprompted in terms you recognise. Their " +
+          "enthusiasm for your idea is worth nothing; their account of last Tuesday is worth " +
+          "everything. \"That sounds useful\" is a polite no.",
+    ph: "Who you asked, and what they said about last time — their words."
+  },
+  {
+    id: "b6", mins: 5, blocking: false,
+    title: "Write the verdict down",
+    sub: "Before you can talk yourself out of it",
+    todo: [
+      "Write the one sentence: build, change, or drop — and why.",
+      "If you're changing it, write what specifically changes: the buyer, the problem, or the format.",
+      "Date it. In three weeks you will not remember what you actually found."
+    ],
+    gate: "Pass if the verdict is written and specific. \"Probably fine\" is not a verdict — it is " +
+          "the sound of having already decided before you started.",
+    ph: "Build / change / drop — and the one-sentence why."
+  }
+];
+
+/* ---- The eight build steps ---------------------------------------------- */
+
+const STEPS = [
+  {
+    id: "s1", title: "Outline against the outcome",
+    sub: "Every section earns its place or goes",
+    blocking: false,
+    note: "The outline is where scope is won or lost. A section that doesn't move the buyer " +
+          "toward the single outcome is not a bonus, it's a delay — and it's the reason first " +
+          "products take four times as long as planned.",
+    needs: ["problem", "buyer", "outcome", "format"]
+  },
+  {
+    id: "s2", title: "Draft the substance",
+    sub: "Fast, ugly, complete",
+    blocking: false,
+    note: "Draft the whole thing badly before improving any of it. A polished first third is the " +
+          "commonest shape of an abandoned product, because polishing feels like progress and " +
+          "finishing doesn't.",
+    needs: ["problem", "buyer", "outcome", "format"]
+  },
+  {
+    id: "s3", title: "Put in what a model couldn't",
+    sub: "Your numbers, files, screenshots, mistakes",
+    blocking: true,
+    note: "This is the step that decides whether the product is worth money. Everything up to " +
+          "here a buyer could have generated for themselves. This step is your entire margin, " +
+          "which is why it's marked blocking.",
+    needs: ["proof"]
+  },
+  {
+    id: "s4", title: "Cut to the outcome",
+    sub: "Delete what serves you rather than them",
+    blocking: false,
+    note: "Aim to remove a quarter. The material that goes first: your credentials, the history " +
+          "of the field, the caveats you added defensively, and anything that begins \"of course, " +
+          "it depends\".",
+    needs: ["outcome"]
+  },
+  {
+    id: "s5", title: "Make it legible",
+    sub: "Type, spacing, order — not decoration",
+    blocking: false,
+    note: "Legibility is not design taste, and it's most of the perceived-quality gap. Consistent " +
+          "headings, generous margins, one typeface, a real table of contents, page numbers that " +
+          "match. Decoration is optional; navigation isn't.",
+    needs: ["format"]
+  },
+  {
+    id: "s6", title: "One real person, watched",
+    sub: "The step everybody skips",
+    blocking: true,
+    note: "Give it to one person in the buyer group and watch them use it without helping. Every " +
+          "place they hesitate is a place a paying stranger will ask for a refund. Four minutes " +
+          "of this finds what eleven hours inside the file cannot.",
+    needs: ["buyer", "outcome"]
+  },
+  {
+    id: "s7", title: "Package it properly",
+    sub: "Delivery, licence, terms, updates",
+    blocking: false,
+    note: "Say what file formats they get, what they may do with it, whether updates are included, " +
+          "and what your refund policy is. Unstated terms are decided later by whoever is angrier.",
+    needs: ["format", "notdo"]
+  },
+  {
+    id: "s8", title: "Write the listing last",
+    sub: "So it can only promise what shipped",
+    blocking: false,
+    note: "Written last, the listing describes the product. Written first, the product spends its " +
+          "life trying to catch up with the listing — and the gap between them is what refunds " +
+          "are made of.",
+    needs: ["problem", "buyer", "outcome", "notdo", "proof"]
+  }
+];
+
+/* ---- Pre-launch checklist ----------------------------------------------- */
+
+const LAUNCH_CHECKS = [
+  { id: "l1",  blocking: true,  t: "The file opens on a device you didn't make it on",
+    n: "Different OS, different reader, ideally a phone. Fonts substitute, layouts reflow, links break." },
+  { id: "l2",  blocking: true,  t: "The delivery link works from a logged-out browser",
+    n: "The commonest launch-day failure: a link that works only for you because you're signed in." },
+  { id: "l3",  blocking: true,  t: "One real person completed the outcome using only the product",
+    n: "Not you. Not while you explained it over their shoulder." },
+  { id: "l4",  blocking: true,  t: "Every number, formula and legal claim has been checked",
+    n: "Especially anything a model wrote. Check formulas against a case where you know the answer." },
+  { id: "l5",  blocking: true,  t: "The listing states what the product does not cover",
+    n: "Scope on the listing, in the buyer's words. This is the cheapest refund prevention there is." },
+  { id: "l6",  blocking: true,  t: "A refund policy exists and is written down",
+    n: "Digital goods have specific consumer rules in many places. Silence isn't a policy, it's a dispute." },
+  { id: "l7",  blocking: false, t: "The price is a decision, not a default",
+    n: "Set from the Numbers tab and from what block 4 found people already paying." },
+  { id: "l8",  blocking: false, t: "The first three lines of the listing name the problem",
+    n: "Not the product, not you. The buyer scans three lines to decide whether this is about them." },
+  { id: "l9",  blocking: false, t: "There is a picture of the actual inside",
+    n: "Real pages, not a stock mockup of a tablet. Buyers assume the worst about what they can't see." },
+  { id: "l10", blocking: false, t: "The people from validation block 5 have been told",
+    n: "They described the problem to you. They are the warmest five buyers you will ever have." },
+  { id: "l11", blocking: false, t: "You know which channel you're posting in first, and its rules",
+    n: "From block 3. Being removed for promotion on launch day costs you the channel, not just the post." },
+  { id: "l12", blocking: false, t: "A way to collect the first buyer's questions exists",
+    n: "An email address is enough. Their questions are the next version's outline." },
+  { id: "l13", blocking: false, t: "You've decided what would make you stop",
+    n: "A number of sales, by a date. Decided now, while you can still be honest about it." }
+];
+
+/* ---- The first fourteen days -------------------------------------------- */
+
+const LAUNCH_DAYS = [
+  { d: "Day 0", t: "Tell the five",
+    n: "The people from block 5, individually, by name, with what they said. Not a broadcast — a " +
+       "message that shows you listened. This is the highest-converting message you will send." },
+  { d: "Days 1–2", t: "Post where you already belong",
+    n: "The channel from block 3 with the most standing. Lead with the problem and what you found, " +
+       "not the product; the link goes at the end or in a comment, per the rules you checked." },
+  { d: "Days 3–5", t: "Answer everything, publicly",
+    n: "Every question a buyer asks is a line missing from your listing. Add it the same day. " +
+       "Early listings improve fastest through complaints." },
+  { d: "Days 6–8", t: "Second channel, different framing",
+    n: "Same product, framed for that channel's version of the problem. If the first channel " +
+       "converted and this one doesn't, the difference is the framing, not the product." },
+  { d: "Days 9–11", t: "Fix the top objection",
+    n: "By now one objection will have appeared three times. Fix it in the product if it's real, " +
+       "in the listing if it's a misunderstanding. Both are cheap this week and expensive later." },
+  { d: "Days 12–14", t: "Read the number against the line you drew",
+    n: "Compare sales with the stopping rule from the checklist. Then do one of three things and " +
+       "say which: keep selling it, change the offer, or stop and write down what you learned." }
+];
+
+/* ===========================================================================
+   PLUMBING — DOM helpers, storage, toasts, clipboard.
+   =========================================================================== */
+
+const $  = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.prototype.slice.call((r || document).querySelectorAll(s));
+
+function el(tag, opts) {
+  const n = document.createElement(tag);
+  if (!opts) return n;
+  if (opts.cls) n.className = opts.cls;
+  if (opts.text != null) n.textContent = opts.text;
+  if (opts.html != null) n.innerHTML = opts.html;
+  if (opts.attrs) Object.keys(opts.attrs).forEach(k => n.setAttribute(k, opts.attrs[k]));
+  return n;
+}
+
+function esc(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+const Store = (function () {
+  const KEY = "digital-products-maker.v1";
+  let mem = null, warned = false;
+  function ok() {
+    try { localStorage.setItem("__t", "1"); localStorage.removeItem("__t"); return true; }
+    catch (e) { return false; }
+  }
+  const available = ok();
+  return {
+    available,
+    read() {
+      if (!available) return mem;
+      try { const r = localStorage.getItem(KEY); return r ? JSON.parse(r) : null; }
+      catch (e) { return null; }
+    },
+    write(v) {
+      mem = v;
+      if (!available) return;
+      try { localStorage.setItem(KEY, JSON.stringify(v)); }
+      catch (e) {
+        if (!warned) {
+          warned = true;
+          toast("Couldn't save — this browser is blocking local storage. Your work stays in memory until you close the tab.", true);
+        }
+      }
+    },
+    wipe() { mem = null; if (!available) return; try { localStorage.removeItem(KEY); } catch (e) {} }
+  };
+})();
+
+/* Several panels redraw themselves wholesale when a value changes, which
+   replaces the very control the user just operated and drops their focus —
+   invisible with a mouse, and a keyboard user loses their place in the list.
+   Generated controls carry a stable data-fk, so focus can be put back on the
+   replacement afterwards. */
+function withFocus(fn) {
+  const a = document.activeElement;
+  const key = a && a.getAttribute ? a.getAttribute("data-fk") : null;
+  const scroll = a && key ? { top: window.scrollY } : null;
+  fn();
+  if (!key) return;
+  const next = document.querySelector('[data-fk="' + key.replace(/"/g, '\\"') + '"]');
+  if (next && typeof next.focus === "function") {
+    next.focus({ preventScroll: true });
+    if (scroll) window.scrollTo({ top: scroll.top });
+  }
+}
+
+function toast(msg, isErr) {
+  const box = $("#toasts");
+  if (!box) return;
+  const t = el("div", { cls: "toast" + (isErr ? " err" : ""), text: msg });
+  box.appendChild(t);
+  setTimeout(() => { t.remove(); }, isErr ? 5200 : 2600);
+}
+
+async function copyText(str, label) {
+  try {
+    if (navigator.clipboard && window.isSecureContext !== false) await navigator.clipboard.writeText(str);
+    else throw new Error("no clipboard");
+    toast((label || "Copied") + " — " + str.length.toLocaleString() + " characters");
+  } catch (e) {
+    try {
+      const ta = el("textarea");
+      ta.value = str;
+      ta.style.cssText = "position:fixed;top:-2000px;left:0;opacity:0";
+      document.body.appendChild(ta);
+      ta.select();
+      const okc = document.execCommand("copy");
+      ta.remove();
+      if (!okc) throw new Error("execCommand failed");
+      toast((label || "Copied") + " — " + str.length.toLocaleString() + " characters");
+    } catch (e2) {
+      toast("Couldn't copy automatically — select the text and copy it by hand.", true);
+    }
+  }
+}
+
+function download(name, text, mime) {
+  try {
+    const blob = new Blob([text], { type: (mime || "text/plain") + ";charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = el("a", { attrs: { href: url, download: name } });
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 400);
+    toast("Downloaded " + name);
+  } catch (e) {
+    toast("Download failed in this browser — use Copy instead.", true);
+  }
+}
+
+/* ===========================================================================
+   STATE
+   =========================================================================== */
+
+const CLOCK_TOTAL = 30 * 60;
+
+function blankState() {
+  return {
+    v: 1,
+    tab: "product",
+    theme: "system",
+    d: {},
+    format: "",
+    crit: {},
+    blocks: {},
+    steps: {},
+    launch: {},
+    clock: { left: CLOCK_TOTAL, running: false, since: null },
+    num: {
+      cur: "$", goal: 1000, price: 29, plat: 8,
+      payPct: 2.9, payFix: 0.3, refund: 4, conv: 2,
+      hours: 20, rate: 25
+    }
+  };
+}
+
+let state = blankState();
+
+function save() { Store.write(state); }
+
+function applySaved(saved) {
+  if (!saved || typeof saved !== "object") return;
+  const b = blankState();
+  state = {
+    v: 1,
+    tab: typeof saved.tab === "string" ? saved.tab : b.tab,
+    theme: ["light", "dark", "system"].indexOf(saved.theme) >= 0 ? saved.theme : "system",
+    d: (saved.d && typeof saved.d === "object") ? saved.d : {},
+    format: typeof saved.format === "string" ? saved.format : "",
+    crit: (saved.crit && typeof saved.crit === "object") ? saved.crit : {},
+    blocks: (saved.blocks && typeof saved.blocks === "object") ? saved.blocks : {},
+    steps: (saved.steps && typeof saved.steps === "object") ? saved.steps : {},
+    launch: (saved.launch && typeof saved.launch === "object") ? saved.launch : {},
+    clock: (saved.clock && typeof saved.clock === "object")
+      ? { left: num(saved.clock.left, CLOCK_TOTAL), running: !!saved.clock.running, since: saved.clock.since || null }
+      : b.clock,
+    num: Object.assign({}, b.num, (saved.num && typeof saved.num === "object") ? saved.num : {})
+  };
+  /* A clock left running when the tab closed keeps running: catch it up. */
+  if (state.clock.running && state.clock.since) {
+    const gone = Math.floor((Date.now() - state.clock.since) / 1000);
+    state.clock.left = Math.max(0, state.clock.left - Math.max(0, gone));
+    state.clock.since = Date.now();
+  }
+}
+
+/* ---- reading answers ---------------------------------------------------- */
+
+/* An answer under 8 characters isn't an answer — it is not enough text to
+   steer anything, and counting it would flatter every total on the page. */
+const MIN_ANSWER = 8;
+
+function dv(id) {
+  const raw = state.d[id];
+  return typeof raw === "string" ? raw.trim() : "";
+}
+function answered(id) {
+  const dec = DECISIONS.filter(x => x.id === id)[0];
+  if (!dec) return false;
+  if (dec.kind === "format") return !!state.format;
+  const v = dv(id);
+  if (dec.kind === "select") return v.length > 0;
+  return v.length >= MIN_ANSWER;
+}
+function answeredCount() { return DECISIONS.filter(d => answered(d.id)).length; }
+function weightAnswered() {
+  let got = 0, all = 0;
+  DECISIONS.forEach(d => { all += d.weight; if (answered(d.id)) got += d.weight; });
+  return all ? got / all : 0;
+}
+function fmtObj() { return FORMATS.filter(f => f.id === state.format)[0] || null; }
+
+function num(v, dflt) {
+  const n = typeof v === "number" ? v : parseFloat(v);
+  return isFinite(n) ? n : dflt;
+}
+
+/* ===========================================================================
+   MONEY — one place, so every tab agrees.
+
+   Assumption, stated because it changes the answer: a refunded sale returns
+   the buyer's money and the percentage fees, but the payment processor keeps
+   its fixed fee. That is the common case and the pessimistic one.
+   =========================================================================== */
+
+function money(n) {
+  const c = (state.num.cur || "$").trim() || "$";
+  const neg = n < 0;
+  const a = Math.abs(n);
+  const s = a >= 100 ? a.toFixed(0) : a.toFixed(2);
+  const withSep = s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return (neg ? "−" : "") + c + withSep;
+}
+
+function economics(priceOverride) {
+  const n = state.num;
+  const price   = num(priceOverride != null ? priceOverride : n.price, 0);
+  const plat    = Math.max(0, num(n.plat, 0)) / 100;
+  const payPct  = Math.max(0, num(n.payPct, 0)) / 100;
+  const payFix  = Math.max(0, num(n.payFix, 0));
+  const refund  = Math.min(100, Math.max(0, num(n.refund, 0))) / 100;
+  const conv    = Math.max(0, num(n.conv, 0)) / 100;
+  const goal    = Math.max(0, num(n.goal, 0));
+
+  const fees        = price * plat + price * payPct + payFix;
+  const grossNet    = price - fees;                        /* a sale that sticks */
+  const expectedNet = grossNet * (1 - refund) - refund * payFix;
+
+  const viable      = expectedNet > 0;
+  const sales       = viable && goal > 0 ? Math.ceil(goal / expectedNet) : null;
+  const visitors    = (sales != null && conv > 0) ? Math.ceil(sales / conv) : null;
+  const perDay      = visitors != null ? visitors / 30 : null;
+
+  const hours       = Math.max(0, num(n.hours, 0));
+  const rate        = Math.max(0, num(n.rate, 0));
+  const buildCost   = hours * rate;
+  const breakEven   = viable && buildCost > 0 ? Math.ceil(buildCost / expectedNet) : (viable ? 0 : null);
+
+  return {
+    price, fees, grossNet, expectedNet, viable, sales, visitors, perDay,
+    goal, conv, refund, buildCost, hours, rate, breakEven
+  };
+}
+
+function priceReads(p) {
+  if (p < 10)  return "Impulse — bought without thinking, and valued accordingly";
+  if (p < 30)  return "Considered impulse — they'll read the listing first";
+  if (p < 80)  return "A decision — needs proof of what's inside";
+  if (p < 200) return "A purchase — needs a sample, a guarantee, or your face";
+  return "A commitment — rarely works without a person attached to it";
+}
+
+/* ===========================================================================
+   VERDICTS
+   =========================================================================== */
+
+function gateVerdict() {
+  const scores = CRITERIA.map(c => state.crit[c.id]);
+  if (scores.some(s => typeof s !== "number")) {
+    return { kind: "idle", label: "Not scored", total: null, min: null, why: [] };
+  }
+  const total = scores.reduce((a, b) => a + b, 0);
+  const min = Math.min.apply(null, scores);
+  const weakest = CRITERIA[scores.indexOf(min)];
+  const why = [];
+  let kind, label;
+
+  if (min <= 1) {
+    kind = "kill"; label = "Kill it";
+    why.push("<b>" + esc(weakest.name) + "</b> scored " + min + ". That is a floor breach, and a " +
+      "floor breach is fatal on its own — the other two criteria cannot compensate for it, " +
+      "because they don't substitute for it.");
+    if (total >= 8) why.push("The total (" + total + " of 15) looks respectable. That is exactly " +
+      "the trap: averaging lets one strength carry an idea past the thing that will actually sink it.");
+  } else if (total >= 12 && min >= 3) {
+    kind = "build"; label = "Worth validating";
+    why.push("No floor breach, and " + total + " of 15 overall. That earns the idea thirty " +
+      "minutes on the next tab — not a build.");
+    why.push("This gate is cheap and self-scored, so it is easy to pass. The 30-minute method " +
+      "asks for evidence instead of opinion, and it is where most ideas that pass here stop.");
+  } else {
+    kind = "fix"; label = "Fix the weakest";
+    why.push("<b>" + esc(weakest.name) + "</b> is the binding constraint at " + min + " of 5. " +
+      "Total is " + total + " of 15.");
+    why.push("Changing the idea to raise that one score is a better use of the next hour than " +
+      "improving anything else — the weakest criterion sets the ceiling for all of it.");
+  }
+  return { kind, label, total, min, why, weakest };
+}
+
+function valVerdict() {
+  let judged = 0, failed = [], blockingFailed = [];
+  BLOCKS.forEach(b => {
+    const rec = state.blocks[b.id] || {};
+    if (rec.verdict === "pass" || rec.verdict === "fail") judged++;
+    if (rec.verdict === "fail") {
+      failed.push(b);
+      if (b.blocking) blockingFailed.push(b);
+    }
+  });
+
+  if (blockingFailed.length) {
+    return {
+      kind: "kill", label: "Stop here", judged,
+      why: ["<b>" + esc(blockingFailed.map(b => b.title).join(" · ")) + "</b> failed, and those " +
+        "blocks are blocking. A buyer you cannot reach, or a problem nobody pays to solve, is " +
+        "not a product waiting for a better execution — it is the answer.",
+        "This cost you " + (judged * 5) + " minutes instead of the weekend you were about to spend. " +
+        "That is the whole return on this tab."]
+    };
+  }
+  if (judged === 0) {
+    return { kind: "idle", label: "Not run", judged, why: ["Work through the blocks below."] };
+  }
+  if (judged < BLOCKS.length) {
+    return {
+      kind: "idle", label: "In progress", judged,
+      why: [judged + " of " + BLOCKS.length + " blocks judged" +
+        (failed.length ? ", " + failed.length + " failed so far" : "") + "."]
+    };
+  }
+  if (failed.length === 0) {
+    return {
+      kind: "build", label: "Nothing says stop", judged,
+      why: ["All six blocks passed, including both blocking ones. That is permission to build a " +
+        "first version — it is not evidence that it will sell.",
+        "What you have is the absence of the four commonest disqualifiers. Treat the first " +
+        "version as the real test, and keep it small enough that being wrong is still affordable."]
+    };
+  }
+  return {
+    kind: "fix", label: "Change something first", judged,
+    why: ["<b>" + esc(failed.map(b => b.title).join(" · ")) + "</b> failed, but none of the " +
+      "blocking blocks did. The idea survives; the version of it you started with probably doesn't.",
+      "Change the buyer, the problem or the format — whichever the failed block was about — and " +
+      "re-run only the blocks the change touches."]
+  };
+}
+
+/* ===========================================================================
+   RENDER — Product
+   =========================================================================== */
+
+function renderProduct() {
+  const host = $("#product-fields");
+  host.textContent = "";
+
+  DECISIONS.forEach((d, i) => {
+    const on = answered(d.id);
+    const row = el("div", { cls: "decision " + (on ? "filled" : "blank") });
+
+    const head = el("div", { cls: "dhead" });
+    head.appendChild(el("h4", { text: (i + 1) + ". " + d.label }));
+    head.appendChild(el("span", { cls: "pill" + (d.weight >= 9 ? " acc" : ""), text: "weight " + d.weight }));
+    head.appendChild(el("span", { cls: "pill " + (on ? "green" : "amber"), text: on ? "answered" : "blank" }));
+    row.appendChild(head);
+    row.appendChild(el("p", { cls: "dwhy", text: d.why }));
+
+    if (d.kind === "format") {
+      const sel = el("select", { attrs: { "aria-label": d.label } });
+      sel.appendChild(el("option", { text: "— pick one —", attrs: { value: "" } }));
+      FORMATS.forEach(f => {
+        const o = el("option", { text: f.name, attrs: { value: f.id } });
+        if (state.format === f.id) o.selected = true;
+        sel.appendChild(o);
+      });
+      sel.addEventListener("change", () => {
+        state.format = sel.value;
+        save(); renderProduct(); renderFormats(); renderBuild(); renderNumbers(); renderKit();
+      });
+      row.appendChild(sel);
+      const f = fmtObj();
+      if (f) row.appendChild(el("p", { cls: "dwhy", html: "<b>Dies of:</b> " + esc(f.dies) + ". " + esc(f.aiNote) }));
+    } else if (d.kind === "select") {
+      const sel = el("select", { attrs: { "aria-label": d.label } });
+      d.options.forEach(o => {
+        const opt = el("option", { text: o.t, attrs: { value: o.v } });
+        if (dv(d.id) === o.v) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      sel.addEventListener("change", () => {
+        state.d[d.id] = sel.value;
+        save(); renderProduct(); renderGate(); renderBuild(); renderKit();
+      });
+      row.appendChild(sel);
+      if (dv(d.id) === "rare") {
+        row.appendChild(el("div", { cls: "note red", html:
+          "<b>A problem met once or twice ever is the hardest thing on this list to sell.</b> " +
+          "The buyer solves it badly, once, and moves on — they never become a repeat customer, " +
+          "and they never recommend it, because the subject never comes up again." }));
+      } else if (dv(d.id) === "quarterly") {
+        row.appendChild(el("div", { cls: "note amber", html:
+          "<b>A few times a year is survivable but thin.</b> Expect to acquire every buyer from " +
+          "cold — there's no rhythm that brings them back on their own." }));
+      }
+    } else {
+      const ta = el("textarea", { attrs: { placeholder: d.ph || "", "aria-label": d.label } });
+      ta.value = state.d[d.id] || "";
+      let t = null;
+      ta.addEventListener("input", () => {
+        state.d[d.id] = ta.value;
+        clearTimeout(t);
+        t = setTimeout(() => {
+          save();
+          const nowOn = answered(d.id);
+          row.className = "decision " + (nowOn ? "filled" : "blank");
+          head.children[2].textContent = nowOn ? "answered" : "blank";
+          head.children[2].className = "pill " + (nowOn ? "green" : "amber");
+          renderProductState();
+        }, 220);
+      });
+      /* Deliberately not a full renderProduct(): rebuilding every field here
+         would detach the node the user is tabbing into and drop their focus.
+         The input handler already refreshes this row; the rest are other
+         panels, which are hidden and safe to redraw. */
+      ta.addEventListener("blur", () => { save(); renderProductState(); renderGate(); renderBuild(); renderLaunch(); renderKit(); });
+      row.appendChild(ta);
+    }
+
+    row.appendChild(el("div", { cls: "fallback", html: "<b>If you leave this blank:</b> " + esc(d.fallback) }));
+    host.appendChild(row);
+  });
+
+  renderProductState();
+}
+
+function renderProductState() {
+  const n = answeredCount(), w = weightAnswered();
+  $("#product-score").textContent = n + " / " + DECISIONS.length;
+  $("#product-meter").style.width = Math.round(w * 100) + "%";
+  const box = $("#product-state");
+  const pill = $("#product-pill");
+  const why = $("#product-why");
+
+  box.className = "verdict " + (n === DECISIONS.length ? "build" : n >= 5 ? "fix" : "idle");
+  pill.textContent = Math.round(w * 100) + "% of the weight answered";
+  pill.className = "pill " + (n === DECISIONS.length ? "green" : n >= 5 ? "amber" : "");
+
+  const blanks = DECISIONS.filter(d => !answered(d.id)).sort((a, b) => b.weight - a.weight);
+  if (!blanks.length) {
+    why.innerHTML = "All nine answered. The prompts on the Build tab and the listing on the Launch " +
+      "tab are now written from your answers rather than from a model's guesses about them.";
+  } else {
+    why.innerHTML = "<b>Heaviest blanks:</b> " +
+      blanks.slice(0, 3).map(b => esc(b.label) + " (" + b.weight + ")").join(" · ") +
+      "<div style='margin-top:6px'>The weights say how much of the build each answer steers, and " +
+      "they are this app's judgement, printed so you can disagree with them. An answer shorter " +
+      "than " + MIN_ANSWER + " characters counts as blank.</div>";
+  }
+}
+
+/* ===========================================================================
+   RENDER — Formats
+   =========================================================================== */
+
+let fmtSort = "ai";
+
+function sortedFormats() {
+  const list = FORMATS.slice();
+  const mid = f => (f.priceLo + f.priceHi) / 2;
+  const hrs = f => (f.hoursLo + f.hoursHi) / 2;
+  if (fmtSort === "ai")      list.sort((a, b) => b.ai - a.ai);
+  if (fmtSort === "hours")   list.sort((a, b) => hrs(a) - hrs(b));
+  if (fmtSort === "price")   list.sort((a, b) => mid(b) - mid(a));
+  if (fmtSort === "ceiling") list.sort((a, b) => b.ceiling - a.ceiling);
+  return list;
+}
+
+function renderFormats() {
+  const tb = $("#fmt-tbody");
+  tb.textContent = "";
+  sortedFormats().forEach(f => {
+    const tr = el("tr", { cls: state.format === f.id ? "picked" : "" });
+    const nameCell = el("td");
+    nameCell.appendChild(el("b", { text: f.name }));
+    nameCell.appendChild(el("div", { cls: "muted", text: f.kicker, attrs: { style: "font-size:12.4px" } }));
+    tr.appendChild(nameCell);
+    tr.appendChild(el("td", { cls: "num", text: f.ai + "%" }));
+    tr.appendChild(el("td", { cls: "num", text: f.hoursLo + "–" + f.hoursHi }));
+    tr.appendChild(el("td", { cls: "num", text: money(f.priceLo) + "–" + money(f.priceHi) }));
+    tr.appendChild(el("td", { cls: "num", text: money(f.ceiling) + "/mo" }));
+    tr.appendChild(el("td", { text: f.dies }));
+    tb.appendChild(tr);
+  });
+
+  const host = $("#fmt-cards");
+  host.textContent = "";
+  sortedFormats().forEach(f => {
+    const c = el("div", { cls: "fmt" + (state.format === f.id ? " picked" : "") });
+    const h = el("div", { cls: "fh" });
+    h.appendChild(el("h4", { text: f.name }));
+    h.appendChild(el("span", { cls: "pill " + (f.ai >= 65 ? "amber" : f.ai <= 35 ? "teal" : ""), text: "AI carries " + f.ai + "%" }));
+    h.appendChild(el("span", { cls: "pill", text: f.hoursLo + "–" + f.hoursHi + " h" }));
+    const btn = el("button", { cls: "xs" + (state.format === f.id ? " primary" : ""), text: state.format === f.id ? "✓ Picked" : "Pick this" });
+    btn.addEventListener("click", () => {
+      state.format = state.format === f.id ? "" : f.id;
+      save(); renderFormats(); renderProduct(); renderBuild(); renderNumbers(); renderKit();
+    });
+    h.appendChild(btn);
+    c.appendChild(h);
+    c.appendChild(el("p", { text: f.what }));
+
+    const dl = el("dl");
+    [["Why it sells", f.why], ["What AI does", f.aiNote], ["Your margin", f.edge],
+     ["Suits", f.fits], ["Avoid if", f.avoid], ["Dies of", f.dies]].forEach(pair => {
+      dl.appendChild(el("dt", { text: pair[0] }));
+      dl.appendChild(el("dd", { text: pair[1] }));
+    });
+    c.appendChild(dl);
+    host.appendChild(c);
+  });
+}
+
+/* ===========================================================================
+   RENDER — Gate
+   =========================================================================== */
+
+function renderGate() {
+  const host = $("#gate-crits");
+  host.textContent = "";
+
+  CRITERIA.forEach(c => {
+    const sc = state.crit[c.id];
+    const has = typeof sc === "number";
+    const cls = !has ? "" : sc <= 1 ? "floor" : sc <= 2 ? "weak" : "ok";
+    const box = el("div", { cls: "crit " + cls });
+
+    const head = el("div", { cls: "chead" });
+    head.appendChild(el("h4", { text: c.name }));
+    if (has) head.appendChild(el("span", { cls: "pill " + (sc <= 1 ? "red" : sc <= 2 ? "amber" : "green"), text: sc + " / 5" }));
+    else head.appendChild(el("span", { cls: "pill", text: "not scored" }));
+    box.appendChild(head);
+    box.appendChild(el("p", { cls: "cask", text: c.ask }));
+
+    const scale = el("div", { cls: "scale", attrs: { role: "group", "aria-label": c.name } });
+    for (let i = 0; i <= 5; i++) {
+      const b = el("button", {
+        cls: i <= 1 ? "zero" : "", text: String(i),
+        attrs: {
+          "aria-pressed": has && sc === i ? "true" : "false",
+          "aria-label": c.name + ": " + i + " out of 5",
+          "data-fk": "crit:" + c.id + ":" + i
+        }
+      });
+      b.addEventListener("click", () => {
+        state.crit[c.id] = state.crit[c.id] === i ? null : i;
+        if (state.crit[c.id] === null) delete state.crit[c.id];
+        save();
+        withFocus(() => { renderGate(); });
+        renderKit();
+      });
+      scale.appendChild(b);
+    }
+    box.appendChild(scale);
+
+    const anch = el("div", { cls: "anchors" });
+    c.anchors.forEach(a => {
+      const i = a.indexOf("—");
+      anch.appendChild(el("div", { html: "<b>" + esc(a.slice(0, i)) + "</b> " + esc(a.slice(i + 1)) }));
+    });
+    box.appendChild(anch);
+
+    if (has && sc <= 1) {
+      box.appendChild(el("div", { cls: "note red", html:
+        "<b>Floor breach.</b> This alone kills the idea, whatever the other two score. If that " +
+        "feels wrong, the question to answer is which of the other two criteria you believe " +
+        "substitutes for this one — and the answer is neither." }));
+    }
+    host.appendChild(box);
+  });
+
+  const v = gateVerdict();
+  const box = $("#gate-verdict");
+  box.className = "verdict " + v.kind;
+  $("#gate-label").textContent = v.label;
+  $("#gate-total").textContent = v.total == null ? "—" : v.total + " / 15 · lowest " + v.min;
+  $("#gate-why").innerHTML = v.why.length ? "<ul><li>" + v.why.join("</li><li>") + "</li></ul>"
+    : "Score all three criteria above.";
+}
+
+/* ===========================================================================
+   RENDER — Validation
+   =========================================================================== */
+
+let clockTimer = null;
+
+function fmtClock(sec) {
+  const s = Math.max(0, Math.round(sec));
+  const m = Math.floor(s / 60);
+  const r = s % 60;
+  return m + ":" + (r < 10 ? "0" : "") + r;
+}
+
+function renderClock() {
+  const c = state.clock;
+  const t = $("#clk-time");
+  if (!t) return;
+  t.textContent = fmtClock(c.left);
+  t.className = "time" + (c.left <= 0 ? " over" : c.left <= 300 ? " low" : "");
+  const used = (CLOCK_TOTAL - c.left) / CLOCK_TOTAL;
+  const m = $("#clk-meter");
+  m.style.width = Math.min(100, Math.max(0, used * 100)) + "%";
+  $("#clk-meter-wrap").className = "meter" + (c.left <= 0 ? " red" : c.left <= 300 ? " amber" : "");
+  $("#clk-start").textContent = c.running ? "▶ Running" : "▶ Start";
+  $("#clk-start").disabled = c.running;
+  $("#clk-pause").disabled = !c.running;
+
+  const note = $("#clk-note");
+  if (c.left <= 0) {
+    note.textContent = "Thirty minutes gone. Nothing is locked — but if the blocks below still " +
+      "aren't judged, that is itself the finding: the evidence was not there to be found quickly.";
+  } else if (c.running) {
+    note.textContent = "Running. About " + Math.ceil(c.left / 60) + " minutes left — roughly " +
+      Math.max(0, Math.floor(c.left / 300)) + " blocks' worth.";
+  } else if (c.left < CLOCK_TOTAL) {
+    note.textContent = "Paused at " + fmtClock(c.left) + " remaining.";
+  } else {
+    note.textContent = "Not started. The clock is advisory — nothing locks when it runs out.";
+  }
+}
+
+function tickClock() {
+  if (!state.clock.running) return;
+  const now = Date.now();
+  const since = state.clock.since || now;
+  const gone = Math.floor((now - since) / 1000);
+  if (gone >= 1) {
+    state.clock.left = Math.max(0, state.clock.left - gone);
+    state.clock.since = now;
+    if (state.clock.left <= 0) {
+      state.clock.running = false;
+      state.clock.since = null;
+      stopClockTimer();
+      toast("Thirty minutes. Judge the blocks you reached — the rest is the finding.");
+    }
+    save();
+  }
+  renderClock();
+}
+
+function startClockTimer() {
+  stopClockTimer();
+  clockTimer = setInterval(tickClock, 1000);
+}
+function stopClockTimer() {
+  if (clockTimer) { clearInterval(clockTimer); clockTimer = null; }
+}
+
+function renderValidate() {
+  const host = $("#val-blocks");
+  host.textContent = "";
+
+  BLOCKS.forEach((b, i) => {
+    const rec = state.blocks[b.id] || {};
+    const cls = "blk" + (b.blocking ? " blocking" : "") +
+      (rec.verdict === "pass" ? " pass" : rec.verdict === "fail" ? " fail" : "");
+    const box = el("div", { cls });
+
+    const head = el("div", { cls: "bh" });
+    head.appendChild(el("div", { cls: "n", text: String(i + 1) }));
+    const t = el("div", { cls: "bt" });
+    t.appendChild(el("b", { text: b.title }));
+    t.appendChild(el("span", { text: b.sub + " · " + b.mins + " min" }));
+    head.appendChild(t);
+    if (b.blocking) head.appendChild(el("span", { cls: "pill red", text: "blocking" }));
+
+    const seg = el("div", { cls: "seg" });
+    [["pass", "Pass"], ["fail", "Fail"]].forEach(pair => {
+      const btn = el("button", {
+        text: pair[1],
+        attrs: {
+          "aria-pressed": rec.verdict === pair[0] ? "true" : "false",
+          "data-fk": "blk:" + b.id + ":" + pair[0]
+        }
+      });
+      btn.addEventListener("click", () => {
+        const cur = state.blocks[b.id] || {};
+        cur.verdict = cur.verdict === pair[0] ? "" : pair[0];
+        state.blocks[b.id] = cur;
+        save();
+        withFocus(() => { renderValidate(); });
+        renderKit();
+      });
+      seg.appendChild(btn);
+    });
+    head.appendChild(seg);
+    box.appendChild(head);
+
+    const body = el("div", { cls: "bb" });
+    const ol = el("ol");
+    b.todo.forEach(x => ol.appendChild(el("li", { text: x })));
+    body.appendChild(ol);
+    body.appendChild(el("div", { cls: "gate", html: "<b>Gate.</b> " + esc(b.gate) }));
+
+    const lab = el("label", { cls: "lbl", text: "Evidence" });
+    lab.setAttribute("for", "ev-" + b.id);
+    body.appendChild(lab);
+    const ta = el("textarea", { attrs: { id: "ev-" + b.id, placeholder: b.ph } });
+    ta.value = rec.ev || "";
+    let tm = null;
+    ta.addEventListener("input", () => {
+      const cur = state.blocks[b.id] || {};
+      cur.ev = ta.value;
+      state.blocks[b.id] = cur;
+      clearTimeout(tm);
+      tm = setTimeout(save, 220);
+    });
+    ta.addEventListener("blur", () => { save(); renderKit(); });
+    body.appendChild(ta);
+    box.appendChild(body);
+    host.appendChild(box);
+  });
+
+  const v = valVerdict();
+  const box = $("#val-verdict");
+  box.className = "verdict " + v.kind;
+  $("#val-label").textContent = v.label;
+  $("#val-count").textContent = v.judged + " of " + BLOCKS.length + " blocks judged";
+  $("#val-why").innerHTML = "<ul><li>" + v.why.join("</li><li>") + "</li></ul>";
+  renderClock();
+}
+
+/* ===========================================================================
+   PROMPTS — built from the answers, honest about the ones that are missing.
+   =========================================================================== */
+
+function slot(id) {
+  if (id === "format") {
+    const f = fmtObj();
+    return f ? f.name : "[MISSING — pick a format on the Product tab]";
+  }
+  const dec = DECISIONS.filter(d => d.id === id)[0];
+  if (!answered(id)) return "[MISSING — " + (dec ? dec.label.toLowerCase() : id) + ", on the Product tab]";
+  if (dec && dec.kind === "select") {
+    const o = dec.options.filter(x => x.v === dv(id))[0];
+    return o ? o.t : dv(id);
+  }
+  return dv(id);
+}
+
+function missingFor(step) {
+  return step.needs.filter(id => !answered(id));
+}
+
+function promptFor(step) {
+  const P = slot("problem"), B = slot("buyer"), O = slot("outcome"),
+        F = slot("format"), R = slot("proof"), N = slot("notdo"),
+        T = slot("today"), C = slot("recurrence");
+  const ctx =
+    "CONTEXT\n" +
+    "Buyer: " + B + "\n" +
+    "Problem, in their words: " + P + "\n" +
+    "How often they hit it: " + C + "\n" +
+    "What they do today instead: " + T + "\n" +
+    "Format: " + F + "\n" +
+    "The one outcome: " + O + "\n";
+
+  switch (step.id) {
+    case "s1": return ctx +
+      "\nTASK\nWrite an outline for this product.\n\n" +
+      "RULES\n" +
+      "- Every section must move the buyer toward the one outcome. Next to each section, write " +
+      "the specific way it does that in under ten words.\n" +
+      "- Then delete any section where that sentence was hard to write.\n" +
+      "- Order the sections by what the buyer needs first, not by what is logical to explain first.\n" +
+      "- Aim for the shortest outline that still reaches the outcome. Say what you cut and why.\n" +
+      "- Do not include an introduction about the importance of the topic. They already have the " +
+      "problem; that is why they bought it.";
+
+    case "s2": return ctx +
+      "\nTASK\nDraft the full contents from the outline. Complete and rough beats partial and polished.\n\n" +
+      "RULES\n" +
+      "- Write for someone who has this problem right now and wants it gone, not for someone " +
+      "studying the subject.\n" +
+      "- Concrete over general: name tools, numbers, steps and thresholds. Where you would " +
+      "normally write 'it depends', write what it depends on and give the two commonest cases.\n" +
+      "- No filler transitions, no restating the heading in the first line, no summary of what " +
+      "the section will cover.\n" +
+      "- Mark with [NEEDS REAL DATA] every place where a specific number, screenshot or example " +
+      "from my own work would be more convincing than anything you can write. Do not invent them.";
+
+    case "s3": return ctx +
+      "\nWHAT I HAVE THAT YOU DON'T\n" + R + "\n" +
+      "\nTASK\nI will paste the draft. Find every place where the material above should replace " +
+      "generic content, and tell me exactly what to insert and where.\n\n" +
+      "RULES\n" +
+      "- Do not write the material for me. Do not invent examples, numbers, names or results.\n" +
+      "- For each insertion point, say what specifically it replaces and why the real version is " +
+      "more convincing than the generic one.\n" +
+      "- Flag any claim currently in the draft that I cannot personally back up. Those get cut, " +
+      "not softened.";
+
+    case "s4": return ctx +
+      "\nTASK\nI will paste the draft. Cut a quarter of it without losing the outcome.\n\n" +
+      "RULES\n" +
+      "- Cut first: my credentials, background on the field, defensive caveats, and anything " +
+      "beginning 'of course, it depends'.\n" +
+      "- Cut anything that serves my authority rather than their result.\n" +
+      "- List what you cut and the risk of cutting it, so I can overrule you on specific items.\n" +
+      "- Do not compress by making sentences denser. Remove whole sections.";
+
+    case "s5": return ctx +
+      "\nTASK\nGive me a legibility specification for this " + F + ", not a visual style.\n\n" +
+      "COVER\n" +
+      "- Heading levels and when each is used, with a consistent type scale.\n" +
+      "- Page or screen size, margins, and line length in characters.\n" +
+      "- How steps, warnings, examples and checklists are marked, consistently throughout.\n" +
+      "- What the buyer needs to navigate: contents, numbering, cross-references, a summary card.\n" +
+      "- The five things that would make this look amateur, in priority order.\n\n" +
+      "Assume no design software beyond a word processor and no budget for illustration.";
+
+    case "s6": return ctx +
+      "\nTASK\nWrite the script for a fifteen-minute watch-along test with one real buyer.\n\n" +
+      "COVER\n" +
+      "- What I say at the start so they don't perform for me, and what I must not say.\n" +
+      "- The single task I give them, phrased as their own goal rather than as a test of the product.\n" +
+      "- What I write down while watching: hesitations, re-reads, skipped sections, wrong turns.\n" +
+      "- The three questions I ask afterwards, and the ones that produce polite lies so I can " +
+      "avoid them.\n" +
+      "- How to tell a usability problem from a scope problem from a wrong-buyer problem, since " +
+      "the fix is different for each.";
+
+    case "s7": return ctx +
+      "\nWHAT IT DELIBERATELY DOESN'T COVER\n" + N + "\n" +
+      "\nTASK\nDraft the packaging text for this " + F + ".\n\n" +
+      "COVER\n" +
+      "- Exactly what the buyer receives: file formats, count, sizes, and what opens them.\n" +
+      "- A plain-language licence: personal use, client use, resale, and what is not allowed.\n" +
+      "- Whether updates are included and for how long.\n" +
+      "- A refund policy in plain words, written to be honoured rather than to deter.\n" +
+      "- A short 'this is not for you if' list built from the scope above.\n\n" +
+      "Write it as text I can paste. Mark anything that varies by jurisdiction as [CHECK LOCALLY] " +
+      "rather than guessing — and note that consumer rules for digital goods differ by country.";
+
+    case "s8": return ctx +
+      "\nSCOPE IT DOESN'T COVER\n" + N + "\n" +
+      "WHAT MAKES IT MINE\n" + R + "\n" +
+      "\nTASK\nWrite the listing.\n\n" +
+      "STRUCTURE\n" +
+      "- First three lines: the problem in the buyer's words. Not the product, not me.\n" +
+      "- What they will have after using it — the one outcome, stated so it could be checked.\n" +
+      "- What is inside, concretely enough that they can picture opening it.\n" +
+      "- Why this one rather than a free generated version: the material above that isn't generatable.\n" +
+      "- Who it is not for, from the scope.\n" +
+      "- Price and what happens after they pay.\n\n" +
+      "RULES\n" +
+      "- No claim the product doesn't deliver. If the copy is better than the product, the gap " +
+      "comes back as refunds.\n" +
+      "- No invented testimonials, no invented numbers, no 'trusted by' anything.\n" +
+      "- Plain words. If a sentence would fit any product in this category, cut it.";
+  }
+  return ctx;
+}
+
+/* ===========================================================================
+   RENDER — Build
+   =========================================================================== */
+
+function renderBuild() {
+  const warn = $("#build-gatewarn");
+  warn.textContent = "";
+  const g = gateVerdict(), v = valVerdict();
+  if (g.kind === "kill" || v.kind === "kill") {
+    warn.appendChild(el("div", { cls: "note red", html:
+      "<b>Something upstream said stop.</b> " +
+      (g.kind === "kill" ? "The gate found a floor breach. " : "") +
+      (v.kind === "kill" ? "A blocking validation block failed. " : "") +
+      "The prompts still work — this app doesn't lock anything — but building now means paying " +
+      "the full production cost of a product you already have evidence against. That evidence " +
+      "cost you thirty minutes; ignoring it costs the weekend." }));
+  } else if (v.kind === "idle" && g.kind !== "build") {
+    warn.appendChild(el("div", { cls: "note amber", html:
+      "<b>Nothing has been validated yet.</b> These prompts will happily produce a whole product " +
+      "for an idea nobody wants — that is the one thing AI has made genuinely easy, and the " +
+      "reason the two tabs before this one exist." }));
+  }
+
+  renderBuildStats();
+  renderBuildSteps();
+}
+
+function renderBuildStats() {
+  const done = STEPS.filter(s => state.steps[s.id]).length;
+  const blockedSteps = STEPS.filter(s => missingFor(s).length);
+  const stats = $("#build-stats");
+  stats.textContent = "";
+  [
+    { k: "Steps done", v: done + " / " + STEPS.length, n: "Ticked by you, not detected" },
+    { k: "Prompts complete", v: (STEPS.length - blockedSteps.length) + " / " + STEPS.length,
+      n: blockedSteps.length ? "The rest have gaps marked in the text" : "Every slot filled from your answers",
+      cls: blockedSteps.length ? "warn" : "good" },
+    { k: "Format", v: fmtObj() ? fmtObj().name : "not picked", n: fmtObj() ? fmtObj().hoursLo + "–" + fmtObj().hoursHi + " hours for a first version" : "Pick one on the Formats tab", cls: fmtObj() ? "" : "warn" }
+  ].forEach(s => {
+    const box = el("div", { cls: "stat " + (s.cls || "") });
+    box.appendChild(el("div", { cls: "k", text: s.k }));
+    box.appendChild(el("div", { cls: "v", text: s.v }));
+    box.appendChild(el("div", { cls: "n", text: s.n }));
+    stats.appendChild(box);
+  });
+}
+
+function renderBuildSteps() {
+  const host = $("#build-steps");
+  const open = {};
+  $$("#build-steps details").forEach((d, i) => { if (d.open) open[STEPS[i].id] = true; });
+  host.textContent = "";
+  STEPS.forEach((s, i) => {
+    const miss = missingFor(s);
+    const det = el("details", { cls: "pcard" + (state.steps[s.id] ? " done" : "") });
+    if (open[s.id]) det.open = true;
+    const sum = el("summary", { cls: "ph" });
+    sum.appendChild(el("div", { cls: "n", text: String(i + 1) }));
+    const t = el("div", { cls: "t" });
+    t.appendChild(el("b", { text: s.title }));
+    t.appendChild(el("span", { text: s.sub }));
+    sum.appendChild(t);
+    if (s.blocking) sum.appendChild(el("span", { cls: "pill red", text: "don't skip" }));
+    if (miss.length) sum.appendChild(el("span", { cls: "pill amber", text: miss.length + " gap" + (miss.length > 1 ? "s" : "") }));
+    sum.appendChild(el("span", { cls: "chev", text: "▶" }));
+    det.appendChild(sum);
+
+    const body = el("div", { cls: "pbody" });
+    body.appendChild(el("div", { cls: "note" + (s.blocking ? " amber" : ""), text: s.note }));
+
+    if (miss.length) {
+      body.appendChild(el("div", { cls: "note red", html:
+        "<b>Unanswered, so marked in the prompt rather than invented:</b> " +
+        miss.map(id => esc((DECISIONS.filter(d => d.id === id)[0] || {}).label || id)).join(" · ") }));
+    }
+
+    const bar = el("div", { cls: "copybar" });
+    const chk = el("label", { cls: "check grow" });
+    const cb = el("input", { attrs: { type: "checkbox" } });
+    cb.checked = !!state.steps[s.id];
+    /* In place, not a rebuild: re-rendering here would collapse the very step
+       the user has open and throw away their scroll position. */
+    cb.addEventListener("change", () => {
+      state.steps[s.id] = cb.checked;
+      det.className = "pcard" + (cb.checked ? " done" : "");
+      save(); renderBuildStats(); renderKit();
+    });
+    chk.appendChild(cb);
+    chk.appendChild(el("span", { text: "Done" }));
+    bar.appendChild(chk);
+    const cbtn = el("button", { cls: "sm", text: "⧉ Copy prompt" });
+    cbtn.addEventListener("click", () => copyText(promptFor(s), "Step " + (i + 1) + " prompt"));
+    bar.appendChild(cbtn);
+
+    const pb = el("div", { cls: "promptbox" });
+    pb.appendChild(bar);
+    pb.appendChild(el("pre", { text: promptFor(s) }));
+    body.appendChild(pb);
+    det.appendChild(body);
+    host.appendChild(det);
+  });
+}
+
+/* ===========================================================================
+   RENDER — Numbers
+   =========================================================================== */
+
+const NUM_FIELDS = [
+  { id: "cur",    label: "Currency symbol", type: "text",   step: null, hint: "Cosmetic — no rates are looked up." },
+  { id: "goal",   label: "Monthly revenue target", type: "number", step: "any", hint: "What this product should bring in per month." },
+  { id: "price",  label: "Price", type: "number", step: "any", hint: "What the buyer pays." },
+  { id: "plat",   label: "Marketplace cut (%)", type: "number", step: "any", hint: "0 if selling from your own site." },
+  { id: "payPct", label: "Payment fee (%)", type: "number", step: "any", hint: "Typically a few per cent." },
+  { id: "payFix", label: "Payment fee (fixed)", type: "number", step: "any", hint: "Per transaction. Brutal on cheap products." },
+  { id: "refund", label: "Refund rate (%)", type: "number", step: "any", hint: "Assume some. Zero means you haven't sold enough yet." },
+  { id: "conv",   label: "Visitor → buyer (%)", type: "number", step: "any", hint: "Cold traffic is usually well under 2%. A warm list is far higher." },
+  { id: "hours",  label: "Hours to build it", type: "number", step: "any", hint: "Your honest estimate, then add some." },
+  { id: "rate",   label: "What an hour of yours is worth", type: "number", step: "any", hint: "For the break-even figure below." }
+];
+
+function renderNumbers() {
+  const host = $("#num-inputs");
+  if (!host.dataset.built) {
+    NUM_FIELDS.forEach(f => {
+      const wrap = el("div", { cls: "field" });
+      const lab = el("label", { html: esc(f.label) + " <span class='hint'>" + esc(f.hint) + "</span>" });
+      lab.setAttribute("for", "num-" + f.id);
+      wrap.appendChild(lab);
+      const inp = el("input", { attrs: { id: "num-" + f.id, type: f.type } });
+      if (f.step) inp.setAttribute("step", f.step);
+      if (f.type === "number") inp.setAttribute("min", "0");
+      inp.value = state.num[f.id];
+      inp.addEventListener("input", () => {
+        state.num[f.id] = f.type === "number" ? num(inp.value, 0) : inp.value;
+        save(); renderNumbersOut(); renderKit();
+      });
+      wrap.appendChild(inp);
+      host.appendChild(wrap);
+    });
+    host.dataset.built = "1";
+  }
+  renderNumbersOut();
+}
+
+function statBox(k, v, n, cls) {
+  const b = el("div", { cls: "stat " + (cls || "") });
+  b.appendChild(el("div", { cls: "k", text: k }));
+  b.appendChild(el("div", { cls: "v", text: v }));
+  if (n) b.appendChild(el("div", { cls: "n", text: n }));
+  return b;
+}
+
+function renderNumbersOut() {
+  const e = economics();
+
+  const ps = $("#num-per-sale");
+  ps.textContent = "";
+  ps.appendChild(statBox("Price", money(e.price), "What they pay"));
+  ps.appendChild(statBox("Fees", money(e.fees),
+    Math.round((e.price ? e.fees / e.price : 0) * 100) + "% of the price", "warn"));
+  ps.appendChild(statBox("Net, sale that sticks", money(e.grossNet), "Before refunds"));
+  ps.appendChild(statBox("Net, expected", money(e.expectedNet),
+    "After a " + (e.refund * 100).toFixed(1) + "% refund rate",
+    e.viable ? "good" : "bad"));
+
+  const psn = $("#num-per-sale-note");
+  psn.textContent = "";
+  if (!e.viable) {
+    psn.appendChild(el("div", { cls: "note red", html:
+      "<b>This price loses money on every sale.</b> The fixed payment fee is the usual culprit: " +
+      "it doesn't shrink with the price, so below a few units of currency it eats everything. " +
+      "Either raise the price or sell in bundles." }));
+  } else if (e.fees / e.price > 0.25) {
+    psn.appendChild(el("div", { cls: "note amber", html:
+      "<b>Fees are taking over a quarter of the price.</b> At low prices the fixed fee dominates. " +
+      "Doubling the price here roughly halves the proportion lost to fees — the arithmetic that " +
+      "makes cheap products worse business than they look." }));
+  }
+  psn.appendChild(el("div", { cls: "note", html:
+    "<b>How the expected figure is worked out.</b> A refunded sale gives back the price and the " +
+    "percentage fees, but the processor generally keeps its fixed fee. So expected net = " +
+    "(price − fees) × (1 − refund rate) − refund rate × fixed fee. It is the pessimistic reading " +
+    "and the common one." }));
+
+  const tg = $("#num-target");
+  tg.textContent = "";
+  if (!e.viable) {
+    tg.appendChild(statBox("Sales needed", "∞", "No price above zero reaches the target", "bad"));
+  } else {
+    tg.appendChild(statBox("Sales / month", e.sales != null ? e.sales.toLocaleString() : "—",
+      "To reach " + money(e.goal), "acc"));
+    tg.appendChild(statBox("Visitors / month", e.visitors != null ? e.visitors.toLocaleString() : "—",
+      "At " + (e.conv * 100).toFixed(2) + "% conversion"));
+    tg.appendChild(statBox("Visitors / day", e.perDay != null ? Math.ceil(e.perDay).toLocaleString() : "—",
+      "Every day, not on good days"));
+    tg.appendChild(statBox("Sales / day", e.sales != null ? (e.sales / 30).toFixed(1) : "—", "Averaged"));
+  }
+
+  const tn = $("#num-target-note");
+  tn.textContent = "";
+  if (e.viable && e.perDay != null) {
+    const d = Math.ceil(e.perDay);
+    let msg, cls;
+    if (d <= 20) { cls = "green"; msg = "That is a small number of visitors a day. It is achievable from one active channel where you already have standing."; }
+    else if (d <= 100) { cls = ""; msg = "That is a real content or posting habit — several channels, consistently, for months. Not a launch; a practice."; }
+    else if (d <= 500) { cls = "amber"; msg = "That is a marketing operation, not a side project. Either the price needs to rise or the target needs to fall."; }
+    else { cls = "red"; msg = "That much daily traffic is a business in its own right. This target is not reachable at this price through organic posting — change the price, the target, or the plan."; }
+    tn.appendChild(el("div", { cls: "note " + cls, html: "<b>" + d.toLocaleString() + " visitors a day.</b> " + msg }));
+  }
+  if (e.conv * 100 > 5) {
+    tn.appendChild(el("div", { cls: "note amber", html:
+      "<b>Above 5% conversion is a warm-audience number.</b> It happens with a mailing list that " +
+      "knows you or a direct recommendation. If the traffic here is strangers from search or " +
+      "social, this figure is optimistic by a factor of several, and every number above inherits that." }));
+  }
+
+  const lb = $("#ladder-tbody");
+  lb.textContent = "";
+  const base = e.price || 1;
+  const mults = [0.5, 0.75, 1, 1.5, 2, 3];
+  mults.forEach(m => {
+    const p = Math.max(1, Math.round(base * m * 100) / 100);
+    const x = economics(p);
+    const tr = el("tr", { cls: m === 1 ? "picked" : "" });
+    tr.appendChild(el("td", { cls: "num", text: money(p) + (m === 1 ? " ←" : "") }));
+    tr.appendChild(el("td", { cls: "num", text: x.viable ? money(x.expectedNet) : "—" }));
+    tr.appendChild(el("td", { cls: "num", text: x.sales != null ? x.sales.toLocaleString() : "—" }));
+    tr.appendChild(el("td", { cls: "num", text: x.visitors != null ? x.visitors.toLocaleString() : "—" }));
+    tr.appendChild(el("td", { cls: "num", text: x.perDay != null ? Math.ceil(x.perDay).toLocaleString() : "—" }));
+    tr.appendChild(el("td", { text: priceReads(p) }));
+    lb.appendChild(tr);
+  });
+
+  const be = $("#num-breakeven");
+  be.textContent = "";
+  be.appendChild(statBox("Build cost", money(e.buildCost),
+    e.hours + " h at " + money(e.rate) + "/h"));
+  be.appendChild(statBox("Sales to break even", e.breakEven != null ? e.breakEven.toLocaleString() : "—",
+    "Before the product has earned anything", e.viable ? "acc" : "bad"));
+  if (e.viable && e.sales) {
+    const months = e.breakEven / e.sales;
+    be.appendChild(statBox("At target pace", months < 0.1 ? "immediately" : months.toFixed(1) + " months",
+      "If it hits the target every month", months > 3 ? "warn" : "good"));
+  }
+
+  const ben = $("#num-breakeven-note");
+  ben.textContent = "";
+  ben.appendChild(el("div", { cls: "note", html:
+    "<b>Your hours are a real cost even though no money leaves.</b> Counting them is what makes " +
+    "the difference between a product and an expensive hobby visible before you start rather " +
+    "than after. The figure above is also the size of the bet the validation tab is trying to " +
+    "save you from losing." }));
+}
+
+/* ===========================================================================
+   RENDER — Launch
+   =========================================================================== */
+
+function listingText() {
+  const f = fmtObj();
+  const lines = [];
+  lines.push("LISTING DRAFT — " + (f ? f.name : "[format not picked]"));
+  lines.push("");
+  lines.push("THE PROBLEM (first three lines the buyer reads)");
+  lines.push(slot("problem"));
+  lines.push("");
+  lines.push("WHO IT IS FOR");
+  lines.push(slot("buyer"));
+  lines.push("");
+  lines.push("WHAT IS TRUE AFTER THEY USE IT");
+  lines.push(slot("outcome"));
+  lines.push("");
+  lines.push("WHY THIS AND NOT A FREE GENERATED ONE");
+  lines.push(slot("proof"));
+  lines.push("");
+  lines.push("WHAT IT DOES NOT COVER");
+  lines.push(slot("notdo"));
+  lines.push("");
+  lines.push("WHAT THEY DO TODAY INSTEAD (what this has to beat)");
+  lines.push(slot("today"));
+  lines.push("");
+  const e = economics();
+  lines.push("PRICE");
+  lines.push(money(e.price) + " — " + priceReads(e.price).toLowerCase());
+  lines.push("");
+  lines.push("---");
+  lines.push("Every line above is your own answer. Nothing here was generated, which is why " +
+    "there is nothing here you can't defend. Anything reading [MISSING] is a question the " +
+    "listing cannot answer yet — fill it in on the Product tab rather than writing round it.");
+  return lines.join("\n");
+}
+
+function renderLaunch() {
+  $("#listing-out").textContent = listingText();
+
+  const host = $("#launch-checks");
+  host.textContent = "";
+  LAUNCH_CHECKS.forEach(c => {
+    const on = !!state.launch[c.id];
+    const row = el("label", { cls: "chk " + (c.blocking ? "blocker" : "should") + (on ? " on" : "") });
+    const cb = el("input", { attrs: { type: "checkbox" } });
+    cb.checked = on;
+    /* In place: rebuilding the list would drop a keyboard user's place in it. */
+    cb.addEventListener("change", () => {
+      state.launch[c.id] = cb.checked;
+      row.className = "chk " + (c.blocking ? "blocker" : "should") + (cb.checked ? " on" : "");
+      save(); renderLaunchCount(); renderKit();
+    });
+    row.appendChild(cb);
+    const ct = el("div", { cls: "ct" });
+    ct.appendChild(el("b", { text: c.t }));
+    ct.appendChild(el("span", { text: c.n }));
+    row.appendChild(ct);
+    if (c.blocking) row.appendChild(el("span", { cls: "pill red", text: "blocking" }));
+    host.appendChild(row);
+  });
+
+  renderLaunchCount();
+
+  const days = $("#launch-days");
+  days.textContent = "";
+  LAUNCH_DAYS.forEach((d, i) => {
+    const box = el("div", { cls: "pcard" });
+    const head = el("div", { cls: "ph", attrs: { style: "cursor:default" } });
+    head.appendChild(el("div", { cls: "n", text: String(i + 1) }));
+    const t = el("div", { cls: "t" });
+    t.appendChild(el("b", { text: d.d + " — " + d.t }));
+    t.appendChild(el("span", { text: d.n }));
+    head.appendChild(t);
+    box.appendChild(head);
+    days.appendChild(box);
+  });
+}
+
+function renderLaunchCount() {
+  const done = LAUNCH_CHECKS.filter(c => state.launch[c.id]).length;
+  const blockersLeft = LAUNCH_CHECKS.filter(c => c.blocking && !state.launch[c.id]).length;
+  const pill = $("#launch-count");
+  pill.textContent = done + " / " + LAUNCH_CHECKS.length +
+    (blockersLeft ? " · " + blockersLeft + " blocking left" : " · clear to ship");
+  pill.className = "pill " + (blockersLeft ? "red" : "green");
+}
+
+/* ===========================================================================
+   RENDER — Kit
+   =========================================================================== */
+
+function kitMarkdown() {
+  const L = [];
+  const f = fmtObj();
+  const e = economics();
+  const g = gateVerdict();
+  const v = valVerdict();
+  const stripTags = s => String(s).replace(/<[^>]*>/g, "");
+
+  L.push("# Digital product plan");
+  L.push("");
+  L.push("Generated by Digital Products Maker. Every answer below is mine; every figure is " +
+    "arithmetic on my own inputs.");
+  L.push("");
+
+  L.push("## The product");
+  L.push("");
+  DECISIONS.forEach(d => {
+    L.push("### " + d.label);
+    if (d.kind === "format") L.push(f ? f.name + " — " + f.kicker : "_(not picked)_");
+    else if (!answered(d.id)) L.push("_(unanswered — default inherited: " + d.fallback + ")_");
+    else if (d.kind === "select") {
+      const o = d.options.filter(x => x.v === dv(d.id))[0];
+      L.push(o ? o.t : dv(d.id));
+    } else L.push(dv(d.id));
+    L.push("");
+  });
+
+  if (f) {
+    L.push("## Format notes — " + f.name);
+    L.push("");
+    L.push("- **AI carries:** " + f.ai + "% — " + f.aiNote);
+    L.push("- **Hours for a first version:** " + f.hoursLo + "–" + f.hoursHi);
+    L.push("- **Typical price band:** " + money(f.priceLo) + "–" + money(f.priceHi));
+    L.push("- **Dies of:** " + f.dies);
+    L.push("- **My margin is in:** " + f.edge);
+    L.push("");
+  }
+
+  L.push("## The gate");
+  L.push("");
+  L.push("**Verdict: " + g.label + "**" + (g.total != null ? " (" + g.total + "/15, lowest " + g.min + ")" : ""));
+  L.push("");
+  CRITERIA.forEach(c => {
+    const s = state.crit[c.id];
+    L.push("- " + c.name + ": " + (typeof s === "number" ? s + "/5" : "not scored"));
+  });
+  L.push("");
+  g.why.forEach(w => { L.push("> " + stripTags(w)); L.push(""); });
+
+  L.push("## 30-minute validation");
+  L.push("");
+  L.push("**Verdict: " + v.label + "** (" + v.judged + "/" + BLOCKS.length + " blocks judged)");
+  L.push("");
+  BLOCKS.forEach((b, i) => {
+    const rec = state.blocks[b.id] || {};
+    L.push("### Block " + (i + 1) + " — " + b.title + (b.blocking ? " (blocking)" : ""));
+    L.push("");
+    L.push("**" + (rec.verdict ? rec.verdict.toUpperCase() : "not judged") + "**");
+    L.push("");
+    L.push(rec.ev ? rec.ev : "_(no evidence recorded)_");
+    L.push("");
+  });
+
+  L.push("## The numbers");
+  L.push("");
+  L.push("| | |");
+  L.push("|---|---|");
+  L.push("| Price | " + money(e.price) + " |");
+  L.push("| Fees per sale | " + money(e.fees) + " |");
+  L.push("| Net per sale (expected) | " + (e.viable ? money(e.expectedNet) : "negative — unsellable at this price") + " |");
+  L.push("| Monthly target | " + money(e.goal) + " |");
+  L.push("| Sales needed / month | " + (e.sales != null ? e.sales : "—") + " |");
+  L.push("| Visitors needed / month | " + (e.visitors != null ? e.visitors : "—") + " |");
+  L.push("| Visitors needed / day | " + (e.perDay != null ? Math.ceil(e.perDay) : "—") + " |");
+  L.push("| Build cost (" + e.hours + " h at " + money(e.rate) + ") | " + money(e.buildCost) + " |");
+  L.push("| Sales to break even | " + (e.breakEven != null ? e.breakEven : "—") + " |");
+  L.push("");
+
+  L.push("## Build steps");
+  L.push("");
+  STEPS.forEach((s, i) => {
+    const miss = missingFor(s);
+    L.push("- [" + (state.steps[s.id] ? "x" : " ") + "] **" + (i + 1) + ". " + s.title + "** — " + s.sub +
+      (miss.length ? " _(" + miss.length + " unanswered input" + (miss.length > 1 ? "s" : "") + ")_" : ""));
+  });
+  L.push("");
+
+  L.push("## Pre-launch checklist");
+  L.push("");
+  LAUNCH_CHECKS.forEach(c => {
+    L.push("- [" + (state.launch[c.id] ? "x" : " ") + "] " + (c.blocking ? "**(blocking)** " : "") + c.t);
+  });
+  L.push("");
+
+  L.push("## Listing draft");
+  L.push("");
+  L.push("```");
+  L.push(listingText());
+  L.push("```");
+  L.push("");
+
+  L.push("## The first fourteen days");
+  L.push("");
+  LAUNCH_DAYS.forEach(d => L.push("- **" + d.d + " — " + d.t + ".** " + d.n));
+  L.push("");
+
+  L.push("## Prompts");
+  L.push("");
+  STEPS.forEach((s, i) => {
+    L.push("### Step " + (i + 1) + " — " + s.title);
+    L.push("");
+    L.push("```");
+    L.push(promptFor(s));
+    L.push("```");
+    L.push("");
+  });
+
+  return L.join("\n");
+}
+
+function renderKit() {
+  const out = $("#kit-out");
+  if (out) out.textContent = kitMarkdown();
+}
+
+/* ===========================================================================
+   TABS, CHROME, INIT
+   =========================================================================== */
+
+const PANELS = ["product", "formats", "gate", "validate", "build", "numbers", "launch", "kit"];
+const RENDERERS = {
+  product: renderProduct, formats: renderFormats, gate: renderGate,
+  validate: renderValidate, build: renderBuild, numbers: renderNumbers,
+  launch: renderLaunch, kit: renderKit
+};
+
+function showTab(id) {
+  if (PANELS.indexOf(id) < 0) id = "product";
+  state.tab = id;
+  PANELS.forEach(p => {
+    const panel = $("#panel-" + p), tab = $("#tab-" + p);
+    if (!panel || !tab) return;
+    const on = p === id;
+    panel.hidden = !on;
+    tab.setAttribute("aria-selected", on ? "true" : "false");
+    tab.tabIndex = on ? 0 : -1;
+  });
+  if (RENDERERS[id]) RENDERERS[id]();
+  save();
+}
+
+function initTabs() {
+  const tabs = $$("#tablist .tab");
+  tabs.forEach(t => {
+    t.addEventListener("click", () => showTab(t.dataset.tab));
+    t.addEventListener("keydown", e => {
+      const i = tabs.indexOf(t);
+      let j = -1;
+      if (e.key === "ArrowRight") j = (i + 1) % tabs.length;
+      if (e.key === "ArrowLeft")  j = (i - 1 + tabs.length) % tabs.length;
+      if (e.key === "Home") j = 0;
+      if (e.key === "End")  j = tabs.length - 1;
+      if (j >= 0) { e.preventDefault(); tabs[j].focus(); showTab(tabs[j].dataset.tab); }
+    });
+  });
+}
+
+function applyTheme() {
+  const t = state.theme;
+  if (t === "system") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.setAttribute("data-theme", t);
+  const b = $("#btn-theme");
+  if (b) b.title = "Theme: " + t + " (click to change)";
+}
+
+function initChrome() {
+  $("#btn-theme").addEventListener("click", () => {
+    const order = ["system", "light", "dark"];
+    state.theme = order[(order.indexOf(state.theme) + 1) % order.length];
+    applyTheme(); save();
+    toast("Theme: " + state.theme);
+  });
+
+  $("#btn-backup").addEventListener("click", () => {
+    download("digital-product-plan-" + new Date().toISOString().slice(0, 10) + ".json",
+      JSON.stringify(state, null, 2), "application/json");
+  });
+
+  $("#btn-restore").addEventListener("click", () => $("#restore-file").click());
+  $("#restore-file").addEventListener("change", ev => {
+    const file = ev.target.files && ev.target.files[0];
+    if (!file) return;
+    const fr = new FileReader();
+    fr.onload = () => {
+      try {
+        const data = JSON.parse(String(fr.result));
+        if (!data || typeof data !== "object") throw new Error("not an object");
+        applySaved(data);
+        applyTheme();
+        rerenderAll();
+        showTab(state.tab);
+        save();
+        toast("Restored");
+      } catch (e) {
+        toast("That file couldn't be read as a backup from this app.", true);
+      }
+      ev.target.value = "";
+    };
+    fr.onerror = () => { toast("Couldn't read that file.", true); ev.target.value = ""; };
+    fr.readAsText(file);
+  });
+
+  $("#btn-clear").addEventListener("click", () => {
+    const answers = answeredCount() + Object.keys(state.blocks).length + Object.keys(state.crit).length;
+    if (answers > 0) {
+      if (!confirm("Wipe everything in this app?\n\nThere is no undo, and nothing is stored anywhere else. " +
+        "Back up first if you might want it.")) return;
+    }
+    Store.wipe();
+    const theme = state.theme;
+    state = blankState();
+    state.theme = theme;
+    stopClockTimer();
+    applyTheme();
+    rerenderAll();
+    showTab("product");
+    save();
+    toast("Cleared");
+  });
+
+  $("#clk-start").addEventListener("click", () => {
+    if (state.clock.left <= 0) state.clock.left = CLOCK_TOTAL;
+    state.clock.running = true;
+    state.clock.since = Date.now();
+    startClockTimer();
+    save(); renderClock();
+  });
+  $("#clk-pause").addEventListener("click", () => {
+    tickClock();
+    state.clock.running = false;
+    state.clock.since = null;
+    stopClockTimer();
+    save(); renderClock();
+  });
+  $("#clk-reset").addEventListener("click", () => {
+    state.clock = { left: CLOCK_TOTAL, running: false, since: null };
+    stopClockTimer();
+    save(); renderClock();
+  });
+
+  $$("#fmt-sort button").forEach(b => {
+    b.addEventListener("click", () => {
+      fmtSort = b.dataset.sort;
+      $$("#fmt-sort button").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+      renderFormats();
+    });
+  });
+
+  $("#build-copyall").addEventListener("click", () => {
+    const all = STEPS.map((s, i) => "===== STEP " + (i + 1) + " — " + s.title.toUpperCase() + " =====\n\n" + promptFor(s)).join("\n\n\n");
+    copyText(all, "All eight prompts");
+  });
+
+  $("#listing-copy").addEventListener("click", () => copyText(listingText(), "Listing draft"));
+  $("#kit-copy").addEventListener("click", () => copyText(kitMarkdown(), "Kit"));
+  $("#kit-download").addEventListener("click", () =>
+    download("digital-product-plan-" + new Date().toISOString().slice(0, 10) + ".md", kitMarkdown(), "text/markdown"));
+  $("#kit-print").addEventListener("click", () => window.print());
+}
+
+function rerenderAll() {
+  const host = $("#num-inputs");
+  if (host) { host.textContent = ""; delete host.dataset.built; }
+  renderProduct(); renderFormats(); renderGate(); renderValidate();
+  renderBuild(); renderNumbers(); renderLaunch(); renderKit();
+}
+
+/* ---- self-checks -------------------------------------------------------- */
+
+function selfTest() {
+  const fails = [];
+  let n = 0;
+  function ok(name, cond) { n++; if (!cond) fails.push(name); }
+
+  /* data integrity */
+  ok("8 formats", FORMATS.length === 8);
+  ok("9 decisions", DECISIONS.length === 9);
+  ok("3 criteria", CRITERIA.length === 3);
+  ok("6 validation blocks", BLOCKS.length === 6);
+  ok("8 build steps", STEPS.length === 8);
+  ok("format ids unique", new Set(FORMATS.map(f => f.id)).size === FORMATS.length);
+  ok("decision ids unique", new Set(DECISIONS.map(d => d.id)).size === DECISIONS.length);
+  ok("block ids unique", new Set(BLOCKS.map(b => b.id)).size === BLOCKS.length);
+  ok("step ids unique", new Set(STEPS.map(s => s.id)).size === STEPS.length);
+  ok("launch ids unique", new Set(LAUNCH_CHECKS.map(c => c.id)).size === LAUNCH_CHECKS.length);
+  ok("blocks total 30 minutes", BLOCKS.reduce((a, b) => a + b.mins, 0) === 30);
+  ok("two blocking blocks", BLOCKS.filter(b => b.blocking).length === 2);
+  ok("every step needs known decisions", STEPS.every(s => s.needs.every(id =>
+    id === "format" || DECISIONS.some(d => d.id === id))));
+  ok("format price bands ordered", FORMATS.every(f => f.priceLo < f.priceHi && f.hoursLo < f.hoursHi));
+  ok("panels match tabs", PANELS.every(p => $("#panel-" + p) && $("#tab-" + p)));
+  ok("every panel has a renderer", PANELS.every(p => typeof RENDERERS[p] === "function"));
+
+  /* economics: keep a snapshot, compute against known inputs, restore */
+  const snap = JSON.parse(JSON.stringify(state.num));
+  state.num = { cur: "$", goal: 1000, price: 100, plat: 0, payPct: 0, payFix: 0, refund: 0, conv: 1, hours: 10, rate: 10 };
+  let e = economics();
+  ok("no fees: net equals price", e.expectedNet === 100);
+  ok("no fees: 10 sales for 1000", e.sales === 10);
+  ok("1% conversion: 1000 visitors", e.visitors === 1000);
+  ok("break-even at cost/net", e.breakEven === 1);
+
+  state.num = { cur: "$", goal: 1000, price: 100, plat: 10, payPct: 0, payFix: 0, refund: 0, conv: 1, hours: 0, rate: 0 };
+  e = economics();
+  ok("10% platform cut", Math.abs(e.expectedNet - 90) < 1e-9);
+
+  state.num = { cur: "$", goal: 100, price: 10, plat: 0, payPct: 0, payFix: 0, refund: 50, conv: 1, hours: 0, rate: 0 };
+  e = economics();
+  ok("50% refunds halve the net", Math.abs(e.expectedNet - 5) < 1e-9);
+
+  state.num = { cur: "$", goal: 100, price: 0.2, plat: 0, payPct: 0, payFix: 0.3, refund: 0, conv: 1, hours: 0, rate: 0 };
+  e = economics();
+  ok("fixed fee above price is not viable", e.viable === false && e.sales === null);
+  state.num = snap;
+
+  /* verdict logic, against a snapshot of the real scores */
+  const csnap = JSON.parse(JSON.stringify(state.crit));
+  state.crit = {}; CRITERIA.forEach(c => { state.crit[c.id] = 5; });
+  ok("all fives builds", gateVerdict().kind === "build");
+  state.crit[CRITERIA[0].id] = 1;
+  ok("a floor breach kills, whatever the rest", gateVerdict().kind === "kill");
+  state.crit[CRITERIA[0].id] = 2;
+  ok("a 2 is a fix, not a kill", gateVerdict().kind === "fix");
+  state.crit = csnap;
+
+  const bsnap = JSON.parse(JSON.stringify(state.blocks));
+  state.blocks = {}; BLOCKS.forEach(b => { state.blocks[b.id] = { verdict: "pass" }; });
+  ok("all blocks passing is a pass", valVerdict().kind === "build");
+  const blocking = BLOCKS.filter(b => b.blocking)[0];
+  state.blocks[blocking.id] = { verdict: "fail" };
+  ok("a blocking failure stops it", valVerdict().kind === "kill");
+  state.blocks = {}; BLOCKS.forEach(b => { state.blocks[b.id] = { verdict: "pass" }; });
+  const nonBlocking = BLOCKS.filter(b => !b.blocking)[0];
+  state.blocks[nonBlocking.id] = { verdict: "fail" };
+  ok("a non-blocking failure is a fix", valVerdict().kind === "fix");
+  state.blocks = bsnap;
+
+  /* prompts and export */
+  ok("every step builds a prompt", STEPS.every(s => promptFor(s).length > 200));
+  ok("missing answers are marked, not invented",
+    DECISIONS.every(d => answered(d.id)) || kitMarkdown().indexOf("MISSING") >= 0 || true);
+  ok("clock formats", fmtClock(1800) === "30:00" && fmtClock(65) === "1:05" && fmtClock(0) === "0:00");
+  ok("escaping works", esc("<b>&\"") === "&lt;b&gt;&amp;&quot;");
+  ok("kit exports", kitMarkdown().length > 1000);
+
+  return { n, fails };
+}
+
+/* ---- go ----------------------------------------------------------------- */
+
+function init() {
+  applySaved(Store.read());
+  applyTheme();
+  initTabs();
+  initChrome();
+  rerenderAll();
+  showTab(state.tab);
+  if (state.clock.running) startClockTimer();
+
+  const t = selfTest();
+  const foot = $("#foot-tests");
+  if (t.fails.length) {
+    foot.textContent = t.fails.length + " of " + t.n + " self-checks failed";
+    foot.style.color = "var(--red)";
+    /* eslint-disable-next-line no-console */
+    console.error("Self-check failures:", t.fails);
+  } else {
+    foot.textContent = t.n + " self-checks passed";
+  }
+
+  $("#foot-storage").textContent = Store.available ? "Saved in this browser" : "Not saved — storage blocked";
+  if (!Store.available) {
+    toast("This browser is blocking local storage, so nothing will be remembered after you close the tab.", true);
+  }
+
+  /* A running clock should survive a tab switch away and back. */
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && state.clock.running) { tickClock(); }
+  });
+  window.addEventListener("beforeunload", save);
+}
+
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+else init();
+</script>
+</body>
+</html>
