@@ -1,0 +1,3366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Real Estate Calculator — what the deal actually returns</title>
+<meta name="description" content="Underwrite a property deal end to end: purchase taxes and costs, mortgage and lender stress tests, real operating expenses, cash flow after tax, cap rate, cash-on-cash, IRR to exit, flip and BRRRR, rent versus buy, and the break-even rent, rate and void that decide it. Single file, fully offline.">
+<meta name="color-scheme" content="light dark">
+<style>
+/* ===========================================================================
+   REAL ESTATE CALCULATOR
+   Single file. No external requests of any kind. Everything below is inline:
+   no CDN scripts, no web fonts, no images, no analytics, no network calls.
+   =========================================================================== */
+
+:root {
+  --ink:        #14201c;
+  --ink-2:      #3f524b;
+  --ink-3:      #6c8078;
+  --bg:         #f4f7f5;
+  --surface:    #ffffff;
+  --surface-2:  #f7faf8;
+  --surface-3:  #e9f0ec;
+  --line:       #dbe6e0;
+  --line-2:     #bfd0c8;
+
+  --acc:        #106b4c;
+  --acc-2:      #14855e;
+  --acc-bg:     #e0f1e9;
+  --brass:      #8a5a10;
+  --brass-bg:   #fbf0dc;
+  --indigo:     #384a9e;
+  --indigo-bg:  #e8ebfa;
+  --green:      #17683e;
+  --green-bg:   #e3f4ea;
+  --amber:      #8a5606;
+  --amber-bg:   #fdf2df;
+  --red:        #ab2020;
+  --red-bg:     #fdeaea;
+  --plum:       #832c75;
+  --plum-bg:    #fae9f6;
+
+  --code-bg:    #101815;
+  --code-ink:   #dce7e2;
+
+  --shadow:     0 1px 2px rgba(12,28,22,.06), 0 8px 24px -14px rgba(12,28,22,.24);
+  --shadow-lg:  0 2px 6px rgba(12,28,22,.08), 0 28px 56px -24px rgba(12,28,22,.34);
+  --radius:     14px;
+  --radius-sm:  9px;
+
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html[data-theme="dark"] {
+  --ink:        #e3ede8;
+  --ink-2:      #aabdb5;
+  --ink-3:      #7d9189;
+  --bg:         #0b100e;
+  --surface:    #141b18;
+  --surface-2:  #1a2320;
+  --surface-3:  #212d28;
+  --line:       #2a3833;
+  --line-2:     #3d4f48;
+
+  --acc:        #4ec69a;
+  --acc-2:      #37ae83;
+  --acc-bg:     #0f2820;
+  --brass:      #d5a355;
+  --brass-bg:   #2a2011;
+  --indigo:     #93a3ed;
+  --indigo-bg:  #1a1f38;
+  --green:      #6ecf9b;
+  --green-bg:   #11271c;
+  --amber:      #e8b661;
+  --amber-bg:   #2a2011;
+  --red:        #f28a86;
+  --red-bg:     #2d1616;
+  --plum:       #e792d3;
+  --plum-bg:    #2c1628;
+
+  --code-bg:    #070b09;
+  --shadow:     0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.75);
+  --shadow-lg:  0 2px 6px rgba(0,0,0,.5), 0 28px 56px -24px rgba(0,0,0,.85);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --ink:        #e3ede8;
+    --ink-2:      #aabdb5;
+    --ink-3:      #7d9189;
+    --bg:         #0b100e;
+    --surface:    #141b18;
+    --surface-2:  #1a2320;
+    --surface-3:  #212d28;
+    --line:       #2a3833;
+    --line-2:     #3d4f48;
+
+    --acc:        #4ec69a;
+    --acc-2:      #37ae83;
+    --acc-bg:     #0f2820;
+    --brass:      #d5a355;
+    --brass-bg:   #2a2011;
+    --indigo:     #93a3ed;
+    --indigo-bg:  #1a1f38;
+    --green:      #6ecf9b;
+    --green-bg:   #11271c;
+    --amber:      #e8b661;
+    --amber-bg:   #2a2011;
+    --red:        #f28a86;
+    --red-bg:     #2d1616;
+    --plum:       #e792d3;
+    --plum-bg:    #2c1628;
+
+    --code-bg:    #070b09;
+    --shadow:     0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.75);
+    --shadow-lg:  0 2px 6px rgba(0,0,0,.5), 0 28px 56px -24px rgba(0,0,0,.85);
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 { line-height: 1.25; margin: 0 0 8px; font-weight: 660; letter-spacing: -.015em; }
+h1 { font-size: 25px; }
+h2 { font-size: 22px; }
+h3 { font-size: 17px; }
+h4 { font-size: 14.5px; }
+p  { margin: 0 0 12px; }
+a  { color: var(--acc-2); }
+:focus-visible { outline: 2px solid var(--acc-2); outline-offset: 2px; border-radius: 6px; }
+code, kbd { font-family: var(--mono); font-size: .88em; }
+hr { border: 0; border-top: 1px solid var(--line); margin: 22px 0; }
+
+.muted   { color: var(--ink-3); }
+.dim     { color: var(--ink-2); }
+.small   { font-size: 13px; }
+.tiny    { font-size: 12px; }
+.num     { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.pos     { color: var(--green); }
+.neg     { color: var(--red); }
+.warn    { color: var(--amber); }
+.center  { text-align: center; }
+.right   { text-align: right; }
+.nowrap  { white-space: nowrap; }
+.strong  { font-weight: 650; }
+
+/* ---------- shell ---------- */
+.app { max-width: 1180px; margin: 0 auto; padding: 0 16px 96px; }
+
+header.top {
+  position: sticky; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  margin: 0 -16px 0; padding: 10px 16px 0;
+}
+.brandrow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.mark {
+  width: 34px; height: 34px; border-radius: 10px; flex: 0 0 auto;
+  display: grid; place-items: center; font-size: 18px;
+  background: var(--acc-bg); border: 1px solid var(--line);
+}
+.brand .t { font-weight: 700; letter-spacing: -.02em; font-size: 16px; }
+.brand .s { font-size: 12px; color: var(--ink-3); margin-top: -3px; }
+.toolbar { margin-left: auto; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+.tabs {
+  display: flex; gap: 2px; overflow-x: auto; scrollbar-width: thin;
+  margin: 10px -16px 0; padding: 0 16px;
+}
+.tabs::-webkit-scrollbar { height: 6px; }
+.tabs::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 3px; }
+.tab {
+  appearance: none; border: 0; background: transparent; cursor: pointer;
+  font: inherit; font-size: 13.5px; font-weight: 560; color: var(--ink-3);
+  padding: 9px 12px 10px; border-bottom: 2px solid transparent; white-space: nowrap;
+  border-radius: 8px 8px 0 0; transition: color .15s, border-color .15s, background .15s;
+}
+.tab:hover { color: var(--ink); background: var(--surface-2); }
+.tab[aria-selected="true"] { color: var(--acc-2); border-bottom-color: var(--acc-2); }
+.tab .ic { margin-right: 5px; }
+
+main { padding-top: 22px; }
+.panel[hidden] { display: none; }
+
+.lede { font-size: 15.5px; color: var(--ink-2); max-width: 74ch; }
+.pagehead { margin-bottom: 20px; }
+.pagehead h2 { margin-bottom: 6px; }
+
+/* ---------- buttons ---------- */
+button, .btn {
+  appearance: none; font: inherit; font-size: 13px; font-weight: 580;
+  border: 1px solid var(--line-2); background: var(--surface); color: var(--ink);
+  padding: 7px 12px; border-radius: var(--radius-sm); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+  transition: background .15s, border-color .15s, color .15s;
+}
+button:hover, .btn:hover { background: var(--surface-3); border-color: var(--ink-3); }
+button.primary { background: var(--acc); border-color: var(--acc); color: #fff; }
+button.primary:hover { background: var(--acc-2); border-color: var(--acc-2); }
+html[data-theme="dark"] button.primary { color: #07120e; }
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) button.primary { color: #07120e; }
+}
+button.danger { color: var(--red); border-color: color-mix(in srgb, var(--red) 40%, var(--line)); }
+button.danger:hover { background: var(--red-bg); }
+button.ghost { border-color: transparent; background: transparent; }
+button.ghost:hover { background: var(--surface-3); }
+button.sm { font-size: 12px; padding: 4px 8px; }
+button[disabled] { opacity: .45; cursor: not-allowed; }
+.btnrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* ---------- cards ---------- */
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 16px 18px; margin-bottom: 16px; box-shadow: var(--shadow);
+}
+.card > h3 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.card > h3 .badge { margin-left: auto; white-space: normal; text-align: right; max-width: 100%; }
+.card.flat { box-shadow: none; background: var(--surface-2); }
+.cols { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.cols-2 { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); }
+.cols.tight { gap: 12px; }
+
+/* ---------- forms ---------- */
+.field { margin-bottom: 12px; }
+.field:last-child { margin-bottom: 0; }
+label { display: block; font-size: 12.5px; font-weight: 600; color: var(--ink-2); margin-bottom: 4px; }
+label .hint { font-weight: 400; color: var(--ink-3); }
+input[type="text"], input[type="number"], input[type="date"], select, textarea {
+  width: 100%; font: inherit; font-size: 14px; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  padding: 7px 10px;
+}
+input[type="number"] { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+textarea { resize: vertical; min-height: 68px; }
+input:focus, select:focus, textarea:focus { border-color: var(--acc-2); outline: none; box-shadow: 0 0 0 3px var(--acc-bg); }
+input[type="range"] { width: 100%; accent-color: var(--acc-2); }
+input[type="checkbox"], input[type="radio"] { accent-color: var(--acc-2); width: 15px; height: 15px; }
+.check { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; font-size: 13.5px; }
+.check label { margin: 0; font-weight: 500; color: var(--ink); font-size: 13.5px; }
+.inline { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.inline .field { flex: 1 1 130px; margin-bottom: 0; }
+.suffixed { display: flex; align-items: stretch; }
+.suffixed input { border-radius: var(--radius-sm) 0 0 var(--radius-sm); border-right: 0; }
+.suffixed .sfx {
+  display: grid; place-items: center; padding: 0 9px; font-size: 12.5px; color: var(--ink-3);
+  background: var(--surface-3); border: 1px solid var(--line-2); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.prefixed { display: flex; align-items: stretch; }
+.prefixed .pfx {
+  display: grid; place-items: center; padding: 0 9px; font-size: 12.5px; color: var(--ink-3);
+  background: var(--surface-3); border: 1px solid var(--line-2); border-right: 0;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm); min-width: 34px;
+}
+.prefixed input { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+fieldset { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px 12px; margin: 0 0 12px; }
+legend { font-size: 12.5px; font-weight: 600; color: var(--ink-2); padding: 0 5px; }
+
+/* segmented control */
+.seg { display: inline-flex; background: var(--surface-3); border-radius: var(--radius-sm); padding: 2px; gap: 2px; flex-wrap: wrap; }
+.seg button {
+  border: 0; background: transparent; font-size: 12.5px; padding: 5px 10px; border-radius: 7px; color: var(--ink-2);
+}
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--acc-2); box-shadow: var(--shadow); font-weight: 640; }
+
+/* ---------- stat tiles ---------- */
+.stats { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 168px), 1fr)); margin-bottom: 16px; }
+.stat {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 11px 13px; min-width: 0;
+}
+.stat .k { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); font-weight: 640; }
+.stat .v { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 21px; font-weight: 650; letter-spacing: -.02em; margin-top: 2px; }
+.stat .n { font-size: 12px; color: var(--ink-3); margin-top: 1px; }
+.stat.good { background: var(--green-bg); border-color: color-mix(in srgb, var(--green) 30%, var(--line)); }
+.stat.good .v { color: var(--green); }
+.stat.bad  { background: var(--red-bg);  border-color: color-mix(in srgb, var(--red) 30%, var(--line)); }
+.stat.bad .v { color: var(--red); }
+.stat.mid  { background: var(--amber-bg); border-color: color-mix(in srgb, var(--amber) 30%, var(--line)); }
+.stat.mid .v { color: var(--amber); }
+.stat.key  { background: var(--acc-bg); border-color: color-mix(in srgb, var(--acc) 30%, var(--line)); }
+
+/* ---------- badges & notes ---------- */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 640;
+  padding: 2px 8px; border-radius: 999px; background: var(--surface-3); color: var(--ink-2);
+  border: 1px solid var(--line); white-space: nowrap;
+}
+.badge.green { background: var(--green-bg); color: var(--green); border-color: color-mix(in srgb, var(--green) 26%, var(--line)); }
+.badge.red   { background: var(--red-bg);   color: var(--red);   border-color: color-mix(in srgb, var(--red) 26%, var(--line)); }
+.badge.amber { background: var(--amber-bg); color: var(--amber); border-color: color-mix(in srgb, var(--amber) 26%, var(--line)); }
+.badge.indigo{ background: var(--indigo-bg);color: var(--indigo);border-color: color-mix(in srgb, var(--indigo) 26%, var(--line)); }
+.badge.plum  { background: var(--plum-bg);  color: var(--plum);  border-color: color-mix(in srgb, var(--plum) 26%, var(--line)); }
+.badge.brass { background: var(--brass-bg); color: var(--brass); border-color: color-mix(in srgb, var(--brass) 26%, var(--line)); }
+
+.note {
+  border-left: 3px solid var(--line-2); background: var(--surface-2);
+  padding: 10px 13px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 13.5px; color: var(--ink-2); margin: 12px 0;
+}
+.note.warn  { border-left-color: var(--amber); background: var(--amber-bg); color: var(--ink-2); }
+.note.bad   { border-left-color: var(--red);   background: var(--red-bg); }
+.note.good  { border-left-color: var(--green); background: var(--green-bg); }
+.note.info  { border-left-color: var(--indigo);background: var(--indigo-bg); }
+.note strong { color: var(--ink); }
+.note :last-child { margin-bottom: 0; }
+
+/* ---------- tables ---------- */
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 8px 11px; border-bottom: 1px solid var(--line); vertical-align: top; }
+thead th {
+  position: sticky; top: 0; background: var(--surface-3); font-size: 11.5px; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--ink-2); font-weight: 660; white-space: nowrap; z-index: 1;
+}
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: var(--surface-2); }
+td.n, th.n { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+th.n { text-align: right; }
+tr.total td { font-weight: 680; background: var(--surface-2); border-top: 2px solid var(--line-2); }
+tr.sub td { background: var(--surface-2); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); font-weight: 640; }
+table.compact th, table.compact td { padding: 5px 8px; font-size: 12.5px; }
+td input, td select { padding: 4px 7px; font-size: 13px; }
+
+/* ---------- waterfall / bars ---------- */
+.bar { height: 8px; border-radius: 4px; background: var(--surface-3); overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--acc-2); }
+.bar.red > span { background: var(--red); }
+.wf { display: flex; flex-direction: column; gap: 3px; }
+.wfrow { display: grid; grid-template-columns: minmax(120px, 1.4fr) minmax(90px, 3fr) minmax(84px, auto); gap: 10px; align-items: center; font-size: 13px; }
+.wfrow .lab { color: var(--ink-2); }
+.wfrow .amt { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.wfbar { height: 16px; background: var(--surface-3); border-radius: 4px; position: relative; overflow: hidden; }
+.wfbar > i { position: absolute; top: 0; bottom: 0; border-radius: 3px; }
+.wfrow.head { font-weight: 660; }
+.wfrow.head .lab { color: var(--ink); }
+
+/* heat grid */
+.heat td.h { text-align: center; font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 12.5px; padding: 6px 4px; }
+.heat th { text-align: center; }
+
+/* ---------- toast ---------- */
+#toasts {
+  position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
+  display: flex; flex-direction: column; gap: 8px; z-index: 90; pointer-events: none; width: min(92vw, 460px);
+}
+.toast {
+  background: var(--ink); color: var(--bg); padding: 9px 14px; border-radius: 999px;
+  font-size: 13px; font-weight: 560; box-shadow: var(--shadow-lg); text-align: center;
+  animation: rise .2s ease-out;
+}
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ---------- misc ---------- */
+pre.out {
+  background: var(--code-bg); color: var(--code-ink); border-radius: var(--radius-sm);
+  padding: 14px 15px; overflow-x: auto; font-family: var(--mono); font-size: 12.5px; line-height: 1.55;
+  white-space: pre-wrap; word-break: break-word; max-height: 62vh; overflow-y: auto;
+}
+details.acc { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 8px; background: var(--surface); }
+details.acc > summary { cursor: pointer; font-weight: 600; font-size: 13.5px; list-style-position: inside; }
+details.acc[open] > summary { margin-bottom: 8px; }
+.kv { display: grid; grid-template-columns: 1fr auto; gap: 3px 12px; font-size: 13.5px; }
+.kv dt { color: var(--ink-2); }
+.kv dd { margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+footer.foot { margin-top: 34px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-3); }
+
+@media (max-width: 640px) {
+  body { font-size: 14.5px; }
+  .app { padding: 0 12px 80px; }
+  header.top { margin: 0 -12px 0; padding: 10px 12px 0; }
+  .tabs { margin: 10px -12px 0; padding: 0 12px; }
+  .stat .v { font-size: 18px; }
+  .wfrow { grid-template-columns: minmax(96px, 1.3fr) minmax(60px, 2fr) minmax(76px, auto); font-size: 12.5px; }
+}
+
+@media print {
+  header.top, .tabs, .toolbar, #toasts, button { display: none !important; }
+  .panel[hidden] { display: block !important; }
+  .card { break-inside: avoid; box-shadow: none; }
+  body { background: #fff; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<header class="top">
+  <div class="brandrow">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">🏠</div>
+      <div>
+        <div class="t">Real Estate Calculator</div>
+        <div class="s" id="brand-sub">Underwrite the whole deal, not the yield</div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <button type="button" id="btn-save"    class="sm" title="Save this deal to the comparison table">💾 Save deal</button>
+      <button type="button" id="btn-backup"  class="sm" title="Download everything as JSON">⬇ Back up</button>
+      <button type="button" id="btn-restore" class="sm" title="Load a JSON backup">⬆ Restore</button>
+      <button type="button" id="btn-reset"   class="sm danger" title="Back up, then reset to the worked example">🗑 Reset</button>
+      <button type="button" id="btn-theme"   class="sm ghost" aria-label="Switch between light and dark">🌗</button>
+      <input type="file" id="file-restore" accept="application/json,.json" class="sr" aria-hidden="true" tabindex="-1">
+    </div>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Sections">
+    <button type="button" class="tab" role="tab" id="tab-deal"       aria-controls="panel-deal"       data-panel="deal"><span class="ic" aria-hidden="true">🏠</span>Deal</button>
+    <button type="button" class="tab" role="tab" id="tab-finance"    aria-controls="panel-finance"    data-panel="finance"><span class="ic" aria-hidden="true">🏦</span>Finance</button>
+    <button type="button" class="tab" role="tab" id="tab-cashflow"   aria-controls="panel-cashflow"   data-panel="cashflow"><span class="ic" aria-hidden="true">💷</span>Cash flow</button>
+    <button type="button" class="tab" role="tab" id="tab-returns"    aria-controls="panel-returns"    data-panel="returns"><span class="ic" aria-hidden="true">📈</span>Returns</button>
+    <button type="button" class="tab" role="tab" id="tab-projection" aria-controls="panel-projection" data-panel="projection"><span class="ic" aria-hidden="true">🗓</span>Projection</button>
+    <button type="button" class="tab" role="tab" id="tab-flip"       aria-controls="panel-flip"       data-panel="flip"><span class="ic" aria-hidden="true">🔨</span>Flip &amp; BRRRR</button>
+    <button type="button" class="tab" role="tab" id="tab-rentbuy"    aria-controls="panel-rentbuy"    data-panel="rentbuy"><span class="ic" aria-hidden="true">⚖️</span>Rent vs buy</button>
+    <button type="button" class="tab" role="tab" id="tab-stress"     aria-controls="panel-stress"     data-panel="stress"><span class="ic" aria-hidden="true">🧪</span>Stress</button>
+    <button type="button" class="tab" role="tab" id="tab-compare"    aria-controls="panel-compare"    data-panel="compare"><span class="ic" aria-hidden="true">📊</span>Compare</button>
+    <button type="button" class="tab" role="tab" id="tab-report"     aria-controls="panel-report"     data-panel="report"><span class="ic" aria-hidden="true">📄</span>Report</button>
+  </div>
+</header>
+
+<main>
+  <section class="panel" id="panel-deal"       role="tabpanel" aria-labelledby="tab-deal"       tabindex="-1" hidden></section>
+  <section class="panel" id="panel-finance"    role="tabpanel" aria-labelledby="tab-finance"    tabindex="-1" hidden></section>
+  <section class="panel" id="panel-cashflow"   role="tabpanel" aria-labelledby="tab-cashflow"   tabindex="-1" hidden></section>
+  <section class="panel" id="panel-returns"    role="tabpanel" aria-labelledby="tab-returns"    tabindex="-1" hidden></section>
+  <section class="panel" id="panel-projection" role="tabpanel" aria-labelledby="tab-projection" tabindex="-1" hidden></section>
+  <section class="panel" id="panel-flip"       role="tabpanel" aria-labelledby="tab-flip"       tabindex="-1" hidden></section>
+  <section class="panel" id="panel-rentbuy"    role="tabpanel" aria-labelledby="tab-rentbuy"    tabindex="-1" hidden></section>
+  <section class="panel" id="panel-stress"     role="tabpanel" aria-labelledby="tab-stress"     tabindex="-1" hidden></section>
+  <section class="panel" id="panel-compare"    role="tabpanel" aria-labelledby="tab-compare"    tabindex="-1" hidden></section>
+  <section class="panel" id="panel-report"     role="tabpanel" aria-labelledby="tab-report"     tabindex="-1" hidden></section>
+</main>
+
+<footer class="foot">
+  <p>
+    Everything you type stays in this browser. No accounts, no server, no network requests —
+    open the file from a USB stick on a plane and it works the same.
+    <strong>Not financial, tax or legal advice.</strong> Purchase-tax bands, tax rules and lender
+    tests change; they are editable here precisely because they go out of date.
+  </p>
+</footer>
+
+</div>
+
+<div id="toasts" role="status" aria-live="polite" aria-atomic="false"></div>
+<script>
+"use strict";
+/* ===========================================================================
+   1. REFERENCE DATA
+   Everything here is a default you can overwrite. Nothing is fetched.
+   =========================================================================== */
+
+const CURRENCIES = [
+  { code: "GBP", sym: "£",   name: "Pound sterling" },
+  { code: "USD", sym: "$",   name: "US dollar" },
+  { code: "EUR", sym: "€",   name: "Euro" },
+  { code: "AUD", sym: "A$",  name: "Australian dollar" },
+  { code: "CAD", sym: "C$",  name: "Canadian dollar" },
+  { code: "NZD", sym: "NZ$", name: "New Zealand dollar" },
+  { code: "AED", sym: "AED", name: "UAE dirham" },
+  { code: "ZAR", sym: "R",   name: "South African rand" },
+  { code: "INR", sym: "₹",   name: "Indian rupee" },
+  { code: "NGN", sym: "₦",   name: "Nigerian naira" },
+  { code: "SGD", sym: "S$",  name: "Singapore dollar" },
+  { code: "CHF", sym: "CHF", name: "Swiss franc" },
+];
+
+/* Purchase-tax presets. Progressive bands: tax is charged at each band's rate
+   on the slice of price inside that band. `surcharge` is a flat percentage of
+   the whole price added on top when the buyer already owns a home.
+
+   These are DEFAULTS TO CHECK, not law. Rates move at every Budget; the whole
+   table is editable and the app tells you when you are using an untouched one. */
+const TAX_PRESETS = [
+  {
+    id: "eng-additional", label: "England & N. Ireland — SDLT, additional property",
+    asAt: "April 2025 thresholds, 5% additional-dwelling surcharge",
+    bands: [ {upTo:125000,pct:0}, {upTo:250000,pct:2}, {upTo:925000,pct:5}, {upTo:1500000,pct:10}, {upTo:null,pct:12} ],
+    surchargePct: 5, surchargeFloor: 40000,
+    note: "The surcharge applies to the whole price, not the slice above a threshold, and it applies from the first £40,000 — so a £45,000 lock-up flat pays it too."
+  },
+  {
+    id: "eng-main", label: "England & N. Ireland — SDLT, only home",
+    asAt: "April 2025 thresholds",
+    bands: [ {upTo:125000,pct:0}, {upTo:250000,pct:2}, {upTo:925000,pct:5}, {upTo:1500000,pct:10}, {upTo:null,pct:12} ],
+    surchargePct: 0, surchargeFloor: 0,
+    note: "Replacing a main residence within the time limit means no surcharge — but you often pay it and reclaim it, so the cash still has to exist on completion day."
+  },
+  {
+    id: "eng-ftb", label: "England & N. Ireland — SDLT, first-time buyer",
+    asAt: "April 2025 thresholds, relief withdrawn above £500,000",
+    bands: [ {upTo:300000,pct:0}, {upTo:500000,pct:5}, {upTo:null,pct:5} ],
+    surchargePct: 0, surchargeFloor: 0, reliefCap: 500000, fallbackId: "eng-main",
+    note: "Relief is all-or-nothing: one pound over the cap and the standard table applies to the whole price."
+  },
+  {
+    id: "scot-ads", label: "Scotland — LBTT + additional dwelling supplement",
+    asAt: "8% ADS from December 2024",
+    bands: [ {upTo:145000,pct:0}, {upTo:250000,pct:2}, {upTo:325000,pct:5}, {upTo:750000,pct:10}, {upTo:null,pct:12} ],
+    surchargePct: 8, surchargeFloor: 40000,
+    note: "Scotland's supplement is the highest of the three UK systems, which is why the same rental yield buys a worse return north of the border."
+  },
+  {
+    id: "scot-main", label: "Scotland — LBTT, only home",
+    asAt: "2024/25 bands",
+    bands: [ {upTo:145000,pct:0}, {upTo:250000,pct:2}, {upTo:325000,pct:5}, {upTo:750000,pct:10}, {upTo:null,pct:12} ],
+    surchargePct: 0, surchargeFloor: 0, note: ""
+  },
+  {
+    id: "wales-higher", label: "Wales — LTT higher residential rates",
+    asAt: "December 2024 rates",
+    bands: [ {upTo:180000,pct:5}, {upTo:250000,pct:8.5}, {upTo:400000,pct:10}, {upTo:750000,pct:12.5}, {upTo:1500000,pct:15}, {upTo:null,pct:17} ],
+    surchargePct: 0, surchargeFloor: 0,
+    note: "Wales folds the surcharge into the bands rather than charging it separately, so there is no extra percentage to add."
+  },
+  {
+    id: "wales-main", label: "Wales — LTT main rates",
+    asAt: "2024/25 rates",
+    bands: [ {upTo:225000,pct:0}, {upTo:400000,pct:6}, {upTo:750000,pct:7.5}, {upTo:1500000,pct:10}, {upTo:null,pct:12} ],
+    surchargePct: 0, surchargeFloor: 0, note: ""
+  },
+  {
+    id: "ireland", label: "Republic of Ireland — stamp duty, residential",
+    asAt: "October 2024 rates",
+    bands: [ {upTo:1000000,pct:1}, {upTo:1500000,pct:2}, {upTo:null,pct:6} ],
+    surchargePct: 0, surchargeFloor: 0,
+    note: "Buying ten or more houses in a year triggers a much higher flat rate. If that is the plan, overwrite the bands."
+  },
+  {
+    id: "uae", label: "UAE (Dubai) — DLD transfer fee",
+    asAt: "4% transfer fee",
+    bands: [ {upTo:null,pct:4} ],
+    surchargePct: 0, surchargeFloor: 0,
+    note: "Flat, with no progressive bands, plus registration and agency fees that belong in the costs below rather than here."
+  },
+  {
+    id: "us-none", label: "United States — no state transfer tax",
+    asAt: "varies by state and county",
+    bands: [ {upTo:null,pct:0} ],
+    surchargePct: 0, surchargeFloor: 0,
+    note: "Transfer taxes are local and range from nothing to over 2%. Put title, escrow, lender and recording fees in the closing costs field instead — they are the larger number."
+  },
+  {
+    id: "flat", label: "Flat percentage (set your own)",
+    asAt: "custom",
+    bands: [ {upTo:null,pct:1} ],
+    surchargePct: 0, surchargeFloor: 0, note: ""
+  },
+];
+
+/* Property archetypes seed the operating assumptions. They differ enough that
+   using a single-let's numbers on an HMO is the most common way to overstate a
+   return by a third. */
+const ARCHETYPES = [
+  { id:"single-let", label:"Single let (whole house or flat)", icon:"🏡",
+    void:6, mgmt:10, maint:8, capex:5, tenancyYears:2.2, letWeeks:2,
+    note:"One tenancy, one rent, void when it ends. The base case everything else is measured against." },
+  { id:"hmo", label:"HMO / room-by-room", icon:"🛏",
+    void:12, mgmt:14, maint:14, capex:8, tenancyYears:1.1, letWeeks:1,
+    note:"Higher gross rent, and higher everything else: bills usually included, licensing, fire compliance, per-room voids that never all fill at once, and management priced well above single-let rates." },
+  { id:"flat-leasehold", label:"Leasehold flat", icon:"🏢",
+    void:6, mgmt:10, maint:5, capex:3, tenancyYears:2.4, letWeeks:2,
+    note:"Lower maintenance because the building is somebody else's problem — until the service charge, the ground rent and the major-works bill arrive. Put the sinking-fund demand in capital reserve, not maintenance." },
+  { id:"short-let", label:"Short let / serviced", icon:"🧳",
+    void:32, mgmt:20, maint:12, capex:8, tenancyYears:0.1, letWeeks:0,
+    note:"Occupancy, not voids, is the number that matters, and 68% is a good year in most markets. Cleaning, linen, platform commission and utilities all sit on you." },
+  { id:"student", label:"Student let", icon:"🎓",
+    void:8, mgmt:12, maint:12, capex:6, tenancyYears:1, letWeeks:1,
+    note:"Contracts are usually 51 weeks with a summer discount, and the void is structural rather than random: if it doesn't let by August it doesn't let." },
+  { id:"commercial", label:"Commercial / mixed use", icon:"🏬",
+    void:10, mgmt:6, maint:4, capex:6, tenancyYears:5, letWeeks:0,
+    note:"Longer leases, tenant-repairing, far lower running costs — and voids measured in quarters, with business rates falling on the owner while empty." },
+];
+
+/* Operating expense lines. `basis` decides how the default is applied:
+     pctEGI  — percentage of rent actually collected
+     pctRent — percentage of gross market rent (charged whether let or not)
+     fixed   — an annual amount */
+const OPEX_LINES = [
+  { id:"mgmt",       label:"Letting agent — management",  basis:"pctEGI",  unit:"% of rent collected", def:10,
+    note:"Charged on what is collected, so it self-adjusts for voids. 'No management fee' means you are the manager; price your hours or the return is fiction." },
+  { id:"maint",      label:"Repairs & maintenance",       basis:"pctRent", unit:"% of gross rent", def:8,
+    note:"The boiler, the leak, the door. Under 5% is a bet on an old building behaving." },
+  { id:"capex",      label:"Capital reserve",             basis:"pctRent", unit:"% of gross rent", def:5,
+    note:"Roof, kitchen, bathroom, windows: not repairs, replacements. They arrive on a 10–20 year cycle and wreck the year they land unless they have been accruing. The most commonly omitted line in the whole model." },
+  { id:"insurance",  label:"Landlord insurance",          basis:"fixed",   unit:"per year", def:320,
+    note:"Buildings, liability, and loss of rent. A standard homeowner policy is void the moment there is a tenant." },
+  { id:"service",    label:"Service charge",              basis:"fixed",   unit:"per year", def:0,
+    note:"Leasehold only. Ask for three years of accounts and the sinking-fund balance before you exchange, not after." },
+  { id:"ground",     label:"Ground rent",                 basis:"fixed",   unit:"per year", def:0,
+    note:"Small until it doubles. Check the review clause: an escalating ground rent can make a flat unmortgageable and therefore unsellable." },
+  { id:"compliance", label:"Safety & compliance",         basis:"fixed",   unit:"per year", def:210,
+    note:"Gas safety, electrical inspection amortised over five years, alarms, EPC, legionella. Non-negotiable and cheap; skipping it is neither." },
+  { id:"licensing",  label:"Licensing (annualised)",      basis:"fixed",   unit:"per year", def:0,
+    note:"Selective and HMO licensing schemes charge for a five-year licence; divide by five and put it here." },
+  { id:"utilities",  label:"Utilities & council tax",     basis:"fixed",   unit:"per year", def:0,
+    note:"Zero on a standard single let where the tenant pays. Not zero on an HMO, a short let, or during a void — and council tax on an empty property is charged at up to 300% in some councils." },
+  { id:"accounts",   label:"Accountancy & admin",         basis:"fixed",   unit:"per year", def:280,
+    note:"A tax return with property pages, bookkeeping, the occasional bit of advice." },
+  { id:"other",      label:"Other annual costs",          basis:"fixed",   unit:"per year", def:0,
+    note:"Gardening, communal cleaning, subscriptions, the thing this list forgot." },
+];
+
+/* How rental profit is taxed. Deliberately four coarse regimes rather than a
+   pretend-precise model of anybody's tax code. */
+const TAX_MODES = [
+  { id:"uk-individual", label:"UK individual (finance-cost restriction)",
+    note:"Since 2020 a UK individual landlord cannot deduct mortgage interest from rental profit. Tax is charged on rent minus running costs, and interest comes back only as a 20% credit. On a higher-rate taxpayer with a big loan this is the single line that turns a profitable-looking deal into a loss — which is why the app shows tax before it shows yield." },
+  { id:"full-deduct", label:"Interest fully deductible (individual)",
+    note:"The pre-2017 UK position and the ordinary position in much of the world, including US Schedule E. Tax is charged on rent minus costs minus interest." },
+  { id:"company", label:"Company / SPV (corporation tax)",
+    note:"Interest is a business expense again, but the money is inside a company: getting it out costs dividend tax on top, and this model does not charge that. Compare like with like before concluding the company wins." },
+  { id:"none", label:"No income tax modelled",
+    note:"For a gross comparison, or a jurisdiction with no rental income tax. Everything downstream then reports pre-tax numbers only." },
+];
+
+const LENDER_TESTS = [
+  { id:"icr", label:"Rental cover / ICR (UK buy-to-let)",
+    note:"The lender takes your market rent, divides by a stressed interest rate, and lends what that supports. On a 145% cover at an 8.5% stress rate, £1,000 of rent supports about £97,000 — regardless of the 75% LTV you were promised." },
+  { id:"dscr", label:"DSCR (US-style debt service coverage)",
+    note:"Net operating income divided by the actual annual payment, which must clear the minimum. Because it uses NOI rather than gross rent, your operating assumptions change how much you can borrow." },
+  { id:"none", label:"No income test (LTV only)",
+    note:"Cash purchase, a lender testing affordability against your salary, or bridging against the asset. LTV is then the only cap." },
+];
+
+const AMORT_TYPES = [
+  { id:"interest-only", label:"Interest only" },
+  { id:"repayment",     label:"Repayment (amortising)" },
+];
+
+/* Rules of thumb the internet repeats. They are included because people ask
+   for them, and annotated because they are screening filters, not answers. */
+const RULES = [
+  { id:"onepct",  label:"The 1% rule", test:d => d.rentMonthly / Math.max(1, d.price) * 100,
+    target:1, unit:"%", dir:"up",
+    note:"Monthly rent as a percentage of price. Born in a market with 6% mortgages and cheap houses; in most of the UK and coastal US it now excludes everything, which tells you about the rule, not the market." },
+  { id:"fiftypct", label:"The 50% rule", test:null, target:50, unit:"%", dir:"down",
+    note:"Assumes operating costs eat half of gross rent before the mortgage. A blunt instrument, but a useful one: if your own opex assumptions come in far below it, you have probably left something out." },
+  { id:"seventy", label:"The 70% rule (flips)", test:null, target:70, unit:"%", dir:"down",
+    note:"Maximum offer = 70% of after-repair value minus the refurb. It is a bid ceiling for a flip, and it is silent on finance costs and holding time, which is where flips actually die." },
+];
+
+/* The costs that turn up after exchange, in the order people forget them. */
+const FORGOTTEN = [
+  { c:"Purchase tax surcharge on an additional property", why:"Five to eight percent of the whole price, not the slice above a threshold." },
+  { c:"Mortgage arrangement fee",       why:"Typically 1–2% of the loan, or a flat fee that looks small until you divide it by a two-year fix." },
+  { c:"Broker and valuation fees",      why:"Paid whether or not the deal completes." },
+  { c:"Searches, land registry, ID checks", why:"Small individually, four figures together." },
+  { c:"Furnishing and white goods",     why:"An unfurnished let still needs a cooker, flooring and curtains to let at the price you assumed." },
+  { c:"Safety certificates at purchase",why:"Gas, electrical, EPC before the first tenancy, not after." },
+  { c:"Void between completion and first tenant", why:"Six weeks is normal. The mortgage starts on completion day." },
+  { c:"Tenant-find fee",               why:"One to two weeks of rent, every time a tenancy ends — so it scales with turnover, not with time." },
+  { c:"Capital reserve",               why:"A kitchen every fifteen years is a real annual cost whether or not you accrue it." },
+  { c:"Insurance excess and uninsured losses", why:"The claim you don't make because the excess is £750." },
+  { c:"Selling costs at exit",         why:"Agent, legal and any early-repayment charge, on a number that has grown with the property." },
+  { c:"Capital gains tax",             why:"On the gain including the years of appreciation you were counting as return." },
+];
+
+/* ===========================================================================
+   2. THE DEAL — default state
+   =========================================================================== */
+
+function defaultOpex() {
+  const o = {};
+  OPEX_LINES.forEach(l => { o[l.id] = l.def; });
+  return o;
+}
+
+function defaultDeal() {
+  return {
+    name: "3-bed terrace, example town",
+    notes: "",
+    archetype: "single-let",
+
+    /* purchase */
+    price: 185000,
+    valuation: 185000,
+    postWorksValue: 195000,
+    refurb: 8000,
+    refurbContPct: 15,
+    taxPreset: "eng-additional",
+    taxBands: null,
+    surchargePct: 5,
+    legal: 1400,
+    survey: 550,
+    brokerFee: 495,
+    otherAcq: 1200,
+    sourcingPct: 0,
+
+    /* finance */
+    useMortgage: true,
+    depositPct: 25,
+    ratePct: 5.29,
+    termYears: 25,
+    amort: "interest-only",
+    fixedYears: 5,
+    revertPct: 7.75,
+    arrFeePct: 1.5,
+    arrFeeAdded: true,
+    lenderTest: "icr",
+    stressPct: 5.5,
+    icr: 145,
+    dscrMin: 1.25,
+    maxLtvPct: 75,
+
+    /* income */
+    rentMonthly: 1050,
+    otherIncomeMonthly: 0,
+    voidPct: 6,
+    badDebtPct: 1,
+    letWeeks: 2,
+    tenancyYears: 2.2,
+    opex: defaultOpex(),
+
+    /* tax */
+    taxMode: "uk-individual",
+    marginalPct: 40,
+    reliefPct: 20,
+    corpPct: 25,
+    depYears: 0,
+    buildingPct: 75,
+
+    /* hold & exit */
+    holdYears: 10,
+    rentGrowthPct: 2.5,
+    costGrowthPct: 3,
+    valueGrowthPct: 3,
+    sellCostPct: 2.5,
+    cgtPct: 24,
+    cgtAllowance: 3000,
+
+    /* flip & BRRRR */
+    flip: {
+      mode: "flip",
+      arv: 235000,
+      months: 7,
+      bridgeUse: true,
+      bridgeLtvPct: 70,
+      bridgeRatePct: 0.85,
+      bridgeArrPct: 2,
+      bridgeExitPct: 0,
+      rolled: true,
+      holdingMonthly: 340,
+      sellAgentPct: 1.2,
+      sellLegal: 900,
+      targetProfitPct: 20,
+      refiLtvPct: 75,
+      refiRatePct: 5.49,
+      refiCosts: 1600,
+      refiMonths: 6,
+    },
+
+    /* rent versus buy */
+    rvb: {
+      years: 10,
+      rentMonthly: 1050,
+      rentGrowthPct: 3,
+      investReturnPct: 5,
+      investTaxPct: 0,
+      ownerMaintPct: 1,
+      ownerInsurance: 320,
+      ownerServiceCharge: 0,
+    },
+  };
+}
+
+function defaultState() {
+  return { v: 1, currency: "GBP", theme: null, tab: "deal", deal: defaultDeal(), saved: [] };
+}
+
+/* ===========================================================================
+   3. THE ARITHMETIC
+   Pure functions. Nothing here touches the DOM or storage, which is what makes
+   it testable — see window.RE at the bottom of the file.
+   =========================================================================== */
+
+const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
+const num = v => { const n = typeof v === "number" ? v : parseFloat(v); return Number.isFinite(n) ? n : 0; };
+
+/* Progressive band tax. Each band charges its rate on the slice of price that
+   falls inside it — the same shape as an income-tax table. */
+function bandTax(price, bands) {
+  let tax = 0, lower = 0;
+  for (const b of bands) {
+    const upper = (b.upTo === null || b.upTo === undefined) ? Infinity : b.upTo;
+    if (price > lower) tax += (Math.min(price, upper) - lower) * (num(b.pct) / 100);
+    lower = upper;
+    if (price <= lower) break;
+  }
+  return tax;
+}
+
+function presetById(id) { return TAX_PRESETS.find(p => p.id === id) || TAX_PRESETS[0]; }
+
+/* Bands actually in force for a deal: the user's edited table if there is one,
+   otherwise the preset — with first-time-buyer relief falling back to the
+   standard table when the price clears the relief cap. */
+function effectiveBands(d) {
+  if (Array.isArray(d.taxBands) && d.taxBands.length) return d.taxBands;
+  let p = presetById(d.taxPreset);
+  if (p.reliefCap && num(d.price) > p.reliefCap && p.fallbackId) p = presetById(p.fallbackId);
+  return p.bands;
+}
+
+function purchaseTax(d) {
+  const price = num(d.price);
+  const preset = presetById(d.taxPreset);
+  const bands = effectiveBands(d);
+  const surPct = d.surchargePct === null || d.surchargePct === undefined ? num(preset.surchargePct) : num(d.surchargePct);
+  const floor = num(preset.surchargeFloor);
+  const base = bandTax(price, bands);
+  const surcharge = price >= floor ? price * surPct / 100 : 0;
+  const reliefLost = !!(preset.reliefCap && price > preset.reliefCap);
+  return { base, surcharge, total: base + surcharge, surPct, bands, preset, reliefLost,
+           effectivePct: price > 0 ? (base + surcharge) / price * 100 : 0 };
+}
+
+/* Monthly payment on an amortising loan. Zero-rate loans are straight-line. */
+function pmt(principal, annualRatePct, years) {
+  const n = Math.round(years * 12);
+  if (n <= 0 || principal <= 0) return 0;
+  const i = annualRatePct / 100 / 12;
+  if (Math.abs(i) < 1e-12) return principal / n;
+  return principal * i / (1 - Math.pow(1 + i, -n));
+}
+
+/* Monthly schedule with a fixed period and a revert rate. Interest-only pays
+   interest and nothing else; repayment recomputes the payment when the rate
+   changes, over whatever term is left. */
+function schedule(loan, opts) {
+  const { ratePct, revertPct, fixedYears, termYears, amort, months } = opts;
+  const totalMonths = Math.max(0, Math.round(months));
+  const termMonths = Math.max(1, Math.round(termYears * 12));
+  const fixedMonths = Math.max(0, Math.round(fixedYears * 12));
+  const rows = [];
+  let bal = loan;
+  let payment = amort === "repayment" ? pmt(loan, ratePct, termYears) : loan * (ratePct / 100 / 12);
+  let lastRate = ratePct;
+
+  for (let m = 1; m <= totalMonths; m++) {
+    const rate = m > fixedMonths ? revertPct : ratePct;
+    if (rate !== lastRate) {
+      const remaining = Math.max(1, termMonths - m + 1);
+      payment = amort === "repayment" ? pmt(bal, rate, remaining / 12) : bal * (rate / 100 / 12);
+      lastRate = rate;
+    }
+    if (m > termMonths || bal <= 1e-9) {
+      rows.push({ m, rate, payment: 0, interest: 0, principal: 0, balance: 0 });
+      bal = 0;
+      continue;
+    }
+    const interest = bal * (rate / 100 / 12);
+    let principal = amort === "repayment" ? payment - interest : 0;
+    if (principal > bal) principal = bal;
+    const pay = interest + principal;
+    bal -= principal;
+    rows.push({ m, rate, payment: pay, interest, principal, balance: Math.max(0, bal) });
+  }
+  return rows;
+}
+
+function yearsFromSchedule(rows) {
+  const out = [];
+  for (let i = 0; i < rows.length; i += 12) {
+    const chunk = rows.slice(i, i + 12);
+    if (!chunk.length) break;
+    out.push({
+      year: out.length + 1,
+      interest: chunk.reduce((s, r) => s + r.interest, 0),
+      principal: chunk.reduce((s, r) => s + r.principal, 0),
+      payment: chunk.reduce((s, r) => s + r.payment, 0),
+      balance: chunk[chunk.length - 1].balance,
+      rate: chunk[chunk.length - 1].rate,
+    });
+  }
+  return out;
+}
+
+/* Net present value and IRR by bisection. IRR is reported as null rather than
+   a wrong number when the flows never cross zero — a deal that loses money in
+   every year does not have an internal rate of return. */
+function npv(rate, flows) {
+  return flows.reduce((s, f, t) => s + f / Math.pow(1 + rate, t), 0);
+}
+
+function irr(flows) {
+  if (!flows.length) return null;
+  let lo = -0.9999, hi = 10;
+  let flo = npv(lo, flows), fhi = npv(hi, flows);
+  if (!Number.isFinite(flo) || !Number.isFinite(fhi) || flo * fhi > 0) return null;
+  for (let i = 0; i < 200; i++) {
+    const mid = (lo + hi) / 2;
+    const fm = npv(mid, flows);
+    if (flo * fm <= 0) { hi = mid; fhi = fm; } else { lo = mid; flo = fm; }
+  }
+  return (lo + hi) / 2;
+}
+
+/* Generic bisection used for every break-even in the app. */
+function solve(fn, lo, hi, tol) {
+  tol = tol || 1e-7;
+  let flo = fn(lo), fhi = fn(hi);
+  if (!Number.isFinite(flo) || !Number.isFinite(fhi) || flo * fhi > 0) return null;
+  for (let i = 0; i < 160; i++) {
+    const mid = (lo + hi) / 2;
+    const fm = fn(mid);
+    if (!Number.isFinite(fm)) return null;
+    if (Math.abs(hi - lo) < tol) return mid;
+    if (flo * fm <= 0) { hi = mid; fhi = fm; } else { lo = mid; flo = fm; }
+  }
+  return (lo + hi) / 2;
+}
+
+/* --- operating year -------------------------------------------------------
+   Year 1 is the first full let year. Rent grows annually; the fixed cost lines
+   grow with the cost inflation assumption; the percentage lines follow rent by
+   construction. Void and bad debt are taken before any percentage fee, because
+   an agent charges on rent collected, not rent hoped for. */
+function operating(d, year, over) {
+  over = over || {};
+  const y = Math.max(1, year || 1);
+  const rentG = Math.pow(1 + num(d.rentGrowthPct) / 100, y - 1);
+  const costG = Math.pow(1 + num(d.costGrowthPct) / 100, y - 1);
+  const rentMonthly = (over.rentMonthly !== undefined ? num(over.rentMonthly) : num(d.rentMonthly)) * rentG;
+  const otherMonthly = num(d.otherIncomeMonthly) * rentG;
+
+  const rentGross = rentMonthly * 12;
+  const otherIncome = otherMonthly * 12;
+  const grossIncome = rentGross + otherIncome;
+  const voidPct = over.voidPct !== undefined ? num(over.voidPct) : num(d.voidPct);
+  const voidLoss = grossIncome * clamp(voidPct, 0, 100) / 100;
+  const badDebt = (grossIncome - voidLoss) * clamp(num(d.badDebtPct), 0, 100) / 100;
+  const egi = grossIncome - voidLoss - badDebt;
+
+  const lines = [];
+  OPEX_LINES.forEach(l => {
+    const v = num(d.opex[l.id]);
+    let amount = 0;
+    if (l.basis === "pctEGI") amount = egi * v / 100;
+    else if (l.basis === "pctRent") amount = grossIncome * v / 100;
+    else amount = v * costG;
+    lines.push({ id: l.id, label: l.label, basis: l.basis, input: v, unit: l.unit, amount });
+  });
+
+  /* Tenant-find fee: weeks of rent, spread over the average tenancy length. */
+  const letFee = num(d.tenancyYears) > 0
+    ? (rentMonthly * 12 / 52) * num(d.letWeeks) / num(d.tenancyYears)
+    : 0;
+  lines.splice(1, 0, { id: "letfee", label: "Tenant-find fee (amortised)", basis: "derived",
+    input: num(d.letWeeks), unit: "weeks of rent per tenancy", amount: letFee });
+
+  const opexTotal = lines.reduce((s, l) => s + l.amount, 0);
+  const noi = egi - opexTotal;
+  return { year: y, rentMonthly, rentGross, otherIncome, grossIncome, voidLoss, badDebt, egi,
+           lines, opexTotal, noi, opexRatio: grossIncome > 0 ? opexTotal / grossIncome : 0 };
+}
+
+/* --- income tax -----------------------------------------------------------
+   Four coarse regimes. The UK individual case is the interesting one: interest
+   is not deductible, it returns as a basic-rate credit, and the credit cannot
+   exceed the tax due on the property profit. */
+function incomeTax(d, noi, interest, depreciation) {
+  const dep = num(depreciation);
+  const mode = d.taxMode;
+  if (mode === "none") return { tax: 0, taxable: 0, credit: 0, mode };
+  if (mode === "company") {
+    const taxable = Math.max(0, noi - interest - dep);
+    return { tax: taxable * num(d.corpPct) / 100, taxable, credit: 0, mode };
+  }
+  if (mode === "full-deduct") {
+    const taxable = Math.max(0, noi - interest - dep);
+    return { tax: taxable * num(d.marginalPct) / 100, taxable, credit: 0, mode };
+  }
+  /* uk-individual */
+  const taxable = Math.max(0, noi - dep);
+  const gross = taxable * num(d.marginalPct) / 100;
+  const credit = Math.min(gross, Math.min(interest, taxable) * num(d.reliefPct) / 100);
+  return { tax: Math.max(0, gross - credit), taxable, credit, mode };
+}
+
+/* --- the whole deal -------------------------------------------------------
+   `core` is everything that does not require solving an equation. The
+   break-evens bisect over `core`, so they live in computeDeal below and never
+   recurse. */
+function core(d, over) {
+  over = over || {};
+  const price = over.price !== undefined ? num(over.price) : num(d.price);
+  const ratePct = over.ratePct !== undefined ? num(over.ratePct) : num(d.ratePct);
+
+  const tax = purchaseTax(Object.assign({}, d, { price }));
+  const refurbTotal = num(d.refurb) * (1 + num(d.refurbContPct) / 100);
+  const sourcing = price * num(d.sourcingPct) / 100;
+  const acqLines = [
+    { id: "tax",      label: "Purchase tax / stamp duty", amount: tax.total },
+    { id: "legal",    label: "Legal & conveyancing",      amount: num(d.legal) },
+    { id: "survey",   label: "Survey & valuation",        amount: num(d.survey) },
+    { id: "broker",   label: "Mortgage broker fee",       amount: num(d.useMortgage ? d.brokerFee : 0) },
+    { id: "sourcing", label: "Sourcing fee",              amount: sourcing },
+    { id: "other",    label: "Other purchase costs",      amount: num(d.otherAcq) },
+  ];
+  const acqTotal = acqLines.reduce((s, l) => s + l.amount, 0);
+
+  /* --- borrowing --------------------------------------------------------- */
+  const lenderValue = Math.min(price, num(d.valuation) || price);
+  const requested = d.useMortgage ? price * (1 - clamp(num(d.depositPct), 0, 100) / 100) : 0;
+  const maxByLtv = d.useMortgage ? lenderValue * clamp(num(d.maxLtvPct), 0, 100) / 100 : 0;
+
+  const op1 = operating(d, 1, over);
+  let maxByTest = Infinity, testLabel = "No income test";
+  if (d.useMortgage && d.lenderTest === "icr") {
+    const stress = num(d.stressPct) / 100, cover = num(d.icr) / 100;
+    maxByTest = (stress > 0 && cover > 0) ? (num(over.rentMonthly !== undefined ? over.rentMonthly : d.rentMonthly) * 12) / (stress * cover) : Infinity;
+    testLabel = "Rental cover (ICR)";
+  } else if (d.useMortgage && d.lenderTest === "dscr") {
+    const perUnit = d.amort === "repayment"
+      ? pmt(1, num(d.stressPct), num(d.termYears)) * 12
+      : num(d.stressPct) / 100;
+    maxByTest = (perUnit > 0 && num(d.dscrMin) > 0) ? op1.noi / (num(d.dscrMin) * perUnit) : Infinity;
+    testLabel = "Debt service cover (DSCR)";
+  }
+  const maxLoan = d.useMortgage ? Math.max(0, Math.min(maxByLtv, maxByTest)) : 0;
+  /* `lockLoan` holds the borrowing still while something else moves. Once the
+     money is drawn the loan is a fact: a rent fall three years later does not
+     shrink it, and a stress test that let it would understate every break-even
+     in the app. */
+  const loanUncapped = Math.max(0, Math.min(requested, maxLoan));
+  const loan = over.lockLoan !== undefined ? Math.max(0, num(over.lockLoan)) : loanUncapped;
+  const capped = d.useMortgage && over.lockLoan === undefined && requested - loan > 1;
+  const arrFee = loan * num(d.arrFeePct) / 100;
+  const loanDrawn = loan + (d.arrFeeAdded ? arrFee : 0);
+  const cashDeposit = price - loan;
+  const cashIn = cashDeposit + acqTotal + refurbTotal + (d.arrFeeAdded ? 0 : arrFee);
+
+  const holdMonths = Math.max(1, Math.round(num(d.holdYears) * 12));
+  const rows = schedule(loanDrawn, {
+    ratePct, revertPct: num(d.revertPct), fixedYears: num(d.fixedYears),
+    termYears: num(d.termYears), amort: d.amort, months: holdMonths,
+  });
+  const sched = yearsFromSchedule(rows);
+  const y1 = sched[0] || { interest: 0, principal: 0, payment: 0, balance: loanDrawn, rate: ratePct };
+  const monthlyPayment = rows.length ? rows[0].payment : 0;
+
+  /* --- year one ---------------------------------------------------------- */
+  const value0 = Math.max(num(d.postWorksValue) || price, 0);
+  const depAnnual = num(d.depYears) > 0
+    ? (price + refurbTotal) * clamp(num(d.buildingPct), 0, 100) / 100 / num(d.depYears)
+    : 0;
+  const t1 = incomeTax(d, op1.noi, y1.interest, depAnnual);
+  const debtService = y1.payment;
+  const preTaxCF = op1.noi - debtService;
+  const postTaxCF = preTaxCF - t1.tax;
+
+  const allIn = price + acqTotal + refurbTotal;
+  const m = {
+    grossYield: price > 0 ? op1.rentGross / price * 100 : 0,
+    grossYieldAllIn: allIn > 0 ? op1.rentGross / allIn * 100 : 0,
+    capRate: allIn > 0 ? op1.noi / allIn * 100 : 0,
+    capRateOnPrice: price > 0 ? op1.noi / price * 100 : 0,
+    capRateOnValue: value0 > 0 ? op1.noi / value0 * 100 : 0,
+    coc: cashIn > 0 ? preTaxCF / cashIn * 100 : 0,
+    cocPostTax: cashIn > 0 ? postTaxCF / cashIn * 100 : 0,
+    dscr: debtService > 0 ? op1.noi / debtService : Infinity,
+    icrActual: (loanDrawn > 0) ? op1.rentGross / (loanDrawn * num(d.stressPct) / 100) * 100 : Infinity,
+    ltv: value0 > 0 ? loanDrawn / value0 * 100 : 0,
+    ltvOnPrice: price > 0 ? loanDrawn / price * 100 : 0,
+    onePct: price > 0 ? num(d.rentMonthly) / price * 100 : 0,
+    opexRatio: op1.opexRatio * 100,
+    yieldOnCost: allIn > 0 ? op1.noi / allIn * 100 : 0,
+  };
+
+  return {
+    price, ratePct, tax, refurbTotal, acqLines, acqTotal, allIn,
+    lenderValue, requested, maxByLtv, maxByTest, maxLoan, loan, capped, testLabel,
+    arrFee, loanDrawn, cashDeposit, cashIn,
+    rows, sched, y1, monthlyPayment, debtService,
+    op1, depAnnual, t1, preTaxCF, postTaxCF, value0, m,
+  };
+}
+
+/* Cash flow as a function of one moving part, used by the break-even solvers. */
+function cfAt(d, patch) {
+  const c = core(d, patch);
+  return c.preTaxCF;
+}
+
+function computeDeal(d) {
+  const c = core(d);
+
+  /* --- break-evens ------------------------------------------------------- */
+  const rent0 = Math.max(1, num(d.rentMonthly));
+  const lock = c.loan;
+  const beRent  = solve(r => cfAt(d, { rentMonthly: r, lockLoan: lock }), 0, rent0 * 12 + 5000, 1e-4);
+  const beRate  = c.loanDrawn > 0 ? solve(x => cfAt(d, { ratePct: x, lockLoan: lock }), 0, 60, 1e-6) : null;
+  const beVoid  = solve(v => cfAt(d, { voidPct: v, lockLoan: lock }), 0, 100, 1e-6);
+  const equity0 = c.value0 - c.loanDrawn;
+  const fallToZeroEquity = c.value0 > 0 ? Math.max(0, (c.value0 - c.loanDrawn) / c.value0 * 100) : 0;
+  const fallToLtvBreach = c.value0 > 0 && num(d.maxLtvPct) > 0
+    ? Math.max(0, (1 - c.loanDrawn / (num(d.maxLtvPct) / 100) / c.value0) * 100) : 0;
+
+  /* --- projection to exit ------------------------------------------------ */
+  const years = Math.max(1, Math.round(num(d.holdYears)));
+  const g = num(d.valueGrowthPct) / 100;
+  const proj = [];
+  let cumCF = 0, cumPrincipal = 0;
+  for (let y = 1; y <= years; y++) {
+    const op = operating(d, y);
+    const s = c.sched[y - 1] || { interest: 0, principal: 0, payment: 0, balance: c.sched.length ? c.sched[c.sched.length - 1].balance : 0, rate: num(d.revertPct) };
+    const t = incomeTax(d, op.noi, s.interest, c.depAnnual);
+    const cf = op.noi - s.payment - t.tax;
+    const value = c.value0 * Math.pow(1 + g, y);
+    cumCF += cf; cumPrincipal += s.principal;
+    proj.push({
+      year: y, rentMonthly: op.rentMonthly, egi: op.egi, opex: op.opexTotal, noi: op.noi,
+      interest: s.interest, principal: s.principal, payment: s.payment, balance: s.balance,
+      rate: s.rate, tax: t.tax, cf, cumCF, value, equity: value - s.balance,
+      roe: (value - s.balance) > 0 ? cf / (value - s.balance) * 100 : 0,
+    });
+  }
+
+  const last = proj[proj.length - 1];
+  const sale = last.value;
+  const sellCosts = sale * num(d.sellCostPct) / 100;
+  const gain = sale - sellCosts - (c.price + c.acqTotal + c.refurbTotal);
+  const cgtRate = d.taxMode === "company" ? num(d.corpPct) : (d.taxMode === "none" ? 0 : num(d.cgtPct));
+  const cgtBase = Math.max(0, gain - (d.taxMode === "company" || d.taxMode === "none" ? 0 : num(d.cgtAllowance)));
+  const cgt = cgtBase * cgtRate / 100;
+  const netProceeds = sale - sellCosts - last.balance - cgt;
+
+  const flows = [-c.cashIn];
+  proj.forEach((p, i) => flows.push(p.cf + (i === proj.length - 1 ? netProceeds : 0)));
+  const dealIrr = irr(flows);
+  const totalProfit = cumCF + netProceeds - c.cashIn;
+  const equityMultiple = c.cashIn > 0 ? (cumCF + netProceeds) / c.cashIn : 0;
+
+  const appreciation = sale - sellCosts - c.value0;
+  const decomposition = [
+    { id: "cf",    label: "Net cash flow after tax",       amount: cumCF },
+    { id: "amort", label: "Loan paid down by the tenant",  amount: cumPrincipal },
+    { id: "apprec",label: "Appreciation net of selling costs", amount: appreciation },
+    { id: "uplift",label: "Refurb uplift at purchase",     amount: c.value0 - c.price },
+    { id: "cgt",   label: "Capital gains tax",             amount: -cgt },
+    { id: "costs", label: "Purchase costs & refurb spend", amount: -(c.acqTotal + c.refurbTotal) },
+    { id: "fee",   label: "Arrangement fee added to the loan", amount: d.arrFeeAdded ? -c.arrFee : 0 },
+  ];
+
+  return Object.assign({}, c, {
+    be: { rent: beRent, rate: beRate, void: beVoid, fallToZeroEquity, fallToLtvBreach, equity0 },
+    proj, exit: { sale, sellCosts, gain, cgt, cgtRate, netProceeds, balance: last.balance },
+    flows, irr: dealIrr, totalProfit, equityMultiple, cumCF, cumPrincipal, decomposition, years,
+  });
+}
+
+/* --- flip & BRRRR ---------------------------------------------------------
+   The flip model charges finance by the month, because holding time is what
+   actually kills a flip: the refurb overruns, the sale takes eleven weeks, and
+   the bridging interest compounds through both. */
+function computeFlip(d, over) {
+  over = over || {};
+  const f = Object.assign({}, d.flip, over);
+  const price = over.price !== undefined ? num(over.price) : num(d.price);
+  const months = Math.max(0, num(f.months));
+  const arv = num(f.arv);
+
+  const tax = purchaseTax(Object.assign({}, d, { price }));
+  const refurbTotal = num(d.refurb) * (1 + num(d.refurbContPct) / 100) * (1 + num(over.refurbOverrunPct || 0) / 100);
+  const acq = tax.total + num(d.legal) + num(d.survey) + num(d.brokerFee) + num(d.otherAcq) + price * num(d.sourcingPct) / 100;
+
+  const bridgeLoan = f.bridgeUse ? price * clamp(num(f.bridgeLtvPct), 0, 100) / 100 : 0;
+  const bridgeArr = bridgeLoan * num(f.bridgeArrPct) / 100;
+  const rMonthly = num(f.bridgeRatePct) / 100;
+  const start = bridgeLoan + bridgeArr; /* arrangement fee added to the facility */
+  const rolledInterest = f.rolled
+    ? start * (Math.pow(1 + rMonthly, months) - 1)
+    : bridgeLoan * rMonthly * months;
+  const redemption = f.rolled ? start + rolledInterest : start;
+  const exitFee = redemption * num(f.bridgeExitPct) / 100;
+  const financeTotal = bridgeArr + rolledInterest + exitFee;
+
+  const holding = num(f.holdingMonthly) * months;
+  const sellCosts = arv * num(f.sellAgentPct) / 100 + num(f.sellLegal);
+
+  const cashIn = (price - bridgeLoan) + acq + refurbTotal + holding + (f.rolled ? 0 : rolledInterest);
+  const profit = arv - price - acq - refurbTotal - financeTotal - holding - sellCosts;
+  const roi = cashIn > 0 ? profit / cashIn * 100 : 0;
+  const annualised = months > 0 ? roi * 12 / months : 0;
+  const compounded = (months > 0 && cashIn > 0 && 1 + profit / cashIn > 0)
+    ? (Math.pow(1 + profit / cashIn, 12 / months) - 1) * 100 : 0;
+  const margin = arv > 0 ? profit / arv * 100 : 0;
+
+  const mao70 = 0.7 * arv - refurbTotal;
+  const breakEvenSale = solve(
+    s => (s - price - acq - refurbTotal - financeTotal - holding - (s * num(f.sellAgentPct) / 100 + num(f.sellLegal))),
+    0, arv * 3 + 100000, 1e-3
+  );
+
+  return { price, arv, months, tax, refurbTotal, acq, bridgeLoan, bridgeArr, rolledInterest,
+           redemption, exitFee, financeTotal, holding, sellCosts, cashIn, profit, roi,
+           annualised, compounded, margin, mao70, breakEvenSale };
+}
+
+/* Maximum purchase price for a target profit, solved rather than approximated —
+   the purchase tax is a step function of the price, so it cannot be rearranged. */
+function maoForProfit(d, targetProfit) {
+  const arv = num(d.flip.arv);
+  return solve(p => computeFlip(d, { price: p }).profit - targetProfit, 1000, arv * 1.5, 1);
+}
+
+/* BRRRR: buy, refurbish, refinance onto a term mortgage, and see what is left
+   in. "All money out" is the claim; the refinance stress test is usually what
+   stops it. */
+function computeBrrrr(d) {
+  const f = d.flip;
+  const flip = computeFlip(d, { months: num(f.refiMonths) });
+  const arv = num(f.arv);
+  const refiByLtv = arv * clamp(num(f.refiLtvPct), 0, 100) / 100;
+  let refiByTest = Infinity;
+  if (d.lenderTest === "icr") {
+    const stress = num(d.stressPct) / 100, cover = num(d.icr) / 100;
+    refiByTest = (stress > 0 && cover > 0) ? (num(d.rentMonthly) * 12) / (stress * cover) : Infinity;
+  } else if (d.lenderTest === "dscr") {
+    const op = operating(d, 1);
+    const perUnit = d.amort === "repayment" ? pmt(1, num(d.stressPct), num(d.termYears)) * 12 : num(d.stressPct) / 100;
+    refiByTest = (perUnit > 0 && num(d.dscrMin) > 0) ? op.noi / (num(d.dscrMin) * perUnit) : Infinity;
+  }
+  const refiLoan = Math.max(0, Math.min(refiByLtv, refiByTest));
+  const cashOut = refiLoan - flip.redemption - num(f.refiCosts);
+  const cashLeftIn = flip.cashIn - cashOut;
+
+  const op = operating(d, 1);
+  const payment = d.amort === "repayment"
+    ? pmt(refiLoan, num(f.refiRatePct), num(d.termYears)) * 12
+    : refiLoan * num(f.refiRatePct) / 100;
+  const interest = refiLoan * num(f.refiRatePct) / 100;
+  const t = incomeTax(d, op.noi, interest, 0);
+  const preTaxCF = op.noi - payment;
+  const postTaxCF = preTaxCF - t.tax;
+  const coc = cashLeftIn > 0 ? preTaxCF / cashLeftIn * 100 : null;
+
+  return { flip, arv, refiByLtv, refiByTest, refiLoan, cashOut, cashLeftIn, op,
+           payment, interest, tax: t, preTaxCF, postTaxCF, coc,
+           ltv: arv > 0 ? refiLoan / arv * 100 : 0,
+           testBinds: refiByTest < refiByLtv - 1 };
+}
+
+/* --- rent versus buy ------------------------------------------------------
+   Monthly loop. The renter invests the deposit and every month the owner pays
+   more than they do; the owner invests the difference in the months it goes the
+   other way. Both end with a net worth, which is the only fair comparison. */
+function computeRentBuy(d) {
+  const r = d.rvb;
+  const years = Math.max(1, Math.round(num(r.years)));
+  const months = years * 12;
+  const c = core(d);
+  const buyUpfront = c.cashIn;
+
+  const invMonthly = Math.pow(1 + num(r.investReturnPct) / 100 * (1 - num(r.investTaxPct) / 100), 1 / 12) - 1;
+  const rentG = Math.pow(1 + num(r.rentGrowthPct) / 100, 1 / 12) - 1;
+  const costG = Math.pow(1 + num(d.costGrowthPct) / 100, 1 / 12) - 1;
+  const valG = Math.pow(1 + num(d.valueGrowthPct) / 100, 1 / 12) - 1;
+
+  const rows = schedule(c.loanDrawn, {
+    ratePct: num(d.ratePct), revertPct: num(d.revertPct), fixedYears: num(d.fixedYears),
+    termYears: num(d.termYears), amort: d.amort, months,
+  });
+
+  let renterPot = buyUpfront, ownerPot = 0;
+  let rent = num(r.rentMonthly), value = c.value0;
+  let ownMaint = c.value0 * num(r.ownerMaintPct) / 100 / 12;
+  let ownIns = num(r.ownerInsurance) / 12 + num(r.ownerServiceCharge) / 12;
+  const series = [];
+
+  for (let m = 1; m <= months; m++) {
+    const row = rows[m - 1] || { payment: 0, balance: 0 };
+    const ownCost = row.payment + ownMaint + ownIns;
+    const diff = ownCost - rent;
+    if (diff > 0) renterPot += diff; else ownerPot += -diff;
+    renterPot *= 1 + invMonthly;
+    ownerPot *= 1 + invMonthly;
+    rent *= 1 + rentG;
+    ownMaint *= 1 + costG; ownIns *= 1 + costG;
+    value *= 1 + valG;
+
+    if (m % 12 === 0) {
+      const sellCosts = value * num(d.sellCostPct) / 100;
+      const ownerEquity = value - sellCosts - row.balance;
+      series.push({
+        year: m / 12, value, balance: row.balance, ownerEquity,
+        ownerNet: ownerEquity + ownerPot, renterNet: renterPot,
+        rentMonthly: rent, ownCostMonthly: ownCost,
+        gap: (ownerEquity + ownerPot) - renterPot,
+      });
+    }
+  }
+  const final = series[series.length - 1];
+  const crossover = series.find(s => s.gap >= 0);
+  /* What annual capital growth would make buying break even over the term? */
+  const requiredGrowth = solve(gp => {
+    const alt = JSON.parse(JSON.stringify(d));
+    alt.valueGrowthPct = gp;
+    const s = computeRentBuyInner(alt);
+    return s.gap;
+  }, -15, 25, 1e-4);
+
+  return { series, final, crossover, buyUpfront, requiredGrowth, years };
+}
+
+/* Terminal gap only — separated so the growth solver above does not recurse. */
+function computeRentBuyInner(d) {
+  const r = d.rvb;
+  const years = Math.max(1, Math.round(num(r.years)));
+  const months = years * 12;
+  const c = core(d);
+  const invMonthly = Math.pow(1 + num(r.investReturnPct) / 100 * (1 - num(r.investTaxPct) / 100), 1 / 12) - 1;
+  const rentG = Math.pow(1 + num(r.rentGrowthPct) / 100, 1 / 12) - 1;
+  const costG = Math.pow(1 + num(d.costGrowthPct) / 100, 1 / 12) - 1;
+  const valG = Math.pow(1 + num(d.valueGrowthPct) / 100, 1 / 12) - 1;
+  const rows = schedule(c.loanDrawn, {
+    ratePct: num(d.ratePct), revertPct: num(d.revertPct), fixedYears: num(d.fixedYears),
+    termYears: num(d.termYears), amort: d.amort, months,
+  });
+  let renterPot = c.cashIn, ownerPot = 0, rent = num(r.rentMonthly), value = c.value0;
+  let ownMaint = c.value0 * num(r.ownerMaintPct) / 100 / 12;
+  let ownIns = num(r.ownerInsurance) / 12 + num(r.ownerServiceCharge) / 12;
+  let balance = c.loanDrawn;
+  for (let m = 1; m <= months; m++) {
+    const row = rows[m - 1] || { payment: 0, balance };
+    balance = row.balance;
+    const diff = (row.payment + ownMaint + ownIns) - rent;
+    if (diff > 0) renterPot += diff; else ownerPot += -diff;
+    renterPot *= 1 + invMonthly; ownerPot *= 1 + invMonthly;
+    rent *= 1 + rentG; ownMaint *= 1 + costG; ownIns *= 1 + costG; value *= 1 + valG;
+  }
+  const sellCosts = value * num(d.sellCostPct) / 100;
+  const ownerNet = value - sellCosts - balance + ownerPot;
+  return { gap: ownerNet - renterPot, ownerNet, renterNet: renterPot };
+}
+
+/* ===========================================================================
+   4. STATE, STORAGE, FORMATTING
+   =========================================================================== */
+
+const STORE_KEY = "real-estate-calculator.v1";
+let S = defaultState();
+let storageOK = true;
+let warnedStorage = false;
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    S = repair(parsed);
+  } catch (e) {
+    storageOK = false;
+  }
+}
+
+function save() {
+  if (!storageOK) return;
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(S));
+  } catch (e) {
+    storageOK = false;
+    if (!warnedStorage) {
+      warnedStorage = true;
+      toast("Can't save to this browser — the app still works, but changes will be lost when you close the tab.");
+    }
+  }
+}
+
+/* Merge a loaded file over the defaults so an old or damaged backup can never
+   leave the app with missing fields. */
+function repair(obj) {
+  const base = defaultState();
+  if (!obj || typeof obj !== "object") return base;
+  const out = Object.assign({}, base, { deal: Object.assign({}, base.deal, obj.deal || {}) });
+  out.deal.opex = Object.assign({}, base.deal.opex, (obj.deal && obj.deal.opex) || {});
+  out.deal.flip = Object.assign({}, base.deal.flip, (obj.deal && obj.deal.flip) || {});
+  out.deal.rvb  = Object.assign({}, base.deal.rvb,  (obj.deal && obj.deal.rvb)  || {});
+  if (Array.isArray(obj.deal && obj.deal.taxBands)) out.deal.taxBands = obj.deal.taxBands;
+  out.currency = typeof obj.currency === "string" ? obj.currency : base.currency;
+  out.theme = obj.theme === "light" || obj.theme === "dark" ? obj.theme : null;
+  out.tab = typeof obj.tab === "string" ? obj.tab : base.tab;
+  out.saved = Array.isArray(obj.saved) ? obj.saved.filter(x => x && x.deal).map(x => ({
+    id: String(x.id || uid()), name: String(x.name || "Untitled"), at: Number(x.at) || Date.now(),
+    deal: Object.assign({}, base.deal, x.deal, {
+      opex: Object.assign({}, base.deal.opex, x.deal.opex || {}),
+      flip: Object.assign({}, base.deal.flip, x.deal.flip || {}),
+      rvb:  Object.assign({}, base.deal.rvb,  x.deal.rvb  || {}),
+    }),
+  })) : [];
+  return out;
+}
+
+const D = () => S.deal;
+function uid() { return Math.random().toString(36).slice(2, 9); }
+
+function getPath(obj, path) {
+  return path.split(".").reduce((o, k) => (o === undefined || o === null ? undefined : o[k]), obj);
+}
+function setPath(obj, path, value) {
+  const parts = path.split(".");
+  let o = obj;
+  for (let i = 0; i < parts.length - 1; i++) {
+    if (typeof o[parts[i]] !== "object" || o[parts[i]] === null) o[parts[i]] = {};
+    o = o[parts[i]];
+  }
+  o[parts[parts.length - 1]] = value;
+}
+
+/* --- formatting ----------------------------------------------------------- */
+function cur() { return CURRENCIES.find(c => c.code === S.currency) || CURRENCIES[0]; }
+function money(n, dp) {
+  if (!Number.isFinite(n)) return "—";
+  dp = dp === undefined ? 0 : dp;
+  const neg = n < 0;
+  const s = Math.abs(n).toLocaleString(undefined, { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  return (neg ? "−" : "") + cur().sym + s;
+}
+function money2(n) { return money(n, 2); }
+function pct(n, dp) {
+  if (!Number.isFinite(n)) return "—";
+  return (n).toLocaleString(undefined, { minimumFractionDigits: dp === undefined ? 1 : dp, maximumFractionDigits: dp === undefined ? 1 : dp }) + "%";
+}
+function x(n, dp) { return Number.isFinite(n) ? n.toFixed(dp === undefined ? 2 : dp) + "×" : "—"; }
+function signCls(n) { return n > 0.005 ? "pos" : (n < -0.005 ? "neg" : ""); }
+function esc(s) {
+  return String(s === undefined || s === null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+function ymd(ts) { const dt = new Date(ts); return dt.toISOString().slice(0, 10); }
+
+/* --- toasts --------------------------------------------------------------- */
+function toast(msg) {
+  const wrap = document.getElementById("toasts");
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(() => { el.remove(); }, 4200);
+}
+
+/* ===========================================================================
+   5. FORM CONTROLS
+   Every input carries a data-path; one delegated listener writes it back into
+   state. Rendering is whole-panel with focus and caret restored afterwards,
+   which keeps the inputs and the numbers beside them impossible to desync.
+   =========================================================================== */
+
+function fld(path, label, opts) {
+  opts = opts || {};
+  const v = getPath(S, path);
+  const val = v === null || v === undefined ? "" : v;
+  const attrs = [
+    `data-path="${esc(path)}"`,
+    `id="f-${esc(path.replace(/\./g, "-"))}"`,
+    opts.step !== undefined ? `step="${opts.step}"` : `step="any"`,
+    opts.min !== undefined ? `min="${opts.min}"` : "",
+    opts.max !== undefined ? `max="${opts.max}"` : "",
+    opts.type === "text" ? `type="text"` : `type="number"`,
+    opts.inputmode ? `inputmode="${opts.inputmode}"` : "",
+  ].filter(Boolean).join(" ");
+  const input = `<input ${attrs} value="${esc(val)}">`;
+  let inner = input;
+  if (opts.money) inner = `<div class="prefixed"><span class="pfx" aria-hidden="true">${esc(cur().sym)}</span>${input}</div>`;
+  else if (opts.suffix) inner = `<div class="suffixed">${input}<span class="sfx" aria-hidden="true">${esc(opts.suffix)}</span></div>`;
+  return `<div class="field">
+    <label for="f-${esc(path.replace(/\./g, "-"))}">${esc(label)}${opts.hint ? ` <span class="hint">${esc(opts.hint)}</span>` : ""}</label>
+    ${inner}
+  </div>`;
+}
+
+function sel(path, label, options, opts) {
+  opts = opts || {};
+  const v = getPath(S, path);
+  const id = "f-" + path.replace(/\./g, "-");
+  return `<div class="field">
+    <label for="${id}">${esc(label)}${opts.hint ? ` <span class="hint">${esc(opts.hint)}</span>` : ""}</label>
+    <select id="${id}" data-path="${esc(path)}" data-kind="select">
+      ${options.map(o => `<option value="${esc(o.value)}"${String(o.value) === String(v) ? " selected" : ""}>${esc(o.label)}</option>`).join("")}
+    </select>
+  </div>`;
+}
+
+function chk(path, label) {
+  const v = !!getPath(S, path);
+  const id = "f-" + path.replace(/\./g, "-");
+  return `<div class="check">
+    <input type="checkbox" id="${id}" data-path="${esc(path)}" data-kind="check"${v ? " checked" : ""}>
+    <label for="${id}">${esc(label)}</label>
+  </div>`;
+}
+
+function statTile(k, v, note, tone) {
+  return `<div class="stat${tone ? " " + tone : ""}">
+    <div class="k">${esc(k)}</div>
+    <div class="v">${v}</div>
+    ${note ? `<div class="n">${note}</div>` : ""}
+  </div>`;
+}
+
+function pageHead(title, lede) {
+  return `<div class="pagehead"><h2>${esc(title)}</h2><p class="lede">${lede}</p></div>`;
+}
+
+/* Waterfall row: label, proportional bar, amount. */
+function wfRow(label, amount, scale, tone, head) {
+  const w = scale > 0 ? Math.min(100, Math.abs(amount) / scale * 100) : 0;
+  const colour = tone === "neg" ? "var(--red)" : tone === "pos" ? "var(--green)" : tone === "key" ? "var(--acc-2)" : "var(--ink-3)";
+  const left = amount < 0 ? "" : "left:0;";
+  return `<div class="wfrow${head ? " head" : ""}">
+    <div class="lab">${label}</div>
+    <div class="wfbar"><i style="${left}width:${w.toFixed(2)}%;background:${colour};"></i></div>
+    <div class="amt ${signCls(amount)}">${money(amount)}</div>
+  </div>`;
+}
+
+/* ===========================================================================
+   6. TAB PLUMBING
+   =========================================================================== */
+
+const TABS = ["deal", "finance", "cashflow", "returns", "projection", "flip", "rentbuy", "stress", "compare", "report"];
+const RENDERERS = {};
+
+let rafPending = false;
+function rerender() {
+  if (rafPending) return;
+  rafPending = true;
+  requestAnimationFrame(() => {
+    rafPending = false;
+    const active = document.activeElement;
+    const path = active && active.dataset ? active.dataset.path : null;
+    const raw = active && "value" in active ? active.value : null;
+    const selStart = (() => { try { return active.selectionStart; } catch (e) { return null; } })();
+    const selEnd = (() => { try { return active.selectionEnd; } catch (e) { return null; } })();
+    renderPanel(S.tab);
+    if (path) {
+      const el = document.querySelector('[data-path="' + path.replace(/"/g, '\\"') + '"]');
+      if (el) {
+        if (raw !== null && "value" in el && el.type !== "checkbox") el.value = raw;
+        el.focus();
+        if (selStart !== null && selEnd !== null) { try { el.setSelectionRange(selStart, selEnd); } catch (e) {} }
+      }
+    }
+  });
+}
+
+function renderPanel(name) {
+  const el = document.getElementById("panel-" + name);
+  if (!el || !RENDERERS[name]) return;
+  el.innerHTML = RENDERERS[name]();
+}
+
+function showTab(name, focusPanel) {
+  if (!TABS.includes(name)) name = "deal";
+  S.tab = name;
+  TABS.forEach(t => {
+    const tab = document.getElementById("tab-" + t);
+    const panel = document.getElementById("panel-" + t);
+    const on = t === name;
+    tab.setAttribute("aria-selected", on ? "true" : "false");
+    tab.tabIndex = on ? 0 : -1;
+    panel.hidden = !on;
+  });
+  renderPanel(name);
+  if (focusPanel) document.getElementById("panel-" + name).focus();
+  if (location.hash.slice(1) !== name) history.replaceState(null, "", "#" + name);
+  save();
+}
+
+function wireTabs() {
+  const tabs = Array.from(document.querySelectorAll(".tab"));
+  tabs.forEach(t => {
+    t.addEventListener("click", () => showTab(t.dataset.panel));
+    t.addEventListener("keydown", e => {
+      const i = tabs.indexOf(t);
+      let j = null;
+      if (e.key === "ArrowRight") j = (i + 1) % tabs.length;
+      else if (e.key === "ArrowLeft") j = (i - 1 + tabs.length) % tabs.length;
+      else if (e.key === "Home") j = 0;
+      else if (e.key === "End") j = tabs.length - 1;
+      if (j !== null) { e.preventDefault(); tabs[j].focus(); showTab(tabs[j].dataset.panel); }
+    });
+  });
+}
+
+/* One delegated listener for every input in the app. */
+function wireInputs() {
+  document.addEventListener("input", e => {
+    const el = e.target;
+    if (!el.dataset || !el.dataset.path) return;
+    const path = el.dataset.path;
+    if (el.dataset.kind === "check") setPath(S, path, el.checked);
+    else if (el.type === "number") {
+      const v = el.value === "" ? 0 : parseFloat(el.value);
+      setPath(S, path, Number.isFinite(v) ? v : 0);
+    } else setPath(S, path, el.value);
+    save();
+    rerender();
+  });
+  document.addEventListener("change", e => {
+    const el = e.target;
+    if (!el.dataset || !el.dataset.path) return;
+    if (el.dataset.kind === "select" || el.dataset.kind === "check") {
+      if (el.dataset.kind === "check") setPath(S, el.dataset.path, el.checked);
+      else setPath(S, el.dataset.path, el.value);
+      if (el.dataset.path === "deal.taxPreset") {
+        S.deal.taxBands = null;
+        S.deal.surchargePct = presetById(el.value).surchargePct;
+      }
+      if (el.dataset.path === "deal.archetype") applyArchetype(el.value);
+      save();
+      rerender();
+    }
+  });
+  /* Buttons inside panels declare an action; one listener handles them all. */
+  document.addEventListener("click", e => {
+    const btn = e.target.closest("[data-act]");
+    if (!btn) return;
+    const act = btn.dataset.act;
+    const arg = btn.dataset.arg;
+    if (ACTIONS[act]) { ACTIONS[act](arg, btn); }
+  });
+}
+
+function applyArchetype(id) {
+  const a = ARCHETYPES.find(z => z.id === id);
+  if (!a) return;
+  const d = D();
+  d.voidPct = a.void;
+  d.opex.mgmt = a.mgmt;
+  d.opex.maint = a.maint;
+  d.opex.capex = a.capex;
+  d.tenancyYears = a.tenancyYears;
+  d.letWeeks = a.letWeeks;
+  toast(a.label + " assumptions applied — overwrite any of them.");
+}
+
+/* ===========================================================================
+   7. THEME
+   =========================================================================== */
+function applyTheme() {
+  const root = document.documentElement;
+  if (S.theme) root.setAttribute("data-theme", S.theme);
+  else root.removeAttribute("data-theme");
+}
+function toggleTheme() {
+  const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const current = S.theme || (prefersDark ? "dark" : "light");
+  S.theme = current === "dark" ? "light" : "dark";
+  applyTheme(); save();
+}
+
+/* ===========================================================================
+   8. TAB — DEAL
+   =========================================================================== */
+
+function taxBandRows() {
+  const d = D();
+  const t = purchaseTax(d);
+  const custom = Array.isArray(d.taxBands) && d.taxBands.length;
+  const bands = t.bands;
+  let lower = 0;
+  return bands.map((b, i) => {
+    const from = lower;
+    const to = b.upTo === null || b.upTo === undefined ? null : b.upTo;
+    lower = to === null ? Infinity : to;
+    const slice = Math.max(0, Math.min(num(d.price), to === null ? Infinity : to) - from);
+    const paid = slice * num(b.pct) / 100;
+    return `<tr>
+      <td class="num">${money(from)}</td>
+      <td>${custom
+        ? `<input type="number" step="any" data-path="deal.taxBands.${i}.upTo" value="${b.upTo === null || b.upTo === undefined ? "" : esc(b.upTo)}" aria-label="Band ${i + 1} upper threshold">`
+        : (to === null ? "<span class='muted'>and above</span>" : money(to))}</td>
+      <td class="n" style="width:96px">${custom
+        ? `<input type="number" step="any" data-path="deal.taxBands.${i}.pct" value="${esc(b.pct)}" aria-label="Band ${i + 1} rate">`
+        : pct(num(b.pct), 1)}</td>
+      <td class="n">${slice > 0 ? money(paid) : "<span class='muted'>—</span>"}</td>
+      ${custom ? `<td class="n"><button type="button" class="sm ghost" data-act="bandDel" data-arg="${i}" aria-label="Delete band ${i + 1}">✕</button></td>` : ""}
+    </tr>`;
+  }).join("");
+}
+
+RENDERERS.deal = function () {
+  const d = D();
+  const c = computeDeal(d);
+  const t = c.tax;
+  const arch = ARCHETYPES.find(a => a.id === d.archetype) || ARCHETYPES[0];
+  const custom = Array.isArray(d.taxBands) && d.taxBands.length;
+  const preset = presetById(d.taxPreset);
+
+  return pageHead("The deal",
+    `Price is the least interesting number on this page. What decides the deal is the gap between the price and the
+     <strong>all-in cost</strong> — tax, fees, works, the void before the first tenant — because every return below is
+     measured against the cash that actually left your account.`) +
+
+  `<div class="stats">
+    ${statTile("All-in cost", money(c.allIn), `price + ${money(c.acqTotal + c.refurbTotal)} of costs and works`, "key")}
+    ${statTile("Cash you need", money(c.cashIn), d.useMortgage ? `deposit ${money(c.cashDeposit)} + costs` : "no mortgage — the lot")}
+    ${statTile("Purchase tax", money(t.total), `${pct(t.effectivePct, 2)} of the price`, t.effectivePct > 5 ? "mid" : "")}
+    ${statTile("Costs over price", pct(c.allIn / Math.max(1, c.price) * 100 - 100, 1), "what you pay above the asking price")}
+  </div>
+
+  <div class="cols-2">
+    <div>
+      <div class="card">
+        <h3>Property</h3>
+        ${fld("deal.name", "Deal name", { type: "text" })}
+        ${sel("deal.archetype", "What kind of let is it?", ARCHETYPES.map(a => ({ value: a.id, label: a.icon + "  " + a.label })),
+          { hint: "— changing this reseeds voids, management, maintenance and reserve" })}
+        <div class="note">${esc(arch.note)}</div>
+        ${sel("currency", "Currency", CURRENCIES.map(x => ({ value: x.code, label: x.sym + "  " + x.name })))}
+      </div>
+
+      <div class="card">
+        <h3>Price &amp; works</h3>
+        <div class="inline">
+          ${fld("deal.price", "Purchase price", { money: true })}
+          ${fld("deal.valuation", "Lender's valuation", { money: true, hint: "usually the price" })}
+        </div>
+        <div class="inline" style="margin-top:12px">
+          ${fld("deal.refurb", "Refurbishment budget", { money: true })}
+          ${fld("deal.refurbContPct", "Contingency", { suffix: "%", hint: "on the works" })}
+        </div>
+        <div style="margin-top:12px">
+          ${fld("deal.postWorksValue", "Value once the works are done", { money: true, hint: "drives equity, LTV and the projection" })}
+        </div>
+        <div class="note ${c.refurbTotal > 0 && num(d.postWorksValue) <= num(d.price) ? "warn" : ""}">
+          Works budget with contingency: <strong>${money(c.refurbTotal)}</strong>.
+          ${num(d.postWorksValue) > num(d.price)
+            ? `You are assuming the works add <strong>${money(num(d.postWorksValue) - num(d.price))}</strong> of value against
+               <strong>${money(c.refurbTotal)}</strong> spent — a ratio of ${x(c.refurbTotal > 0 ? (num(d.postWorksValue) - num(d.price)) / c.refurbTotal : 0)}.
+               Anything above 2× needs a comparable sale to back it, not an agent's opinion.`
+            : `You are assuming the works add no value. That is the conservative position and it is often the right one:
+               a new bathroom keeps a property lettable rather than making it worth more.`}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Purchase tax <span class="badge brass">${esc(preset.asAt)}</span></h3>
+        ${sel("deal.taxPreset", "Regime", TAX_PRESETS.map(p => ({ value: p.id, label: p.label })))}
+        ${preset.note ? `<div class="note">${esc(preset.note)}</div>` : ""}
+        ${t.reliefLost ? `<div class="note warn"><strong>Relief lost.</strong> The price is above ${money(preset.reliefCap)}, so first-time-buyer relief does not apply at all and the standard table is being used.</div>` : ""}
+        <div class="tablewrap" style="margin-bottom:10px">
+          <table class="compact">
+            <thead><tr><th>From</th><th>Up to</th><th class="n">Rate</th><th class="n">Tax on this slice</th>${custom ? "<th></th>" : ""}</tr></thead>
+            <tbody>${taxBandRows()}</tbody>
+            <tfoot><tr class="total"><td colspan="${custom ? 3 : 3}">Band tax</td><td class="n">${money(t.base)}</td>${custom ? "<td></td>" : ""}</tr></tfoot>
+          </table>
+        </div>
+        <div class="btnrow" style="margin-bottom:12px">
+          ${custom
+            ? `<button type="button" class="sm" data-act="bandAdd">＋ Add band</button>
+               <button type="button" class="sm" data-act="bandsReset">↺ Back to the published table</button>`
+            : `<button type="button" class="sm" data-act="bandsEdit">✎ Edit these bands</button>`}
+        </div>
+        ${fld("deal.surchargePct", "Additional-property surcharge", { suffix: "% of the whole price" })}
+        <div class="kv" style="margin-top:8px">
+          <dt>Band tax</dt><dd>${money(t.base)}</dd>
+          <dt>Surcharge</dt><dd>${money(t.surcharge)}</dd>
+          <dt class="strong">Total purchase tax</dt><dd class="strong">${money(t.total)}</dd>
+          <dt>Effective rate on the price</dt><dd>${pct(t.effectivePct, 2)}</dd>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Other purchase costs</h3>
+        <div class="cols tight">
+          ${fld("deal.legal", "Legal & conveyancing", { money: true })}
+          ${fld("deal.survey", "Survey", { money: true })}
+          ${fld("deal.brokerFee", "Mortgage broker", { money: true })}
+          ${fld("deal.otherAcq", "Furnishings, certificates, sundries", { money: true })}
+          ${fld("deal.sourcingPct", "Sourcing fee", { suffix: "% of price" })}
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>Where the money goes</h3>
+        <div class="wf">
+          ${wfRow("Purchase price", c.price, c.allIn, "key", true)}
+          ${c.acqLines.filter(l => l.amount > 0).map(l => wfRow(esc(l.label), l.amount, c.allIn, "neg")).join("")}
+          ${c.refurbTotal > 0 ? wfRow("Refurbishment incl. contingency", c.refurbTotal, c.allIn, "neg") : ""}
+          ${wfRow("<strong>All-in cost</strong>", c.allIn, c.allIn, "key", true)}
+        </div>
+        <hr>
+        <div class="wf">
+          ${d.useMortgage ? wfRow("Borrowed", c.loanDrawn, c.allIn, "pos", true) : ""}
+          ${wfRow("<strong>Your cash</strong>", c.cashIn, c.allIn, "key", true)}
+        </div>
+        <div class="note info" style="margin-top:12px">
+          Every percentage in this app that says <em>cash</em> — cash-on-cash, IRR, equity multiple — is measured against
+          <strong>${money(c.cashIn)}</strong>, not against the deposit. The deposit is the smaller, more flattering number,
+          and it is the one most spreadsheets use.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Costs people forget</h3>
+        <p class="small dim">Not a checklist to tick. A list to price: each one is a number that belongs somewhere on this page.</p>
+        <div class="tablewrap">
+          <table class="compact">
+            <tbody>
+              ${FORGOTTEN.map(f => `<tr><td style="width:44%"><strong>${esc(f.c)}</strong></td><td class="small dim">${esc(f.why)}</td></tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card flat">
+        <h3>Notes on this deal</h3>
+        <div class="field">
+          <label for="f-deal-notes">Anything you want carried into the report</label>
+          <textarea id="f-deal-notes" data-path="deal.notes" rows="5">${esc(d.notes)}</textarea>
+        </div>
+      </div>
+    </div>
+  </div>`;
+};
+
+/* ===========================================================================
+   9. TAB — FINANCE
+   =========================================================================== */
+
+RENDERERS.finance = function () {
+  const d = D();
+  const c = computeDeal(d);
+  const test = LENDER_TESTS.find(l => l.id === d.lenderTest) || LENDER_TESTS[0];
+  const ltvBinds = d.useMortgage && c.maxByLtv <= c.maxByTest;
+  const yearsShown = Math.min(c.sched.length, Math.max(10, Math.round(num(d.holdYears))));
+
+  const shock = [-1, 0, 1, 2, 3, 4].map(delta => {
+    const r = num(d.ratePct) + delta;
+    const cc = core(d, { ratePct: r, lockLoan: c.loan });
+    return { delta, r, payment: cc.monthlyPayment, cf: cc.preTaxCF / 12, dscr: cc.m.dscr };
+  });
+
+  return pageHead("Finance",
+    `Two separate questions, in this order: <strong>how much will a lender actually lend</strong>, and
+     <strong>what does that debt cost once the fix ends</strong>. The advertised LTV answers neither.`) +
+
+  `<div class="stats">
+    ${statTile("Loan drawn", money(c.loanDrawn), d.arrFeeAdded && c.arrFee > 0 ? `includes ${money(c.arrFee)} of fee added to the loan` : "net of fees")}
+    ${statTile("Monthly payment", money(c.monthlyPayment), `${d.amort === "repayment" ? "repayment" : "interest only"} at ${pct(num(d.ratePct), 2)}`)}
+    ${statTile("LTV on value", pct(c.m.ltv, 1), `against ${money(c.value0)}`, c.m.ltv > num(d.maxLtvPct) ? "bad" : "")}
+    ${statTile(d.lenderTest === "dscr" ? "DSCR" : "Rental cover", d.lenderTest === "dscr" ? x(c.m.dscr) : pct(c.m.icrActual, 0),
+      d.lenderTest === "dscr" ? `lender floor ${x(num(d.dscrMin))}` : `lender floor ${pct(num(d.icr), 0)} at ${pct(num(d.stressPct), 2)}`,
+      (d.lenderTest === "dscr" ? c.m.dscr >= num(d.dscrMin) : c.m.icrActual >= num(d.icr)) ? "good" : "bad")}
+  </div>
+
+  ${c.capped ? `<div class="note bad">
+    <strong>The lender will not lend what you asked for.</strong> You wanted ${money(c.requested)};
+    the binding constraint is ${ltvBinds ? `the ${pct(num(d.maxLtvPct), 0)} LTV cap` : test.label.toLowerCase()},
+    which supports ${money(c.maxLoan)}. The shortfall of <strong>${money(c.requested - c.loan)}</strong> has been added to your
+    cash requirement, which is why the deposit line below is larger than the percentage you typed.
+  </div>` : ""}
+
+  <div class="cols-2">
+    <div>
+      <div class="card">
+        <h3>The mortgage</h3>
+        ${chk("deal.useMortgage", "Buying with a mortgage")}
+        ${d.useMortgage ? `
+          <div class="inline">
+            ${fld("deal.depositPct", "Deposit", { suffix: "% of price" })}
+            ${fld("deal.ratePct", "Interest rate", { suffix: "%" })}
+          </div>
+          <div class="inline" style="margin-top:12px">
+            ${sel("deal.amort", "Repayment type", AMORT_TYPES.map(a => ({ value: a.id, label: a.label })))}
+            ${fld("deal.termYears", "Term", { suffix: "years" })}
+          </div>
+          <div class="inline" style="margin-top:12px">
+            ${fld("deal.fixedYears", "Fixed for", { suffix: "years" })}
+            ${fld("deal.revertPct", "Rate after the fix", { suffix: "%" })}
+          </div>
+          <div class="inline" style="margin-top:12px">
+            ${fld("deal.arrFeePct", "Arrangement fee", { suffix: "% of loan" })}
+          </div>
+          ${chk("deal.arrFeeAdded", "Add the arrangement fee to the loan rather than paying it in cash")}
+          <div class="note ${num(d.revertPct) > num(d.ratePct) + 1.5 ? "warn" : ""}">
+            ${num(d.fixedYears) > 0
+              ? `The fix ends in year ${Math.ceil(num(d.fixedYears))}. After that this model charges ${pct(num(d.revertPct), 2)},
+                 taking the payment from ${money(c.monthlyPayment)} to
+                 ${money(d.amort === "repayment" ? pmt(c.sched[Math.max(0, Math.ceil(num(d.fixedYears)) - 1)] ? c.sched[Math.max(0, Math.ceil(num(d.fixedYears)) - 1)].balance : c.loanDrawn, num(d.revertPct), Math.max(1, num(d.termYears) - num(d.fixedYears))) : c.loanDrawn * num(d.revertPct) / 100 / 12)}
+                 a month. Every projection on the following tabs uses that, not the teaser rate.`
+              : `No fixed period: the whole model runs at ${pct(num(d.ratePct), 2)}.`}
+          </div>
+        ` : `<div class="note">Cash purchase. There is no debt, so there is no leverage: the return will be lower and far more stable, and the deal cannot be taken away from you by a rate rise.</div>`}
+      </div>
+
+      ${d.useMortgage ? `<div class="card">
+        <h3>What the lender will lend</h3>
+        ${sel("deal.lenderTest", "Income test", LENDER_TESTS.map(l => ({ value: l.id, label: l.label })))}
+        <div class="note">${esc(test.note)}</div>
+        ${d.lenderTest === "icr" ? `<div class="note info">
+          The stress rate is not one number. A two-year fix is typically stressed several points above the pay rate;
+          a five-year fix is usually stressed at or near the pay rate, subject to a floor. That single difference is why a
+          longer fix often borrows more — and it is worth checking before you assume a product, because it changes the
+          deposit, and the deposit changes every return in this app.
+        </div>` : ""}
+        <div class="inline">
+          ${fld("deal.maxLtvPct", "Maximum LTV", { suffix: "%" })}
+          ${d.lenderTest === "icr" ? fld("deal.stressPct", "Stress rate", { suffix: "%" }) : ""}
+          ${d.lenderTest === "icr" ? fld("deal.icr", "Cover required", { suffix: "%" }) : ""}
+          ${d.lenderTest === "dscr" ? fld("deal.stressPct", "Stress rate", { suffix: "%" }) : ""}
+          ${d.lenderTest === "dscr" ? fld("deal.dscrMin", "Minimum DSCR", { suffix: "×" }) : ""}
+        </div>
+        <div class="tablewrap" style="margin-top:12px">
+          <table class="compact">
+            <thead><tr><th>Constraint</th><th class="n">Supports a loan of</th><th class="n">LTV</th></tr></thead>
+            <tbody>
+              <tr${ltvBinds ? ' class="total"' : ""}>
+                <td>${pct(num(d.maxLtvPct), 0)} of ${money(c.lenderValue)}</td>
+                <td class="n">${money(c.maxByLtv)}</td>
+                <td class="n">${pct(num(d.maxLtvPct), 0)}</td>
+              </tr>
+              <tr${!ltvBinds && Number.isFinite(c.maxByTest) ? ' class="total"' : ""}>
+                <td>${esc(test.label)}</td>
+                <td class="n">${Number.isFinite(c.maxByTest) ? money(c.maxByTest) : "no limit"}</td>
+                <td class="n">${Number.isFinite(c.maxByTest) && c.lenderValue > 0 ? pct(c.maxByTest / c.lenderValue * 100, 1) : "—"}</td>
+              </tr>
+              <tr class="sub"><td>You asked for</td><td class="n">${money(c.requested)}</td><td class="n">${pct(c.lenderValue > 0 ? c.requested / c.lenderValue * 100 : 0, 1)}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note ${c.capped ? "bad" : "good"}" style="margin-top:12px">
+          ${c.capped
+            ? `Binding constraint: <strong>${ltvBinds ? "LTV" : test.label}</strong>. You get ${money(c.loan)}.`
+            : `Both tests clear. The loan is limited by your own deposit choice, not by the lender.`}
+          ${d.lenderTest === "icr" && num(d.stressPct) > 0 && num(d.icr) > 0
+            ? ` At a ${pct(num(d.icr), 0)} cover and a ${pct(num(d.stressPct), 2)} stress rate, every ${money(100)} of monthly rent supports about ${money(100 * 12 / (num(d.stressPct) / 100 * num(d.icr) / 100))} of borrowing.`
+            : ""}
+        </div>
+      </div>` : ""}
+    </div>
+
+    <div>
+      ${d.useMortgage ? `<div class="card">
+        <h3>What a rate move does</h3>
+        <p class="small dim">Payment and monthly cash flow at the rate you typed, and at rates around it. Nothing else changes.</p>
+        <div class="tablewrap">
+          <table class="compact">
+            <thead><tr><th>Rate</th><th class="n">Monthly payment</th><th class="n">Monthly cash flow</th><th class="n">DSCR</th></tr></thead>
+            <tbody>
+              ${shock.map(s => `<tr${s.delta === 0 ? ' class="total"' : ""}>
+                <td>${pct(s.r, 2)}${s.delta === 0 ? " <span class='badge'>yours</span>" : ""}</td>
+                <td class="n">${money(s.payment)}</td>
+                <td class="n ${signCls(s.cf)}">${money(s.cf)}</td>
+                <td class="n">${Number.isFinite(s.dscr) ? x(s.dscr) : "∞"}</td>
+              </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+        ${c.be.rate !== null ? `<div class="note ${c.be.rate - num(d.ratePct) < 2 ? "bad" : c.be.rate - num(d.ratePct) < 4 ? "warn" : "good"}" style="margin-top:12px">
+          Cash flow reaches zero at <strong>${pct(c.be.rate, 2)}</strong> — ${pct(Math.max(0, c.be.rate - num(d.ratePct)), 2)} above today's rate.
+          ${num(d.revertPct) > c.be.rate
+            ? `Your own revert rate of ${pct(num(d.revertPct), 2)} is above that line, so this deal is planned to lose money the day the fix ends unless rent has risen by then.`
+            : `Your revert rate of ${pct(num(d.revertPct), 2)} stays below it.`}
+        </div>` : ""}
+      </div>
+
+      <div class="card">
+        <h3>The loan, year by year</h3>
+        <div class="tablewrap">
+          <table class="compact">
+            <thead><tr><th>Year</th><th class="n">Rate</th><th class="n">Interest</th><th class="n">Principal</th><th class="n">Paid</th><th class="n">Balance</th></tr></thead>
+            <tbody>
+              ${c.sched.slice(0, yearsShown).map(s => `<tr>
+                <td>${s.year}</td>
+                <td class="n">${pct(s.rate, 2)}</td>
+                <td class="n">${money(s.interest)}</td>
+                <td class="n">${money(s.principal)}</td>
+                <td class="n">${money(s.payment)}</td>
+                <td class="n">${money(s.balance)}</td>
+              </tr>`).join("")}
+            </tbody>
+            <tfoot><tr class="total">
+              <td colspan="2">Over ${yearsShown} years</td>
+              <td class="n">${money(c.sched.slice(0, yearsShown).reduce((s, r) => s + r.interest, 0))}</td>
+              <td class="n">${money(c.sched.slice(0, yearsShown).reduce((s, r) => s + r.principal, 0))}</td>
+              <td class="n">${money(c.sched.slice(0, yearsShown).reduce((s, r) => s + r.payment, 0))}</td>
+              <td class="n">${money(c.sched[yearsShown - 1] ? c.sched[yearsShown - 1].balance : 0)}</td>
+            </tr></tfoot>
+          </table>
+        </div>
+        ${d.amort === "interest-only" ? `<div class="note warn" style="margin-top:12px">
+          Interest only: the balance never moves. Over ${yearsShown} years you pay
+          <strong>${money(c.sched.slice(0, yearsShown).reduce((s, r) => s + r.interest, 0))}</strong> in interest and still owe
+          <strong>${money(c.loanDrawn)}</strong>. That is the correct choice for a leveraged portfolio and a poor one for a
+          single property you intend to own outright — the projection tab shows the difference in the equity column.
+        </div>` : ""}
+      </div>` : `<div class="card"><h3>No debt</h3><p class="dim">Cash purchase: nothing to schedule. Turn the mortgage on to see the lender tests and the amortisation.</p></div>`}
+    </div>
+  </div>`;
+};
+
+/* ===========================================================================
+   10. TAB — CASH FLOW
+   =========================================================================== */
+
+RENDERERS.cashflow = function () {
+  const d = D();
+  const c = computeDeal(d);
+  const op = c.op1;
+  const mode = TAX_MODES.find(m => m.id === d.taxMode) || TAX_MODES[0];
+  const scale = op.grossIncome;
+
+  /* What the same year would cost in tax if interest were deductible — the
+     size of the UK finance-cost restriction, in money. */
+  const altTax = incomeTax(Object.assign({}, d, { taxMode: "full-deduct" }), op.noi, c.y1.interest, c.depAnnual).tax;
+  const s24Cost = d.taxMode === "uk-individual" ? c.t1.tax - altTax : 0;
+
+  return pageHead("Cash flow",
+    `Rent is not income. Take out the weeks it is empty, the fees charged on what is collected, the costs that arrive
+     whether or not it is let, the mortgage and the tax — and what is left is the only number that reaches your account.`) +
+
+  `<div class="stats">
+    ${statTile("Rent collected", money(op.egi), `of ${money(op.grossIncome)} asked`)}
+    ${statTile("Operating costs", money(op.opexTotal), `${pct(op.opexRatio * 100, 0)} of gross rent`, op.opexRatio > 0.5 ? "mid" : "")}
+    ${statTile("NOI", money(op.noi), "before any mortgage or tax", "key")}
+    ${statTile("Cash flow after tax", money(c.postTaxCF), money(c.postTaxCF / 12) + " a month", c.postTaxCF >= 0 ? "good" : "bad")}
+  </div>
+
+  <div class="cols-2">
+    <div>
+      <div class="card">
+        <h3>Income</h3>
+        <div class="inline">
+          ${fld("deal.rentMonthly", "Rent", { money: true, hint: "per month" })}
+          ${fld("deal.otherIncomeMonthly", "Other income", { money: true, hint: "parking, storage" })}
+        </div>
+        <div class="inline" style="margin-top:12px">
+          ${fld("deal.voidPct", "Void", { suffix: "% of the year" })}
+          ${fld("deal.badDebtPct", "Arrears written off", { suffix: "% of rent due" })}
+        </div>
+        <div class="inline" style="margin-top:12px">
+          ${fld("deal.letWeeks", "Tenant-find fee", { suffix: "weeks of rent" })}
+          ${fld("deal.tenancyYears", "Average tenancy", { suffix: "years" })}
+        </div>
+        <div class="note">
+          A ${pct(num(d.voidPct), 1)} void is ${(num(d.voidPct) / 100 * 52).toFixed(1)} weeks a year — about
+          ${(num(d.tenancyYears) > 0 ? (num(d.voidPct) / 100 * 52 * num(d.tenancyYears)) : 0).toFixed(1)} weeks between tenancies
+          at your average tenancy length. If that sounds long, it is because the gap between tenancies is rarely the
+          two weeks people budget: it is the notice, the works, the marketing and the referencing.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Operating costs</h3>
+        <p class="small dim">Percentages are applied to rent collected or gross rent as marked; fixed amounts are annual and grow with your cost inflation assumption.</p>
+        <div class="tablewrap">
+          <table class="compact">
+            <thead><tr><th>Line</th><th style="width:110px">Input</th><th class="n">Per year</th></tr></thead>
+            <tbody>
+              ${OPEX_LINES.map(l => {
+                const line = op.lines.find(z => z.id === l.id) || { amount: 0 };
+                return `<tr>
+                  <td><label for="f-deal-opex-${l.id}" style="margin:0">${esc(l.label)}</label>
+                      <div class="tiny muted">${esc(l.unit)}</div></td>
+                  <td><input type="number" step="any" id="f-deal-opex-${l.id}" data-path="deal.opex.${l.id}" value="${esc(num(d.opex[l.id]))}"></td>
+                  <td class="n">${money(line.amount)}</td>
+                </tr>`;
+              }).join("")}
+              <tr>
+                <td>Tenant-find fee<div class="tiny muted">derived from weeks &amp; tenancy length</div></td>
+                <td class="muted tiny">${num(d.letWeeks)} weeks ÷ ${num(d.tenancyYears)} yrs</td>
+                <td class="n">${money((op.lines.find(z => z.id === "letfee") || { amount: 0 }).amount)}</td>
+              </tr>
+            </tbody>
+            <tfoot><tr class="total"><td colspan="2">Total operating costs</td><td class="n">${money(op.opexTotal)}</td></tr></tfoot>
+          </table>
+        </div>
+        <details class="acc" style="margin-top:12px">
+          <summary>What each line is for</summary>
+          <dl style="margin:0">
+            ${OPEX_LINES.map(l => `<dt class="strong small" style="margin-top:8px">${esc(l.label)}</dt><dd class="small dim" style="margin:0">${esc(l.note)}</dd>`).join("")}
+          </dl>
+        </details>
+        <div class="note ${op.opexRatio < 0.28 ? "warn" : ""}">
+          Your costs are <strong>${pct(op.opexRatio * 100, 0)}</strong> of gross rent.
+          ${op.opexRatio < 0.28
+            ? `That is well under the 50% rule of thumb and under what most portfolios report. It may be right — a new-build
+               flat with the tenant paying everything — but check the capital reserve line before you believe it.`
+            : `That is in the range most landlords actually experience once a full replacement cycle is included.`}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Tax on the rent</h3>
+        ${sel("deal.taxMode", "Regime", TAX_MODES.map(m => ({ value: m.id, label: m.label })))}
+        <div class="note">${esc(mode.note)}</div>
+        <div class="inline">
+          ${d.taxMode === "company" ? fld("deal.corpPct", "Corporation tax", { suffix: "%" }) : fld("deal.marginalPct", "Your marginal rate", { suffix: "%" })}
+          ${d.taxMode === "uk-individual" ? fld("deal.reliefPct", "Interest credit", { suffix: "%" }) : ""}
+        </div>
+        <div class="inline" style="margin-top:12px">
+          ${fld("deal.depYears", "Depreciation over", { suffix: "years", hint: "0 = not allowed" })}
+          ${num(d.depYears) > 0 ? fld("deal.buildingPct", "Building share", { suffix: "% of cost" }) : ""}
+        </div>
+        ${d.taxMode === "uk-individual" && c.y1.interest > 0 ? `<div class="note ${s24Cost > c.preTaxCF * 0.4 ? "bad" : "warn"}">
+          <strong>The restriction costs you ${money(s24Cost)} a year.</strong>
+          Tax is charged on ${money(c.t1.taxable)} of profit — the figure before interest — giving ${money(c.t1.taxable * num(d.marginalPct) / 100)},
+          against which you get a credit of ${money(c.t1.credit)}. Had interest been deductible you would have paid ${money(altTax)}.
+          On a higher-rate taxpayer this is the difference between a deal that works and one that does not, and it is invisible in every yield figure ever quoted.
+        </div>` : ""}
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>From asking rent to your pocket</h3>
+        <div class="wf">
+          ${wfRow("Gross rent asked", op.grossIncome, scale, "key", true)}
+          ${wfRow("Voids", -op.voidLoss, scale, "neg")}
+          ${wfRow("Arrears written off", -op.badDebt, scale, "neg")}
+          ${wfRow("<strong>Rent collected</strong>", op.egi, scale, "key", true)}
+          ${op.lines.filter(l => l.amount > 0).map(l => wfRow(esc(l.label), -l.amount, scale, "neg")).join("")}
+          ${wfRow("<strong>Net operating income</strong>", op.noi, scale, "key", true)}
+          ${c.debtService > 0 ? wfRow("Mortgage payment", -c.debtService, scale, "neg") : ""}
+          ${wfRow("<strong>Cash flow before tax</strong>", c.preTaxCF, scale, c.preTaxCF >= 0 ? "pos" : "neg", true)}
+          ${c.t1.tax > 0 ? wfRow("Income tax", -c.t1.tax, scale, "neg") : ""}
+          ${wfRow("<strong>Cash flow after tax</strong>", c.postTaxCF, scale, c.postTaxCF >= 0 ? "pos" : "neg", true)}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Monthly and annual</h3>
+        <div class="tablewrap">
+          <table class="compact">
+            <thead><tr><th></th><th class="n">Per month</th><th class="n">Per year</th><th class="n">% of gross rent</th></tr></thead>
+            <tbody>
+              <tr><td>Gross rent</td><td class="n">${money(op.grossIncome / 12)}</td><td class="n">${money(op.grossIncome)}</td><td class="n">100%</td></tr>
+              <tr><td>Rent collected</td><td class="n">${money(op.egi / 12)}</td><td class="n">${money(op.egi)}</td><td class="n">${pct(op.egi / scale * 100, 0)}</td></tr>
+              <tr><td>Operating costs</td><td class="n neg">${money(-op.opexTotal / 12)}</td><td class="n neg">${money(-op.opexTotal)}</td><td class="n">${pct(op.opexTotal / scale * 100, 0)}</td></tr>
+              <tr class="total"><td>NOI</td><td class="n">${money(op.noi / 12)}</td><td class="n">${money(op.noi)}</td><td class="n">${pct(op.noi / scale * 100, 0)}</td></tr>
+              <tr><td>Mortgage</td><td class="n neg">${money(-c.debtService / 12)}</td><td class="n neg">${money(-c.debtService)}</td><td class="n">${pct(c.debtService / scale * 100, 0)}</td></tr>
+              <tr><td>Income tax</td><td class="n neg">${money(-c.t1.tax / 12)}</td><td class="n neg">${money(-c.t1.tax)}</td><td class="n">${pct(c.t1.tax / scale * 100, 0)}</td></tr>
+              <tr class="total"><td>Cash flow after tax</td><td class="n ${signCls(c.postTaxCF)}">${money(c.postTaxCF / 12)}</td><td class="n ${signCls(c.postTaxCF)}">${money(c.postTaxCF)}</td><td class="n">${pct(c.postTaxCF / scale * 100, 0)}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note ${c.postTaxCF < 0 ? "bad" : c.postTaxCF / 12 < 100 ? "warn" : "good"}" style="margin-top:12px">
+          ${c.postTaxCF < 0
+            ? `This property costs you <strong>${money(-c.postTaxCF / 12)} a month</strong> to own. That is a legitimate position
+               — you are buying appreciation and amortisation — but it must be a decision, and it must be funded for the whole hold.`
+            : c.postTaxCF / 12 < 100
+              ? `<strong>${money(c.postTaxCF / 12)} a month.</strong> One boiler is ${(2400 / Math.max(1, c.postTaxCF / 12)).toFixed(0)} months of it.
+                 That is not a margin, it is a rounding error, and it is why the capital reserve line matters more than the yield.`
+              : `<strong>${money(c.postTaxCF / 12)} a month</strong>, which survives ${(c.postTaxCF / 12 > 0 ? (2400 / (c.postTaxCF / 12)).toFixed(0) : "—")} months of it going into a ${money(2400)} repair.`}
+        </div>
+      </div>
+    </div>
+  </div>`;
+};
+
+/* ===========================================================================
+   11. TAB — RETURNS
+   =========================================================================== */
+
+RENDERERS.returns = function () {
+  const d = D();
+  const c = computeDeal(d);
+  const op = c.op1;
+  const appreciation1 = c.value0 * num(d.valueGrowthPct) / 100;
+  const totalReturn1 = c.postTaxCF + c.y1.principal + appreciation1;
+  const parts = [
+    { label: "Cash flow after tax", v: c.postTaxCF, tone: "pos" },
+    { label: "Loan paid down", v: c.y1.principal, tone: "key" },
+    { label: "Appreciation at " + pct(num(d.valueGrowthPct), 1), v: appreciation1, tone: "" },
+  ];
+  const maxPart = Math.max(...parts.map(p => Math.abs(p.v)), 1);
+
+  const metric = (name, value, def, miss) => `<tr>
+    <td><strong>${esc(name)}</strong><div class="tiny muted">${def}</div></td>
+    <td class="n">${value}</td>
+    <td class="small dim">${miss}</td>
+  </tr>`;
+
+  return pageHead("Returns",
+    `Six numbers that all claim to be "the return", each measuring something different. The disagreement between them
+     <em>is</em> the information: a deal with a strong yield and a weak cash-on-cash is telling you the debt is eating it.`) +
+
+  `<div class="stats">
+    ${statTile("Gross yield", pct(c.m.grossYield, 2), "rent ÷ price — the estate agent's number")}
+    ${statTile("Net yield / cap rate", pct(c.m.capRate, 2), "NOI ÷ all-in cost", "key")}
+    ${statTile("Cash-on-cash", pct(c.m.coc, 2), `after tax ${pct(c.m.cocPostTax, 2)}`, c.m.cocPostTax >= 0 ? "good" : "bad")}
+    ${statTile("Total return, year 1", pct(c.cashIn > 0 ? totalReturn1 / c.cashIn * 100 : 0, 2), "cash + amortisation + growth")}
+  </div>
+
+  <div class="cols-2">
+    <div>
+      <div class="card">
+        <h3>What each number means, and what it hides</h3>
+        <div class="tablewrap">
+          <table class="compact">
+            <thead><tr><th>Measure</th><th class="n">Value</th><th>What it leaves out</th></tr></thead>
+            <tbody>
+              ${metric("Gross yield", pct(c.m.grossYield, 2), "annual rent ÷ purchase price", "Every cost. It is a comparison tool between properties in the same market and nothing more.")}
+              ${metric("Gross yield on all-in cost", pct(c.m.grossYieldAllIn, 2), "annual rent ÷ price + costs + works", "Still every operating cost — but at least it counts the money you actually spent.")}
+              ${metric("Net yield / cap rate", pct(c.m.capRate, 2), "NOI ÷ all-in cost", "Finance. Two identical properties have the same cap rate whether you paid cash or borrowed 75%.")}
+              ${metric("Cash-on-cash", pct(c.m.coc, 2), "pre-tax cash flow ÷ cash invested", "Amortisation, appreciation and tax. It is what lands in your account this year, per pound you put in.")}
+              ${metric("Cash-on-cash after tax", pct(c.m.cocPostTax, 2), "post-tax cash flow ÷ cash invested", "Amortisation and appreciation — but this is the honest spendable number.")}
+              ${metric("DSCR", Number.isFinite(c.m.dscr) ? x(c.m.dscr) : "∞", "NOI ÷ debt service", "How close to the edge you are, if you read it as a return rather than a safety margin.")}
+              ${metric("Return on equity, year 1", pct(c.be.equity0 > 0 ? (c.postTaxCF + c.y1.principal) / c.be.equity0 * 100 : 0, 2), "(cash flow + amortisation) ÷ equity", "Appreciation, and the fact that equity grows — which is why ROE falls every year even as the deal improves.")}
+              ${metric("Yield on cost", pct(c.m.yieldOnCost, 2), "NOI ÷ all-in cost", "Nothing you have not already seen — it is the cap rate under its development name, and the number to compare against the cap rate a buyer would pay you.")}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Rules of thumb, and whether to believe them</h3>
+        <div class="tablewrap">
+          <table class="compact">
+            <thead><tr><th>Rule</th><th class="n">Yours</th><th class="n">Verdict</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>The 1% rule</strong><div class="tiny muted">${esc(RULES[0].note)}</div></td>
+                <td class="n">${pct(c.m.onePct, 2)}</td>
+                <td class="n">${c.m.onePct >= 1 ? '<span class="badge green">passes</span>' : '<span class="badge amber">below</span>'}</td>
+              </tr>
+              <tr>
+                <td><strong>The 50% rule</strong><div class="tiny muted">${esc(RULES[1].note)}</div></td>
+                <td class="n">${pct(c.m.opexRatio, 0)}</td>
+                <td class="n">${c.m.opexRatio <= 50 ? '<span class="badge green">under</span>' : '<span class="badge amber">over</span>'}</td>
+              </tr>
+              <tr>
+                <td><strong>The 70% rule</strong><div class="tiny muted">${esc(RULES[2].note)}</div></td>
+                <td class="n">${pct(num(d.flip.arv) > 0 ? (c.price + c.refurbTotal) / num(d.flip.arv) * 100 : 0, 1)}</td>
+                <td class="n">${(num(d.flip.arv) > 0 && (c.price + c.refurbTotal) / num(d.flip.arv) <= 0.7) ? '<span class="badge green">under</span>' : '<span class="badge amber">over</span>'}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">
+          These are screening filters from specific markets at specific times. Use them to decide what to look at,
+          never to decide what to buy — the tabs either side of this one are the deciding.
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>Where year one's return comes from</h3>
+        <div class="wf">
+          ${parts.map(p => wfRow(esc(p.label), p.v, maxPart, p.v >= 0 ? (p.tone || "pos") : "neg")).join("")}
+          ${wfRow("<strong>Total</strong>", totalReturn1, maxPart, "key", true)}
+        </div>
+        <div class="note ${appreciation1 > totalReturn1 * 0.6 && totalReturn1 > 0 ? "warn" : ""}" style="margin-top:12px">
+          ${totalReturn1 > 0 && appreciation1 / totalReturn1 > 0.6
+            ? `<strong>${pct(appreciation1 / totalReturn1 * 100, 0)} of this year's return is house-price growth you have assumed.</strong>
+               It is not income, it is not banked, and it is the one input on this page with no evidence behind it. Set growth to zero
+               on the projection tab and see whether you still want the deal.`
+            : `Most of this year's return is cash and amortisation rather than assumed growth, which is the position that survives a flat market.`}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Break-even: how much has to go wrong</h3>
+        <div class="tablewrap">
+          <table class="compact">
+            <thead><tr><th>If this moves</th><th class="n">Cash flow hits zero at</th><th class="n">Room</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Rent falls</td>
+                <td class="n">${c.be.rent !== null ? money(c.be.rent) + " / month" : "—"}</td>
+                <td class="n ${c.be.rent !== null && num(d.rentMonthly) > 0 ? signCls(num(d.rentMonthly) - c.be.rent) : ""}">${c.be.rent !== null && num(d.rentMonthly) > 0 ? pct((num(d.rentMonthly) - c.be.rent) / num(d.rentMonthly) * 100, 1) : "—"}</td>
+              </tr>
+              <tr>
+                <td>Interest rate rises</td>
+                <td class="n">${c.be.rate !== null ? pct(c.be.rate, 2) : "—"}</td>
+                <td class="n ${c.be.rate !== null ? signCls(c.be.rate - num(d.ratePct)) : ""}">${c.be.rate !== null ? "+" + pct(c.be.rate - num(d.ratePct), 2) : "—"}</td>
+              </tr>
+              <tr>
+                <td>Voids rise</td>
+                <td class="n">${c.be.void !== null ? pct(c.be.void, 1) + " of the year" : "never"}</td>
+                <td class="n ${c.be.void !== null ? signCls(c.be.void - num(d.voidPct)) : ""}">${c.be.void !== null ? "+" + pct(Math.max(0, c.be.void - num(d.voidPct)), 1) : "—"}</td>
+              </tr>
+              <tr>
+                <td>Price falls to zero equity</td>
+                <td class="n">${money(c.loanDrawn)}</td>
+                <td class="n">${pct(c.be.fallToZeroEquity, 1)}</td>
+              </tr>
+              <tr>
+                <td>Price falls past ${pct(num(d.maxLtvPct), 0)} LTV</td>
+                <td class="n">${money(c.loanDrawn / Math.max(0.01, num(d.maxLtvPct) / 100))}</td>
+                <td class="n ${c.be.fallToLtvBreach < 10 ? "neg" : ""}">${pct(c.be.fallToLtvBreach, 1)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note info" style="margin-top:12px">
+          The last row is the one that ends portfolios. Cash flow going negative is survivable; being unable to remortgage
+          because the LTV has moved means falling onto the revert rate at exactly the moment you cannot afford it.
+        </div>
+      </div>
+    </div>
+  </div>`;
+};
+
+/* ===========================================================================
+   12. TAB — PROJECTION
+   =========================================================================== */
+
+RENDERERS.projection = function () {
+  const d = D();
+  const c = computeDeal(d);
+  const ex = c.exit;
+  const maxDec = Math.max(...c.decomposition.map(p => Math.abs(p.amount)), 1);
+  const noGrowth = computeDeal(Object.assign({}, d, { valueGrowthPct: 0 }));
+
+  return pageHead("Projection to exit",
+    `Hold for ${c.years} years, then sell. Rent grows, costs grow faster, the fix ends, tax is charged every year, and
+     the sale pays an agent and a tax bill. The IRR at the bottom is the only figure here that accounts for <em>when</em>
+     each of those happens.`) +
+
+  `<div class="stats">
+    ${statTile("IRR", c.irr === null ? "—" : pct(c.irr * 100, 2), `over ${c.years} years on ${money(c.cashIn)}`, "key")}
+    ${statTile("Equity multiple", x(c.equityMultiple), "everything back, per pound in")}
+    ${statTile("Total profit", money(c.totalProfit), "cash flow + sale proceeds − cash in", c.totalProfit >= 0 ? "good" : "bad")}
+    ${statTile("Net sale proceeds", money(ex.netProceeds), `after ${money(ex.sellCosts)} costs and ${money(ex.cgt)} tax`)}
+  </div>
+
+  <div class="cols-2">
+    <div>
+      <div class="card">
+        <h3>Assumptions</h3>
+        <div class="inline">
+          ${fld("deal.holdYears", "Hold for", { suffix: "years" })}
+          ${fld("deal.valueGrowthPct", "Capital growth", { suffix: "% a year" })}
+        </div>
+        <div class="inline" style="margin-top:12px">
+          ${fld("deal.rentGrowthPct", "Rent growth", { suffix: "% a year" })}
+          ${fld("deal.costGrowthPct", "Cost inflation", { suffix: "% a year" })}
+        </div>
+        <div class="inline" style="margin-top:12px">
+          ${fld("deal.sellCostPct", "Selling costs", { suffix: "% of sale" })}
+          ${fld("deal.cgtPct", "Capital gains tax", { suffix: "%" })}
+          ${fld("deal.cgtAllowance", "Annual exemption", { money: true })}
+        </div>
+        <div class="note ${num(d.rentGrowthPct) >= num(d.costGrowthPct) ? "warn" : ""}">
+          ${num(d.rentGrowthPct) >= num(d.costGrowthPct)
+            ? `You have rent growing at least as fast as costs. Over ten years that assumption alone adds a large share of the
+               return; landlords who lived through the last decade of insurance, compliance and maintenance inflation did not
+               find it held.`
+            : `Costs are growing ${pct(num(d.costGrowthPct) - num(d.rentGrowthPct), 1)} a year faster than rent, which compounds:
+               by year ${c.years} the margin is materially thinner than year one. That is the realistic case.`}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>The exit</h3>
+        <div class="kv">
+          <dt>Sale price in year ${c.years}</dt><dd>${money(ex.sale)}</dd>
+          <dt>Selling costs at ${pct(num(d.sellCostPct), 2)}</dt><dd class="neg">−${money(ex.sellCosts)}</dd>
+          <dt>Mortgage redeemed</dt><dd class="neg">−${money(ex.balance)}</dd>
+          <dt>Chargeable gain</dt><dd>${money(ex.gain)}</dd>
+          <dt>Capital gains tax at ${pct(ex.cgtRate, 0)}</dt><dd class="neg">−${money(ex.cgt)}</dd>
+          <dt class="strong">Net proceeds</dt><dd class="strong">${money(ex.netProceeds)}</dd>
+        </div>
+        <div class="note" style="margin-top:12px">
+          Capital gains tax is charged on the gain over the whole hold, in one year, at a rate set by a future government.
+          It is modelled here as a single rate on the gain after the annual exemption — the reliefs, the joint ownership and
+          the timing are yours to plan, but pretending the bill is zero is how a 12% IRR becomes a 9% one.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Where the profit comes from</h3>
+        <div class="wf">
+          ${c.decomposition.filter(p => Math.abs(p.amount) > 0.5).map(p => wfRow(esc(p.label), p.amount, maxDec, p.amount >= 0 ? "pos" : "neg")).join("")}
+          ${wfRow("<strong>Total profit</strong>", c.totalProfit, maxDec, "key", true)}
+        </div>
+        <div class="note ${noGrowth.totalProfit < 0 ? "bad" : "good"}" style="margin-top:12px">
+          <strong>With zero capital growth</strong> this deal returns
+          ${noGrowth.irr === null ? "no measurable IRR" : pct(noGrowth.irr * 100, 2) + " IRR"} and
+          ${noGrowth.totalProfit >= 0 ? "still makes " + money(noGrowth.totalProfit) : "loses " + money(-noGrowth.totalProfit)}.
+          ${noGrowth.totalProfit < 0
+            ? "Everything positive about it is a forecast of house prices. That is a legitimate bet — but it is a bet, not an investment thesis, and it should be sized like one."
+            : "It works without the forecast, which is the test that matters."}
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>Year by year</h3>
+        <div class="tablewrap">
+          <table class="compact">
+            <thead><tr>
+              <th>Yr</th><th class="n">Rent pm</th><th class="n">NOI</th><th class="n">Interest</th>
+              <th class="n">Tax</th><th class="n">Cash flow</th><th class="n">Cumulative</th><th class="n">Value</th><th class="n">Equity</th>
+            </tr></thead>
+            <tbody>
+              ${c.proj.map(p => `<tr>
+                <td>${p.year}${p.year === Math.ceil(num(d.fixedYears)) + 1 && num(d.fixedYears) > 0 ? ' <span class="badge amber">revert</span>' : ""}</td>
+                <td class="n">${money(p.rentMonthly)}</td>
+                <td class="n">${money(p.noi)}</td>
+                <td class="n">${money(p.interest)}</td>
+                <td class="n">${money(p.tax)}</td>
+                <td class="n ${signCls(p.cf)}">${money(p.cf)}</td>
+                <td class="n ${signCls(p.cumCF)}">${money(p.cumCF)}</td>
+                <td class="n">${money(p.value)}</td>
+                <td class="n">${money(p.equity)}</td>
+              </tr>`).join("")}
+            </tbody>
+            <tfoot><tr class="total">
+              <td colspan="5">Over ${c.years} years</td>
+              <td class="n ${signCls(c.cumCF)}">${money(c.cumCF)}</td>
+              <td class="n"></td><td class="n">${money(ex.sale)}</td>
+              <td class="n">${money(ex.sale - ex.balance)}</td>
+            </tr></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>The cash flows the IRR is built from</h3>
+        <div class="tablewrap">
+          <table class="compact">
+            <thead><tr><th>Year</th><th class="n">Flow</th><th>What it is</th></tr></thead>
+            <tbody>
+              ${c.flows.map((f, i) => `<tr>
+                <td>${i}</td>
+                <td class="n ${signCls(f)}">${money(f)}</td>
+                <td class="small dim">${i === 0 ? "Cash into the deal" : (i === c.flows.length - 1 ? "Cash flow plus net sale proceeds" : "Cash flow after tax")}</td>
+              </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+        <div class="note info" style="margin-top:12px">
+          ${c.irr === null
+            ? `No IRR exists for this series — the flows never change sign, which means the deal loses money in every year including the sale.`
+            : `An IRR of ${pct(c.irr * 100, 2)} means these flows, discounted at that rate, are worth exactly what you put in.
+               It is not a yield and it is not comparable to a savings rate without adjusting for the fact that this one is illiquid,
+               undiversified, and depends on a tenant.`}
+        </div>
+      </div>
+    </div>
+  </div>`;
+};
+
+/* ===========================================================================
+   13. TAB — FLIP & BRRRR
+   =========================================================================== */
+
+RENDERERS.flip = function () {
+  const d = D();
+  const f = d.flip;
+  const fl = computeFlip(d);
+  const br = computeBrrrr(d);
+  const isBrrrr = f.mode === "brrrr";
+  const targetProfit = num(f.arv) * num(f.targetProfitPct) / 100;
+  const maoTarget = maoForProfit(d, targetProfit);
+
+  /* Two things go wrong on a flip: it takes longer and it costs more. */
+  const monthsRange = [0, 2, 4, 6];
+  const overrunRange = [0, 10, 25, 40];
+  const grid = monthsRange.map(extra => ({
+    extra,
+    cells: overrunRange.map(ov => computeFlip(d, { months: num(f.months) + extra, refurbOverrunPct: ov }).profit),
+  }));
+  const maxAbs = Math.max(...grid.flatMap(r => r.cells.map(Math.abs)), 1);
+
+  return pageHead("Flip & BRRRR",
+    `A flip is a trade, not an investment: you are paid for time and risk, and financed by the month. A BRRRR is the same
+     trade followed by a refinance — and whether the money comes back out is decided by the lender's stress test, not by
+     the valuation you have in mind.`) +
+
+  `<div class="card flat" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+    <strong class="small">Strategy</strong>
+    <div class="seg" role="group" aria-label="Strategy">
+      <button type="button" data-act="flipMode" data-arg="flip"  aria-pressed="${!isBrrrr}">🔨 Flip and sell</button>
+      <button type="button" data-act="flipMode" data-arg="brrrr" aria-pressed="${isBrrrr}">🔁 BRRRR — refinance and keep</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    ${isBrrrr ? `
+      ${statTile("Cash left in", br.cashLeftIn <= 0 ? "none" : money(br.cashLeftIn), br.cashLeftIn <= 0 ? "everything came back out" : `of ${money(br.flip.cashIn)} put in`, br.cashLeftIn <= 0 ? "good" : "")}
+      ${statTile("Refinance loan", money(br.refiLoan), `${pct(br.ltv, 1)} of ${money(br.arv)}`, br.testBinds ? "mid" : "")}
+      ${statTile("Cash out", money(br.cashOut), "after redeeming the bridge and paying costs")}
+      ${statTile("Cash-on-cash after refi", br.coc === null ? "∞" : pct(br.coc, 1), br.coc === null ? "no cash left in the deal" : `on ${money(br.cashLeftIn)}`, br.preTaxCF >= 0 ? "good" : "bad")}
+    ` : `
+      ${statTile("Profit", money(fl.profit), `on ${money(fl.cashIn)} of cash`, fl.profit > 0 ? "good" : "bad")}
+      ${statTile("Return on cash", pct(fl.roi, 1), `${pct(fl.annualised, 1)} annualised over ${fl.months} months`)}
+      ${statTile("Margin on GDV", pct(fl.margin, 1), "profit ÷ sale price", fl.margin < 15 ? "mid" : "good")}
+      ${statTile("Break-even sale", fl.breakEvenSale === null ? "—" : money(fl.breakEvenSale), fl.breakEvenSale !== null ? pct((num(f.arv) - fl.breakEvenSale) / Math.max(1, num(f.arv)) * 100, 1) + " below your ARV" : "")}
+    `}
+  </div>
+
+  <div class="cols-2">
+    <div>
+      <div class="card">
+        <h3>The project</h3>
+        <div class="inline">
+          ${fld("deal.flip.arv", "After-repair value", { money: true, hint: "back it with comparables" })}
+          ${fld("deal.flip.months", isBrrrr ? "Months to refinance" : "Months held", { suffix: "months" })}
+        </div>
+        <div class="note">
+          Purchase price ${money(fl.price)} and works of ${money(fl.refurbTotal)} (including your
+          ${pct(num(d.refurbContPct), 0)} contingency) are taken from the Deal tab.
+          ${num(f.months) < 6 && !isBrrrr ? `<strong>${fl.months} months is optimistic.</strong> Legals to completion, the works, the marketing, the buyer's survey and their mortgage offer rarely fit inside two quarters.` : ""}
+        </div>
+        <div class="inline" style="margin-top:12px">
+          ${fld("deal.flip.holdingMonthly", "Holding costs", { money: true, hint: "per month: council tax, utilities, insurance, security" })}
+        </div>
+        ${!isBrrrr ? `<div class="inline" style="margin-top:12px">
+          ${fld("deal.flip.sellAgentPct", "Selling agent", { suffix: "% of sale" })}
+          ${fld("deal.flip.sellLegal", "Sale legals", { money: true })}
+        </div>` : ""}
+      </div>
+
+      <div class="card">
+        <h3>Finance while you hold it</h3>
+        ${chk("deal.flip.bridgeUse", "Using bridging or development finance")}
+        ${f.bridgeUse ? `
+          <div class="inline">
+            ${fld("deal.flip.bridgeLtvPct", "Advance", { suffix: "% of price" })}
+            ${fld("deal.flip.bridgeRatePct", "Rate", { suffix: "% per month" })}
+          </div>
+          <div class="inline" style="margin-top:12px">
+            ${fld("deal.flip.bridgeArrPct", "Arrangement fee", { suffix: "% of loan" })}
+            ${fld("deal.flip.bridgeExitPct", "Exit fee", { suffix: "% of redemption" })}
+          </div>
+          ${chk("deal.flip.rolled", "Roll the interest up rather than servicing it monthly")}
+          <div class="note ${f.rolled && num(f.months) > 9 ? "warn" : ""}">
+            ${f.rolled
+              ? `Rolled interest compounds on a balance that already includes the arrangement fee. At ${pct(num(f.bridgeRatePct), 2)} a month
+                 over ${fl.months} months that is <strong>${money(fl.rolledInterest)}</strong> — an effective
+                 ${pct((Math.pow(1 + num(f.bridgeRatePct) / 100, 12) - 1) * 100, 1)} a year. Rolling costs more; it is chosen because it
+                 preserves the cash you need for the works.`
+              : `Servicing the interest monthly costs <strong>${money(fl.rolledInterest)}</strong> across the project and it comes out of
+                 your cash, not the facility — so it raises the cash you must have available, and it appears in the cash-in figure.`}
+          </div>
+        ` : `<div class="note">No debt: the whole purchase and refurbishment come from your own cash, which raises the cash requirement and lowers the percentage return on it while removing every deadline that bridging imposes.</div>`}
+      </div>
+
+      ${isBrrrr ? `<div class="card">
+        <h3>The refinance</h3>
+        <div class="inline">
+          ${fld("deal.flip.refiLtvPct", "Refinance LTV", { suffix: "%" })}
+          ${fld("deal.flip.refiRatePct", "Term rate", { suffix: "%" })}
+        </div>
+        <div class="inline" style="margin-top:12px">
+          ${fld("deal.flip.refiCosts", "Refinance costs", { money: true, hint: "valuation, legals, fee" })}
+          ${fld("deal.flip.refiMonths", "Months before refinancing", { suffix: "months" })}
+        </div>
+        <div class="tablewrap" style="margin-top:12px">
+          <table class="compact">
+            <thead><tr><th>Constraint on the new loan</th><th class="n">Supports</th></tr></thead>
+            <tbody>
+              <tr${!br.testBinds ? ' class="total"' : ""}><td>${pct(num(f.refiLtvPct), 0)} of the ${money(br.arv)} valuation</td><td class="n">${money(br.refiByLtv)}</td></tr>
+              <tr${br.testBinds ? ' class="total"' : ""}><td>${esc((LENDER_TESTS.find(l => l.id === d.lenderTest) || {}).label || "Income test")}</td><td class="n">${Number.isFinite(br.refiByTest) ? money(br.refiByTest) : "no limit"}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note ${br.testBinds ? "warn" : "good"}" style="margin-top:12px">
+          ${br.testBinds
+            ? `<strong>The rent, not the valuation, is what limits this refinance.</strong> The lender will advance ${money(br.refiLoan)} —
+               ${money(br.refiByLtv - br.refiByTest)} less than the LTV alone would allow. This is the reason most BRRRR projects leave money in:
+               the refurbishment lifted the value but the rent did not move with it.`
+            : `The valuation is the binding constraint, so the rent comfortably supports the borrowing.`}
+        </div>
+      </div>` : ""}
+    </div>
+
+    <div>
+      ${isBrrrr ? `
+      <div class="card">
+        <h3>Money in, money out</h3>
+        <div class="kv">
+          <dt>Cash into the project</dt><dd>${money(br.flip.cashIn)}</dd>
+          <dt>Bridge redemption</dt><dd class="neg">−${money(br.flip.redemption)}</dd>
+          <dt>Refinance advance</dt><dd class="pos">${money(br.refiLoan)}</dd>
+          <dt>Refinance costs</dt><dd class="neg">−${money(num(f.refiCosts))}</dd>
+          <dt class="strong">Cash returned to you</dt><dd class="strong ${signCls(br.cashOut)}">${money(br.cashOut)}</dd>
+          <dt class="strong">Cash left in the deal</dt><dd class="strong">${money(Math.max(0, br.cashLeftIn))}</dd>
+        </div>
+        <hr>
+        <h4>What it then earns</h4>
+        <div class="kv">
+          <dt>NOI</dt><dd>${money(br.op.noi)}</dd>
+          <dt>Mortgage at ${pct(num(f.refiRatePct), 2)}</dt><dd class="neg">−${money(br.payment)}</dd>
+          <dt>Income tax</dt><dd class="neg">−${money(br.tax.tax)}</dd>
+          <dt class="strong">Cash flow after tax</dt><dd class="strong ${signCls(br.postTaxCF)}">${money(br.postTaxCF)}</dd>
+          <dt>Per month</dt><dd class="${signCls(br.postTaxCF)}">${money(br.postTaxCF / 12)}</dd>
+        </div>
+        <div class="note ${br.cashLeftIn <= 0 && br.preTaxCF < 0 ? "bad" : "info"}" style="margin-top:12px">
+          ${br.cashLeftIn <= 0 && br.preTaxCF < 0
+            ? `<strong>All the money came out and the property loses money every month.</strong> An infinite return on zero cash is
+               still a monthly bill. This is the classic BRRRR failure: maximum leverage against a stressed valuation, negative carry, and
+               nothing left to absorb a void.`
+            : br.cashLeftIn <= 0
+              ? `All the capital came back out and it still pays. That is the strategy working as advertised — note that it is now at
+                 ${pct(br.ltv, 0)} LTV, so the price-fall row on the Returns tab matters more than it did.`
+              : `<strong>${money(br.cashLeftIn)} stays in the deal.</strong> That is not a failure — it is the honest number, and the
+                 cash-on-cash above is measured against it rather than against zero.`}
+        </div>
+      </div>` : `
+      <div class="card">
+        <h3>The cost stack</h3>
+        <div class="wf">
+          ${wfRow("Sale price (ARV)", fl.arv, fl.arv, "key", true)}
+          ${wfRow("Purchase price", -fl.price, fl.arv, "neg")}
+          ${wfRow("Purchase costs &amp; tax", -fl.acq, fl.arv, "neg")}
+          ${wfRow("Works incl. contingency", -fl.refurbTotal, fl.arv, "neg")}
+          ${wfRow("Finance", -fl.financeTotal, fl.arv, "neg")}
+          ${wfRow("Holding costs", -fl.holding, fl.arv, "neg")}
+          ${wfRow("Selling costs", -fl.sellCosts, fl.arv, "neg")}
+          ${wfRow("<strong>Profit</strong>", fl.profit, fl.arv, fl.profit >= 0 ? "pos" : "neg", true)}
+        </div>
+        <div class="note" style="margin-top:12px">
+          Finance and holding together are <strong>${money(fl.financeTotal + fl.holding)}</strong> —
+          ${pct((fl.financeTotal + fl.holding) / Math.max(1, fl.arv) * 100, 1)} of the sale price, and every month of delay adds
+          ${money(num(f.holdingMonthly) + (f.bridgeUse ? fl.redemption * num(f.bridgeRatePct) / 100 : 0))} more.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>What to bid</h3>
+        <div class="tablewrap">
+          <table class="compact">
+            <thead><tr><th>Method</th><th class="n">Maximum price</th><th>What it assumes</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>The 70% rule</strong></td>
+                <td class="n">${money(fl.mao70)}</td>
+                <td class="small dim">70% of ARV minus the works. Silent on finance, holding time and purchase tax — which here come to ${money(fl.acq + fl.financeTotal + fl.holding + fl.sellCosts)}.</td>
+              </tr>
+              <tr class="total">
+                <td><strong>Your target profit</strong><div class="tiny muted">${pct(num(f.targetProfitPct), 0)} of ARV = ${money(targetProfit)}</div></td>
+                <td class="n">${maoTarget === null ? "—" : money(maoTarget)}</td>
+                <td class="small dim">Solved backwards through every cost on this page, including the purchase tax that changes as the price moves.</td>
+              </tr>
+              <tr>
+                <td>You are paying</td>
+                <td class="n">${money(fl.price)}</td>
+                <td class="small dim">${maoTarget !== null ? (fl.price <= maoTarget ? `<span class="badge green">${money(maoTarget - fl.price)} under your ceiling</span>` : `<span class="badge red">${money(fl.price - maoTarget)} over your ceiling</span>`) : ""}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="field" style="margin-top:12px">
+          ${fld("deal.flip.targetProfitPct", "Target profit", { suffix: "% of ARV" })}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Late and over budget</h3>
+        <p class="small dim">Profit if the project runs longer than planned and the works cost more than quoted — the two things that always happen together.</p>
+        <div class="tablewrap">
+          <table class="compact heat">
+            <thead><tr><th>Delay ↓ / overrun →</th>${overrunRange.map(o => `<th class="n">+${o}%</th>`).join("")}</tr></thead>
+            <tbody>
+              ${grid.map(r => `<tr>
+                <th scope="row">${r.extra === 0 ? "on time" : "+" + r.extra + " months"}</th>
+                ${r.cells.map(v => {
+                  const t = Math.min(1, Math.abs(v) / maxAbs);
+                  const bg = v >= 0
+                    ? `background:color-mix(in srgb, var(--green-bg) ${(30 + t * 70).toFixed(0)}%, transparent)`
+                    : `background:color-mix(in srgb, var(--red-bg) ${(30 + t * 70).toFixed(0)}%, transparent)`;
+                  return `<td class="h ${signCls(v)}" style="${bg}">${money(v)}</td>`;
+                }).join("")}
+              </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+        <div class="note ${grid[1].cells[1] < 0 ? "bad" : "warn"}" style="margin-top:12px">
+          Two months late and 10% over — the median outcome, not the disaster — turns
+          ${money(fl.profit)} into <strong>${money(grid[1].cells[1])}</strong>.
+          If that number is not one you can accept, the bid is too high rather than the plan too slow.
+        </div>
+      </div>`}
+    </div>
+  </div>`;
+};
+
+/* ===========================================================================
+   14. TAB — RENT VS BUY
+   =========================================================================== */
+
+RENDERERS.rentbuy = function () {
+  const d = D();
+  const r = d.rvb;
+  const rb = computeRentBuy(d);
+  const fin = rb.final || { ownerNet: 0, renterNet: 0, gap: 0 };
+  const wins = fin.gap >= 0;
+
+  return pageHead("Rent versus buy",
+    `Not "rent is dead money" and not "buying is always better". Both sides invest: the buyer puts
+     ${money(rb.buyUpfront)} into a house, the renter puts the same amount into a market and adds the difference in monthly
+     cost. After ${rb.years} years, whoever is worth more wins — and the answer moves with three assumptions you can set below.`) +
+
+  `<div class="stats">
+    ${statTile("Owner net worth", money(fin.ownerNet), `equity after selling costs, plus savings`, wins ? "good" : "")}
+    ${statTile("Renter net worth", money(fin.renterNet), `invested at ${pct(num(r.investReturnPct), 1)} a year`, wins ? "" : "good")}
+    ${statTile("Difference", money(fin.gap), wins ? "buying wins" : "renting wins", wins ? "good" : "bad")}
+    ${statTile("Buying breaks even", rb.crossover ? "year " + rb.crossover.year : "not within " + rb.years + " years", rb.crossover ? "first year the owner is ahead" : "on these assumptions")}
+  </div>
+
+  <div class="cols-2">
+    <div>
+      <div class="card">
+        <h3>Assumptions</h3>
+        <div class="inline">
+          ${fld("deal.rvb.years", "Compare over", { suffix: "years" })}
+          ${fld("deal.rvb.rentMonthly", "Rent for the same home", { money: true, hint: "per month" })}
+        </div>
+        <div class="inline" style="margin-top:12px">
+          ${fld("deal.rvb.rentGrowthPct", "Rent growth", { suffix: "% a year" })}
+          ${fld("deal.rvb.investReturnPct", "Investment return", { suffix: "% a year" })}
+        </div>
+        <div class="inline" style="margin-top:12px">
+          ${fld("deal.rvb.investTaxPct", "Tax on that return", { suffix: "%" })}
+          ${fld("deal.rvb.ownerMaintPct", "Owner maintenance", { suffix: "% of value a year" })}
+        </div>
+        <div class="inline" style="margin-top:12px">
+          ${fld("deal.rvb.ownerInsurance", "Buildings insurance", { money: true, hint: "a year" })}
+          ${fld("deal.rvb.ownerServiceCharge", "Service charge", { money: true, hint: "a year" })}
+        </div>
+        <div class="note info">
+          Price, deposit, rate, term, capital growth and selling costs come from the Deal, Finance and Projection tabs —
+          so this comparison always uses the same mortgage as the rest of the app.
+          Capital growth is currently ${pct(num(d.valueGrowthPct), 1)} a year.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>The assumption that decides it</h3>
+        <div class="kv">
+          <dt>Capital growth you have assumed</dt><dd>${pct(num(d.valueGrowthPct), 2)}</dd>
+          <dt>Growth needed for the two to tie</dt><dd>${rb.requiredGrowth === null ? "—" : pct(rb.requiredGrowth, 2)}</dd>
+          <dt>Investment return assumed for the renter</dt><dd>${pct(num(r.investReturnPct) * (1 - num(r.investTaxPct) / 100), 2)}</dd>
+        </div>
+        <div class="note ${rb.requiredGrowth !== null && rb.requiredGrowth > num(d.valueGrowthPct) ? "warn" : "good"}" style="margin-top:12px">
+          ${rb.requiredGrowth === null
+            ? `No growth rate inside a sensible range makes the two sides meet — one of them wins on cash flow alone.`
+            : rb.requiredGrowth > num(d.valueGrowthPct)
+              ? `Buying needs house prices to rise <strong>${pct(rb.requiredGrowth, 2)}</strong> a year to match renting and investing.
+                 You have assumed ${pct(num(d.valueGrowthPct), 2)}. The gap between those two numbers is the entire argument, and neither is knowable.`
+              : `Buying wins on anything above <strong>${pct(rb.requiredGrowth, 2)}</strong> a year, which is below what you have assumed —
+                 and, more usefully, below long-run inflation in most markets.`}
+        </div>
+        <div class="note">
+          What this deliberately ignores: the security of tenure, the freedom to move, the cost of a five-year fixed rate
+          ending, and the fact that almost nobody actually invests the difference every month. The first three are
+          modellable and are not modelled; the last is the reason the renter's column is a best case.
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>Year by year</h3>
+        <div class="tablewrap">
+          <table class="compact">
+            <thead><tr>
+              <th>Yr</th><th class="n">Rent pm</th><th class="n">Owning pm</th><th class="n">Owner equity</th>
+              <th class="n">Owner net</th><th class="n">Renter net</th><th class="n">Gap</th>
+            </tr></thead>
+            <tbody>
+              ${rb.series.map(s => `<tr${rb.crossover && s.year === rb.crossover.year ? ' class="total"' : ""}>
+                <td>${s.year}</td>
+                <td class="n">${money(s.rentMonthly)}</td>
+                <td class="n">${money(s.ownCostMonthly)}</td>
+                <td class="n">${money(s.ownerEquity)}</td>
+                <td class="n">${money(s.ownerNet)}</td>
+                <td class="n">${money(s.renterNet)}</td>
+                <td class="n ${signCls(s.gap)}">${money(s.gap)}</td>
+              </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+        <div class="note" style="margin-top:12px">
+          The "owning" column is the mortgage payment plus maintenance, insurance and service charge — not council tax or
+          bills, which both sides pay. In the early years it is usually higher than the rent, which is exactly why the renter's
+          portfolio grows: they invest that difference every month.
+        </div>
+      </div>
+    </div>
+  </div>`;
+};
+
+/* ===========================================================================
+   15. TAB — STRESS
+   =========================================================================== */
+
+RENDERERS.stress = function () {
+  const d = D();
+  const c = computeDeal(d);
+
+  const rateDeltas = [0, 1, 2, 3, 4];
+  const rentDeltas = [10, 5, 0, -5, -10, -15];
+  const grid = rateDeltas.map(rd => ({
+    rd,
+    cells: rentDeltas.map(rr => {
+      const cc = core(d, { ratePct: num(d.ratePct) + rd, rentMonthly: num(d.rentMonthly) * (1 + rr / 100), lockLoan: c.loan });
+      return cc.preTaxCF / 12;
+    }),
+  }));
+  const maxAbs = Math.max(...grid.flatMap(r => r.cells.map(Math.abs)), 1);
+
+  /* Elasticity: the effect on annual cash flow of a one-unit move in each
+     input, holding everything else still. It ranks what to worry about. */
+  const base = c.preTaxCF;
+  const sens = [
+    { label: "Interest rate +1 percentage point", v: core(d, { ratePct: num(d.ratePct) + 1, lockLoan: c.loan }).preTaxCF - base },
+    { label: "Rent −5%", v: core(d, { rentMonthly: num(d.rentMonthly) * 0.95, lockLoan: c.loan }).preTaxCF - base },
+    { label: "Voids +5 percentage points", v: core(d, { voidPct: num(d.voidPct) + 5, lockLoan: c.loan }).preTaxCF - base },
+    { label: "Rate at your revert rate of " + pct(num(d.revertPct), 2), v: core(d, { ratePct: num(d.revertPct), lockLoan: c.loan }).preTaxCF - base },
+  ].sort((a, b) => a.v - b.v);
+  const maxSens = Math.max(...sens.map(s => Math.abs(s.v)), 1);
+
+  /* A single bad year, all at once. */
+  const worst = core(d, {
+    ratePct: Math.max(num(d.ratePct), num(d.revertPct)),
+    rentMonthly: num(d.rentMonthly) * 0.95,
+    voidPct: Math.max(num(d.voidPct) + 6, 12),
+    lockLoan: c.loan,
+  });
+  const bigRepair = 3500;
+  const worstYear = worst.preTaxCF - bigRepair;
+
+  return pageHead("Stress",
+    `Every number on the other tabs is one scenario. These are the others. The question is not whether the deal works —
+     you already know it does on your assumptions — but <strong>how far they can be wrong before it stops working</strong>.`) +
+
+  `<div class="stats">
+    ${statTile("Cash flow now", money(c.preTaxCF / 12), "per month, before tax")}
+    ${statTile("Break-even rate", c.be.rate === null ? "—" : pct(c.be.rate, 2), c.be.rate !== null ? "+" + pct(Math.max(0, c.be.rate - num(d.ratePct)), 2) + " of headroom" : "", c.be.rate !== null && c.be.rate - num(d.ratePct) < 2 ? "bad" : "good")}
+    ${statTile("Break-even rent", c.be.rent === null ? "—" : money(c.be.rent), c.be.rent !== null ? pct((num(d.rentMonthly) - c.be.rent) / Math.max(1, num(d.rentMonthly)) * 100, 1) + " below today" : "")}
+    ${statTile("Bad year", money(worstYear), "revert rate, rent −5%, long void, one big repair", worstYear < 0 ? "bad" : "good")}
+  </div>
+
+  <div class="card">
+    <h3>Monthly cash flow at every rate and rent</h3>
+    <p class="small dim">Rows are the interest rate. Columns are the rent against what you have assumed. Everything else is held still.</p>
+    <div class="tablewrap">
+      <table class="compact heat">
+        <thead><tr><th>Rate ↓ / rent →</th>${rentDeltas.map(r => `<th class="n">${r > 0 ? "+" : ""}${r}%</th>`).join("")}</tr></thead>
+        <tbody>
+          ${grid.map(row => `<tr>
+            <th scope="row">${pct(num(d.ratePct) + row.rd, 2)}${row.rd === 0 ? ' <span class="badge">now</span>' : ""}</th>
+            ${row.cells.map((v, i) => {
+              const t = Math.min(1, Math.abs(v) / maxAbs);
+              const bg = v >= 0
+                ? `background:color-mix(in srgb, var(--green-bg) ${(25 + t * 75).toFixed(0)}%, transparent)`
+                : `background:color-mix(in srgb, var(--red-bg) ${(25 + t * 75).toFixed(0)}%, transparent)`;
+              const isNow = row.rd === 0 && rentDeltas[i] === 0;
+              return `<td class="h ${signCls(v)}" style="${bg}${isNow ? ";outline:2px solid var(--acc-2);outline-offset:-2px" : ""}">${money(v)}</td>`;
+            }).join("")}
+          </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+    <div class="note ${grid.some(r => r.cells.some(v => v < 0)) ? "warn" : "good"}" style="margin-top:12px">
+      ${grid.some(r => r.cells.some(v => v < 0))
+        ? `The red region is where you are funding the property from your salary. Note how much of it sits at rates that
+           existed within the last three years — the question to answer before exchanging is not whether that region is likely,
+           but whether you could pay for it for eighteen months.`
+        : `Nothing in this range turns the cash flow negative, which is unusual and worth double-checking against the operating
+           costs on the cash flow tab.`}
+    </div>
+  </div>
+
+  <div class="cols-2">
+    <div>
+      <div class="card">
+        <h3>What breaks it first</h3>
+        <p class="small dim">Effect on annual cash flow of one thing going wrong, worst first.</p>
+        <div class="wf">
+          ${sens.map(s => wfRow(esc(s.label), s.v, maxSens, s.v >= 0 ? "pos" : "neg")).join("")}
+        </div>
+        <div class="note" style="margin-top:12px">
+          ${sens[0].label.startsWith("Rate at your revert")
+            ? `The largest single risk you carry is your own revert rate, and it is the one with a known date attached.
+               Everything else on this list is a possibility; that one is a diary entry.`
+            : `Rank matters more than the amounts: the top line is where your attention and your contingency belong.`}
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>A bad year, priced</h3>
+        <div class="kv">
+          <dt>Rate at ${pct(Math.max(num(d.ratePct), num(d.revertPct)), 2)}</dt><dd>${money(worst.monthlyPayment)} / month</dd>
+          <dt>Rent 5% below plan</dt><dd>${money(num(d.rentMonthly) * 0.95)} / month</dd>
+          <dt>Void of ${Math.max(num(d.voidPct) + 6, 12).toFixed(0)}% — about ${((Math.max(num(d.voidPct) + 6, 12)) / 100 * 52).toFixed(0)} weeks</dt><dd>—</dd>
+          <dt>One boiler or roof</dt><dd class="neg">−${money(bigRepair)}</dd>
+          <dt class="strong">Cash flow for that year</dt><dd class="strong ${signCls(worstYear)}">${money(worstYear)}</dd>
+          <dt>Which is, per month</dt><dd class="${signCls(worstYear)}">${money(worstYear / 12)}</dd>
+        </div>
+        <div class="note ${worstYear < 0 ? "bad" : "good"}" style="margin-top:12px">
+          ${worstYear < 0
+            ? `You would need <strong>${money(-worstYear)}</strong> of other money to hold this property through that year.
+               That is the reserve this deal requires — not a rule of thumb, a calculated figure. If it is not sitting somewhere
+               liquid before you exchange, the deal is bigger than you are.`
+            : `The deal still pays through all four at once, which is a genuinely strong position and rarer than the spreadsheets suggest.`}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Refinancing risk</h3>
+        <div class="kv">
+          <dt>Fix ends</dt><dd>year ${num(d.fixedYears) || "—"}</dd>
+          <dt>Value then at ${pct(num(d.valueGrowthPct), 1)} growth</dt><dd>${money(c.value0 * Math.pow(1 + num(d.valueGrowthPct) / 100, num(d.fixedYears)))}</dd>
+          <dt>Balance then</dt><dd>${money((c.sched[Math.max(0, Math.ceil(num(d.fixedYears)) - 1)] || { balance: c.loanDrawn }).balance)}</dd>
+          <dt>LTV then</dt><dd>${pct((c.sched[Math.max(0, Math.ceil(num(d.fixedYears)) - 1)] || { balance: c.loanDrawn }).balance / Math.max(1, c.value0 * Math.pow(1 + num(d.valueGrowthPct) / 100, num(d.fixedYears))) * 100, 1)}</dd>
+          <dt>Price fall that breaches ${pct(num(d.maxLtvPct), 0)} today</dt><dd class="${c.be.fallToLtvBreach < 10 ? "neg" : ""}">${pct(c.be.fallToLtvBreach, 1)}</dd>
+        </div>
+        <div class="note info" style="margin-top:12px">
+          A remortgage is not automatic. It requires the value to hold, the rent to pass the stress test on the day, and a
+          lender to still be in the market. Fail any one and you stay on the revert rate — which is the row at the top of
+          "what breaks it first".
+        </div>
+      </div>
+    </div>
+  </div>`;
+};
+
+/* ===========================================================================
+   16. TAB — COMPARE
+   =========================================================================== */
+
+function savedMetrics(deal) {
+  const c = computeDeal(deal);
+  return {
+    price: c.price, cashIn: c.cashIn, rent: num(deal.rentMonthly),
+    grossYield: c.m.grossYield, capRate: c.m.capRate, coc: c.m.coc, cocPostTax: c.m.cocPostTax,
+    cfMonth: c.postTaxCF / 12, dscr: c.m.dscr, irr: c.irr, multiple: c.equityMultiple,
+    profit: c.totalProfit, beRate: c.be.rate, ltv: c.m.ltv,
+  };
+}
+
+RENDERERS.compare = function () {
+  const d = D();
+  const rows = S.saved.map(s => ({ s, m: savedMetrics(s.deal) }));
+  const live = { s: { id: "__live", name: d.name || "Current deal", at: Date.now() }, m: savedMetrics(d) };
+  const all = [live].concat(rows);
+  const best = key => {
+    const vals = all.map(r => r.m[key]).filter(v => Number.isFinite(v));
+    return vals.length ? Math.max.apply(null, vals) : null;
+  };
+  const bestIrr = best("irr"), bestCoc = best("cocPostTax"), bestCf = best("cfMonth");
+
+  return pageHead("Compare",
+    `Underwriting one property tells you whether it works. Underwriting three tells you which to buy — and usually that the
+     one with the best yield is not the one with the best return, because the yield never sees the tax or the stamp duty.`) +
+
+  `<div class="card flat">
+    <div class="btnrow">
+      <button type="button" class="primary" data-act="saveDeal">💾 Save the current deal into the table</button>
+      ${S.saved.length ? `<button type="button" data-act="exportCompareCsv">⬇ Export as CSV</button>` : ""}
+      <span class="small dim">${S.saved.length} saved · the top row is always whatever you are working on now</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Side by side</h3>
+    <div class="tablewrap">
+      <table class="compact">
+        <thead><tr>
+          <th>Deal</th><th class="n">Price</th><th class="n">Cash in</th><th class="n">Gross yield</th>
+          <th class="n">Cap rate</th><th class="n">CoC after tax</th><th class="n">Cash flow pm</th>
+          <th class="n">DSCR</th><th class="n">IRR</th><th class="n">Multiple</th><th class="n">Break-even rate</th><th></th>
+        </tr></thead>
+        <tbody>
+          ${all.map(r => `<tr${r.s.id === "__live" ? ' class="total"' : ""}>
+            <td>${esc(r.s.name)}${r.s.id === "__live" ? ' <span class="badge">live</span>' : `<div class="tiny muted">saved ${ymd(r.s.at)}</div>`}</td>
+            <td class="n">${money(r.m.price)}</td>
+            <td class="n">${money(r.m.cashIn)}</td>
+            <td class="n">${pct(r.m.grossYield, 2)}</td>
+            <td class="n">${pct(r.m.capRate, 2)}</td>
+            <td class="n ${r.m.cocPostTax === bestCoc ? "pos strong" : signCls(r.m.cocPostTax)}">${pct(r.m.cocPostTax, 2)}</td>
+            <td class="n ${r.m.cfMonth === bestCf ? "pos strong" : signCls(r.m.cfMonth)}">${money(r.m.cfMonth)}</td>
+            <td class="n">${Number.isFinite(r.m.dscr) ? x(r.m.dscr) : "∞"}</td>
+            <td class="n ${r.m.irr !== null && r.m.irr === bestIrr ? "pos strong" : ""}">${r.m.irr === null ? "—" : pct(r.m.irr * 100, 2)}</td>
+            <td class="n">${x(r.m.multiple)}</td>
+            <td class="n">${r.m.beRate === null ? "—" : pct(r.m.beRate, 2)}</td>
+            <td class="n">${r.s.id === "__live" ? "" : `<button type="button" class="sm" data-act="loadDeal" data-arg="${esc(r.s.id)}">Load</button>
+              <button type="button" class="sm ghost danger" data-act="delDeal" data-arg="${esc(r.s.id)}" aria-label="Delete ${esc(r.s.name)}">✕</button>`}</td>
+          </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+    ${all.length > 1 ? `<div class="note info" style="margin-top:12px">
+      ${(() => {
+        const byYield = all.slice().sort((a, b) => b.m.grossYield - a.m.grossYield)[0];
+        const byIrr = all.slice().filter(r => r.m.irr !== null).sort((a, b) => b.m.irr - a.m.irr)[0];
+        if (!byIrr) return "Not enough of these deals produce a measurable IRR to rank them.";
+        return byYield.s.id === byIrr.s.id
+          ? `<strong>${esc(byYield.s.name)}</strong> has both the best gross yield and the best IRR — agreement between those two is
+             worth noticing, because they usually disagree.`
+          : `The best gross yield is <strong>${esc(byYield.s.name)}</strong>; the best IRR is <strong>${esc(byIrr.s.name)}</strong>.
+             They are different deals. Whichever one an agent showed you first, the second column is the one you spend.`;
+      })()}
+    </div>` : `<div class="note" style="margin-top:12px">Save a deal, change the numbers, save another. The table keeps every set of assumptions rather than overwriting them.</div>`}
+  </div>`;
+};
+
+/* ===========================================================================
+   17. TAB — REPORT
+   =========================================================================== */
+
+function markdownReport() {
+  const d = D();
+  const c = computeDeal(d);
+  const op = c.op1;
+  const ex = c.exit;
+  const fl = computeFlip(d);
+  const br = computeBrrrr(d);
+  const M = n => money(n).replace("−", "-");
+  const P = (n, dp) => pct(n, dp);
+  const L = [];
+
+  L.push(`# ${d.name || "Property deal"}`);
+  L.push("");
+  L.push(`*Underwritten ${ymd(Date.now())} · all figures in ${cur().code} · assumptions are the author's, not advice.*`);
+  L.push("");
+  L.push(`## The decision in five numbers`);
+  L.push("");
+  L.push(`| | |`);
+  L.push(`|---|---|`);
+  L.push(`| All-in cost | ${M(c.allIn)} |`);
+  L.push(`| Cash required | ${M(c.cashIn)} |`);
+  L.push(`| Cash flow after tax | ${M(c.postTaxCF)} a year, ${M(c.postTaxCF / 12)} a month |`);
+  L.push(`| Cash-on-cash after tax | ${P(c.m.cocPostTax, 2)} |`);
+  L.push(`| IRR over ${c.years} years | ${c.irr === null ? "no measurable IRR" : P(c.irr * 100, 2)} |`);
+  L.push("");
+  L.push(`## The purchase`);
+  L.push("");
+  L.push(`| Line | Amount |`);
+  L.push(`|---|---:|`);
+  L.push(`| Purchase price | ${M(c.price)} |`);
+  c.acqLines.filter(l => l.amount > 0).forEach(l => L.push(`| ${l.label} | ${M(l.amount)} |`));
+  if (c.refurbTotal > 0) L.push(`| Refurbishment incl. ${P(num(d.refurbContPct), 0)} contingency | ${M(c.refurbTotal)} |`);
+  L.push(`| **All-in cost** | **${M(c.allIn)}** |`);
+  L.push(`| Borrowed | ${M(c.loanDrawn)} |`);
+  L.push(`| **Cash in** | **${M(c.cashIn)}** |`);
+  L.push("");
+  L.push(`Purchase tax regime: ${presetById(d.taxPreset).label} (${presetById(d.taxPreset).asAt}); effective rate ${P(c.tax.effectivePct, 2)} of the price.`);
+  L.push("");
+  if (d.useMortgage) {
+    L.push(`## The finance`);
+    L.push("");
+    L.push(`${d.amort === "repayment" ? "Repayment" : "Interest-only"} mortgage of ${M(c.loanDrawn)} at ${P(num(d.ratePct), 2)} over ${num(d.termYears)} years, fixed for ${num(d.fixedYears)} years then ${P(num(d.revertPct), 2)}. Monthly payment ${M(c.monthlyPayment)}.`);
+    L.push("");
+    L.push(`- LTV cap of ${P(num(d.maxLtvPct), 0)} supports ${M(c.maxByLtv)}`);
+    L.push(`- ${c.testLabel} supports ${Number.isFinite(c.maxByTest) ? M(c.maxByTest) : "no limit"}`);
+    L.push(`- You asked for ${M(c.requested)} and get **${M(c.loan)}**${c.capped ? " — the shortfall is added to the cash you need" : ""}`);
+    L.push("");
+  }
+  L.push(`## The year`);
+  L.push("");
+  L.push(`| Line | Per year | Per month |`);
+  L.push(`|---|---:|---:|`);
+  L.push(`| Gross rent | ${M(op.grossIncome)} | ${M(op.grossIncome / 12)} |`);
+  L.push(`| Voids and arrears | -${M(op.voidLoss + op.badDebt)} | -${M((op.voidLoss + op.badDebt) / 12)} |`);
+  op.lines.filter(l => l.amount > 0).forEach(l => L.push(`| ${l.label} | -${M(l.amount)} | -${M(l.amount / 12)} |`));
+  L.push(`| **NOI** | **${M(op.noi)}** | **${M(op.noi / 12)}** |`);
+  if (c.debtService > 0) L.push(`| Mortgage | -${M(c.debtService)} | -${M(c.debtService / 12)} |`);
+  if (c.t1.tax > 0) L.push(`| Income tax (${(TAX_MODES.find(m => m.id === d.taxMode) || {}).label}) | -${M(c.t1.tax)} | -${M(c.t1.tax / 12)} |`);
+  L.push(`| **Cash flow after tax** | **${M(c.postTaxCF)}** | **${M(c.postTaxCF / 12)}** |`);
+  L.push("");
+  L.push(`## The returns`);
+  L.push("");
+  L.push(`| Measure | Value |`);
+  L.push(`|---|---:|`);
+  L.push(`| Gross yield | ${P(c.m.grossYield, 2)} |`);
+  L.push(`| Net yield / cap rate on all-in cost | ${P(c.m.capRate, 2)} |`);
+  L.push(`| Cash-on-cash before tax | ${P(c.m.coc, 2)} |`);
+  L.push(`| Cash-on-cash after tax | ${P(c.m.cocPostTax, 2)} |`);
+  L.push(`| DSCR | ${Number.isFinite(c.m.dscr) ? x(c.m.dscr) : "no debt"} |`);
+  L.push(`| LTV | ${P(c.m.ltv, 1)} |`);
+  L.push(`| Operating costs as a share of rent | ${P(c.m.opexRatio, 0)} |`);
+  L.push("");
+  L.push(`## What has to go wrong`);
+  L.push("");
+  L.push(`| If this moves | Cash flow reaches zero at | Room |`);
+  L.push(`|---|---:|---:|`);
+  L.push(`| Rent falls | ${c.be.rent === null ? "—" : M(c.be.rent) + " a month"} | ${c.be.rent === null ? "—" : P((num(d.rentMonthly) - c.be.rent) / Math.max(1, num(d.rentMonthly)) * 100, 1)} |`);
+  L.push(`| Interest rate rises | ${c.be.rate === null ? "—" : P(c.be.rate, 2)} | ${c.be.rate === null ? "—" : "+" + P(c.be.rate - num(d.ratePct), 2)} |`);
+  L.push(`| Voids rise | ${c.be.void === null ? "never" : P(c.be.void, 1)} | ${c.be.void === null ? "—" : "+" + P(Math.max(0, c.be.void - num(d.voidPct)), 1)} |`);
+  L.push(`| Price falls past the ${P(num(d.maxLtvPct), 0)} LTV cap | ${M(c.loanDrawn / Math.max(0.01, num(d.maxLtvPct) / 100))} | ${P(c.be.fallToLtvBreach, 1)} |`);
+  L.push("");
+  L.push(`## Hold and exit`);
+  L.push("");
+  L.push(`Held ${c.years} years with rent growing ${P(num(d.rentGrowthPct), 1)}, costs ${P(num(d.costGrowthPct), 1)} and value ${P(num(d.valueGrowthPct), 1)} a year.`);
+  L.push("");
+  L.push(`| Year | Rent pm | NOI | Interest | Tax | Cash flow | Value | Equity |`);
+  L.push(`|---:|---:|---:|---:|---:|---:|---:|---:|`);
+  c.proj.forEach(p => L.push(`| ${p.year} | ${M(p.rentMonthly)} | ${M(p.noi)} | ${M(p.interest)} | ${M(p.tax)} | ${M(p.cf)} | ${M(p.value)} | ${M(p.equity)} |`));
+  L.push("");
+  L.push(`Sale at ${M(ex.sale)}, less ${M(ex.sellCosts)} of selling costs, ${M(ex.balance)} of mortgage and ${M(ex.cgt)} of capital gains tax, leaves **${M(ex.netProceeds)}**.`);
+  L.push(`Total profit ${M(c.totalProfit)}; equity multiple ${x(c.equityMultiple)}; IRR ${c.irr === null ? "not measurable" : P(c.irr * 100, 2)}.`);
+  L.push("");
+  const noGrowth = computeDeal(Object.assign({}, d, { valueGrowthPct: 0 }));
+  L.push(`With capital growth set to zero the same deal returns ${noGrowth.irr === null ? "no measurable IRR" : P(noGrowth.irr * 100, 2)} and ${noGrowth.totalProfit >= 0 ? "makes " + M(noGrowth.totalProfit) : "loses " + M(-noGrowth.totalProfit)}.`);
+  L.push("");
+  if (d.flip.mode === "brrrr") {
+    L.push(`## Refinance (BRRRR)`);
+    L.push("");
+    L.push(`Refinancing at ${M(br.arv)} on ${P(num(d.flip.refiLtvPct), 0)} LTV gives ${M(br.refiLoan)}${br.testBinds ? " — capped by the income test rather than the valuation" : ""}. After redeeming ${M(br.flip.redemption)} of bridging and ${M(num(d.flip.refiCosts))} of costs, ${M(br.cashOut)} comes back out and **${M(Math.max(0, br.cashLeftIn))}** stays in.`);
+    L.push("");
+  } else {
+    L.push(`## If it were flipped instead`);
+    L.push("");
+    L.push(`Sold at ${M(fl.arv)} after ${fl.months} months: profit ${M(fl.profit)} on ${M(fl.cashIn)} of cash (${P(fl.roi, 1)}, ${P(fl.annualised, 1)} annualised), a margin of ${P(fl.margin, 1)} on the sale price. Break-even sale price ${fl.breakEvenSale === null ? "—" : M(fl.breakEvenSale)}.`);
+    L.push("");
+  }
+  if (d.notes && d.notes.trim()) {
+    L.push(`## Notes`);
+    L.push("");
+    L.push(d.notes.trim());
+    L.push("");
+  }
+  L.push(`## Assumptions in full`);
+  L.push("");
+  L.push(`| Assumption | Value |`);
+  L.push(`|---|---:|`);
+  [
+    ["Property type", (ARCHETYPES.find(a => a.id === d.archetype) || {}).label],
+    ["Rent", M(num(d.rentMonthly)) + " a month"],
+    ["Void", P(num(d.voidPct), 1)],
+    ["Arrears written off", P(num(d.badDebtPct), 1)],
+    ["Tenant-find fee", num(d.letWeeks) + " weeks every " + num(d.tenancyYears) + " years"],
+    ["Management", P(num(d.opex.mgmt), 1) + " of rent collected"],
+    ["Maintenance", P(num(d.opex.maint), 1) + " of gross rent"],
+    ["Capital reserve", P(num(d.opex.capex), 1) + " of gross rent"],
+    ["Deposit", P(num(d.depositPct), 1)],
+    ["Rate / revert", P(num(d.ratePct), 2) + " then " + P(num(d.revertPct), 2)],
+    ["Lender test", c.testLabel],
+    ["Tax regime", (TAX_MODES.find(m => m.id === d.taxMode) || {}).label],
+    ["Marginal rate", P(num(d.taxMode === "company" ? d.corpPct : d.marginalPct), 0)],
+    ["Selling costs", P(num(d.sellCostPct), 2)],
+    ["Capital gains tax", P(num(d.cgtPct), 0)],
+  ].forEach(r => L.push(`| ${r[0]} | ${r[1]} |`));
+  L.push("");
+  L.push(`---`);
+  L.push("");
+  L.push(`Produced with the Real Estate Calculator — a single offline HTML file. Not financial, tax or legal advice.`);
+  return L.join("\n");
+}
+
+RENDERERS.report = function () {
+  const md = markdownReport();
+  return pageHead("Report",
+    `The whole underwrite as one document: the purchase, the finance, the year, the returns, the break-evens, the exit and
+     every assumption behind them. Copy it into an email to a partner, a broker or your own file — the assumptions table at
+     the end is the part that matters in six months, when you have forgotten what you assumed.`) +
+
+  `<div class="card flat">
+    <div class="btnrow">
+      <button type="button" class="primary" data-act="copyReport">📋 Copy the Markdown</button>
+      <button type="button" data-act="downloadReport">⬇ Download .md</button>
+      <button type="button" data-act="exportProjectionCsv">⬇ Projection as CSV</button>
+      <button type="button" data-act="printPage">🖨 Print</button>
+    </div>
+  </div>
+  <div class="card">
+    <pre class="out" id="report-out">${esc(md)}</pre>
+  </div>`;
+};
+
+/* ===========================================================================
+   18. ACTIONS, EXPORTS, BOOT
+   =========================================================================== */
+
+function download(filename, text, mime) {
+  const blob = new Blob([text], { type: (mime || "text/plain") + ";charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function csvCell(v) {
+  const s = String(v === null || v === undefined ? "" : v);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+function toCsv(rows) { return rows.map(r => r.map(csvCell).join(",")).join("\n"); }
+
+function slug(s) { return String(s || "deal").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 48) || "deal"; }
+
+const ACTIONS = {
+  bandsEdit() {
+    const t = purchaseTax(D());
+    S.deal.taxBands = t.bands.map(b => ({ upTo: b.upTo === undefined ? null : b.upTo, pct: b.pct }));
+    save(); rerender();
+  },
+  bandsReset() { S.deal.taxBands = null; save(); rerender(); toast("Back to the published table."); },
+  bandAdd() {
+    if (!Array.isArray(S.deal.taxBands)) ACTIONS.bandsEdit();
+    const b = S.deal.taxBands;
+    const last = b[b.length - 1];
+    const prev = b.length > 1 ? b[b.length - 2] : null;
+    const threshold = prev && prev.upTo ? prev.upTo * 2 : 500000;
+    b.splice(b.length - 1, 0, { upTo: threshold, pct: last ? last.pct : 0 });
+    save(); rerender();
+  },
+  bandDel(i) {
+    if (!Array.isArray(S.deal.taxBands) || S.deal.taxBands.length <= 1) return;
+    S.deal.taxBands.splice(Number(i), 1);
+    S.deal.taxBands[S.deal.taxBands.length - 1].upTo = null;
+    save(); rerender();
+  },
+  flipMode(mode) { S.deal.flip.mode = mode; save(); rerender(); },
+  saveDeal() {
+    const snapshot = JSON.parse(JSON.stringify(S.deal));
+    S.saved.unshift({ id: uid(), name: snapshot.name || "Untitled deal", at: Date.now(), deal: snapshot });
+    if (S.saved.length > 24) S.saved.length = 24;
+    save(); rerender();
+    toast("Saved. It is on the Compare tab.");
+  },
+  loadDeal(id) {
+    const found = S.saved.find(s => s.id === id);
+    if (!found) return;
+    S.deal = JSON.parse(JSON.stringify(found.deal));
+    save(); rerender();
+    toast("Loaded " + found.name + ".");
+  },
+  delDeal(id) {
+    S.saved = S.saved.filter(s => s.id !== id);
+    save(); rerender();
+  },
+  copyReport() {
+    const md = markdownReport();
+    const done = () => toast("Report copied.");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(md).then(done, () => ACTIONS._fallbackCopy(md, done));
+    } else ACTIONS._fallbackCopy(md, done);
+  },
+  _fallbackCopy(text, done) {
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); done(); } catch (e) { toast("Copy failed — select the text and copy it manually."); }
+    ta.remove();
+  },
+  downloadReport() {
+    download(slug(S.deal.name) + "-underwrite.md", markdownReport(), "text/markdown");
+    toast("Downloaded.");
+  },
+  exportProjectionCsv() {
+    const c = computeDeal(D());
+    const rows = [["Year", "Rent per month", "Rent collected", "Operating costs", "NOI", "Interest", "Principal", "Payment", "Tax", "Cash flow", "Cumulative cash flow", "Balance", "Value", "Equity"]];
+    c.proj.forEach(p => rows.push([p.year, p.rentMonthly.toFixed(2), p.egi.toFixed(2), p.opex.toFixed(2), p.noi.toFixed(2),
+      p.interest.toFixed(2), p.principal.toFixed(2), p.payment.toFixed(2), p.tax.toFixed(2), p.cf.toFixed(2),
+      p.cumCF.toFixed(2), p.balance.toFixed(2), p.value.toFixed(2), p.equity.toFixed(2)]));
+    rows.push([]);
+    rows.push(["Sale", c.exit.sale.toFixed(2)], ["Selling costs", c.exit.sellCosts.toFixed(2)],
+      ["Mortgage redeemed", c.exit.balance.toFixed(2)], ["Capital gains tax", c.exit.cgt.toFixed(2)],
+      ["Net proceeds", c.exit.netProceeds.toFixed(2)], ["Cash in", c.cashIn.toFixed(2)],
+      ["Total profit", c.totalProfit.toFixed(2)], ["IRR", c.irr === null ? "" : (c.irr * 100).toFixed(4)]);
+    download(slug(S.deal.name) + "-projection.csv", toCsv(rows), "text/csv");
+    toast("Downloaded.");
+  },
+  exportCompareCsv() {
+    const rows = [["Deal", "Saved", "Price", "Cash in", "Rent pm", "Gross yield %", "Cap rate %", "CoC %", "CoC after tax %", "Cash flow pm", "DSCR", "IRR %", "Equity multiple", "Break-even rate %"]];
+    const add = (name, at, m) => rows.push([name, at, m.price.toFixed(2), m.cashIn.toFixed(2), m.rent.toFixed(2),
+      m.grossYield.toFixed(3), m.capRate.toFixed(3), m.coc.toFixed(3), m.cocPostTax.toFixed(3), m.cfMonth.toFixed(2),
+      Number.isFinite(m.dscr) ? m.dscr.toFixed(3) : "", m.irr === null ? "" : (m.irr * 100).toFixed(3),
+      m.multiple.toFixed(3), m.beRate === null ? "" : m.beRate.toFixed(3)]);
+    add(S.deal.name || "Current deal", ymd(Date.now()), savedMetrics(S.deal));
+    S.saved.forEach(s => add(s.name, ymd(s.at), savedMetrics(s.deal)));
+    download("deal-comparison.csv", toCsv(rows), "text/csv");
+    toast("Downloaded.");
+  },
+  printPage() { window.print(); },
+};
+
+function backup() {
+  download("real-estate-calculator-" + ymd(Date.now()) + ".json", JSON.stringify(S, null, 2), "application/json");
+  toast("Backed up.");
+}
+
+function restoreFrom(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      S = repair(JSON.parse(String(reader.result)));
+      applyTheme(); save(); showTab(S.tab); rerender();
+      toast("Restored.");
+    } catch (e) {
+      toast("That file could not be read as a backup.");
+    }
+  };
+  reader.onerror = () => toast("That file could not be read.");
+  reader.readAsText(file);
+}
+
+function resetAll() {
+  backup();
+  S = defaultState();
+  applyTheme(); save(); showTab("deal"); rerender();
+  toast("Reset to the worked example — your old data was backed up first.");
+}
+
+function wireToolbar() {
+  document.getElementById("btn-theme").addEventListener("click", toggleTheme);
+  document.getElementById("btn-backup").addEventListener("click", backup);
+  document.getElementById("btn-save").addEventListener("click", () => { ACTIONS.saveDeal(); showTab("compare"); });
+  document.getElementById("btn-reset").addEventListener("click", () => {
+    if (confirm("Reset everything to the worked example? A backup file will download first.")) resetAll();
+  });
+  const fileInput = document.getElementById("file-restore");
+  document.getElementById("btn-restore").addEventListener("click", () => fileInput.click());
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files && fileInput.files[0]) restoreFrom(fileInput.files[0]);
+    fileInput.value = "";
+  });
+}
+
+function boot() {
+  load();
+  applyTheme();
+  wireTabs();
+  wireInputs();
+  wireToolbar();
+  const fromHash = location.hash.slice(1);
+  showTab(TABS.includes(fromHash) ? fromHash : S.tab);
+  window.addEventListener("hashchange", () => {
+    const h = location.hash.slice(1);
+    if (TABS.includes(h) && h !== S.tab) showTab(h);
+  });
+  if (!storageOK) toast("This browser will not let the page save — everything works, but nothing is kept when you close it.");
+}
+
+/* Exposed for the verification suite: the arithmetic, with no DOM in the way. */
+window.RE = {
+  bandTax, purchaseTax, pmt, schedule, yearsFromSchedule, npv, irr, solve,
+  operating, incomeTax, core, computeDeal, computeFlip, computeBrrrr, maoForProfit,
+  computeRentBuy, computeRentBuyInner, defaultDeal, defaultState, markdownReport,
+  get state() { return S; }, set state(v) { S = v; },
+  TAX_PRESETS, OPEX_LINES, ARCHETYPES, TAX_MODES, CURRENCIES,
+};
+
+document.addEventListener("DOMContentLoaded", boot);
+</script>
+</body>
+</html>
