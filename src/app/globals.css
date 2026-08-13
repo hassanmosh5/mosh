@@ -11,12 +11,65 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* MOSH Chief of Staff design tokens */
+  --color-canvas: var(--cos-canvas);
+  --color-surface: var(--cos-surface);
+  --color-surface-2: var(--cos-surface-2);
+  --color-line: var(--cos-line);
+  --color-ink: var(--cos-ink);
+  --color-ink-muted: var(--cos-ink-muted);
+  --color-ink-subtle: var(--cos-ink-subtle);
+  --color-brand: var(--cos-brand);
+  --color-brand-ink: var(--cos-brand-ink);
+  --color-brand-soft: var(--cos-brand-soft);
+  --color-good: var(--cos-good);
+  --color-warn: var(--cos-warn);
+  --color-bad: var(--cos-bad);
+  --color-info: var(--cos-info);
+}
+
+/*
+ * The Chief of Staff palette is defined on :root so it is available in both
+ * the light default and the dark override below. Components reference only the
+ * semantic tokens (surface / line / ink), never raw hex values.
+ */
+:root {
+  --cos-canvas: #f6f7f9;
+  --cos-surface: #ffffff;
+  --cos-surface-2: #f1f3f6;
+  --cos-line: #e2e5ea;
+  --cos-ink: #0f172a;
+  --cos-ink-muted: #4b5563;
+  --cos-ink-subtle: #8b93a1;
+  --cos-brand: #0f766e;
+  --cos-brand-ink: #ffffff;
+  --cos-brand-soft: #d7f0ec;
+  --cos-good: #15803d;
+  --cos-warn: #b45309;
+  --cos-bad: #b91c1c;
+  --cos-info: #1d4ed8;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    --cos-canvas: #0b0f14;
+    --cos-surface: #121820;
+    --cos-surface-2: #182029;
+    --cos-line: #253040;
+    --cos-ink: #e8edf4;
+    --cos-ink-muted: #a3aebe;
+    --cos-ink-subtle: #6f7c8d;
+    --cos-brand: #2dd4bf;
+    --cos-brand-ink: #05201d;
+    --cos-brand-soft: #123833;
+    --cos-good: #4ade80;
+    --cos-warn: #fbbf24;
+    --cos-bad: #f87171;
+    --cos-info: #60a5fa;
   }
 }
 
@@ -24,4 +77,41 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Chief of Staff surfaces opt into the product font and palette. */
+.cos-root {
+  background: var(--cos-canvas);
+  color: var(--cos-ink);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+.cos-root ::selection {
+  background: var(--cos-brand-soft);
+  color: var(--cos-ink);
+}
+
+/* Focus ring shared by every interactive element in the app shell. */
+.cos-root :is(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--cos-brand);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.cos-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.cos-scroll::-webkit-scrollbar-thumb {
+  background: var(--cos-line);
+  border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cos-root *,
+  .cos-root *::before,
+  .cos-root *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
 }

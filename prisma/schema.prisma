@@ -35,6 +35,20 @@ model User {
   notes     Note[]
   bookmarks Bookmark[]
   attempts  QuizAttempt[]
+
+  // ----- MOSH Chief of Staff -----
+  memberships       Membership[]
+  assignedTasks     Task[]            @relation("TaskAssignee")
+  createdTasks      Task[]            @relation("TaskCreator")
+  ownedGoals        Goal[]
+  projectMemberships ProjectMember[]
+  conversations     Conversation[]
+  agentExecutions   AgentExecution[]
+  notifications     Notification[]
+  reports           Report[]
+  aiUsage           AiUsage[]
+  approvalsRequested ApprovalRequest[] @relation("ApprovalRequester")
+  approvalsDecided   ApprovalRequest[] @relation("ApprovalDecider")
 }
 
 model Account {
@@ -207,4 +221,1144 @@ model Bookmark {
   createdAt DateTime @default(now())
 
   @@unique([userId, lessonId])
+}
+
+// =====================================================================
+// MOSH Chief of Staff (M-CoS) — AI executive operating system
+// =====================================================================
+// Design notes:
+//  * Every operational record hangs off a Business so multi-tenant /
+//    multi-user support is a matter of adding Memberships, not migrating.
+//  * User <-> Business access is modelled by Membership + CosRole. The
+//    legacy `Role` enum above stays untouched (it drives the academy app).
+//  * Indexes are added on every column used for filtering/sorting in the
+//    dashboard, list views and the AI retrieval layer.
+
+enum CosRole {
+  OWNER // founder — full access
+  MANAGER // can manage operations, cannot change billing/security settings
+  MEMBER // employee / contractor
+  CLIENT // external client portal (future)
+  VIEWER // read only
+}
+
+model Business {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  tagline   String?
+  currency  String   @default("GHS")
+  timezone  String   @default("Africa/Accra")
+  isDemo    Boolean  @default(false)
+  settings  Json     @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships   Membership[]
+  areas         BusinessArea[]
+  clients       Client[]
+  contacts      Contact[]
+  leads         Lead[]
+  opportunities Opportunity[]
+  projects      Project[]
+  tasks         Task[]
+  goals         Goal[]
+  products      Product[]
+  contentItems  ContentItem[]
+  campaigns     Campaign[]
+  documents     KnowledgeDocument[]
+  memories      Memory[]
+  agents        AIAgent[]
+  executions    AgentExecution[]
+  automations   Automation[]
+  notifications Notification[]
+  reports       Report[]
+  conversations Conversation[]
+  auditLogs     AuditLog[]
+  aiUsage       AiUsage[]
+  integrations  Integration[]
+  approvals     ApprovalRequest[]
+  financeEntries FinanceEntry[]
+  invoices      Invoice[]
+  decisions     Decision[]
+}
+
+model Membership {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       CosRole  @default(MEMBER)
+  title      String?
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([businessId, userId])
+  @@index([userId])
+}
+
+model BusinessArea {
+  id          String   @id @default(cuid())
+  businessId  String
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  slug        String
+  name        String
+  description String?  @db.Text
+  active      Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  projects Project[]
+  leads    Lead[]
+  products Product[]
+
+  @@unique([businessId, slug])
+  @@index([businessId, active])
+}
+
+// ---------- CRM ----------
+
+enum ClientStatus {
+  PROSPECT
+  ACTIVE
+  PAUSED
+  CHURNED
+}
+
+enum PipelineStage {
+  NEW_LEAD
+  QUALIFIED
+  CONTACTED
+  PROPOSAL
+  NEGOTIATION
+  WON
+  LOST
+}
+
+model Client {
+  id         String       @id @default(cuid())
+  businessId String
+  business   Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  name       String
+  company    String?
+  email      String?
+  phone      String?
+  website    String?
+  country    String?
+  status     ClientStatus @default(ACTIVE)
+  healthNote String?      @db.Text
+  since      DateTime?
+  isDemo     Boolean      @default(false)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  contacts      Contact[]
+  projects      Project[]
+  tasks         Task[]
+  opportunities Opportunity[]
+  invoices      Invoice[]
+  memories      Memory[]
+  financeEntries FinanceEntry[]
+
+  @@index([businessId, status])
+  @@index([businessId, name])
+}
+
+model Contact {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  clientId   String?
+  client     Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  name       String
+  role       String?
+  email      String?
+  phone      String?
+  notes      String?  @db.Text
+  isPrimary  Boolean  @default(false)
+  isDemo     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([businessId, name])
+  @@index([clientId])
+}
+
+model Lead {
+  id              String        @id @default(cuid())
+  businessId      String
+  business        Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  areaId          String?
+  area            BusinessArea? @relation(fields: [areaId], references: [id], onDelete: SetNull)
+  name            String
+  company         String?
+  email           String?
+  phone           String?
+  source          String?
+  serviceInterest String?
+  estimatedValue  Decimal?      @db.Decimal(14, 2)
+  stage           PipelineStage @default(NEW_LEAD)
+  probability     Int           @default(10)
+  nextAction      String?       @db.Text
+  followUpAt      DateTime?
+  lastContactedAt DateTime?
+  notes           String?       @db.Text
+  isDemo          Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  opportunities Opportunity[]
+
+  @@index([businessId, stage])
+  @@index([businessId, followUpAt])
+}
+
+enum OpportunityStatus {
+  OPEN
+  WON
+  LOST
+}
+
+model Opportunity {
+  id         String            @id @default(cuid())
+  businessId String
+  business   Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  leadId     String?
+  lead       Lead?             @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  clientId   String?
+  client     Client?           @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  title      String
+  value      Decimal           @default(0) @db.Decimal(14, 2)
+  stage      PipelineStage     @default(QUALIFIED)
+  status     OpportunityStatus @default(OPEN)
+  probability Int              @default(30)
+  expectedCloseAt DateTime?
+  closedAt   DateTime?
+  lostReason String?           @db.Text
+  notes      String?           @db.Text
+  isDemo     Boolean           @default(false)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  proposals Proposal[]
+
+  @@index([businessId, status])
+  @@index([businessId, stage])
+  @@index([businessId, expectedCloseAt])
+}
+
+enum ProposalStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+model Proposal {
+  id            String         @id @default(cuid())
+  opportunityId String
+  opportunity   Opportunity    @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  title         String
+  summary       String?        @db.Text
+  amount        Decimal        @default(0) @db.Decimal(14, 2)
+  status        ProposalStatus @default(DRAFT)
+  sentAt        DateTime?
+  decidedAt     DateTime?
+  validUntil    DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([opportunityId, status])
+}
+
+// ---------- Projects & tasks ----------
+
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  ON_HOLD
+  REVIEW
+  COMPLETED
+  CANCELLED
+}
+
+enum HealthStatus {
+  GREEN
+  YELLOW
+  RED
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  businessId  String
+  business    Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  clientId    String?
+  client      Client?       @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  areaId      String?
+  area        BusinessArea? @relation(fields: [areaId], references: [id], onDelete: SetNull)
+  name        String
+  slug        String
+  description String?       @db.Text
+  status      ProjectStatus @default(PLANNING)
+  startDate   DateTime?
+  deadline    DateTime?
+  budget      Decimal?      @db.Decimal(14, 2)
+  revenue     Decimal?      @db.Decimal(14, 2)
+  spend       Decimal?      @db.Decimal(14, 2)
+  health      HealthStatus  @default(GREEN)
+  healthNote  String?       @db.Text
+  completion  Int           @default(0) // 0-100, derived from tasks
+  notes       String?       @db.Text
+  isDemo      Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  tasks      Task[]
+  milestones Milestone[]
+  risks      ProjectRisk[]
+  members    ProjectMember[]
+  memories   Memory[]
+  documents  KnowledgeDocument[]
+  financeEntries FinanceEntry[]
+
+  @@unique([businessId, slug])
+  @@index([businessId, status])
+  @@index([businessId, deadline])
+  @@index([clientId])
+}
+
+model Milestone {
+  id          String    @id @default(cuid())
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  description String?   @db.Text
+  dueDate     DateTime?
+  completedAt DateTime?
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([projectId, dueDate])
+}
+
+enum RiskSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model ProjectRisk {
+  id         String       @id @default(cuid())
+  projectId  String
+  project    Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title      String
+  detail     String?      @db.Text
+  severity   RiskSeverity @default(MEDIUM)
+  mitigation String?      @db.Text
+  resolvedAt DateTime?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  @@index([projectId, severity])
+}
+
+model ProjectMember {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  agentId   String?
+  agent     AIAgent? @relation(fields: [agentId], references: [id], onDelete: SetNull)
+  roleLabel String?
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@index([userId])
+}
+
+enum TaskStatus {
+  BACKLOG
+  PLANNED
+  IN_PROGRESS
+  BLOCKED
+  REVIEW
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskPriority {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum TaskOrigin {
+  HUMAN
+  AI
+  AUTOMATION
+}
+
+enum RecurrenceRule {
+  NONE
+  DAILY
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  QUARTERLY
+}
+
+model Task {
+  id             String         @id @default(cuid())
+  businessId     String
+  business       Business       @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  projectId      String?
+  project        Project?       @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  clientId       String?
+  client         Client?        @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  goalId         String?
+  goal           Goal?          @relation(fields: [goalId], references: [id], onDelete: SetNull)
+  assigneeId     String?
+  assignee       User?          @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  agentId        String?
+  agent          AIAgent?       @relation(fields: [agentId], references: [id], onDelete: SetNull)
+  createdById    String?
+  createdBy      User?          @relation("TaskCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  title          String
+  description    String?        @db.Text
+  status         TaskStatus     @default(BACKLOG)
+  priority       TaskPriority   @default(MEDIUM)
+  dueDate        DateTime?
+  startedAt      DateTime?
+  completedAt    DateTime?
+  estimateMins   Int?
+  actualMins     Int?
+  tags           String[]       @default([])
+  origin         TaskOrigin     @default(HUMAN)
+  recurrence     RecurrenceRule @default(NONE)
+  recurrenceUntil DateTime?
+  notes          String?        @db.Text
+  isDemo         Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  dependsOn  TaskDependency[] @relation("Dependent")
+  dependents TaskDependency[] @relation("Blocker")
+
+  @@index([businessId, status])
+  @@index([businessId, dueDate])
+  @@index([businessId, priority, status])
+  @@index([projectId])
+  @@index([assigneeId, status])
+}
+
+model TaskDependency {
+  id          String @id @default(cuid())
+  taskId      String // the task that is blocked
+  task        Task   @relation("Dependent", fields: [taskId], references: [id], onDelete: Cascade)
+  dependsOnId String // the blocker
+  dependsOn   Task   @relation("Blocker", fields: [dependsOnId], references: [id], onDelete: Cascade)
+
+  @@unique([taskId, dependsOnId])
+  @@index([dependsOnId])
+}
+
+// ---------- Goals ----------
+
+enum GoalHorizon {
+  ANNUAL
+  QUARTERLY
+  MONTHLY
+  WEEKLY
+  DAILY
+}
+
+enum GoalStatus {
+  DRAFT
+  ACTIVE
+  AT_RISK
+  ACHIEVED
+  MISSED
+  ARCHIVED
+}
+
+model Goal {
+  id           String      @id @default(cuid())
+  businessId   String
+  business     Business    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  parentId     String?
+  parent       Goal?       @relation("GoalTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children     Goal[]      @relation("GoalTree")
+  ownerId      String?
+  owner        User?       @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  title        String
+  description  String?     @db.Text
+  horizon      GoalHorizon @default(QUARTERLY)
+  kpi          String?
+  targetValue  Decimal?    @db.Decimal(14, 2)
+  currentValue Decimal     @default(0) @db.Decimal(14, 2)
+  unit         String?
+  startDate    DateTime?
+  deadline     DateTime?
+  status       GoalStatus  @default(ACTIVE)
+  isDemo       Boolean     @default(false)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  tasks Task[]
+
+  @@index([businessId, horizon, status])
+  @@index([businessId, deadline])
+}
+
+// ---------- Digital products ----------
+
+enum ProductStage {
+  IDEA
+  RESEARCH
+  VALIDATION
+  PRODUCTION
+  LAUNCH
+  OPTIMIZATION
+  SCALE
+  RETIRED
+}
+
+model Product {
+  id          String        @id @default(cuid())
+  businessId  String
+  business    Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  areaId      String?
+  area        BusinessArea? @relation(fields: [areaId], references: [id], onDelete: SetNull)
+  name        String
+  slug        String
+  category    String?
+  description String?       @db.Text
+  price       Decimal?      @db.Decimal(14, 2)
+  platform    String?
+  landingPage String?
+  stage       ProductStage  @default(IDEA)
+  unitsSold   Int           @default(0)
+  revenue     Decimal       @default(0) @db.Decimal(14, 2)
+  feedback    String?       @db.Text
+  isDemo      Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  contentItems ContentItem[]
+  campaigns    Campaign[]
+
+  @@unique([businessId, slug])
+  @@index([businessId, stage])
+}
+
+// ---------- Content & campaigns ----------
+
+enum ContentPlatform {
+  YOUTUBE
+  FACEBOOK
+  INSTAGRAM
+  TIKTOK
+  LINKEDIN
+  BLOG
+  EMAIL
+  X
+  OTHER
+}
+
+enum ContentStatus {
+  IDEA
+  RESEARCH
+  SCRIPT
+  PRODUCTION
+  REVIEW
+  SCHEDULED
+  PUBLISHED
+  REPURPOSE
+}
+
+model Campaign {
+  id          String    @id @default(cuid())
+  businessId  String
+  business    Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  productId   String?
+  product     Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  name        String
+  objective   String?   @db.Text
+  startDate   DateTime?
+  endDate     DateTime?
+  budget      Decimal?  @db.Decimal(14, 2)
+  active      Boolean   @default(true)
+  isDemo      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  contentItems ContentItem[]
+
+  @@index([businessId, active])
+}
+
+model ContentItem {
+  id           String          @id @default(cuid())
+  businessId   String
+  business     Business        @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  productId    String?
+  product      Product?        @relation(fields: [productId], references: [id], onDelete: SetNull)
+  campaignId   String?
+  campaign     Campaign?       @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  title        String
+  platform     ContentPlatform @default(YOUTUBE)
+  format       String?
+  topic        String?
+  status       ContentStatus   @default(IDEA)
+  publishAt    DateTime?
+  publishedAt  DateTime?
+  script       String?         @db.Text
+  caption      String?         @db.Text
+  callToAction String?
+  assetUrl     String?
+  views        Int             @default(0)
+  engagements  Int             @default(0)
+  conversions  Int             @default(0)
+  isDemo       Boolean         @default(false)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([businessId, status])
+  @@index([businessId, publishAt])
+  @@index([businessId, platform])
+}
+
+// ---------- Knowledge & memory ----------
+
+enum KnowledgeCategory {
+  COMPANY
+  SERVICE
+  PRICING
+  SOP
+  CLIENT
+  PRODUCT
+  BRAND
+  MARKETING
+  FAQ
+  POLICY
+  AI_INSTRUCTION
+  PROMPT
+  PROJECT
+  OTHER
+}
+
+model KnowledgeDocument {
+  id          String            @id @default(cuid())
+  businessId  String
+  business    Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project?          @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  title       String
+  slug        String
+  category    KnowledgeCategory @default(OTHER)
+  summary     String?           @db.Text
+  body        String            @db.Text
+  tags        String[]          @default([])
+  source      String?
+  // Placeholder for a future vector column. Kept as Float[] so the schema is
+  // portable; swap for pgvector when semantic search is enabled.
+  embedding   Float[]           @default([])
+  embeddedAt  DateTime?
+  reviewAt    DateTime?
+  isDemo      Boolean           @default(false)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@unique([businessId, slug])
+  @@index([businessId, category])
+}
+
+enum MemoryScope {
+  COMPANY
+  STRATEGIC
+  OPERATIONAL
+  CLIENT
+  PROJECT
+  CONVERSATIONAL
+}
+
+enum MemorySource {
+  HUMAN
+  AI
+  IMPORT
+  SYSTEM
+}
+
+model Memory {
+  id         String       @id @default(cuid())
+  businessId String
+  business   Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  clientId   String?
+  client     Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  projectId  String?
+  project    Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  conversationId String?
+  conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  scope      MemoryScope
+  key        String
+  value      String       @db.Text
+  source     MemorySource @default(HUMAN)
+  confidence Int          @default(70) // 0-100
+  reviewAt   DateTime?
+  expiresAt  DateTime?
+  pinned     Boolean      @default(false)
+  isDemo     Boolean      @default(false)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  @@unique([businessId, scope, key])
+  @@index([businessId, scope])
+  @@index([businessId, expiresAt])
+}
+
+// ---------- AI agents & orchestration ----------
+
+enum AgentStatus {
+  ACTIVE
+  DISABLED
+}
+
+model AIAgent {
+  id           String      @id @default(cuid())
+  businessId   String
+  business     Business    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  key          String // stable identifier, e.g. "marketing"
+  name         String
+  role         String
+  description  String      @db.Text
+  systemPrompt String      @db.Text
+  capabilities String[]    @default([])
+  allowedTools String[]    @default([])
+  model        String      @default("claude-opus-5")
+  status       AgentStatus @default(ACTIVE)
+  isDemo       Boolean     @default(false)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  executions     AgentExecution[]
+  tasks          Task[]
+  projectMembers ProjectMember[]
+
+  @@unique([businessId, key])
+  @@index([businessId, status])
+}
+
+enum ExecutionStatus {
+  PENDING
+  RUNNING
+  SUCCEEDED
+  FAILED
+  REJECTED
+}
+
+model AgentExecution {
+  id             String          @id @default(cuid())
+  businessId     String
+  business       Business        @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  agentId        String
+  agent          AIAgent         @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  conversationId String?
+  conversation   Conversation?   @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  requestedById  String?
+  requestedBy    User?           @relation(fields: [requestedById], references: [id], onDelete: SetNull)
+  objective      String          @db.Text
+  contextSummary String?         @db.Text
+  output         String?         @db.Text
+  status         ExecutionStatus @default(PENDING)
+  error          String?         @db.Text
+  durationMs     Int?
+  startedAt      DateTime        @default(now())
+  finishedAt     DateTime?
+
+  usage AiUsage[]
+
+  @@index([businessId, status])
+  @@index([agentId, startedAt])
+}
+
+// ---------- Conversations ----------
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+  TOOL
+}
+
+model Conversation {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  title      String   @default("New conversation")
+  archived   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  messages   Message[]
+  executions AgentExecution[]
+  memories   Memory[]
+  usage      AiUsage[]
+
+  @@index([businessId, updatedAt])
+  @@index([userId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           MessageRole
+  content        String       @db.Text
+  toolCalls      Json?
+  agentKey       String?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
+}
+
+// ---------- Automations ----------
+
+enum AutomationStatus {
+  IDENTIFIED
+  EVALUATING
+  APPROVED
+  BUILDING
+  LIVE
+  REJECTED
+}
+
+model Automation {
+  id                 String           @id @default(cuid())
+  businessId         String
+  business           Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  name               String
+  process            String           @db.Text
+  trigger            String?          @db.Text
+  steps              String[]         @default([])
+  frequencyPerMonth  Int              @default(1)
+  minutesPerRun      Int              @default(30)
+  minutesAfter       Int              @default(5)
+  complexity         Int              @default(3) // 1 (trivial) - 5 (hard)
+  businessValue      Int              @default(3) // 1 (low) - 5 (high)
+  score              Int              @default(0) // computed 0-100
+  status             AutomationStatus @default(IDENTIFIED)
+  tooling            String?
+  notes              String?          @db.Text
+  isDemo             Boolean          @default(false)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@index([businessId, status])
+  @@index([businessId, score])
+}
+
+// ---------- Finance ----------
+
+enum FinanceKind {
+  REVENUE
+  EXPENSE
+}
+
+enum FinanceOrigin {
+  REPORTED // entered by a human / synced from a system of record
+  CALCULATED // derived from other reported records
+  AI_ESTIMATE // produced by the AI, must be labelled as an estimate
+}
+
+model FinanceEntry {
+  id          String        @id @default(cuid())
+  businessId  String
+  business    Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  clientId    String?
+  client      Client?       @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  projectId   String?
+  project     Project?      @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  kind        FinanceKind
+  origin      FinanceOrigin @default(REPORTED)
+  category    String?
+  description String?
+  amount      Decimal       @db.Decimal(14, 2)
+  currency    String        @default("GHS")
+  occurredAt  DateTime
+  isDemo      Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([businessId, kind, occurredAt])
+  @@index([businessId, occurredAt])
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PARTIAL
+  PAID
+  OVERDUE
+  VOID
+}
+
+model Invoice {
+  id         String        @id @default(cuid())
+  businessId String
+  business   Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  clientId   String?
+  client     Client?       @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  number     String
+  amount     Decimal       @db.Decimal(14, 2)
+  amountPaid Decimal       @default(0) @db.Decimal(14, 2)
+  currency   String        @default("GHS")
+  status     InvoiceStatus @default(DRAFT)
+  issuedAt   DateTime?
+  dueAt      DateTime?
+  paidAt     DateTime?
+  notes      String?       @db.Text
+  isDemo     Boolean       @default(false)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  payments Payment[]
+
+  @@unique([businessId, number])
+  @@index([businessId, status])
+  @@index([businessId, dueAt])
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  invoiceId String
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  amount    Decimal  @db.Decimal(14, 2)
+  method    String?
+  reference String?
+  paidAt    DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@index([invoiceId])
+}
+
+// ---------- Decisions ----------
+
+model Decision {
+  id            String   @id @default(cuid())
+  businessId    String
+  business      Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  title         String
+  context       String?  @db.Text
+  revenueImpact Int      @default(3)
+  strategicFit  Int      @default(3)
+  customerValue Int      @default(3)
+  cost          Int      @default(3)
+  timeToValue   Int      @default(3)
+  complexity    Int      @default(3)
+  risk          Int      @default(3)
+  automation    Int      @default(3)
+  scalability   Int      @default(3)
+  score         Int      @default(0)
+  rationale     String?  @db.Text
+  risks         String?  @db.Text
+  recommendation String? @db.Text
+  nextStep      String?  @db.Text
+  isDemo        Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([businessId, score])
+}
+
+// ---------- Notifications, reports, audit, usage ----------
+
+enum NotificationKind {
+  TASK_OVERDUE
+  DEADLINE_APPROACHING
+  LEAD_INACTIVE
+  CLIENT_FOLLOW_UP
+  PROJECT_RISK
+  DECISION_REQUIRED
+  PRODUCT_UNDERPERFORMING
+  AUTOMATION_OPPORTUNITY
+  INVOICE_OVERDUE
+  SYSTEM
+}
+
+enum NotificationSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+model Notification {
+  id         String               @id @default(cuid())
+  businessId String
+  business   Business             @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  userId     String?
+  user       User?                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind       NotificationKind
+  severity   NotificationSeverity @default(INFO)
+  title      String
+  body       String?              @db.Text
+  entityType String?
+  entityId   String?
+  dedupeKey  String
+  readAt     DateTime?
+  createdAt  DateTime             @default(now())
+
+  @@unique([businessId, dedupeKey])
+  @@index([businessId, readAt])
+}
+
+enum ReportKind {
+  DAILY_BRIEFING
+  WEEKLY_EXECUTIVE
+  MONTHLY_BUSINESS
+  QUARTERLY_STRATEGY
+}
+
+model Report {
+  id           String     @id @default(cuid())
+  businessId   String
+  business     Business   @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  createdById  String?
+  createdBy    User?      @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  kind         ReportKind
+  title        String
+  periodStart  DateTime
+  periodEnd    DateTime
+  metrics      Json       @default("{}")
+  body         String     @db.Text
+  aiGenerated  Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+
+  @@index([businessId, kind, periodStart])
+}
+
+enum ActorKind {
+  USER
+  AI
+  AGENT
+  SYSTEM
+}
+
+enum AuditResult {
+  SUCCESS
+  FAILURE
+  DENIED
+}
+
+model AuditLog {
+  id         String      @id @default(cuid())
+  businessId String
+  business   Business    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  actorKind  ActorKind   @default(USER)
+  actorId    String?
+  actorLabel String?
+  action     String
+  entityType String?
+  entityId   String?
+  result     AuditResult @default(SUCCESS)
+  detail     Json?
+  createdAt  DateTime    @default(now())
+
+  @@index([businessId, createdAt])
+  @@index([businessId, entityType, entityId])
+}
+
+model AiUsage {
+  id             String          @id @default(cuid())
+  businessId     String
+  business       Business        @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  conversationId String?
+  conversation   Conversation?   @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  executionId    String?
+  execution      AgentExecution? @relation(fields: [executionId], references: [id], onDelete: SetNull)
+  agentKey       String?
+  model          String
+  purpose        String
+  inputTokens    Int             @default(0)
+  outputTokens   Int             @default(0)
+  cacheReadTokens Int            @default(0)
+  cacheWriteTokens Int           @default(0)
+  estimatedCost  Decimal         @default(0) @db.Decimal(12, 6)
+  currency       String          @default("USD")
+  createdAt      DateTime        @default(now())
+
+  @@index([businessId, createdAt])
+  @@index([businessId, agentKey])
+}
+
+// ---------- Integrations & approvals ----------
+
+enum IntegrationStatus {
+  NOT_CONNECTED
+  CONNECTED
+  ERROR
+  DISABLED
+}
+
+model Integration {
+  id           String            @id @default(cuid())
+  businessId   String
+  business     Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  provider     String // e.g. "google_calendar"
+  displayName  String
+  category     String
+  status       IntegrationStatus @default(NOT_CONNECTED)
+  // Only non-secret configuration is stored here. Credentials live in
+  // environment variables / a secret manager and are never persisted.
+  config       Json              @default("{}")
+  lastCheckedAt DateTime?
+  lastError    String?           @db.Text
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@unique([businessId, provider])
+  @@index([businessId, status])
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  EXECUTED
+  FAILED
+  EXPIRED
+}
+
+model ApprovalRequest {
+  id           String         @id @default(cuid())
+  businessId   String
+  business     Business       @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  requestedById String?
+  requestedBy  User?          @relation("ApprovalRequester", fields: [requestedById], references: [id], onDelete: SetNull)
+  decidedById  String?
+  decidedBy    User?          @relation("ApprovalDecider", fields: [decidedById], references: [id], onDelete: SetNull)
+  action       String // the sensitive tool/action name
+  summary      String         @db.Text
+  payload      Json
+  agentKey     String?
+  status       ApprovalStatus @default(PENDING)
+  decidedAt    DateTime?
+  executedAt   DateTime?
+  result       String?        @db.Text
+  expiresAt    DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([businessId, status])
 }
