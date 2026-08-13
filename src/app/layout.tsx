@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { SiteHeader } from "@/components/site-header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,7 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Income Academy",
+  title: {
+    default: "AI Income Academy",
+    template: "%s · MOSH Digital Studios",
+  },
   description:
     "An interactive learning platform built from The AI Income Blueprint — turn AI tools into real income, one lesson at a time.",
 };
@@ -29,10 +31,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <SiteHeader />
-        <main className="flex-1">{children}</main>
-      </body>
+      <body className="min-h-full">{children}</body>
     </html>
   );
 }

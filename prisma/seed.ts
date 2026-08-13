@@ -2,6 +2,7 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { course, modules } from "./seed-data";
+import { seedChiefOfStaff } from "./cos-seed";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -92,6 +93,15 @@ async function main() {
   const lessonCount = modules.reduce((n, m) => n + m.lessons.length, 0);
   console.log(
     `Seeded course "${course.title}" with ${modules.length} modules and ${lessonCount} lessons.`
+  );
+
+  // MOSH Chief of Staff: workspace, business areas, agent registry, reference
+  // knowledge, and (on a fresh workspace) clearly-flagged demo data.
+  const cos = await seedChiefOfStaff(prisma);
+  console.log(
+    cos.demo
+      ? "Seeded MOSH Chief of Staff with the agent registry and demo business data."
+      : "Seeded MOSH Chief of Staff workspace, business areas and agent registry (demo data skipped)."
   );
 }
 
