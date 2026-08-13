@@ -1,0 +1,3696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOSH Product Factory — how many digital products a month you can actually finish</title>
+<meta name="description" content="A production console for a one-person digital product studio: score the ideas, run the ebook/course/template workflows with their human gates, generate the seven agent briefs, price against real store fees, work the funnel arithmetic, and simulate the catalogue month by month until upkeep eats the build hours. Single file, fully offline.">
+<meta name="color-scheme" content="light dark">
+<style>
+/* ===========================================================================
+   MOSH PRODUCT FACTORY
+   Single file. No external requests of any kind: no CDN scripts, no web
+   fonts, no images, no analytics, no network calls. Everything is inline.
+   =========================================================================== */
+
+:root {
+  --ink:        #14181d;
+  --ink-2:      #414c58;
+  --ink-3:      #6d7a88;
+  --bg:         #f5f6f8;
+  --surface:    #ffffff;
+  --surface-2:  #f7f9fb;
+  --surface-3:  #eceff4;
+  --line:       #dde3ea;
+  --line-2:     #c4cedb;
+
+  --acc:        #0f6b57;
+  --acc-2:      #0b5544;
+  --acc-bg:     #e2f2ed;
+  --plum:       #8a2f86;
+  --plum-bg:    #f8e9f7;
+  --green:      #156b41;
+  --green-bg:   #e2f3e9;
+  --amber:      #8a5406;
+  --amber-bg:   #fdf1dd;
+  --red:        #ac1f28;
+  --red-bg:     #fdeaeb;
+  --blue:       #1a55b8;
+  --blue-bg:    #e5edfa;
+
+  --code-bg:    #11161c;
+  --code-ink:   #dfe6ee;
+
+  --shadow:     0 1px 2px rgba(14,22,32,.06), 0 8px 24px -14px rgba(14,22,32,.24);
+  --shadow-lg:  0 2px 6px rgba(14,22,32,.08), 0 28px 56px -24px rgba(14,22,32,.34);
+  --radius:     14px;
+  --radius-sm:  9px;
+
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html[data-theme="dark"] {
+  --ink:        #e6ecf3;
+  --ink-2:      #aebbc8;
+  --ink-3:      #808f9d;
+  --bg:         #0d1116;
+  --surface:    #151b22;
+  --surface-2:  #1b232b;
+  --surface-3:  #232d37;
+  --line:       #2b3742;
+  --line-2:     #3e4c59;
+
+  --acc:        #5fc9ac;
+  --acc-2:      #8adcc6;
+  --acc-bg:     #0f2820;
+  --plum:       #e39bde;
+  --plum-bg:    #2c162a;
+  --green:      #6fd09c;
+  --green-bg:   #10271b;
+  --amber:      #e9b65f;
+  --amber-bg:   #2a2011;
+  --red:        #f38b8f;
+  --red-bg:     #2e1618;
+  --blue:       #7fb0ff;
+  --blue-bg:    #142238;
+
+  --code-bg:    #070b0f;
+  --shadow:     0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.75);
+  --shadow-lg:  0 2px 6px rgba(0,0,0,.5), 0 28px 56px -24px rgba(0,0,0,.85);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --ink:        #e6ecf3;
+    --ink-2:      #aebbc8;
+    --ink-3:      #808f9d;
+    --bg:         #0d1116;
+    --surface:    #151b22;
+    --surface-2:  #1b232b;
+    --surface-3:  #232d37;
+    --line:       #2b3742;
+    --line-2:     #3e4c59;
+
+    --acc:        #5fc9ac;
+    --acc-2:      #8adcc6;
+    --acc-bg:     #0f2820;
+    --plum:       #e39bde;
+    --plum-bg:    #2c162a;
+    --green:      #6fd09c;
+    --green-bg:   #10271b;
+    --amber:      #e9b65f;
+    --amber-bg:   #2a2011;
+    --red:        #f38b8f;
+    --red-bg:     #2e1618;
+    --blue:       #7fb0ff;
+    --blue-bg:    #142238;
+
+    --code-bg:    #070b0f;
+    --shadow:     0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.75);
+    --shadow-lg:  0 2px 6px rgba(0,0,0,.5), 0 28px 56px -24px rgba(0,0,0,.85);
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 { line-height: 1.25; margin: 0 0 8px; font-weight: 660; letter-spacing: -.015em; }
+h2 { font-size: 22px; }
+h3 { font-size: 17px; }
+h4 { font-size: 14.5px; }
+p { margin: 0 0 12px; }
+p:last-child { margin-bottom: 0; }
+a { color: var(--acc); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+small { font-size: 12.5px; }
+b, strong { font-weight: 650; }
+code, kbd { font-family: var(--mono); font-size: .88em; }
+ul, ol { margin: 0 0 12px; padding-left: 20px; }
+li { margin: 4px 0; }
+li:last-child { margin-bottom: 0; }
+hr { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
+
+:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 4px; }
+.sr {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skip {
+  position: absolute; left: -9999px; top: 8px; z-index: 200; background: var(--acc); color: #fff;
+  padding: 10px 16px; border-radius: 8px; text-decoration: none;
+}
+.skip:focus { left: 12px; }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 18px; }
+.muted { color: var(--ink-3); }
+.nowrap { white-space: nowrap; }
+.tnum { font-variant-numeric: tabular-nums; }
+.grow { flex: 1 1 auto; min-width: 0; }
+
+/* ---- top bar ---- */
+
+.topbar { position: sticky; top: 0; z-index: 50; background: var(--surface); border-bottom: 1px solid var(--line); }
+.topbar .wrap { display: flex; align-items: center; gap: 8px; height: 60px; }
+.brand { margin-right: auto; display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.brand b { font-size: 16.5px; letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand span { font-size: 12.5px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 900px) { .brand span { display: none; } }
+@media (max-width: 620px) {
+  .topbar .btxt { display: none; }
+  .brand b { font-size: 15px; }
+}
+
+button, .btn {
+  font: inherit; font-weight: 560; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm); padding: 9px 14px;
+  cursor: pointer; transition: background .12s, border-color .12s, color .12s;
+  display: inline-flex; align-items: center; gap: 7px; text-decoration: none;
+}
+button:hover, .btn:hover { background: var(--surface-2); border-color: var(--ink-3); }
+button:disabled, .btn:disabled { opacity: .45; cursor: not-allowed; }
+button:disabled:hover { background: var(--surface); border-color: var(--line-2); }
+button.sm, .btn.sm { padding: 6px 11px; font-size: 13px; }
+button.xs { padding: 3px 8px; font-size: 12px; border-radius: 7px; }
+button.ghost { background: transparent; border-color: transparent; color: var(--ink-2); }
+button.ghost:hover { background: var(--surface-3); border-color: transparent; color: var(--ink); }
+button.primary { background: var(--acc); border-color: var(--acc); color: #fff; }
+button.primary:hover { background: var(--acc-2); border-color: var(--acc-2); color: #fff; }
+button.danger { color: var(--red); }
+button.danger:hover { background: var(--red-bg); color: var(--red); }
+html[data-theme="dark"] button.primary { color: #05130f; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) button.primary { color: #05130f; } }
+
+/* ---- tabs ---- */
+
+.tabs { background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 60px; z-index: 49; }
+.tabs .wrap { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: thin; }
+.tabs button {
+  border: 0; background: transparent; border-radius: 0; border-bottom: 2px solid transparent;
+  padding: 11px 13px; color: var(--ink-3); font-weight: 570; white-space: nowrap; font-size: 14px;
+}
+.tabs button:hover { background: var(--surface-2); color: var(--ink); border-color: transparent; }
+.tabs button[aria-selected="true"] { color: var(--acc); border-bottom-color: var(--acc); background: transparent; }
+.tabs .em { font-size: 15px; }
+@media (max-width: 760px) { .tabs .ttxt { display: none; } .tabs button { padding: 11px 14px; } .tabs .em { font-size: 17px; } }
+
+main { padding: 22px 0 40px; }
+.panel[hidden] { display: none; }
+.page-intro { margin: 0 0 18px; max-width: 76ch; }
+.page-intro h2 { margin-bottom: 6px; }
+.page-intro p { color: var(--ink-2); }
+
+/* ---- cards ---- */
+
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 16px 18px; margin: 0 0 14px; box-shadow: var(--shadow);
+}
+.card.flush { padding: 0; overflow: hidden; }
+.card-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.card-head h3 { margin: 0; margin-right: auto; }
+.card-head .tools { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.card .sub { color: var(--ink-3); font-size: 13px; margin: -6px 0 12px; }
+
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 980px) { .grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 680px) { .grid2, .grid3, .grid4 { grid-template-columns: minmax(0, 1fr); } }
+
+.split { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 900px) { .split { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---- stats ---- */
+
+.stat {
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 12px 13px;
+}
+.stat .k { font-size: 12px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+.stat .v { font-size: 25px; font-weight: 680; letter-spacing: -.03em; margin: 3px 0 1px; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.stat .n { font-size: 12.5px; color: var(--ink-3); line-height: 1.45; }
+.stat.good { background: var(--green-bg); border-color: transparent; }
+.stat.good .v { color: var(--green); }
+.stat.warn { background: var(--amber-bg); border-color: transparent; }
+.stat.warn .v { color: var(--amber); }
+.stat.bad { background: var(--red-bg); border-color: transparent; }
+.stat.bad .v { color: var(--red); }
+.stat.acc { background: var(--acc-bg); border-color: transparent; }
+.stat.acc .v { color: var(--acc); }
+
+/* ---- pills & notes ---- */
+
+.pill {
+  display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600;
+  padding: 2px 8px; border-radius: 999px; background: var(--surface-3); color: var(--ink-2);
+  white-space: nowrap; letter-spacing: .01em;
+}
+.pill.acc { background: var(--acc-bg); color: var(--acc); }
+.pill.green { background: var(--green-bg); color: var(--green); }
+.pill.amber { background: var(--amber-bg); color: var(--amber); }
+.pill.red { background: var(--red-bg); color: var(--red); }
+.pill.blue { background: var(--blue-bg); color: var(--blue); }
+.pill.plum { background: var(--plum-bg); color: var(--plum); }
+
+.note {
+  background: var(--surface-2); border: 1px solid var(--line); border-left: 3px solid var(--ink-3);
+  border-radius: var(--radius-sm); padding: 11px 13px; font-size: 13.6px; margin: 12px 0 0;
+}
+.note:first-child { margin-top: 0; }
+.note.acc { background: var(--acc-bg); border-color: transparent; border-left-color: var(--acc); }
+.note.amber { background: var(--amber-bg); border-color: transparent; border-left-color: var(--amber); }
+.note.red { background: var(--red-bg); border-color: transparent; border-left-color: var(--red); }
+.note.green { background: var(--green-bg); border-color: transparent; border-left-color: var(--green); }
+.note.blue { background: var(--blue-bg); border-color: transparent; border-left-color: var(--blue); }
+
+/* ---- forms ---- */
+
+label.f { display: block; font-size: 12.8px; font-weight: 600; color: var(--ink-2); margin: 0 0 4px; }
+label.f .hint { font-weight: 400; color: var(--ink-3); }
+input[type="text"], input[type="number"], textarea, select {
+  font: inherit; width: 100%; background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm); padding: 8px 10px;
+}
+input[type="number"] { font-variant-numeric: tabular-nums; }
+textarea { resize: vertical; min-height: 62px; line-height: 1.5; }
+input:focus, textarea:focus, select:focus { outline: 2px solid var(--acc); outline-offset: 1px; border-color: var(--acc); }
+.field { margin: 0 0 12px; }
+.field:last-child { margin-bottom: 0; }
+.inline { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+input[type="range"] { width: 100%; accent-color: var(--acc); }
+.slider { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; margin: 0 0 9px; }
+.slider .lab { grid-column: 1 / -1; display: flex; gap: 8px; align-items: baseline; font-size: 12.8px; }
+.slider .lab b { font-weight: 620; }
+.slider .lab .why { color: var(--ink-3); font-weight: 400; font-size: 12.3px; }
+.slider .val { font-variant-numeric: tabular-nums; font-weight: 640; min-width: 34px; text-align: right; font-size: 13.5px; }
+
+label.chk { display: flex; gap: 9px; align-items: flex-start; font-size: 13.8px; cursor: pointer; padding: 5px 0; }
+label.chk input { margin: 4px 0 0; accent-color: var(--acc); flex: 0 0 auto; width: 15px; height: 15px; }
+label.chk.done > span { color: var(--ink-3); text-decoration: line-through; text-decoration-color: var(--line-2); }
+
+/* ---- tables ---- */
+
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13.6px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); font-weight: 650; white-space: nowrap; background: var(--surface-2); }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover td { background: var(--surface-2); }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ---- disclosure rows ---- */
+
+details.row { border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); margin: 0 0 8px; }
+details.row > summary {
+  cursor: pointer; padding: 11px 13px; display: flex; gap: 10px; align-items: center;
+  list-style: none; font-size: 14px;
+}
+details.row > summary::-webkit-details-marker { display: none; }
+details.row > summary::before { content: "▸"; color: var(--ink-3); font-size: 11px; flex: 0 0 auto; }
+details.row[open] > summary::before { content: "▾"; }
+details.row > summary:hover { background: var(--surface-2); }
+details.row > summary .t { display: flex; flex-direction: column; gap: 1px; min-width: 0; margin-right: auto; }
+details.row > summary .t b { font-weight: 620; }
+details.row > summary .t span { font-size: 12.4px; color: var(--ink-3); }
+details.row .body { padding: 0 13px 13px; border-top: 1px solid var(--line); margin-top: -1px; padding-top: 12px; }
+
+/* ---- code / prompt boxes ---- */
+
+.promptbox {
+  background: var(--code-bg); border-radius: var(--radius-sm); overflow: hidden; margin: 10px 0 0;
+  border: 1px solid var(--line);
+}
+.promptbox pre {
+  margin: 0; padding: 13px 15px; overflow-x: auto; color: var(--code-ink);
+  font-family: var(--mono); font-size: 12.5px; line-height: 1.62; white-space: pre-wrap; word-break: break-word;
+  max-height: 460px; overflow-y: auto;
+}
+.promptbox.tall pre { max-height: 620px; }
+
+/* ---- steps ---- */
+
+.step {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 4px 11px; align-items: start;
+  padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface); margin: 0 0 7px;
+}
+.step.gate { border-left: 3px solid var(--amber); }
+.step.done { background: var(--surface-2); }
+.step .no {
+  font-variant-numeric: tabular-nums; font-size: 12px; font-weight: 700; color: var(--ink-3);
+  background: var(--surface-3); border-radius: 6px; padding: 1px 6px; margin-top: 2px;
+}
+.step .main { min-width: 0; }
+.step .main b { font-weight: 620; font-size: 14px; }
+.step .main .meta { font-size: 12.4px; color: var(--ink-3); margin-top: 2px; }
+.step .main .why { font-size: 13px; color: var(--ink-2); margin-top: 5px; }
+.step .side { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+.step.done .main b { color: var(--ink-3); text-decoration: line-through; text-decoration-color: var(--line-2); }
+
+/* ---- progress ---- */
+
+.bar { height: 7px; border-radius: 999px; background: var(--surface-3); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--acc); border-radius: 999px; transition: width .2s; }
+.bar.amber > i { background: var(--amber); }
+.bar.red > i { background: var(--red); }
+.bar.green > i { background: var(--green); }
+
+/* ---- chart ---- */
+
+.chart { display: flex; align-items: flex-end; gap: 3px; height: 190px; padding: 0; margin: 14px 0 0; }
+.chart .col { flex: 1 1 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 1px; min-width: 0; height: 100%; }
+.chart .col .seg { width: 100%; border-radius: 2px 2px 0 0; }
+.chart .col .seg.rev { background: var(--acc); }
+.chart .col .seg.up { background: var(--amber); }
+.chart .axis { display: flex; gap: 3px; margin-top: 5px; font-size: 10.5px; color: var(--ink-3); }
+.chart .axis span { flex: 1 1 0; text-align: center; min-width: 0; overflow: hidden; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12.4px; color: var(--ink-2); margin-top: 10px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+
+/* ---- funnel ---- */
+
+.fstage { display: grid; grid-template-columns: 150px 1fr; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.fstage:last-child { border-bottom: 0; }
+.fstage .fl { font-size: 13.4px; }
+.fstage .fl b { display: block; font-weight: 620; }
+.fstage .fl span { font-size: 12.2px; color: var(--ink-3); }
+.fstage .fb { display: flex; align-items: center; gap: 10px; }
+.fstage .fb .bar2 { height: 22px; background: var(--acc); border-radius: 5px; min-width: 2px; }
+.fstage .fb .fnum { font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+@media (max-width: 640px) { .fstage { grid-template-columns: minmax(0,1fr); gap: 4px; } }
+
+/* ---- misc ---- */
+
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 12px; }
+.chips button[aria-pressed="true"] { background: var(--acc); border-color: var(--acc); color: #fff; }
+html[data-theme="dark"] .chips button[aria-pressed="true"] { color: #05130f; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) .chips button[aria-pressed="true"] { color: #05130f; } }
+
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; font-size: 13.4px; }
+.kv dt { color: var(--ink-3); }
+.kv dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+.arg { counter-reset: arg; }
+.arg > li { margin: 0 0 10px; }
+.arg > li > b { display: block; }
+
+footer.foot { border-top: 1px solid var(--line); padding: 18px 0 40px; font-size: 12.5px; color: var(--ink-3); }
+footer.foot .wrap { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+footer.foot .grow { margin-right: auto; }
+
+#toasts { position: fixed; left: 50%; transform: translateX(-50%); bottom: 20px; z-index: 300; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+.toast {
+  background: var(--ink); color: var(--bg); padding: 9px 15px; border-radius: 999px; font-size: 13.2px;
+  box-shadow: var(--shadow-lg); max-width: min(92vw, 520px); text-align: center;
+}
+.toast.err { background: var(--red); color: #fff; }
+
+@media print {
+  .topbar, .tabs, #toasts, button { display: none !important; }
+  .panel[hidden] { display: block !important; }
+  .card { break-inside: avoid; box-shadow: none; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <b>MOSH Product Factory</b>
+      <span>the studio's production console — nothing leaves this browser</span>
+    </div>
+    <button id="btn-example" class="sm" title="Load a worked twelve-product year">📋 <span class="btxt">Example</span></button>
+    <button id="btn-theme" class="sm" title="Light / dark">◐ <span class="btxt">Theme</span></button>
+    <button id="btn-backup" class="sm" title="Download everything as JSON">⬇ <span class="btxt">Back up</span></button>
+    <button id="btn-restore" class="sm" title="Load a backup">⬆ <span class="btxt">Restore</span></button>
+    <button id="btn-clear" class="sm danger" title="Wipe everything (a backup downloads first)">🗑 <span class="btxt">Clear</span></button>
+    <input type="file" id="file-restore" accept="application/json,.json" class="sr">
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="wrap" role="tablist" id="tablist">
+    <button role="tab" id="tab-factory"  aria-controls="panel-factory"  aria-selected="true"><span class="em">🏭</span> <span class="ttxt">Factory</span></button>
+    <button role="tab" id="tab-ideas"    aria-controls="panel-ideas"    aria-selected="false"><span class="em">💡</span> <span class="ttxt">Ideas</span></button>
+    <button role="tab" id="tab-build"    aria-controls="panel-build"    aria-selected="false"><span class="em">🔧</span> <span class="ttxt">Production</span></button>
+    <button role="tab" id="tab-agents"   aria-controls="panel-agents"   aria-selected="false"><span class="em">🤖</span> <span class="ttxt">Agents</span></button>
+    <button role="tab" id="tab-checks"   aria-controls="panel-checks"   aria-selected="false"><span class="em">⚠️</span> <span class="ttxt">Checks</span></button>
+    <button role="tab" id="tab-money"    aria-controls="panel-money"    aria-selected="false"><span class="em">💰</span> <span class="ttxt">Economics</span></button>
+    <button role="tab" id="tab-funnel"   aria-controls="panel-funnel"   aria-selected="false"><span class="em">🔻</span> <span class="ttxt">Funnel</span></button>
+    <button role="tab" id="tab-plan"     aria-controls="panel-plan"     aria-selected="false"><span class="em">🗓</span> <span class="ttxt">Schedule</span></button>
+    <button role="tab" id="tab-export"   aria-controls="panel-export"   aria-selected="false"><span class="em">📄</span> <span class="ttxt">Export</span></button>
+  </div>
+</nav>
+
+<main id="main">
+<div class="wrap">
+
+<!-- ==================== FACTORY ==================== -->
+<section class="panel" id="panel-factory" role="tabpanel" aria-labelledby="tab-factory" tabindex="-1">
+  <div class="page-intro">
+    <h2>The factory</h2>
+    <p>
+      A plan to publish "multiple products every month" is a claim about hours, not about
+      software. This tab works out how many products a month you can actually finish, and how
+      big the catalogue gets before looking after it consumes the time you were going to build
+      with. Everything else in the app feeds these numbers.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>What this app argues</h3></div>
+    <ol class="arg">
+      <li>
+        <b>A factory's output is set by its slowest human step, not its fastest AI one.</b>
+        Generation collapses drafting from days to minutes and leaves deciding, checking,
+        formatting and answering customers exactly where they were. On the workflows in this app
+        the generation steps are a minority of the clock — the Production tab totals both, so you
+        can see the ratio rather than assume it.
+      </li>
+      <li>
+        <b>Every published product is a standing cost, not a finished asset.</b> Support
+        questions, refunds, a broken download link, a syllabus that changed, a model that no
+        longer behaves the way the prompt pack says. Upkeep scales with the catalogue; your week
+        doesn't. There is a catalogue size at which upkeep eats every build hour you have, and
+        the simulation below finds it.
+      </li>
+      <li>
+        <b>The pipeline is exactly as automatic as its worst gate.</b> Most steps here can run
+        unattended. A handful cannot, because being wrong is expensive in a way no amount of
+        review-by-another-model fixes — wrong physics in an exam guide, a feed ratio that kills
+        birds, an invented regnal date in a history of a living institution. Those gates are
+        marked, costed, and never checked off automatically.
+      </li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Your studio</h3>
+      <div class="tools"><span class="pill" id="f-cur-pill">USD</span></div>
+    </div>
+    <div class="grid4">
+      <div class="field">
+        <label class="f" for="f-hours">Hours a week on production <span class="hint">— real ones</span></label>
+        <input type="number" id="f-hours" min="0" max="120" step="0.5">
+      </div>
+      <div class="field">
+        <label class="f" for="f-rate">What an hour of yours is worth</label>
+        <input type="number" id="f-rate" min="0" max="100000" step="1">
+      </div>
+      <div class="field">
+        <label class="f" for="f-upkeep">Upkeep <span class="hint">— minutes per live product per month</span></label>
+        <input type="number" id="f-upkeep" min="0" max="600" step="5">
+      </div>
+      <div class="field">
+        <label class="f" for="f-retire">Retired per month <span class="hint">— % of catalogue</span></label>
+        <input type="number" id="f-retire" min="0" max="50" step="1">
+      </div>
+      <div class="field">
+        <label class="f" for="f-cur">Currency</label>
+        <select id="f-cur"></select>
+      </div>
+      <div class="field">
+        <label class="f" for="f-months">Simulate <span class="hint">— months</span></label>
+        <input type="number" id="f-months" min="6" max="60" step="1">
+      </div>
+      <div class="field">
+        <label class="f" for="f-visitors">Visitors a month <span class="hint">— per live product</span></label>
+        <input type="number" id="f-visitors" min="0" max="10000000" step="50">
+      </div>
+      <div class="field">
+        <label class="f" for="f-conv">Of those, buy <span class="hint">— %</span></label>
+        <input type="number" id="f-conv" min="0" max="100" step="0.1">
+      </div>
+      <div class="field">
+        <label class="f" for="f-target">Target <span class="hint">— products a month</span></label>
+        <input type="number" id="f-target" min="0" max="30" step="1">
+      </div>
+    </div>
+    <div class="note">
+      <b>Upkeep is the number people leave out.</b> The default of 45 minutes a product a month
+      is a placeholder, not a measurement — replace it with your own once you have three products
+      live and a month of support email to count. It is the single input that decides whether the
+      catalogue compounds or stalls.
+    </div>
+  </div>
+
+  <div class="grid4" id="f-stats"></div>
+
+  <div id="f-verdict"></div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>The catalogue, month by month</h3>
+      <div class="tools"><span class="pill" id="f-sim-note">—</span></div>
+    </div>
+    <p class="sub">
+      Each month: upkeep for everything live comes out of your hours first, whatever is left
+      builds the next product in priority order from the Ideas tab, and a share of the catalogue
+      retires. Revenue per product decays without marketing towards a residual floor.
+    </p>
+    <div class="chart" id="f-chart" role="img" aria-label="Monthly revenue and the share of hours going to upkeep"></div>
+    <div class="axis chart" id="f-axis" style="height:auto;display:flex"></div>
+    <div class="legend">
+      <span><i style="background:var(--acc)"></i>Monthly revenue, net of store fees</span>
+      <span><i style="background:var(--amber)"></i>Share of your hours going to upkeep</span>
+    </div>
+    <div class="tablewrap" style="margin-top:14px"><table>
+      <thead><tr>
+        <th>Month</th><th class="n">Live</th><th class="n">Launched</th><th class="n">Retired</th>
+        <th class="n">Upkeep hrs</th><th class="n">Build hrs</th><th class="n">Revenue</th><th class="n">Cumulative</th>
+      </tr></thead>
+      <tbody id="f-sim-table"></tbody>
+    </table></div>
+    <div class="note amber" id="f-ceiling"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>What the simulation is not</h3></div>
+    <ul style="margin:0">
+      <li><b>Not a forecast of your sales.</b> It multiplies your traffic guess by your
+        conversion guess. Both are yours; the app supplies no market data and cannot.</li>
+      <li><b>Not a claim that products decay at 15% a month.</b> That is a default you can
+        change on the Economics tab. What is not a guess is the shape: an unmarketed product
+        falls towards a floor rather than holding its launch month.</li>
+      <li><b>Not an argument against publishing.</b> It is an argument for choosing the
+        catalogue size on purpose instead of discovering it when the support inbox stops
+        fitting into a Saturday.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== IDEAS ==================== -->
+<section class="panel" id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>Ideas, ranked</h2>
+    <p>
+      Twelve seeded from the studio's own list, scored on five things, ranked by the product of
+      what they earn and what they cost you to make. Commit the ones you intend to build — the
+      committed set is what the Production, Economics and Schedule tabs work on.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>How the score is built</h3>
+      <div class="tools"><button id="i-weights-reset" class="xs">Reset weights</button></div>
+    </div>
+    <p class="sub">
+      Five factors, each 0–10, each weighted. The weights are the app's judgement and yours to
+      argue with; change them and every rank below moves.
+    </p>
+    <div class="grid3" id="i-weights"></div>
+    <div class="note">
+      <b>Rank is not score.</b> Score says how good the product is; rank divides it by the hours
+      the workflow says it takes, because a studio with one pair of hands is choosing between
+      products, not collecting them. A merely-good ebook beats a slightly-better course whenever
+      the course costs three times the week.
+    </div>
+  </div>
+
+  <div class="chips" id="i-filters"></div>
+
+  <div class="card flush">
+    <div class="tablewrap"><table>
+      <thead><tr>
+        <th>#</th><th>Product</th><th>Type</th><th class="n">Price</th><th class="n">Hours</th>
+        <th class="n">Score</th><th class="n">Per hour</th><th>Build?</th>
+      </tr></thead>
+      <tbody id="i-table"></tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Score an idea</h3>
+      <div class="tools"><select id="i-pick" aria-label="Idea to score"></select></div>
+    </div>
+    <div class="split">
+      <div>
+        <div id="i-sliders"></div>
+      </div>
+      <div>
+        <div id="i-detail"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>Add your own</h3></div>
+    <div class="grid3">
+      <div class="field">
+        <label class="f" for="i-new-name">Name</label>
+        <input type="text" id="i-new-name" maxlength="90" placeholder="WASSCE Chemistry Pass Guide">
+      </div>
+      <div class="field">
+        <label class="f" for="i-new-cat">Category</label>
+        <select id="i-new-cat"></select>
+      </div>
+      <div class="field">
+        <label class="f" for="i-new-type">Workflow</label>
+        <select id="i-new-type"></select>
+      </div>
+      <div class="field">
+        <label class="f" for="i-new-price">Price</label>
+        <input type="number" id="i-new-price" min="0" max="100000" step="1" value="19">
+      </div>
+      <div class="field">
+        <label class="f" for="i-new-who">Who it's for</label>
+        <input type="text" id="i-new-who" maxlength="120" placeholder="SHS 3 science students sitting in May">
+      </div>
+      <div class="field" style="display:flex;align-items:flex-end">
+        <button id="i-add" class="primary" style="width:100%;justify-content:center">Add to the list</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PRODUCTION ==================== -->
+<section class="panel" id="panel-build" role="tabpanel" aria-labelledby="tab-build" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>Production</h2>
+    <p>
+      Three workflows — ebook, course, template pack — broken into the steps that actually
+      consume a day, each with the agent that runs it, the artifact it must produce before the
+      next step starts, and how long it takes you rather than the model. Steps with a gate cannot
+      be delegated; they are why the pipeline is not a button.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Working on</h3>
+      <div class="tools">
+        <select id="b-pick" aria-label="Product in production"></select>
+        <button id="b-reset" class="sm">Reset this product's steps</button>
+      </div>
+    </div>
+    <div id="b-summary"></div>
+  </div>
+
+  <div id="b-steps"></div>
+
+  <div class="card">
+    <div class="card-head"><h3>Where the hours go</h3></div>
+    <div class="grid3" id="b-split"></div>
+    <div class="note" id="b-split-note"></div>
+  </div>
+</section>
+
+<!-- ==================== AGENTS ==================== -->
+<section class="panel" id="panel-agents" role="tabpanel" aria-labelledby="tab-agents" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>The seven agents</h2>
+    <p>
+      Each one is a system prompt, written from the product you have selected, with your own
+      facts substituted and the things the model must not invent stated as prohibitions. Copy
+      one into a project, a custom GPT, or the top of a chat. They are written to be pasted
+      once and reused, not retyped per message.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Briefing for</h3>
+      <div class="tools">
+        <select id="a-pick" aria-label="Product to brief the agents on"></select>
+        <button id="a-copyall" class="sm">Copy all seven</button>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label class="f" for="a-facts">What you can prove <span class="hint">— pasted into every brief</span></label>
+        <textarea id="a-facts" rows="3" placeholder="Nine years teaching SHS physics. 400+ students through the class. Sources: WAEC syllabus 2024, past papers 2015–2025 (owned copies)."></textarea>
+      </div>
+      <div class="field">
+        <label class="f" for="a-voice">House voice</label>
+        <textarea id="a-voice" rows="3" placeholder="Plain Ghanaian English. Short sentences. Worked examples with cedi amounts and local names. No hype, no exclamation marks, no American spelling."></textarea>
+      </div>
+    </div>
+    <div class="note amber">
+      <b>The prohibitions are the useful half.</b> A model asked for a testimonial writes one; a
+      model asked for a statistic supplies one. Every brief below ends with a list of things it
+      must leave as a marked hole for you to fill, because a hole is visible and an invention
+      is not.
+    </div>
+  </div>
+
+  <div id="a-cards"></div>
+</section>
+
+<!-- ==================== CHECKS ==================== -->
+<section class="panel" id="panel-checks" role="tabpanel" aria-labelledby="tab-checks" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>The checks a model can't do for you</h2>
+    <p>
+      Category by category: what generated content in this subject gets wrong, how it shows up
+      after you have sold it, and who can actually settle it. These are the gates costed on the
+      Production tab. Nothing here is a general worry about AI — each one is specific to
+      something on the studio's own product list.
+    </p>
+  </div>
+
+  <div class="chips" id="k-filters"></div>
+  <div id="k-list"></div>
+
+  <div class="card">
+    <div class="card-head"><h3>The refund arithmetic behind the gates</h3></div>
+    <div id="k-refund"></div>
+    <div class="note">
+      A gate costs a fixed number of minutes every time. A missed gate costs refunds, the
+      support thread each refund brings, and the reviews that follow — and unlike the gate, that
+      bill arrives after the money has been spent and scales with how well the product sold. The
+      arithmetic above uses your own upkeep and refund figures.
+    </div>
+  </div>
+</section>
+
+<!-- ==================== ECONOMICS ==================== -->
+<section class="panel" id="panel-money" role="tabpanel" aria-labelledby="tab-money" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>Unit economics</h2>
+    <p>
+      What a sale leaves after the store takes its cut, what a product has to sell to pay for
+      the hours that made it, and what the price ladder looks like once fees are real numbers
+      rather than a rounding error.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Store fees</h3>
+      <div class="tools"><button id="m-confirm" class="sm">Mark these as checked today</button></div>
+    </div>
+    <p class="sub">
+      <b>These are placeholders, not quoted rates.</b> The app ships no price list, because
+      platform fees change and any figure baked in would be wrong by the time you read it. Open
+      each platform's pricing page, type what it says, and mark it checked.
+    </p>
+    <div class="tablewrap"><table>
+      <thead><tr>
+        <th>Channel</th><th>Best for</th><th class="n">Fee %</th><th class="n">Fixed</th>
+        <th class="n">Payout lag</th><th>Status</th>
+      </tr></thead>
+      <tbody id="m-channels"></tbody>
+    </table></div>
+    <div class="grid3" style="margin-top:14px">
+      <div class="field">
+        <label class="f" for="m-refund">Refund rate <span class="hint">— % of sales</span></label>
+        <input type="number" id="m-refund" min="0" max="100" step="0.5">
+      </div>
+      <div class="field">
+        <label class="f" for="m-decay">Monthly decay <span class="hint">— % a product fades without marketing</span></label>
+        <input type="number" id="m-decay" min="0" max="90" step="1">
+      </div>
+      <div class="field">
+        <label class="f" for="m-floor">Residual floor <span class="hint">— % of launch-month sales it never falls below</span></label>
+        <input type="number" id="m-floor" min="0" max="100" step="1">
+      </div>
+    </div>
+  </div>
+
+  <div class="card flush">
+    <div class="tablewrap"><table>
+      <thead><tr>
+        <th>Product</th><th>Channel</th><th class="n">Price</th><th class="n">Fee</th><th class="n">Net</th>
+        <th class="n">Build cost</th><th class="n">Break-even</th><th class="n">Months to pay back</th>
+      </tr></thead>
+      <tbody id="m-table"></tbody>
+    </table></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-head"><h3>The ladder</h3></div>
+      <p class="sub">Prices from the Ideas tab, sorted, with the gap each one has to justify.</p>
+      <div id="m-ladder"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Two currencies, one price</h3></div>
+      <div class="field">
+        <label class="f" for="m-fx">Your rate <span class="hint">— local units per <span id="m-fx-cur">USD</span>, typed by you</span></label>
+        <input type="number" id="m-fx" min="0" max="1000000" step="0.01">
+      </div>
+      <div id="m-fx-out"></div>
+      <div class="note amber">
+        The app has no exchange rate and never fetches one. A price that reads as reasonable in
+        one currency and absurd in the other is the commonest way a two-store setup loses money —
+        not through fees, through a price nobody local will pay.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FUNNEL ==================== -->
+<section class="panel" id="panel-funnel" role="tabpanel" aria-labelledby="tab-funnel" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>The funnel, priced</h2>
+    <p>
+      Seven steps from a visitor to a coaching client. Type the rates you believe; the app
+      multiplies them out per thousand visitors and says which step the money actually comes
+      from. It is very rarely the one that gets the most attention.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Rates and prices</h3>
+      <div class="tools"><button id="n-reset" class="sm">Reset to defaults</button></div>
+    </div>
+    <div id="n-inputs"></div>
+    <div class="note">
+      Each rate is <b>of the step above it</b>, not of the original visitors — 3% of buyers
+      taking the core product is a very different number from 3% of everybody who landed.
+      Compounding is where funnel arithmetic usually goes wrong in a spreadsheet.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Per 1,000 visitors</h3>
+      <div class="tools"><span class="pill" id="n-rpv">—</span></div>
+    </div>
+    <div id="n-stages"></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-head"><h3>Where the money comes from</h3></div>
+      <div id="n-mix"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>What this says to do next</h3></div>
+      <div id="n-advice"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SCHEDULE ==================== -->
+<section class="panel" id="panel-plan" role="tabpanel" aria-labelledby="tab-plan" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>The thirty days</h2>
+    <p>
+      The blueprint's month — build in week one, design in two, publish in three, review in four
+      — laid against your actual hours and the committed products' actual step lists. Where it
+      doesn't fit, the app says so rather than shrinking the estimates.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Month starting</h3>
+      <div class="tools">
+        <input type="text" id="s-start" maxlength="10" placeholder="YYYY-MM-DD" style="width:150px">
+        <button id="s-today" class="sm">Today</button>
+      </div>
+    </div>
+    <div id="s-fit"></div>
+  </div>
+
+  <div id="s-weeks"></div>
+
+  <div class="card">
+    <div class="card-head"><h3>The recurring month, once the catalogue exists</h3></div>
+    <div id="s-steady"></div>
+  </div>
+</section>
+
+<!-- ==================== EXPORT ==================== -->
+<section class="panel" id="panel-export" role="tabpanel" aria-labelledby="tab-export" tabindex="-1" hidden>
+  <div class="page-intro">
+    <h2>Export</h2>
+    <p>
+      The whole factory as one Markdown document — the ranked ideas, the workflows with their
+      gates, the seven agent briefs, the economics, the funnel and the schedule. Hand it to
+      whoever is doing the building, including future you.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Include</h3>
+      <div class="tools">
+        <button id="x-all" class="sm">All</button>
+        <button id="x-none" class="sm">None</button>
+      </div>
+    </div>
+    <div class="grid3" id="x-sections"></div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button id="x-build" class="primary">Build the document</button>
+      <button id="x-csv" class="sm">Product table as CSV</button>
+      <button id="x-simcsv" class="sm">Simulation as CSV</button>
+    </div>
+  </div>
+
+  <p class="muted" id="x-placeholder">Nothing built yet.</p>
+
+  <div class="card" id="x-card" hidden>
+    <div class="card-head">
+      <h3>Preview</h3>
+      <div class="tools">
+        <span class="pill" id="x-size">—</span>
+        <button id="x-copy" class="sm">Copy</button>
+        <button id="x-dl" class="sm primary">Download .md</button>
+      </div>
+    </div>
+    <div class="promptbox tall"><pre id="x-out"></pre></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>What this factory deliberately does not do</h3></div>
+    <ul style="margin:0">
+      <li><b>It does not research the market.</b> Every demand and competition score is a
+        judgement you typed. The app makes them explicit and weighs them consistently; it cannot
+        make them true.</li>
+      <li><b>It does not publish anything.</b> No store, no payment processor, no mailing list,
+        no network of any kind. It works out what to publish and what it will earn; the
+        uploading is yours.</li>
+      <li><b>It does not write the product.</b> It writes the briefs that write the product,
+        and it is explicit about which parts of the result a person still has to verify.</li>
+      <li><b>It does not promise a month of output.</b> It computes one from your hours and
+        then tells you when the number you wanted is not in them.</li>
+    </ul>
+  </div>
+</section>
+
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span class="grow">MOSH Product Factory — everything stays in this browser. No network requests of any kind.</span>
+    <span id="foot-storage"></span>
+    <span id="foot-tests" class="muted"></span>
+  </div>
+</footer>
+
+<div id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<script>
+"use strict";
+
+/* ===========================================================================
+   DATA — categories, the product list, the three workflows, the seven agents,
+   the accuracy register, the funnel, the channels.
+
+   Nothing here is fetched and nothing here is a market figure. Where a number
+   is a judgement it is editable, and where it is a placeholder standing in for
+   something only the platform can tell you, the interface says so.
+   =========================================================================== */
+
+const CURRENCIES = [
+  { code: "USD", sym: "$" },
+  { code: "GHS", sym: "₵" },
+  { code: "NGN", sym: "₦" },
+  { code: "GBP", sym: "£" },
+  { code: "EUR", sym: "€" }
+];
+
+const CATEGORIES = [
+  { id: "education", name: "Education", em: "🎓",
+    note: "The largest and least forgiving audience the studio has. Exam candidates buy on a deadline, use the product within weeks, and find out immediately whether it was right. Nothing else on this list has a shorter feedback loop or a harsher one.",
+    buyer: "Students on a deadline, and the parents and teachers buying for them." },
+  { id: "ai", name: "AI products", em: "🤖",
+    note: "Fastest to make and fastest to rot. A prompt pack is a snapshot of how a model behaved in the month you wrote it; the model moves, the screenshots go stale, and the product needs a version number from day one or it becomes a support queue.",
+    buyer: "Small business owners and freelancers who have opened a chat window and not known what to type." },
+  { id: "business", name: "Business", em: "💼",
+    note: "Templates sell steadily and quietly. The trap is not competition — it is that the facts inside a startup guide (agency names, fees, forms, thresholds) change without telling you, and a guide with last year's fees in it is worse than no guide.",
+    buyer: "First-time founders and side-hustlers who want the sequence, not the theory." },
+  { id: "agriculture", name: "Agriculture", em: "🦆",
+    note: "The highest price tolerance on the list and the highest stakes. Buyers are spending real capital on live animals, and advice that is merely plausible can kill stock, fail a market inspection, or lose a season. This is the one category where a human expert is not optional.",
+    buyer: "Small and medium farmers who have already decided to start and want the operating detail." },
+  { id: "history", name: "History & heritage", em: "🏛",
+    note: "The category most flattered by a model and most damaged by one. Generated history is fluent, confident and specific — dates, lineages, cited books — and specificity is exactly what it is worst at. It also concerns living institutions, so an error is not only wrong, it is somebody's standing.",
+    buyer: "Schools, diaspora readers, researchers and cultural institutions." }
+];
+
+const TYPES = [
+  { id: "ebook", name: "E-book / guide", em: "📘" },
+  { id: "course", name: "Course", em: "🎬" },
+  { id: "pack", name: "Template / prompt pack", em: "🧩" }
+];
+
+/* ---- the studio's own list, seeded with judgements you can overwrite ------
+   s = { demand, ground, price, fit, proof } on 0–10. Every one of them is an
+   opinion typed into this file, printed in the interface as an opinion. ----- */
+
+const SEED = [
+  { id: "prompt-pack-gh", name: "AI Prompt Pack for Small Businesses in Ghana",
+    cat: "ai", type: "pack", price: 19,
+    who: "Shop owners, tailors, caterers and salons with a phone and a WhatsApp business line",
+    s: { demand: 7, ground: 6, price: 4, fit: 9, proof: 9 },
+    note: "The cheapest thing on the list to make and the easiest to test — you can run every prompt in an afternoon. Its weakness is price ceiling: nobody pays much for a text file, so this earns by feeding the list, not by itself." },
+
+  { id: "ai-income-gh", name: "The AI Income Blueprint for Ghana",
+    cat: "ai", type: "ebook", price: 25,
+    who: "People who have heard AI makes money and have no idea what the first step is",
+    s: { demand: 8, ground: 5, price: 6, fit: 10, proof: 7 },
+    note: "The anchor product: it explains the studio and sells everything else. Crowded shelf, but almost nothing on it is written for a reader earning and spending in cedis." },
+
+  { id: "wassce-physics", name: "WASSCE Physics Pass Guide",
+    cat: "education", type: "ebook", price: 15,
+    who: "SHS 3 science students sitting the May/June paper, and the parents buying for them",
+    s: { demand: 9, ground: 6, price: 5, fit: 8, proof: 8 },
+    note: "Demand is seasonal and enormous, and the buyer is desperate rather than curious, which is the best purchase intent on the whole list. Also the least forgiving: one wrong worked solution circulates faster than any review." },
+
+  { id: "wassce-maths", name: "WASSCE Mathematics Pass Guide",
+    cat: "education", type: "ebook", price: 15,
+    who: "Core and elective maths candidates, all programmes",
+    s: { demand: 10, ground: 4, price: 5, fit: 7, proof: 8 },
+    note: "Bigger audience than physics — every candidate sits core maths — and correspondingly more competition, including free material. Worth building second, after physics has proved the format." },
+
+  { id: "duck-farming", name: "The Complete Duck Farming Business Guide",
+    cat: "agriculture", type: "course", price: 45,
+    who: "Smallholders choosing between poultry lines, and existing chicken farmers adding ducks",
+    s: { demand: 6, ground: 9, price: 9, fit: 8, proof: 5 },
+    note: "The clearest ground on the list: duck-specific material for West African conditions barely exists, while chicken material is everywhere and does not transfer. Highest price tolerance, longest build, and the only product here that needs a named expert to sign off." },
+
+  { id: "akan-encyclopedia", name: "The Complete Akan Kingdom Encyclopedia",
+    cat: "history", type: "ebook", price: 35,
+    who: "Schools, diaspora readers, and researchers wanting one organised reference",
+    s: { demand: 5, ground: 8, price: 7, fit: 7, proof: 3 },
+    note: "The most valuable thing the studio could own in ten years and the worst possible first product. Slow to sell, slow to prove, and the fact-checking is a research project rather than a review pass." },
+
+  { id: "startup-templates", name: "Small Business Startup Templates",
+    cat: "business", type: "pack", price: 29,
+    who: "First-time founders registering a business this quarter",
+    s: { demand: 7, ground: 5, price: 6, fit: 8, proof: 8 },
+    note: "Sells all year with no seasonality. The maintenance burden is the point of failure: registration fees and forms change, and a template pack quietly becomes wrong while it is still selling." },
+
+  { id: "canva-social", name: "Canva Social Media Templates",
+    cat: "business", type: "pack", price: 19,
+    who: "Small businesses posting daily and running out of things to post",
+    s: { demand: 8, ground: 3, price: 4, fit: 6, proof: 9 },
+    note: "Enormous demand meeting enormous supply, much of it free. Only worth building as a bundled bonus or with a sharply local angle — the generic version competes with thousands of identical packs." },
+
+  { id: "automation-templates", name: "AI Automation Templates",
+    cat: "ai", type: "pack", price: 29,
+    who: "Owners drowning in repeat admin: quotes, invoices, follow-ups, booking",
+    s: { demand: 7, ground: 6, price: 7, fit: 9, proof: 7 },
+    note: "Higher price than a prompt pack because the buyer can name the hours it saves. Every workflow must be built and run end to end before it ships; an untested automation is not a template, it is a diagram." },
+
+  { id: "youtube-templates", name: "YouTube Growth Templates",
+    cat: "business", type: "pack", price: 19,
+    who: "Creators with under a thousand subscribers and no publishing system",
+    s: { demand: 7, ground: 3, price: 4, fit: 5, proof: 8 },
+    note: "The weakest fit on the list. The studio would be selling growth advice to an audience that judges it by the seller's own channel, which is a claim you have to be able to make." },
+
+  { id: "freelancing-gh", name: "Freelancing From Ghana",
+    cat: "business", type: "ebook", price: 19,
+    who: "Graduates and job-seekers wanting foreign-currency income from home",
+    s: { demand: 9, ground: 6, price: 6, fit: 9, proof: 7 },
+    note: "The specific problems — getting paid across borders, platform verification, pricing against a cedi cost base — are exactly what generic freelancing books skip, and exactly what the studio has lived." },
+
+  { id: "mosh-toolkit", name: "The MOSH Digital Studios AI Toolkit",
+    cat: "ai", type: "pack", price: 49,
+    who: "Buyers of anything else here who want the whole system in one purchase",
+    s: { demand: 6, ground: 7, price: 8, fit: 10, proof: 6 },
+    note: "A bundle, so it costs almost nothing to assemble once the parts exist and cannot exist before them. Build it last; price it above the sum of any two products and below the sum of all of them." }
+];
+
+/* ---- workflows -----------------------------------------------------------
+   mins is your time at the keyboard, whether you are prompting, reading or
+   fixing — not the model's latency, which is not the constraint.
+   gate: a step where being wrong is expensive and no second model settles it.
+   ai:   the share of the step a model genuinely does. Used for the ratio on
+         the Production tab, and it is a judgement like everything else.  ---- */
+
+const WORKFLOWS = {
+  ebook: [
+    { id: "e1", n: "Demand check", agent: "strategist", mins: 45, ai: 0.6, gate: false,
+      out: "One page: who buys this, what they are afraid of, and why this month",
+      why: "The cheapest step to skip and the most expensive one to have skipped. Everything downstream inherits the answer." },
+    { id: "e2", n: "Source gathering", agent: "strategist", mins: 90, ai: 0.2, gate: true,
+      out: "A numbered list of sources you own, can open, and can quote",
+      why: "A model cannot supply sources; it can only supply things shaped like sources. Every factual claim later in the book has to point at a line in this list." },
+    { id: "e3", n: "Outline", agent: "strategist", mins: 40, ai: 0.7, gate: false,
+      out: "Chapter list, each with the one promise it keeps and roughly what it costs the reader in time",
+      why: "Fixing structure after the chapters exist means rewriting the chapters." },
+    { id: "e4", n: "Chapter drafting", agent: "writer", mins: 240, ai: 0.85, gate: false,
+      out: "A complete draft with every hole marked, none filled with invention",
+      why: "The step everybody imagines is the whole job. It is under a third of it." },
+    { id: "e5", n: "Accuracy pass", agent: "editor", mins: 120, ai: 0.2, gate: true,
+      out: "Every number, name, date, dosage, fee and worked solution checked against the source list",
+      why: "This is the gate. See the Checks tab for what fails here in each category." },
+    { id: "e6", n: "Line edit and voice", agent: "editor", mins: 90, ai: 0.6, gate: false,
+      out: "A draft that sounds like one person wrote it, in your English rather than the model's",
+      why: "Generated prose has a register — evenly enthusiastic, faintly American, allergic to short sentences. Readers recognise it even when they can't name it." },
+    { id: "e7", n: "Formatting and layout", agent: "designer", mins: 75, ai: 0.4, gate: false,
+      out: "PDF with a working table of contents, page numbers, and readable type on a phone",
+      why: "Most of the audience reads on a 6-inch screen. A two-column A4 layout is unreadable there." },
+    { id: "e8", n: "Cover and mockups", agent: "designer", mins: 60, ai: 0.7, gate: false,
+      out: "Cover, plus three mockups for the listing and the ads",
+      why: "The cover is the only part of the product most people ever see." },
+    { id: "e9", n: "Sales page", agent: "store", mins: 90, ai: 0.7, gate: false,
+      out: "Listing copy, price, screenshots, refund terms, checkout live",
+      why: "Written from the demand check, not from the book — the buyer has not read it yet." },
+    { id: "e10", n: "Delivery test", agent: "automation", mins: 30, ai: 0.1, gate: true,
+      out: "You bought your own product, on a phone, on mobile data, and it arrived",
+      why: "The commonest launch failure is not a bad product. It is a delivery email in a spam folder and a download link that expired." },
+    { id: "e11", n: "Launch assets", agent: "marketing", mins: 90, ai: 0.85, gate: false,
+      out: "Ten posts, three emails, one video script, all scheduled",
+      why: "Written before launch day, because launch day is not a writing day." },
+    { id: "e12", n: "Publish and announce", agent: "store", mins: 45, ai: 0.3, gate: false,
+      out: "Live, announced, and the first sale watched end to end",
+      why: "Watch the first real purchase happen. Do not learn about the broken step from a customer." }
+  ],
+
+  course: [
+    { id: "c1", n: "Demand check", agent: "strategist", mins: 45, ai: 0.6, gate: false,
+      out: "Who pays course money rather than book money, and what they need to be able to do afterwards",
+      why: "A course is not a longer book. It is bought to produce a capability, and it is refunded when it doesn't." },
+    { id: "c2", n: "Source gathering and expert line", agent: "strategist", mins: 90, ai: 0.2, gate: true,
+      out: "Sources you own, plus the name of the person who will sign off the technical content",
+      why: "For anything operational — livestock, money, medicine, law — find the expert before writing, not after. Their corrections change the outline." },
+    { id: "c3", n: "Course structure", agent: "strategist", mins: 60, ai: 0.7, gate: false,
+      out: "Modules and lessons, each ending in something the student can now do",
+      why: "Modules organised by topic produce a course people finish 12% of. Modules organised by capability produce one they finish." },
+    { id: "c4", n: "Lesson writing", agent: "writer", mins: 300, ai: 0.85, gate: false,
+      out: "Every lesson written out in full, holes marked",
+      why: "Write it before you film it. Improvising to camera costs more in editing than the script cost to write." },
+    { id: "c5", n: "Worksheets and exercises", agent: "writer", mins: 120, ai: 0.8, gate: false,
+      out: "One artifact per lesson the student fills in and keeps",
+      why: "The worksheet is what makes it a course rather than a video playlist, and it is what gets photographed and shared." },
+    { id: "c6", n: "Slides and visuals", agent: "designer", mins: 150, ai: 0.6, gate: false,
+      out: "Deck per lesson, legible at phone size",
+      why: "Text-heavy slides read to camera are the defining shape of an unfinished course." },
+    { id: "c7", n: "Recording and editing", agent: "designer", mins: 360, ai: 0.15, gate: false,
+      out: "Recorded, cut, levelled audio, uploaded",
+      why: "The single largest block of unavoidable human time in the whole factory, and the one AI has moved the least. Budget it honestly or the course sits at 80% for a year." },
+    { id: "c8", n: "Accuracy pass and sign-off", agent: "editor", mins: 120, ai: 0.2, gate: true,
+      out: "Technical content checked, and where it matters, signed off by the named expert",
+      why: "This is the gate. For agricultural and medical detail it is not a review, it is an approval." },
+    { id: "c9", n: "Platform setup", agent: "store", mins: 90, ai: 0.3, gate: false,
+      out: "Hosted, access controlled, progress visible, tested on a slow connection",
+      why: "Video delivery is the part of a course that breaks, and it breaks worst for the buyers with the worst bandwidth." },
+    { id: "c10", n: "Sales page", agent: "store", mins: 90, ai: 0.7, gate: false,
+      out: "Listing, price, curriculum outline, refund terms, checkout live",
+      why: "Course buyers read the curriculum before anything else. Publish it in full." },
+    { id: "c11", n: "Delivery test", agent: "automation", mins: 30, ai: 0.1, gate: true,
+      out: "You enrolled yourself, on a phone, and watched lesson one to the end",
+      why: "Access control is the thing that silently fails for exactly the people who paid." },
+    { id: "c12", n: "Launch assets", agent: "marketing", mins: 90, ai: 0.85, gate: false,
+      out: "Posts, emails, a trailer script, a free lesson chosen as the sample",
+      why: "The free lesson does more selling than any advert. Choose the one that produces a visible result." }
+  ],
+
+  pack: [
+    { id: "p1", n: "Demand check", agent: "strategist", mins: 30, ai: 0.6, gate: false,
+      out: "The repeated task this pack removes, named in the buyer's words",
+      why: "A pack that saves a nameable hour sells. A pack of assets sells at asset prices." },
+    { id: "p2", n: "Spec the pack", agent: "strategist", mins: 40, ai: 0.7, gate: false,
+      out: "The item list, with the problem each item solves and the format it ships in",
+      why: "Count and format are the whole listing. Decide them before building or the pack grows shapelessly." },
+    { id: "p3", n: "Build the items", agent: "writer", mins: 180, ai: 0.8, gate: false,
+      out: "Every item made, named consistently, in one file convention",
+      why: "Naming is not cosmetic — a pack of 60 files with inconsistent names is unusable and generates support mail forever." },
+    { id: "p4", n: "Run every item", agent: "editor", mins: 120, ai: 0.3, gate: true,
+      out: "Each prompt actually run, each template actually filled, output kept as evidence",
+      why: "This is the gate. An untested prompt pack is a list of sentences, and the buyer finds out in the first five minutes." },
+    { id: "p5", n: "Quickstart and instructions", agent: "writer", mins: 60, ai: 0.8, gate: false,
+      out: "One page: what to open first, what to change, what good output looks like",
+      why: "The commonest refund reason for a pack is not quality. It is a buyer who opened the folder and closed it." },
+    { id: "p6", n: "Packaging", agent: "designer", mins: 60, ai: 0.3, gate: false,
+      out: "Folder structure, formats the buyer can actually open, one zip under the platform's limit",
+      why: "Ship formats that need no paid software. A pack that opens only in the tool you happen to own is a pack half your buyers cannot use." },
+    { id: "p7", n: "Cover and mockups", agent: "designer", mins: 45, ai: 0.7, gate: false,
+      out: "Cover plus a grid mockup showing the actual count",
+      why: "Packs sell on visible abundance. Show the items rather than describing them." },
+    { id: "p8", n: "Sales page", agent: "store", mins: 75, ai: 0.7, gate: false,
+      out: "Listing copy, the item list in full, price, checkout live",
+      why: "List every item. The buyer is counting, and a hidden count reads as a small one." },
+    { id: "p9", n: "Delivery test", agent: "automation", mins: 25, ai: 0.1, gate: true,
+      out: "Bought it yourself, downloaded on a phone, opened three items at random",
+      why: "Zip files and phone browsers are an unreliable pairing, and most of the audience is on a phone." },
+    { id: "p10", n: "Launch assets", agent: "marketing", mins: 75, ai: 0.85, gate: false,
+      out: "Posts showing before-and-after output, three emails, one demo script",
+      why: "For a pack the demo is the advert: show one item producing a result in under a minute." }
+  ]
+};
+
+/* ---- the seven agents ---------------------------------------------------- */
+
+function factsBlock(ctx) {
+  const f = (ctx.facts || "").trim();
+  return f
+    ? "WHAT I CAN PROVE (use only these as evidence):\n" + f
+    : "WHAT I CAN PROVE: I have not given you any. Therefore you may not use any evidence at all — no statistics, no testimonials, no credentials, no case studies. Mark every place one would go as [EVIDENCE NEEDED].";
+}
+function voiceBlock(ctx) {
+  const v = (ctx.voice || "").trim();
+  return v ? "VOICE:\n" + v
+           : "VOICE: plain English, short sentences, concrete examples, no hype, no exclamation marks. Write for a reader on a phone.";
+}
+const NEVER = [
+  "Never invent a statistic, a source, a quotation, a testimonial, a customer name, a price, a date or a regulation.",
+  "Where a fact is needed and you have not been given it, write [FACT NEEDED: what you need] and continue.",
+  "Never describe an outcome as typical, guaranteed or likely.",
+  "Never write in the first person about experiences you have not been told about."
+];
+
+const AGENTS = [
+  { id: "strategist", n: "Product Strategist", em: "🧭", role: "Decides what to build and what shape it is",
+    does: "Turns a topic into a specified product: who it is for, what it must contain, what it costs, and what would prove the idea wrong.",
+    prompt: (p, ctx) => `You are the product strategist for ${ctx.studio}. You specify digital products before anyone writes a word of them.
+
+THE PRODUCT UNDER CONSIDERATION
+- Working title: ${p.name}
+- Category: ${catName(p.cat)}
+- Format: ${typeName(p.type)}
+- Intended buyer: ${p.who || "[FACT NEEDED: who this is for]"}
+- Intended price: ${money(p.price)}
+
+${factsBlock(ctx)}
+
+${voiceBlock(ctx)}
+
+DELIVER, IN THIS ORDER
+1. THE BUYER. One paragraph on the specific person: what they were doing ten minutes before they found this, what they are afraid of, what they have already tried and why it did not work.
+2. THE PROMISE. One sentence, in their words, of what they can do after buying that they could not do before. If you cannot write it in one sentence the product is not specified yet — say so.
+3. WHAT IS INSIDE. A contents list with the promise each part keeps. For a pack, an exact item count and the format of each item.
+4. WHAT IS DELIBERATELY LEFT OUT, and why leaving it out makes the product better rather than smaller.
+5. PRICE. Argue for or against ${money(p.price)} on what the buyer compares it to — not on what it cost to make, which they do not know and would not care about.
+6. THE COMPETITION, as questions I must go and answer myself. Do not answer them for me: you cannot see the market and I can.
+7. THE KILL CRITERIA. Three things that, if true, mean I should not build this. Make them observable within two weeks.
+8. THE RISK REGISTER. What a language model gets wrong in ${catName(p.cat).toLowerCase()} specifically, and which claims in this product a human must verify before it ships.
+
+RULES
+${NEVER.map(x => "- " + x).join("\n")}
+- Do not pad. If a section is short because the answer is short, leave it short.
+- End with the three things you most need from me before the writer can start.` },
+
+  { id: "writer", n: "Writer", em: "✍️", role: "Produces the draft",
+    does: "Writes chapters, lessons, worksheets and pack items to the outline, marking every hole rather than filling it with plausible invention.",
+    prompt: (p, ctx) => `You are the writer for ${ctx.studio}, drafting "${p.name}" — a ${typeName(p.type).toLowerCase()} for ${p.who || "[FACT NEEDED: the audience]"}.
+
+${voiceBlock(ctx)}
+
+${factsBlock(ctx)}
+
+HOW TO WORK
+- I will give you the outline one section at a time. Write that section only. Do not skip ahead, and do not summarise sections you have not been given.
+- Open each section with the reader's problem in their own words, not with a definition.
+- Every abstract point gets a concrete example immediately after it. Examples must use the reader's setting, currency and names — not defaults from somewhere else.
+- Prefer a worked example to an explanation, a table to a paragraph of comparisons, and a numbered procedure to prose whenever the reader has to do something in order.
+- End each section with the smallest action the reader can take today, and how they will know it worked.
+
+THE RULE THAT MATTERS MOST
+${NEVER.join("\n")}
+A marked hole costs me five minutes to fill. An invented fact costs me a refund, a support thread and a review, and I will not find it before the buyer does.
+
+FORMAT
+- Markdown. ## for sections, ### for sub-sections. No decorative emoji in body text.
+- Target length is a floor for usefulness, not a target for words: if the section is complete in half the length, stop.
+- After each section, list in a "HOLES" block every [FACT NEEDED] you left and what would fill it.`,
+  },
+
+  { id: "designer", n: "Designer", em: "🎨", role: "Makes the thing look like something",
+    does: "Cover, interior layout, slides, mockups, ad creative — specified precisely enough to be executed in a design tool without further decisions.",
+    prompt: (p, ctx) => `You are the designer for ${ctx.studio}. You are specifying the visual design for "${p.name}" (${typeName(p.type)}, ${catName(p.cat)}), sold at ${money(p.price)} to ${p.who || "[FACT NEEDED: the audience]"}.
+
+You produce specifications precise enough that I can execute them in a design tool without making a single further decision. You do not produce mood boards and you do not produce adjectives.
+
+DELIVER
+1. COVER. Exact layout: what sits where, at what size, in what weight. The title as it should be set, broken across lines the way you want it broken. Two colours as hex values plus one neutral. One typeface for the title and one for everything else, both freely licensed and named. State what the cover must survive being shrunk to 120 pixels wide, because that is the size it sells at.
+2. INTERIOR. Page size, margins, body size and leading, heading scale, and the treatment for the three things this product repeats most — for this product, name them.
+3. THE PHONE TEST. Most of this audience reads on a 6-inch screen. State the smallest type size used anywhere and justify it, or change it.
+4. MOCKUPS. Three, described shot by shot: what device, what angle, what is on the screen, what is behind it.
+5. AD CREATIVE. Three still concepts, each with the words that appear on the image (fewer than nine) and the one thing the image proves.
+
+RULES
+- Freely licensed or open-source typefaces only. Name them exactly.
+- No stock photograph of a person who is meant to read as the buyer or the author. If the design needs a person, say [PHOTO NEEDED: what it must show].
+- Contrast for every text-on-colour pairing must reach 4.5:1. State the ratio you are relying on.
+- ${NEVER[0]}
+- If a decision depends on something only I know, ask for it rather than choosing a plausible default.` },
+
+  { id: "editor", n: "Editor", em: "🔍", role: "Two passes: is it true, then is it readable",
+    does: "The accuracy gate first and the line edit second, in that order, because polishing a wrong sentence is wasted work.",
+    prompt: (p, ctx) => `You are the editor for ${ctx.studio}, working on "${p.name}" (${catName(p.cat)}). You make two separate passes and you do not mix them.
+
+PASS ONE — ACCURACY. Nothing else matters until this is clean.
+Go through the text and extract, as a numbered table, every one of these:
+- numbers, quantities, ratios, dosages, rates, fees and dates
+- names of people, places, institutions, agencies, laws, syllabuses and products
+- anything phrased as a rule, a requirement, a deadline or a legal obligation
+- every worked solution, calculation and unit
+- every claim about what results a reader can expect
+
+For each one, mark it: SOURCED (and say which source I gave you), UNSOURCED (I did not give you a source for this), or SUSPECT (it reads like something a model would generate rather than something anyone verified).
+Say plainly which items I must check with a human expert rather than a search, and which category-specific errors you were looking for in ${catName(p.cat).toLowerCase()}.
+Do not correct unsourced facts by supplying different facts. Flag them.
+
+PASS TWO — READABILITY. Only once I tell you pass one is settled.
+- Cut every sentence that exists to sound complete. Cut hedges, throat-clearing openings and summaries of what you are about to say.
+- Break any sentence over about 25 words unless it is a list.
+- Flag the register: mark any passage that reads as machine-generated — evenly enthusiastic, symmetrical paragraphs, triads everywhere, "in today's fast-paced world" — and rewrite it in ${ctx.studio}'s voice.
+- Check heading hierarchy, list parallelism, and that every promise made in the contents is kept somewhere.
+
+${voiceBlock(ctx)}
+
+OUTPUT
+Pass one as a table. Pass two as a marked-up diff with a one-line reason per change. Never silently rewrite a fact.` },
+
+  { id: "store", n: "Store Builder", em: "🛒", role: "Listing, price, checkout",
+    does: "Writes the sales page from the buyer's problem, sets the listing up, and tests the purchase like a customer.",
+    prompt: (p, ctx) => `You are the store builder for ${ctx.studio}. Write and specify the listing for "${p.name}" at ${money(p.price)}, sold to ${p.who || "[FACT NEEDED: the audience]"}.
+
+Assume the buyer arrived from a social post on a phone, has ninety seconds and one thumb, and has been disappointed by a cheap digital product before.
+
+DELIVER
+1. HEADLINE. Six options. Each names the buyer's problem or the outcome — never the format. "47 prompts" is not a headline; what the 47 prompts stop happening is.
+2. FIRST SCREEN. The three lines above the fold, and the exact button text.
+3. THE PROBLEM. Three sentences, in their words, that make them feel understood before anything is offered.
+4. WHAT THEY GET. The full contents, itemised and countable, with the format and size of each part.
+5. WHO IT IS NOT FOR. Two lines. This raises conversion and cuts refunds; do not skip it because it feels like turning money away.
+6. OBJECTIONS. The five real ones, each answered in two sentences. Include "can I not just ask an AI this myself" — because they can, and the honest answer is the sale.
+7. PRICE PRESENTATION. What to compare it to so ${money(p.price)} reads as small. Compare to the cost of the problem, not to other products.
+8. REFUND TERMS. Plain, generous, and stated in full.
+9. DELIVERY. What arrives, how fast, in what file formats, and what to do if it does not — including a reachable human.
+10. LAUNCH CHECKLIST. Everything to test before switching on, including buying it yourself on mobile data and on a phone that has never seen the site.
+
+RULES
+${NEVER.map(x => "- " + x).join("\n")}
+- No fake scarcity, no countdown that resets, no crossed-out price that was never charged.
+- Every claim traceable to what I gave you. Where there is no evidence, write [EVIDENCE NEEDED] and leave the space empty rather than filling it.` },
+
+  { id: "marketing", n: "Marketing Director", em: "📣", role: "Everything that runs after publish",
+    does: "Launch sequence, social posts, email campaigns and video scripts, all written before launch day.",
+    prompt: (p, ctx) => `You are the marketing director for ${ctx.studio}, launching "${p.name}" at ${money(p.price)} to ${p.who || "[FACT NEEDED: the audience]"}.
+
+Constraints, which are not negotiable: one person, no advertising budget worth the name, and an audience mostly on WhatsApp, TikTok and Facebook rather than on email newsletters or X.
+
+DELIVER
+1. THE ONE THING. What single fact about this product, if a stranger learned only that, would make them buy. Everything below repeats it.
+2. TEN POSTS. Each with the platform, the hook line, the body, the call to action, and the format (image, carousel, video, text). No two may use the same hook shape. At least three must teach something complete and useful without mentioning the product.
+3. THREE EMAILS. Announcement, objection-handler, last call. Subject lines under 45 characters. Plain text.
+4. ONE VIDEO SCRIPT, 45 seconds, shot list included, filmable on a phone alone with no set.
+5. THE FREE THING. What to give away that is genuinely useful on its own and makes the paid product the obvious next step. It must not be a teaser or a first chapter that stops mid-argument.
+6. THE FIRST TEN CUSTOMERS. Who to message directly, in what words, given that a personal message from one person converts better than any campaign at this scale.
+7. WHAT TO MEASURE in the first week, and what number would mean stop rather than push harder.
+
+RULES
+${NEVER.map(x => "- " + x).join("\n")}
+- No engagement bait, no fake urgency, no "link in bio" post with nothing in it.
+- Write in ${ctx.studio}'s voice, not in the voice of a growth thread.
+${voiceBlock(ctx)}` },
+
+  { id: "automation", n: "Automation Manager", em: "⚙️", role: "Delivery, email, and what happens after the sale",
+    does: "Specifies the post-purchase machinery and, more importantly, what it does when a step fails.",
+    prompt: (p, ctx) => `You are the automation manager for ${ctx.studio}. Specify everything that happens after someone pays for "${p.name}".
+
+Design for the buyer with the worst connection, the oldest phone, and a mail provider that files unknown senders as spam. That buyer is not an edge case here; they are a large share of the audience.
+
+DELIVER
+1. THE DELIVERY PATH, step by step from payment confirmed to file open, naming what performs each step and how long it takes.
+2. THE FAILURE MODES. For each step: what happens when it fails, how I find out, how the buyer finds out, and what they do about it. Include payment succeeded but delivery did not, expired link, wrong email address, and a file too large for the phone that is downloading it.
+3. THE EMAIL SEQUENCE. Delivery email, day-2 "have you opened it", day-7 "here is how to get the most from it", day-14 next step. Subject lines and full text. Every one must be useful even to someone who never opens the product.
+4. THE UPSELL, if there is an honest one — what it is, when it fires, and the rule for when it must not.
+5. THE SUPPORT LOOP. Where questions arrive, what the answer template is for the three most likely questions, and what response time I am promising in writing.
+6. THE MONTHLY UPKEEP. What has to be checked for this product every month for it to keep working: links, prices, facts that expire, screenshots that go stale. Estimate it in minutes, honestly, because that number decides how many products can exist at once.
+7. THE RECEIPT. What the buyer keeps as proof of purchase, and how they re-download in a year when the email is gone.
+
+RULES
+- Prefer fewer moving parts. Every tool in the path is another thing that can break on a Sunday.
+- Do not design anything that requires me to be awake for it.
+- ${NEVER[0]}` }
+];
+
+/* ---- the accuracy register ---------------------------------------------- */
+
+const RISKS = [
+  { id: "r-syllabus", cat: "education", sev: "high", mins: 90,
+    t: "The syllabus the model used is not the syllabus they are sitting",
+    what: "Generated exam material follows a generic version of the subject. Topics that were removed stay in; topics that were added are missing; the weighting is somebody else's.",
+    surface: "A student works through a chapter that is not examinable, or sits a paper containing a topic your guide never mentioned. They tell everyone.",
+    who: "The current examining body's syllabus document, read topic by topic against your contents page. A teacher currently preparing candidates can do it faster than you can." },
+  { id: "r-marking", cat: "education", sev: "high", mins: 60,
+    t: "Right answer, wrong method",
+    what: "Marking schemes award method marks. A model produces the shortest correct route, which is frequently not the route the scheme credits, and skips the working that carries the marks.",
+    surface: "A student follows your worked solution exactly and loses marks. This is worse than being wrong, because they did what you said.",
+    who: "Anyone who has marked the paper. Check working, notation and units against a published scheme rather than checking the final answer." },
+  { id: "r-papers", cat: "education", sev: "high", mins: 30,
+    t: "Past questions are somebody else's copyright",
+    what: "Reproducing exam questions verbatim, at scale, in a product you sell is not fair use in most places, whoever generated the file.",
+    surface: "A takedown, a removed listing, or a platform account closed with the catalogue inside it.",
+    who: "You. Write original questions in the same style and state that they are original, or get written permission." },
+  { id: "r-arith", cat: "education", sev: "med", mins: 45,
+    t: "Arithmetic and units drift in worked solutions",
+    what: "Models drop unit conversions, round mid-calculation, and carry a wrong figure confidently through six clean-looking lines.",
+    surface: "A screenshot of the mistake circulating in a study group before you have had a refund request.",
+    who: "Re-do every calculation independently. Not a re-read — a re-do, from the question, without looking at the answer." },
+
+  { id: "r-drift", cat: "ai", sev: "high", mins: 40,
+    t: "The model moved and the pack didn't",
+    what: "A prompt pack is a snapshot of how one model behaved in one month. Providers change defaults, refusal behaviour and formatting without notice, and prompts that produced a table start producing an essay.",
+    surface: "Buyers six months later saying it doesn't work, all at once, for a product you thought was finished.",
+    who: "You, on a schedule. Version the pack, state which model and month it was tested on, and re-run a sample every quarter. Budget the minutes on the Factory tab." },
+  { id: "r-untested", cat: "ai", sev: "high", mins: 120,
+    t: "Prompts that were never run",
+    what: "It takes a minute to generate sixty prompts and two hours to run them. Skipping the second is the single commonest defect in this category.",
+    surface: "The first buyer finds it in five minutes, because running the prompts is the entire product.",
+    who: "You. Run each one, keep the output as evidence, and ship the good output as the example." },
+  { id: "r-shots", cat: "ai", sev: "med", mins: 25,
+    t: "Screenshots of an interface that has changed",
+    what: "AI tools redesign constantly. A guide illustrated with last year's interface reads as abandoned even when the substance is current.",
+    surface: "Support questions asking where a button is, and reviews using the word outdated.",
+    who: "You. Date every screenshot in the file name and check them at the same time as the prompts." },
+
+  { id: "r-fees", cat: "business", sev: "high", mins: 60,
+    t: "Registration steps, fees and forms have moved",
+    what: "Agency names, fee schedules, form numbers, thresholds and portals change. A model will state last year's confidently, or an amalgam of several years'.",
+    surface: "A buyer turns up at the office with your checklist and is turned away. That is the review you get.",
+    who: "The agency's own current page, checked the week you publish and again each quarter. Put the check date in the product." },
+  { id: "r-advice", cat: "business", sev: "high", mins: 30,
+    t: "A template presented as legal or tax advice",
+    what: "Contract and tax templates written by a model read as authoritative and are not. Selling them as advice is a different liability from selling them as a starting point.",
+    surface: "It surfaces when a buyer relies on one in a dispute — which is exactly when you find out what you implied.",
+    who: "You, in the product and the listing: state what it is, what it is not, and that local professional review is required. Have a lawyer read the templates once." },
+  { id: "r-stats", cat: "business", sev: "med", mins: 20,
+    t: "Invented market statistics about your own country",
+    what: "Ask for the size of a local market and a model will give you a number, a percentage and a year. Frequently none of them exist.",
+    surface: "Anyone who knows the sector reads one sentence and stops trusting the rest.",
+    who: "You. Cite the statistical service or the report, or delete the number. A guide with no statistics is credible; a guide with invented ones is not." },
+
+  { id: "r-feed", cat: "agriculture", sev: "critical", mins: 120,
+    t: "Feed formulations and medication dosages",
+    what: "Ratios, inclusion rates and dosages are the operational core of a farming guide and the thing a model is least able to be trusted on. Wrong figures do not produce a bad read; they produce dead stock.",
+    surface: "A farmer follows the ration, birds fail to thrive or die, and they can point at your page.",
+    who: "A veterinary officer or an agricultural extension officer, by name, before publication. Not a second model. This gate is the reason the agriculture products are priced where they are." },
+  { id: "r-climate", cat: "agriculture", sev: "high", mins: 60,
+    t: "Temperate-zone advice applied to the tropics",
+    what: "Most published poultry and livestock material describes temperate housing, temperate parasites and temperate seasons. A model trained on it produces guidance about insulation and winter for a farm dealing with heat stress and humidity.",
+    surface: "The advice is subtly useless: correct in structure, wrong in every specific that matters locally.",
+    who: "Someone farming in the same conditions. Check ventilation, stocking density, water, seasonality and disease pressure specifically." },
+  { id: "r-withdraw", cat: "agriculture", sev: "critical", mins: 45,
+    t: "Withdrawal periods before meat or eggs go to market",
+    what: "Medicated stock cannot enter the food chain until the withdrawal period has passed. Getting this wrong is a food-safety failure, not a farming mistake.",
+    surface: "It may never surface to you at all. That is what makes it the most serious item on this page.",
+    who: "The veterinary authority's published guidance, and the product label. State that both must be checked, and never print a number without a source." },
+  { id: "r-econ", cat: "agriculture", sev: "med", mins: 40,
+    t: "Budgets built on prices from somewhere else",
+    what: "Feed, day-old stock, labour and transport prices drive every number in a farming business case, and they are local, volatile and seasonal.",
+    surface: "The buyer's first month bears no relation to your budget, and the whole guide loses authority with it.",
+    who: "You, with a local price sheet, a stated month, and the spreadsheet built so the buyer types their own prices in." },
+
+  { id: "r-dates", cat: "history", sev: "critical", mins: 180,
+    t: "Confident invented specifics",
+    what: "Regnal dates, successions, stool lineages, treaty years, place-name origins. A model produces these fluently and precisely, and precision is exactly where it is least reliable. The output does not look uncertain, which is the danger.",
+    surface: "A single wrong date is enough for a researcher, a teacher or a family to discard the whole reference — and an encyclopedia is bought on the assumption that this cannot happen.",
+    who: "Named published sources, checked one claim at a time. Anything unsourced comes out. This is why the encyclopedia costs a research project rather than a review pass." },
+  { id: "r-living", cat: "history", sev: "critical", mins: 90,
+    t: "These are living institutions, not closed history",
+    what: "Chieftaincy, stools and lineages are current, occupied and sometimes contested. Writing about them carelessly is not an academic error; it is a statement about somebody's standing.",
+    surface: "Offence, dispute, and a product that cannot be quietly corrected because it is already in schools.",
+    who: "People with standing to speak on it, consulted before publication. Where a matter is disputed, say that it is disputed and present the positions rather than adjudicating." },
+  { id: "r-oral", cat: "history", sev: "high", mins: 60,
+    t: "Oral tradition flattened into a single settled account",
+    what: "Where several traditions coexist, a model merges them into one confident narrative, silently choosing a version and dropping the others.",
+    surface: "Readers who hold a different tradition see their own history recorded wrongly and say so publicly.",
+    who: "You, structurally: present variants as variants, attribute each one, and never write the merged version." },
+  { id: "r-cites", cat: "history", sev: "high", mins: 60,
+    t: "Citations that do not say what they are cited for",
+    what: "Fabricated references, real books cited for claims they do not make, and page numbers that do not exist. A bibliography is the easiest thing to generate and the least likely to be checked.",
+    surface: "One academic reader opens one reference. That is all it takes.",
+    who: "You. Open every source you cite. If you cannot open it, it does not go in the bibliography." }
+];
+
+/* ---- funnel -------------------------------------------------------------- */
+
+const FUNNEL = [
+  { id: "visit",  n: "Visitor",        of: null,     rate: null, price: 0,
+    note: "Anyone who arrives, from anywhere. The one number the whole page multiplies." },
+  { id: "optin",  n: "Free guide",     of: "visit",  rate: 8,    price: 0,
+    note: "The give-away exists to buy an email address. Judge it on nothing else." },
+  { id: "trip",   n: "Low-cost product", of: "optin", rate: 6,   price: 9,
+    note: "Turns a subscriber into a customer. The first purchase is the hard one; the price is almost irrelevant to whether it happens." },
+  { id: "core",   n: "Core product",   of: "trip",   rate: 12,   price: 25,
+    note: "The product the studio is actually for. Most of the catalogue lives here." },
+  { id: "prem",   n: "Premium product", of: "core",  rate: 15,   price: 60,
+    note: "The course or the bundle. Fewer buyers, several times the price." },
+  { id: "member", n: "Membership",     of: "prem",   rate: 20,   price: 15,
+    note: "Recurring, so it is counted over its lifetime rather than once. The only line here that compounds." },
+  { id: "coach",  n: "Coaching",       of: "member", rate: 10,   price: 300,
+    note: "Sells your hours, which is the opposite of a product factory — but it is where the money per buyer is, and it tells you what to build next." }
+];
+const MEMBER_MONTHS = 6;
+
+/* ---- channels ------------------------------------------------------------ */
+
+const CHANNELS = [
+  { id: "selar", n: "Selar", for: "African buyers paying in local currency and by mobile money", pct: 5, fixed: 0, lag: 3 },
+  { id: "gumroad", n: "Gumroad", for: "International buyers paying by card", pct: 10, fixed: 0.5, lag: 7 },
+  { id: "paystack", n: "Paystack", for: "Direct payments from your own page, no marketplace", pct: 2, fixed: 0, lag: 1 }
+];
+
+/* ---- scoring factors ----------------------------------------------------- */
+
+const FACTORS = [
+  { id: "demand", n: "Demand", w: 30,
+    why: "How many people already know they have this problem. Not how big the topic is — how many are looking for a solution this month." },
+  { id: "ground", n: "Clear ground", w: 20,
+    why: "10 means nobody is serving this properly. 0 means the shelf is full and half of it is free." },
+  { id: "price", n: "Price tolerance", w: 20,
+    why: "What this buyer will pay a studio with no reputation yet. Exam candidates and farmers are not the same answer." },
+  { id: "fit", n: "Unfair advantage", w: 20,
+    why: "How much of this you can write from what you already know and can prove. This is what stops the product being generic." },
+  { id: "proof", n: "Speed of proof", w: 10,
+    why: "How fast the market tells you yes or no. A product you cannot evaluate for a year is a bet, not a test." }
+];
+
+const EXPORT_SECTIONS = [
+  { k: "brief", n: "Studio settings and capacity" },
+  { k: "ideas", n: "Ranked product list" },
+  { k: "flows", n: "Workflows with gates" },
+  { k: "agents", n: "The seven agent briefs" },
+  { k: "risks", n: "Accuracy register" },
+  { k: "money", n: "Unit economics" },
+  { k: "funnel", n: "Funnel arithmetic" },
+  { k: "plan", n: "The thirty days" },
+  { k: "sim", n: "Catalogue simulation" }
+];
+
+const PANELS = ["factory", "ideas", "build", "agents", "checks", "money", "funnel", "plan", "export"];
+
+/* ===========================================================================
+   CORE — helpers, storage, formatting
+   =========================================================================== */
+
+const $  = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+
+function el(tag, attrs, kids) {
+  const n = document.createElement(tag);
+  if (attrs) for (const k in attrs) {
+    const v = attrs[k];
+    if (v === null || v === undefined || v === false) continue;
+    if (k === "html") n.innerHTML = v;
+    else if (k === "text") n.textContent = v;
+    else if (k === "cls") n.className = v;
+    else if (k.slice(0, 2) === "on") n.addEventListener(k.slice(2), v);
+    else n.setAttribute(k, v === true ? "" : v);
+  }
+  if (kids) (Array.isArray(kids) ? kids : [kids]).forEach(c => {
+    if (c === null || c === undefined || c === false) return;
+    n.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+  });
+  return n;
+}
+
+function esc(s) {
+  return String(s === null || s === undefined ? "" : s).replace(/[&<>"']/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+const Store = (function () {
+  const KEY = "mosh-product-factory.v1";
+  let mem = null, warned = false;
+  function ok() {
+    try { localStorage.setItem("__t", "1"); localStorage.removeItem("__t"); return true; }
+    catch (e) { return false; }
+  }
+  const available = ok();
+  return {
+    available,
+    read() {
+      if (!available) return mem;
+      try { const r = localStorage.getItem(KEY); return r ? JSON.parse(r) : null; }
+      catch (e) { return null; }
+    },
+    write(v) {
+      mem = v;
+      if (!available) return;
+      try { localStorage.setItem(KEY, JSON.stringify(v)); }
+      catch (e) {
+        if (!warned) { warned = true; toast("Couldn't save — this browser is blocking local storage. Your work stays in memory until you close the tab.", true); }
+      }
+    },
+    wipe() {
+      mem = null;
+      if (!available) return;
+      try { localStorage.removeItem(KEY); } catch (e) {}
+    }
+  };
+})();
+
+function toast(msg, isErr) {
+  const box = $("#toasts");
+  if (!box) return;
+  const t = el("div", { cls: "toast" + (isErr ? " err" : ""), text: msg });
+  box.appendChild(t);
+  setTimeout(() => { t.remove(); }, isErr ? 5200 : 2600);
+}
+
+async function copyText(str, label) {
+  try {
+    if (navigator.clipboard && window.isSecureContext !== false) await navigator.clipboard.writeText(str);
+    else throw new Error("no clipboard");
+    toast((label || "Copied") + " — " + str.length.toLocaleString() + " characters");
+    return true;
+  } catch (e) {
+    try {
+      const ta = el("textarea", { style: "position:fixed;top:-9999px;opacity:0" });
+      ta.value = str;
+      document.body.appendChild(ta);
+      ta.select();
+      const done = document.execCommand("copy");
+      ta.remove();
+      if (!done) throw new Error("denied");
+      toast((label || "Copied") + " — " + str.length.toLocaleString() + " characters");
+      return true;
+    } catch (e2) {
+      toast("Couldn't reach the clipboard. Select the text and copy it manually.", true);
+      return false;
+    }
+  }
+}
+
+function download(name, text, mime) {
+  try {
+    const blob = new Blob([text], { type: (mime || "text/plain") + ";charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = el("a", { href: url, download: name });
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 500);
+    toast("Downloaded " + name);
+  } catch (e) {
+    toast("This browser blocked the download. Copy the text instead.", true);
+  }
+}
+
+function numOr(v, d) { const n = parseFloat(v); return isFinite(n) ? n : d; }
+function clamp(n, lo, hi) { return Math.min(hi, Math.max(lo, n)); }
+function slug(s) {
+  return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48);
+}
+
+function cur() { return CURRENCIES.find(c => c.code === state.cur) || CURRENCIES[0]; }
+function money(n, dp) {
+  if (n === null || n === undefined || !isFinite(n)) return "—";
+  const c = cur();
+  const digits = dp === undefined ? (Math.abs(n) < 10 && n !== 0 ? 2 : 0) : dp;
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: "currency", currency: c.code, minimumFractionDigits: digits, maximumFractionDigits: digits
+    }).format(n);
+  } catch (e) { return c.sym + n.toFixed(digits); }
+}
+function num(n, dp) {
+  if (n === null || n === undefined || !isFinite(n)) return "—";
+  return n.toLocaleString(undefined, { minimumFractionDigits: dp || 0, maximumFractionDigits: dp === undefined ? 0 : dp });
+}
+function pct(n, dp) {
+  if (n === null || n === undefined || !isFinite(n)) return "—";
+  return n.toFixed(dp === undefined ? 0 : dp) + "%";
+}
+function hrs(h) {
+  if (!isFinite(h)) return "—";
+  return h >= 10 ? num(h, 0) + " h" : num(h, 1) + " h";
+}
+function catName(id) { const c = CATEGORIES.find(x => x.id === id); return c ? c.name : id; }
+function catDef(id) { return CATEGORIES.find(x => x.id === id) || CATEGORIES[0]; }
+function typeName(id) { const t = TYPES.find(x => x.id === id); return t ? t.name : id; }
+function typeDef(id) { return TYPES.find(x => x.id === id) || TYPES[0]; }
+function agentDef(id) { return AGENTS.find(a => a.id === id); }
+
+/* ===========================================================================
+   STATE
+   =========================================================================== */
+
+const MONTH_WEEKS = 13 / 3;   /* 4.333 — weeks in an average month */
+const LAUNCH_BUMP = 2.5;      /* the launch month sells more than a steady month */
+const MAX_SIM_PRODUCTS = 400;
+
+function defaultWeights() { const o = {}; FACTORS.forEach(f => { o[f.id] = f.w; }); return o; }
+function defaultChannels() {
+  const o = {};
+  CHANNELS.forEach(c => { o[c.id] = { pct: c.pct, fixed: c.fixed, lag: c.lag, checked: false }; });
+  return o;
+}
+function defaultFunnel() {
+  const o = {};
+  FUNNEL.forEach(f => {
+    if (f.rate !== null) o["r_" + f.id] = f.rate;
+    if (f.price) o["p_" + f.id] = f.price;
+  });
+  return o;
+}
+function defaultProducts() {
+  return SEED.map(s => Object.assign({}, s, {
+    s: Object.assign({}, s.s),
+    commit: ["prompt-pack-gh", "wassce-physics", "freelancing-gh"].indexOf(s.id) >= 0,
+    channel: "selar",
+    custom: false
+  }));
+}
+function defaultExport() { const o = {}; EXPORT_SECTIONS.forEach(s => { o[s.k] = true; }); return o; }
+
+function defaultState() {
+  return {
+    v: 1,
+    tab: "factory",
+    theme: null,
+
+    studio: "MOSH Digital Studios",
+    hours: 15,
+    rate: 25,
+    upkeep: 45,
+    retire: 4,
+    months: 24,
+    visitors: 400,
+    conv: 2,
+    target: 2,
+    cur: "USD",
+
+    weights: defaultWeights(),
+    products: defaultProducts(),
+    steps: {},
+    risksOk: {},
+
+    facts: "",
+    voice: "",
+
+    channels: defaultChannels(),
+    refund: 3,
+    decay: 15,
+    floor: 35,
+    fx: 0,
+
+    funnel: defaultFunnel(),
+
+    sel: { ideas: "wassce-physics", build: "wassce-physics", agents: "wassce-physics" },
+    filters: { ideas: "all", checks: "all" },
+    start: "",
+    x: defaultExport()
+  };
+}
+
+let state = defaultState();
+
+function save() { Store.write(state); }
+
+/** Merge a saved object over the defaults, one key deep, so an older or
+    hand-edited file can never leave a required key undefined. */
+function applySaved(s) {
+  if (!s || typeof s !== "object") return false;
+  const d = defaultState();
+  for (const k in d) {
+    if (!(k in s)) continue;
+    if (d[k] && typeof d[k] === "object" && !Array.isArray(d[k]) && s[k] && typeof s[k] === "object" && !Array.isArray(s[k])) {
+      state[k] = Object.assign({}, d[k], s[k]);
+    } else if (s[k] !== null && s[k] !== undefined) {
+      state[k] = s[k];
+    }
+  }
+
+  state.studio = String(state.studio || d.studio).slice(0, 80) || d.studio;
+  ["hours", "rate", "upkeep", "retire", "months", "visitors", "conv", "target", "refund", "decay", "floor", "fx"]
+    .forEach(k => { state[k] = clamp(numOr(state[k], d[k]), 0, 1e7); });
+  state.months = clamp(Math.round(state.months), 6, 60);
+  state.retire = clamp(state.retire, 0, 50);
+  state.refund = clamp(state.refund, 0, 100);
+  state.decay = clamp(state.decay, 0, 90);
+  state.floor = clamp(state.floor, 0, 100);
+  state.conv = clamp(state.conv, 0, 100);
+  if (!CURRENCIES.some(c => c.code === state.cur)) state.cur = d.cur;
+
+  state.weights = Object.assign(defaultWeights(), state.weights || {});
+  FACTORS.forEach(f => { state.weights[f.id] = clamp(numOr(state.weights[f.id], f.w), 0, 100); });
+  Object.keys(state.weights).forEach(k => { if (!FACTORS.some(f => f.id === k)) delete state.weights[k]; });
+
+  /* products: repair every field, drop anything unrecognisable */
+  if (!Array.isArray(state.products)) state.products = d.products;
+  const seen = {};
+  state.products = state.products.filter(p => p && typeof p === "object" && p.id && !seen[p.id] && (seen[p.id] = true))
+    .map(p => {
+      const base = SEED.find(x => x.id === p.id);
+      const o = Object.assign({}, base || {}, p);
+      o.id = String(o.id).slice(0, 60);
+      o.name = String(o.name || "Untitled").slice(0, 120);
+      o.who = String(o.who || "").slice(0, 200);
+      o.note = String(o.note || "").slice(0, 900);
+      o.cat = CATEGORIES.some(c => c.id === o.cat) ? o.cat : CATEGORIES[0].id;
+      o.type = TYPES.some(t => t.id === o.type) ? o.type : "ebook";
+      o.channel = CHANNELS.some(c => c.id === o.channel) ? o.channel : "selar";
+      o.price = clamp(numOr(o.price, 19), 0, 1e6);
+      o.commit = o.commit === true;
+      o.custom = o.custom === true || !base;
+      o.s = Object.assign({}, (base && base.s) || {}, o.s || {});
+      FACTORS.forEach(f => { o.s[f.id] = clamp(Math.round(numOr(o.s[f.id], 5)), 0, 10); });
+      Object.keys(o.s).forEach(k => { if (!FACTORS.some(f => f.id === k)) delete o.s[k]; });
+      return o;
+    });
+  if (!state.products.length) state.products = d.products;
+
+  /* step ticks: only ids that exist in that product's workflow */
+  state.steps = state.steps && typeof state.steps === "object" ? state.steps : {};
+  Object.keys(state.steps).forEach(pid => {
+    const p = productById(pid);
+    if (!p) { delete state.steps[pid]; return; }
+    const flow = flowOf(p);
+    const v = state.steps[pid];
+    if (!v || typeof v !== "object") { delete state.steps[pid]; return; }
+    Object.keys(v).forEach(sid => { if (!flow.some(st => st.id === sid) || v[sid] !== true) delete v[sid]; });
+  });
+
+  state.risksOk = state.risksOk && typeof state.risksOk === "object" ? state.risksOk : {};
+  Object.keys(state.risksOk).forEach(k => { if (!RISKS.some(r => r.id === k) || state.risksOk[k] !== true) delete state.risksOk[k]; });
+
+  state.facts = String(state.facts || "").slice(0, 3000);
+  state.voice = String(state.voice || "").slice(0, 3000);
+
+  state.channels = Object.assign(defaultChannels(), state.channels || {});
+  CHANNELS.forEach(c => {
+    const o = Object.assign({ pct: c.pct, fixed: c.fixed, lag: c.lag, checked: false }, state.channels[c.id] || {});
+    o.pct = clamp(numOr(o.pct, c.pct), 0, 100);
+    o.fixed = clamp(numOr(o.fixed, c.fixed), 0, 1e5);
+    o.lag = clamp(Math.round(numOr(o.lag, c.lag)), 0, 365);
+    o.checked = o.checked === true;
+    state.channels[c.id] = o;
+  });
+  Object.keys(state.channels).forEach(k => { if (!CHANNELS.some(c => c.id === k)) delete state.channels[k]; });
+
+  state.funnel = Object.assign(defaultFunnel(), state.funnel || {});
+  Object.keys(state.funnel).forEach(k => {
+    const lim = k.charAt(0) === "r" ? 100 : 1e6;
+    state.funnel[k] = clamp(numOr(state.funnel[k], 0), 0, lim);
+  });
+
+  state.sel = Object.assign({}, d.sel, state.sel || {});
+  ["ideas", "build", "agents"].forEach(k => {
+    if (!productById(state.sel[k])) state.sel[k] = (state.products[0] || {}).id;
+  });
+  state.filters = Object.assign({}, d.filters, state.filters || {});
+  if (state.filters.ideas !== "all" && !CATEGORIES.some(c => c.id === state.filters.ideas)) state.filters.ideas = "all";
+  if (state.filters.checks !== "all" && !CATEGORIES.some(c => c.id === state.filters.checks)) state.filters.checks = "all";
+
+  state.start = /^\d{4}-\d{2}-\d{2}$/.test(String(state.start || "")) ? state.start : "";
+  state.x = Object.assign(defaultExport(), state.x || {});
+  Object.keys(state.x).forEach(k => { if (!EXPORT_SECTIONS.some(s => s.k === k)) delete state.x[k]; });
+
+  if (["light", "dark"].indexOf(state.theme) < 0) state.theme = null;
+  if (PANELS.indexOf(state.tab) < 0) state.tab = d.tab;
+
+  return true;
+}
+
+/* ===========================================================================
+   DERIVED — the arithmetic. Every input here is something you typed; nothing
+   is fetched, and nothing is a market figure the app pretends to know.
+   =========================================================================== */
+
+function productById(id) { return state.products.find(p => p.id === id); }
+function flowOf(p) { return WORKFLOWS[p && p.type] || WORKFLOWS.ebook; }
+function committed() { return state.products.filter(p => p.commit); }
+
+/** Minutes of your time the workflow itself costs. */
+function wfMins(p) { return flowOf(p).reduce((a, s) => a + s.mins, 0); }
+
+/** Minutes of verification this product's *category* costs on top of the
+    workflow's generic accuracy pass. This is the whole argument of the
+    Checks tab expressed as a number, and it is why a history reference book
+    is not an e-book with a different cover. */
+function verMins(p) { return RISKS.filter(r => r.cat === (p && p.cat)).reduce((a, r) => a + r.mins, 0); }
+
+function totalMins(p) { return wfMins(p) + verMins(p); }
+function hoursOf(p) { return totalMins(p) / 60; }
+function gateMins(p) { return flowOf(p).filter(s => s.gate).reduce((a, s) => a + s.mins, 0) + verMins(p); }
+
+/** Minutes a model genuinely takes off you, by the per-step judgement in the
+    workflow. Verification minutes count as fully human. */
+function aiMins(p) { return flowOf(p).reduce((a, s) => a + s.mins * s.ai, 0); }
+
+function buildCost(p) { return hoursOf(p) * state.rate; }
+
+function weightTotal() { return FACTORS.reduce((a, f) => a + numOr(state.weights[f.id], 0), 0); }
+
+/** 0–100. A weighted mean of the five factors, nothing more clever. */
+function scoreOf(p) {
+  const tw = weightTotal();
+  if (!tw) return 0;
+  const sum = FACTORS.reduce((a, f) => a + numOr(state.weights[f.id], 0) * clamp(numOr(p.s[f.id], 0), 0, 10), 0);
+  return (sum / tw) * 10;
+}
+
+/** Score per hour of your time. The ranking a one-person studio actually
+    faces: not which product is best, but which is best per week spent. */
+function valuePerHour(p) {
+  const h = hoursOf(p);
+  return h > 0 ? scoreOf(p) / h : 0;
+}
+
+function ranked(list) {
+  return (list || state.products).slice().sort((a, b) => valuePerHour(b) - valuePerHour(a) || scoreOf(b) - scoreOf(a));
+}
+
+/* ---- money --------------------------------------------------------------- */
+
+function chan(id) { return state.channels[id] || state.channels[CHANNELS[0].id]; }
+function feeOf(price, chId) {
+  const c = chan(chId);
+  return Math.min(price, price * c.pct / 100 + c.fixed);
+}
+function netOf(p) { return Math.max(0, p.price - feeOf(p.price, p.channel)); }
+/** Net after refunds — a refunded sale usually keeps its fee, so the drag is
+    on the whole sale, not on the net. */
+function netAfterRefunds(p) { return netOf(p) * (1 - state.refund / 100); }
+function breakEvenUnits(p) {
+  const n = netAfterRefunds(p);
+  return n > 0 ? buildCost(p) / n : Infinity;
+}
+
+/** Units a live product sells in a given month of its life (0 = launch). */
+function unitsAtAge(age) {
+  const decay = Math.pow(1 - state.decay / 100, Math.max(0, age));
+  const shape = state.floor / 100 + (1 - state.floor / 100) * decay;
+  const base = state.visitors * state.conv / 100;
+  return base * shape * (age === 0 ? LAUNCH_BUMP : 1);
+}
+function revenueAtAge(p, age) { return unitsAtAge(age) * netAfterRefunds(p); }
+
+/** Months until a product has repaid the hours that made it. Null if never. */
+function paybackMonths(p) {
+  const cost = buildCost(p);
+  if (cost <= 0) return 0;
+  let acc = 0;
+  for (let m = 0; m < 120; m++) {
+    acc += revenueAtAge(p, m);
+    if (acc >= cost) return m + 1;
+  }
+  return null;
+}
+
+/* ---- capacity ------------------------------------------------------------ */
+
+function monthHours() { return state.hours * MONTH_WEEKS; }
+function upkeepHoursFor(n) { return n * state.upkeep / 60; }
+function avgProductHours() {
+  const list = committed().length ? committed() : state.products;
+  return list.reduce((a, p) => a + hoursOf(p), 0) / list.length;
+}
+/** How many products a month you can finish from a standing start, before
+    any catalogue exists to look after. The optimistic number. */
+function coldCapacity() {
+  const h = avgProductHours();
+  return h > 0 ? monthHours() / h : 0;
+}
+/** The catalogue size at which upkeep consumes every hour you have. */
+function catalogueCeiling() {
+  return state.upkeep > 0 ? monthHours() / (state.upkeep / 60) : Infinity;
+}
+/** The size the catalogue settles at: where the launches your remaining hours
+    allow exactly replace what retires. Solved directly rather than simulated:
+      launches(C) = (monthHours - C*u) / h   and   retirements(C) = C*r
+    so C* = monthHours / (h*r + u). */
+function steadyCatalogue() {
+  const h = avgProductHours(), u = state.upkeep / 60, r = state.retire / 100;
+  const den = h * r + u;
+  if (den <= 0) return Infinity;
+  return monthHours() / den;
+}
+
+/* ---- the simulation ------------------------------------------------------ */
+
+/** Month by month. Upkeep is paid first out of your hours, whatever remains
+    builds the next product in rank order, and a share of the catalogue
+    retires. Once the committed list runs out the factory keeps going with an
+    average product, so the steady state is visible rather than assumed. */
+function simulate() {
+  const queue = ranked(committed()).slice();
+  const avgH = avgProductHours();
+  const avgNet = (function () {
+    const list = committed().length ? committed() : state.products;
+    return list.reduce((a, p) => a + netAfterRefunds(p), 0) / list.length;
+  })();
+
+  const live = [];        /* { net, hours, born, name } */
+  const rows = [];
+  let carry = 0, cum = 0, extra = 0, ceilingMonth = null;
+
+  for (let m = 1; m <= state.months; m++) {
+    const upH = upkeepHoursFor(live.length);
+    let buildH = monthHours() - upH + carry;
+    if (buildH < 0) buildH = 0;
+    if (ceilingMonth === null && monthHours() - upH <= 0) ceilingMonth = m;
+
+    const launched = [];
+    let guard = 0;
+    while (guard++ < 50 && live.length + launched.length < MAX_SIM_PRODUCTS) {
+      const next = queue.length ? queue[0] : null;
+      const h = next ? hoursOf(next) : avgH;
+      if (!(h > 0) || buildH < h) break;
+      buildH -= h;
+      if (next) {
+        queue.shift();
+        launched.push({ net: netAfterRefunds(next), hours: h, born: m, name: next.name });
+      } else {
+        extra++;
+        launched.push({ net: avgNet, hours: h, born: m, name: "Product " + (state.products.length + extra) });
+      }
+    }
+    /* Bank at most one month of unused hours: a studio does not save June's
+       afternoons for December. */
+    carry = clamp(buildH, 0, monthHours());
+
+    let revenue = 0;
+    live.forEach(x => { revenue += unitsAtAge(m - x.born) * x.net; });
+    launched.forEach(x => { revenue += unitsAtAge(0) * x.net; });
+
+    launched.forEach(x => live.push(x));
+
+    /* Retire the oldest, after this month's revenue is counted. */
+    const retiring = Math.floor(live.length * state.retire / 100 + 0.5);
+    live.sort((a, b) => a.born - b.born);
+    const retired = live.splice(0, Math.min(retiring, Math.max(0, live.length - 0)));
+
+    cum += revenue;
+    rows.push({
+      m, live: live.length, launched: launched.length, retired: retired.length,
+      upkeepH: upH, buildH: Math.max(0, monthHours() - upH), revenue, cum,
+      names: launched.map(x => x.name)
+    });
+  }
+  return { rows, ceilingMonth, peak: rows.reduce((a, r) => Math.max(a, r.revenue), 0) };
+}
+
+/* ---- funnel -------------------------------------------------------------- */
+
+function funnelRate(id) { return numOr(state.funnel["r_" + id], 0); }
+function funnelPrice(id) { return numOr(state.funnel["p_" + id], 0); }
+
+/** Per 1,000 visitors, with every rate applied to the step above it. */
+function funnelRun(over) {
+  const rates = over || {};
+  const out = [];
+  let count = 1000;
+  FUNNEL.forEach(f => {
+    if (f.of !== null) {
+      const r = rates[f.id] !== undefined ? rates[f.id] : funnelRate(f.id);
+      count = count * r / 100;
+    }
+    const price = funnelPrice(f.id);
+    const mult = f.id === "member" ? MEMBER_MONTHS : 1;
+    out.push({ id: f.id, n: f.n, count, price, revenue: count * price * mult, mult });
+  });
+  const total = out.reduce((a, s) => a + s.revenue, 0);
+  return { stages: out, total, perVisitor: total / 1000, emails: out.find(s => s.id === "optin").count };
+}
+
+/** Which single rate is worth working on: bump each by a tenth of itself and
+    see what the total does. Rates compound, so the answer is nearly always
+    near the top and nearly never at the bottom — but it is computed, not
+    asserted, and your numbers can say otherwise. */
+function funnelSensitivity() {
+  const base = funnelRun().total;
+  return FUNNEL.filter(f => f.of !== null).map(f => {
+    const over = {};
+    over[f.id] = funnelRate(f.id) * 1.1;
+    const t = funnelRun(over).total;
+    return { id: f.id, n: f.n, delta: t - base, pctDelta: base > 0 ? (t - base) / base * 100 : 0 };
+  }).sort((a, b) => b.delta - a.delta);
+}
+
+/* ---- schedule ------------------------------------------------------------ */
+
+/** Lay the committed products' remaining steps into four weeks of your hours,
+    in rank order, stopping when the month runs out. */
+function planMonth() {
+  const weeks = [[], [], [], []];
+  const cap = state.hours * 60;         /* minutes a week */
+  const left = [cap, cap, cap, cap];
+  const queue = [];
+
+  ranked(committed()).forEach(p => {
+    flowOf(p).forEach(s => {
+      if (!isDone(p.id, s.id)) queue.push({ p, s, mins: s.mins });
+    });
+    const v = verMins(p);
+    if (v > 0) queue.push({ p, s: { id: "ver-" + p.id, n: "Category verification — " + catName(p.cat), gate: true, agent: "editor", out: "Every item on the Checks tab for this category settled", why: "" }, mins: v });
+  });
+
+  const overflow = [];
+  queue.forEach(item => {
+    let placed = false;
+    for (let w = 0; w < 4 && !placed; w++) {
+      if (left[w] >= item.mins) { weeks[w].push(item); left[w] -= item.mins; placed = true; }
+    }
+    if (!placed) overflow.push(item);
+  });
+
+  return { weeks, left, overflow, cap, queued: queue.length };
+}
+
+function isDone(pid, sid) { return !!(state.steps[pid] && state.steps[pid][sid]); }
+function setDone(pid, sid, v) {
+  if (!state.steps[pid]) state.steps[pid] = {};
+  if (v) state.steps[pid][sid] = true; else delete state.steps[pid][sid];
+}
+function doneMins(p) {
+  return flowOf(p).filter(s => isDone(p.id, s.id)).reduce((a, s) => a + s.mins, 0);
+}
+function progressOf(p) {
+  const t = wfMins(p);
+  return t > 0 ? doneMins(p) / t : 0;
+}
+
+/** Dates: the schedule works in plain YYYY-MM-DD with no timezone anywhere,
+    because a date that shifts by one when the clocks change is worse than no
+    date at all. */
+function parseDate(s) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s || ""));
+  if (!m) return null;
+  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+  return isFinite(d.getTime()) ? d : null;
+}
+function fmtDate(d) {
+  if (!d) return "";
+  try { return d.toLocaleDateString(undefined, { timeZone: "UTC", day: "numeric", month: "short" }); }
+  catch (e) { return d.toISOString().slice(0, 10); }
+}
+function addDays(d, n) { return new Date(d.getTime() + n * 86400000); }
+function todayISO() {
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+
+/* ===========================================================================
+   RENDER — small helpers shared by the panels
+   =========================================================================== */
+
+function statHtml(k, v, n, cls) {
+  return '<div class="stat ' + (cls || "") + '"><div class="k">' + esc(k) + '</div><div class="v">' +
+    esc(v) + '</div><div class="n">' + (n || "") + '</div></div>';
+}
+function barHtml(frac, cls) {
+  return '<div class="bar ' + (cls || "") + '"><i style="width:' + clamp(frac * 100, 0, 100).toFixed(1) + '%"></i></div>';
+}
+function optionsHtml(list, sel, labelFn) {
+  return list.map(x => '<option value="' + esc(x.id) + '"' + (x.id === sel ? " selected" : "") + '>' +
+    esc(labelFn ? labelFn(x) : x.name) + '</option>').join("");
+}
+
+/** Re-render without stealing the caret: restore focus (and selection, for
+    text fields) to whatever had it before the DOM was replaced. */
+function withFocus(fn) {
+  const a = document.activeElement;
+  const id = a && a.id ? a.id : null;
+  const st = a && typeof a.selectionStart === "number" ? a.selectionStart : null;
+  fn();
+  if (!id) return;
+  const b = document.getElementById(id);
+  if (!b || b === document.activeElement) return;
+  try {
+    b.focus({ preventScroll: true });
+    if (st !== null && typeof b.selectionStart === "number") b.setSelectionRange(st, st);
+  } catch (e) {}
+}
+
+function renderAll() {
+  withFocus(() => {
+    renderFactory();
+    renderIdeas();
+    renderBuild();
+    renderAgents();
+    renderChecks();
+    renderMoney();
+    renderFunnel();
+    renderPlan();
+  });
+}
+function touch() { save(); renderAll(); }
+
+/* ===========================================================================
+   FACTORY
+   =========================================================================== */
+
+function renderFactory() {
+  $("#f-cur-pill").textContent = state.cur;
+
+  const mh = monthHours(), avg = avgProductHours();
+  const cold = coldCapacity(), steady = steadyCatalogue();
+  const steadyLaunch = steady * state.retire / 100;
+  const ceiling = catalogueCeiling();
+
+  $("#f-stats").innerHTML =
+    statHtml("Hours a month", num(mh, 0) + " h",
+      num(state.hours, 1) + " a week × " + MONTH_WEEKS.toFixed(2) + " weeks", "acc") +
+    statHtml("An average product", hrs(avg),
+      num(avgProductHours() * 60 - avgVerMins(), 0) + " min of workflow + " + num(avgVerMins(), 0) + " min of category checks") +
+    statHtml("Products a month", num(cold, 1),
+      "from a standing start, with no catalogue to look after", cold >= state.target ? "good" : "warn") +
+    statHtml("Catalogue settles at", isFinite(steady) ? num(steady, 0) : "∞",
+      isFinite(steady) ? "launching " + num(steadyLaunch, 1) + " a month to replace what retires" : "nothing retires and upkeep is zero");
+
+  /* the verdict */
+  const target = state.target;
+  const v = [];
+  if (target > 0) {
+    if (cold < target) {
+      v.push({ cls: "red", t: "The target does not fit in the week.",
+        b: "You want " + num(target, 1) + " products a month and have hours for " + num(cold, 1) +
+           " — and that is the optimistic figure, before a single product exists to support. Reaching " + num(target, 1) +
+           " needs " + hrs(target * avg / MONTH_WEEKS) + " a week, which is " + num(target * avg / MONTH_WEEKS - state.hours, 1) +
+           " more than you have. The honest moves are fewer products, cheaper formats, or bought hands." });
+    } else if (steadyLaunch < target) {
+      v.push({ cls: "amber", t: "The target fits this month and not next year.",
+        b: "From a standing start you can finish " + num(cold, 1) + " a month. Once the catalogue has settled at about " +
+           num(steady, 0) + " products, upkeep takes " + hrs(upkeepHoursFor(steady)) + " of your " + num(mh, 0) +
+           " and the sustainable launch rate falls to " + num(steadyLaunch, 1) +
+           " a month. That is not a failure of the plan; it is the plan's second year." });
+    } else {
+      v.push({ cls: "green", t: "The target survives the catalogue.",
+        b: "At " + num(state.upkeep, 0) + " minutes of upkeep per product per month, " + num(target, 1) +
+           " a month is still sustainable once the catalogue settles at about " + num(steady, 0) + " products." });
+    }
+  }
+  if (isFinite(ceiling)) {
+    v.push({ cls: "", t: "Where the ceiling is.",
+      b: "At " + num(state.upkeep, 0) + " minutes each, " + num(ceiling, 0) +
+         " live products consume every hour you have and the factory stops building anything. Retiring " +
+         pct(state.retire) + " a month is what keeps the catalogue below it — a studio that never retires anything eventually only does support." });
+  }
+  $("#f-verdict").innerHTML = v.map(x =>
+    '<div class="note ' + x.cls + '"><b>' + esc(x.t) + '</b> ' + esc(x.b) + '</div>').join("");
+
+  /* the simulation */
+  const sim = simulate();
+  const peak = sim.peak || 1;
+  $("#f-sim-note").textContent = state.months + " months · " + committed().length + " committed";
+
+  $("#f-chart").innerHTML = sim.rows.map(r => {
+    const revH = clamp(r.revenue / peak * 100, 0, 100);
+    const upH = clamp(r.upkeepH / Math.max(1e-9, monthHours()) * 100, 0, 100);
+    return '<div class="col" style="flex-direction:row;align-items:flex-end;gap:1px" ' +
+      'title="' + esc("Month " + r.m + ": " + money(r.revenue) + ", " + r.live + " live, upkeep " + hrs(r.upkeepH)) + '">' +
+      '<span class="seg rev" style="flex:2;height:' + revH.toFixed(1) + '%"></span>' +
+      '<span class="seg up" style="flex:1;height:' + upH.toFixed(1) + '%"></span></div>';
+  }).join("");
+
+  const every = sim.rows.length > 26 ? 6 : 3;
+  $("#f-axis").innerHTML = sim.rows.map(r =>
+    '<span>' + (r.m === 1 || r.m % every === 0 ? "m" + r.m : "") + '</span>').join("");
+
+  $("#f-sim-table").innerHTML = sim.rows.map(r =>
+    '<tr><td class="tnum">' + r.m + '</td>' +
+    '<td class="n">' + r.live + '</td>' +
+    '<td class="n">' + (r.launched || "") + '</td>' +
+    '<td class="n">' + (r.retired || "") + '</td>' +
+    '<td class="n">' + num(r.upkeepH, 1) + '</td>' +
+    '<td class="n">' + num(r.buildH, 1) + '</td>' +
+    '<td class="n">' + money(r.revenue) + '</td>' +
+    '<td class="n">' + money(r.cum) + '</td></tr>').join("");
+
+  const last = sim.rows[sim.rows.length - 1];
+  $("#f-ceiling").innerHTML = sim.ceilingMonth
+    ? "<b>Month " + sim.ceilingMonth + " is where it stops.</b> Upkeep reaches your whole month and nothing new gets built after it. " +
+      "Everything past that point in the table is a catalogue coasting on decay."
+    : "<b>The catalogue never hits the ceiling inside " + state.months + " months.</b> It ends at " + (last ? last.live : 0) +
+      " live products, " + hrs(last ? last.upkeepH : 0) + " a month of upkeep — " +
+      pct(last ? last.upkeepH / Math.max(1e-9, monthHours()) * 100 : 0) + " of your time — and " +
+      money(last ? last.cum : 0) + " earned in total.";
+}
+
+function avgVerMins() {
+  const list = committed().length ? committed() : state.products;
+  return list.reduce((a, p) => a + verMins(p), 0) / list.length;
+}
+
+/* ===========================================================================
+   IDEAS
+   =========================================================================== */
+
+function initIdeas() {
+  $("#i-weights").innerHTML = FACTORS.map(f =>
+    '<div class="slider"><span class="lab"><b>' + esc(f.n) + '</b> <span class="why">weight</span></span>' +
+    '<input type="range" id="w-' + f.id + '" min="0" max="50" step="1" aria-label="Weight for ' + esc(f.n) + '">' +
+    '<span class="val" id="wv-' + f.id + '">—</span></div>').join("");
+  FACTORS.forEach(f => {
+    $("#w-" + f.id).addEventListener("input", e => {
+      state.weights[f.id] = clamp(numOr(e.target.value, f.w), 0, 50);
+      $("#wv-" + f.id).textContent = num(state.weights[f.id]);
+      save(); renderIdeas(); renderFactory(); renderPlan();
+    });
+  });
+  $("#i-weights-reset").addEventListener("click", () => {
+    state.weights = defaultWeights();
+    syncSliders(); touch();
+    toast("Weights back to the app's own judgement");
+  });
+
+  $("#i-sliders").innerHTML = FACTORS.map(f =>
+    '<div class="slider"><span class="lab"><b>' + esc(f.n) + '</b> <span class="why">' + esc(f.why) + '</span></span>' +
+    '<input type="range" id="s-' + f.id + '" min="0" max="10" step="1" aria-label="' + esc(f.n) + ' for the selected idea">' +
+    '<span class="val" id="sv-' + f.id + '">—</span></div>').join("");
+  FACTORS.forEach(f => {
+    $("#s-" + f.id).addEventListener("input", e => {
+      const p = productById(state.sel.ideas);
+      if (!p) return;
+      p.s[f.id] = clamp(Math.round(numOr(e.target.value, 5)), 0, 10);
+      $("#sv-" + f.id).textContent = num(p.s[f.id]);
+      save();
+      withFocus(() => { renderIdeasTable(); renderIdeaDetail(); renderFactory(); });
+    });
+  });
+
+  $("#i-pick").addEventListener("change", e => {
+    state.sel.ideas = e.target.value;
+    syncSliders(); touch();
+  });
+
+  $("#i-new-cat").innerHTML = optionsHtml(CATEGORIES, "education", c => c.em + "  " + c.name);
+  $("#i-new-type").innerHTML = optionsHtml(TYPES, "ebook", t => t.em + "  " + t.name);
+  $("#i-add").addEventListener("click", addIdea);
+
+  $("#i-filters").innerHTML =
+    '<button data-f="all" aria-pressed="true">All</button>' +
+    CATEGORIES.map(c => '<button data-f="' + c.id + '" aria-pressed="false">' + c.em + " " + esc(c.name) + '</button>').join("");
+  $$("#i-filters button").forEach(b => b.addEventListener("click", () => {
+    state.filters.ideas = b.dataset.f;
+    touch();
+  }));
+}
+
+function addIdea() {
+  const name = $("#i-new-name").value.trim();
+  if (name.length < 3) { toast("Give it a name first.", true); return; }
+  let id = slug(name) || "idea";
+  let n = 2;
+  while (productById(id)) id = slug(name) + "-" + n++;
+  const p = {
+    id, name: name.slice(0, 120),
+    cat: $("#i-new-cat").value, type: $("#i-new-type").value,
+    price: clamp(numOr($("#i-new-price").value, 19), 0, 1e6),
+    who: $("#i-new-who").value.trim().slice(0, 200),
+    note: "Your own idea. Score it honestly — the ranking is only as good as the five numbers you type.",
+    s: { demand: 5, ground: 5, price: 5, fit: 5, proof: 5 },
+    commit: false, channel: "selar", custom: true
+  };
+  state.products.push(p);
+  state.sel.ideas = id;
+  $("#i-new-name").value = ""; $("#i-new-who").value = "";
+  syncSliders(); touch();
+  toast("Added — now score it");
+}
+
+function ideaList() {
+  const f = state.filters.ideas;
+  return ranked(f === "all" ? state.products : state.products.filter(p => p.cat === f));
+}
+
+function renderIdeas() {
+  $$("#i-filters button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.f === state.filters.ideas)));
+  $("#i-pick").innerHTML = optionsHtml(ranked(state.products), state.sel.ideas, p => p.name);
+  renderIdeasTable();
+  renderIdeaDetail();
+}
+
+function renderIdeasTable() {
+  const list = ideaList();
+  const all = ranked(state.products);
+  $("#i-table").innerHTML = list.map(p => {
+    const rank = all.indexOf(p) + 1;
+    const c = catDef(p.cat);
+    return '<tr>' +
+      '<td class="tnum">' + rank + '</td>' +
+      '<td><b>' + esc(p.name) + '</b><br><span class="pill">' + c.em + " " + esc(c.name) + '</span>' +
+      (p.commit ? ' <span class="pill green">committed</span>' : "") +
+      (p.custom ? ' <span class="pill blue">yours</span>' : "") + '</td>' +
+      '<td>' + esc(typeDef(p.type).em + " " + typeName(p.type)) + '</td>' +
+      '<td class="n">' + money(p.price) + '</td>' +
+      '<td class="n">' + num(hoursOf(p), 1) + '</td>' +
+      '<td class="n">' + num(scoreOf(p), 0) + '</td>' +
+      '<td class="n"><b>' + num(valuePerHour(p), 2) + '</b></td>' +
+      '<td><label class="chk" style="padding:0"><input type="checkbox" id="cm-' + esc(p.id) + '"' +
+      (p.commit ? " checked" : "") + ' aria-label="Commit to building ' + esc(p.name) + '"><span class="sr">Build</span></label></td>' +
+      '</tr>';
+  }).join("");
+
+  list.forEach(p => {
+    const box = document.getElementById("cm-" + p.id);
+    if (box) box.addEventListener("change", e => {
+      p.commit = e.target.checked;
+      if (p.commit) { state.sel.build = p.id; state.sel.agents = p.id; }
+      touch();
+    });
+  });
+}
+
+function renderIdeaDetail() {
+  const p = productById(state.sel.ideas);
+  const box = $("#i-detail");
+  if (!p) { box.innerHTML = '<p class="muted">Nothing selected.</p>'; return; }
+  const c = catDef(p.cat), flow = flowOf(p);
+  const gates = flow.filter(s => s.gate).length;
+
+  box.innerHTML =
+    '<div class="card" style="margin:0">' +
+      '<div class="card-head"><h3 style="font-size:15.5px">' + esc(p.name) + '</h3>' +
+      '<div class="tools"><span class="pill acc">' + num(scoreOf(p), 0) + ' / 100</span></div></div>' +
+      '<p class="muted" style="font-size:13.2px">' + esc(p.who || "No buyer written down yet.") + '</p>' +
+      '<p style="font-size:13.4px">' + esc(p.note) + '</p>' +
+      '<dl class="kv">' +
+        '<dt>Format</dt><dd>' + esc(typeName(p.type)) + '</dd>' +
+        '<dt>Workflow</dt><dd>' + flow.length + ' steps, ' + gates + ' of them gates</dd>' +
+        '<dt>Your time</dt><dd>' + hrs(wfMins(p) / 60) + ' of workflow</dd>' +
+        '<dt>Category checks</dt><dd>' + hrs(verMins(p) / 60) + ' — ' + RISKS.filter(r => r.cat === p.cat).length + ' items</dd>' +
+        '<dt>Total</dt><dd><b>' + hrs(hoursOf(p)) + '</b> = ' + money(buildCost(p)) + ' of your hours</dd>' +
+        '<dt>Score per hour</dt><dd>' + num(valuePerHour(p), 2) + '</dd>' +
+      '</dl>' +
+      '<div class="field" style="margin-top:12px">' +
+        '<label class="f" for="i-price">Price</label>' +
+        '<input type="number" id="i-price" min="0" max="1000000" step="1" value="' + esc(p.price) + '">' +
+      '</div>' +
+      '<div class="field">' +
+        '<label class="f" for="i-chan">Sold through</label>' +
+        '<select id="i-chan">' + optionsHtml(CHANNELS, p.channel, x => x.n) + '</select>' +
+      '</div>' +
+      '<label class="chk"><input type="checkbox" id="i-commit"' + (p.commit ? " checked" : "") +
+        '><span>Commit to building this — it joins Production, Economics and the Schedule</span></label>' +
+      (p.custom ? '<button id="i-del" class="sm danger" style="margin-top:8px">Delete this idea</button>' : "") +
+    '</div>' +
+    '<div class="note">' + esc(c.note) + '</div>';
+
+  $("#i-price").addEventListener("input", e => {
+    p.price = clamp(numOr(e.target.value, p.price), 0, 1e6);
+    save();
+    withFocus(() => { renderIdeasTable(); renderMoney(); renderFactory(); });
+  });
+  $("#i-chan").addEventListener("change", e => { p.channel = e.target.value; touch(); });
+  $("#i-commit").addEventListener("change", e => {
+    p.commit = e.target.checked;
+    if (p.commit) { state.sel.build = p.id; state.sel.agents = p.id; }
+    touch();
+  });
+  const del = $("#i-del");
+  if (del) del.addEventListener("click", () => {
+    if (state.products.length < 2) { toast("That's the last one.", true); return; }
+    state.products = state.products.filter(x => x.id !== p.id);
+    delete state.steps[p.id];
+    ["ideas", "build", "agents"].forEach(k => { if (state.sel[k] === p.id) state.sel[k] = state.products[0].id; });
+    syncSliders(); touch();
+    toast("Deleted");
+  });
+}
+
+function syncSliders() {
+  FACTORS.forEach(f => {
+    const w = $("#w-" + f.id);
+    if (w) { w.value = state.weights[f.id]; $("#wv-" + f.id).textContent = num(state.weights[f.id]); }
+  });
+  const p = productById(state.sel.ideas);
+  FACTORS.forEach(f => {
+    const s = $("#s-" + f.id);
+    if (s) { s.value = p ? p.s[f.id] : 5; $("#sv-" + f.id).textContent = p ? num(p.s[f.id]) : "—"; }
+  });
+}
+
+/* ===========================================================================
+   PRODUCTION
+   =========================================================================== */
+
+function initBuild() {
+  $("#b-pick").addEventListener("change", e => { state.sel.build = e.target.value; touch(); });
+  $("#b-reset").addEventListener("click", () => {
+    const p = productById(state.sel.build);
+    if (!p) return;
+    delete state.steps[p.id];
+    touch();
+    toast("Steps cleared for " + p.name);
+  });
+}
+
+function renderBuild() {
+  $("#b-pick").innerHTML = optionsHtml(ranked(state.products), state.sel.build,
+    p => (p.commit ? "★ " : "") + p.name);
+  const p = productById(state.sel.build);
+  if (!p) return;
+  const flow = flowOf(p);
+  const prog = progressOf(p);
+  const doneH = doneMins(p) / 60, totH = wfMins(p) / 60;
+  const gatesLeft = flow.filter(s => s.gate && !isDone(p.id, s.id)).length;
+
+  $("#b-summary").innerHTML =
+    '<div class="grid4" style="margin-bottom:12px">' +
+      statHtml("Progress", pct(prog * 100), num(flow.filter(s => isDone(p.id, s.id)).length) + " of " + flow.length + " steps", prog >= 1 ? "good" : "") +
+      statHtml("Hours left", hrs(totH - doneH), "of " + hrs(totH) + " in the workflow") +
+      statHtml("Gates left", num(gatesLeft), gatesLeft ? "cannot be delegated" : "all settled", gatesLeft ? "warn" : "good") +
+      statHtml("Category checks", hrs(verMins(p) / 60), RISKS.filter(r => r.cat === p.cat).length + " items on the Checks tab") +
+    '</div>' + barHtml(prog, prog >= 1 ? "green" : "");
+
+  $("#b-steps").innerHTML = flow.map((s, i) => {
+    const done = isDone(p.id, s.id);
+    const a = agentDef(s.agent);
+    return '<div class="step' + (s.gate ? " gate" : "") + (done ? " done" : "") + '">' +
+      '<span class="no">' + (i + 1) + '</span>' +
+      '<div class="main">' +
+        '<b>' + esc(s.n) + '</b>' +
+        '<div class="meta">' + esc(a ? a.em + " " + a.n : s.agent) + ' · ' + num(s.mins) + ' min · ' +
+          (s.gate ? '<span class="pill amber">gate — a person decides</span>' : 'model does about ' + pct(s.ai * 100) + ' of it') + '</div>' +
+        '<div class="why"><b>Out:</b> ' + esc(s.out) + '</div>' +
+        '<div class="why muted">' + esc(s.why) + '</div>' +
+      '</div>' +
+      '<div class="side"><label class="chk" style="padding:0"><input type="checkbox" id="st-' + esc(p.id) + '-' + esc(s.id) + '"' +
+        (done ? " checked" : "") + ' aria-label="Done: ' + esc(s.n) + '"><span class="sr">Done</span></label></div>' +
+    '</div>';
+  }).join("");
+
+  flow.forEach(s => {
+    const box = document.getElementById("st-" + p.id + "-" + s.id);
+    if (box) box.addEventListener("change", e => { setDone(p.id, s.id, e.target.checked); touch(); });
+  });
+
+  const ai = aiMins(p), human = totalMins(p) - ai, gate = gateMins(p);
+  $("#b-split").innerHTML =
+    statHtml("Model does", num(ai / 60, 1) + " h", pct(ai / totalMins(p) * 100) + " of the product", "acc") +
+    statHtml("You do", num(human / 60, 1) + " h", pct(human / totalMins(p) * 100) + " of the product") +
+    statHtml("Behind a gate", num(gate / 60, 1) + " h", pct(gate / totalMins(p) * 100) + " that cannot be delegated at all", "warn");
+
+  $("#b-split-note").innerHTML =
+    "<b>This is the ratio the whole plan turns on.</b> A model takes " + hrs(ai / 60) + " off a " + hrs(hoursOf(p)) +
+    " product — real, and worth having. It leaves " + hrs(human / 60) + " that is yours, of which " + hrs(gate / 60) +
+    " is gate work where a second model is not a second opinion. Multiply the leftover by the number of products you " +
+    "want a month; that product is your calendar.";
+}
+
+/* ===========================================================================
+   AGENTS
+   =========================================================================== */
+
+function initAgents() {
+  $("#a-pick").addEventListener("change", e => { state.sel.agents = e.target.value; touch(); });
+  $("#a-facts").addEventListener("input", e => { state.facts = e.target.value.slice(0, 3000); save(); renderAgents(); });
+  $("#a-voice").addEventListener("input", e => { state.voice = e.target.value.slice(0, 3000); save(); renderAgents(); });
+  $("#a-copyall").addEventListener("click", () => {
+    const p = productById(state.sel.agents);
+    if (!p) return;
+    copyText(allBriefs(p), "All seven briefs copied");
+  });
+}
+
+function agentCtx() {
+  return { studio: state.studio || "the studio", facts: state.facts, voice: state.voice };
+}
+function briefOf(a, p) {
+  try { return a.prompt(p, agentCtx()); }
+  catch (e) { return "[This brief could not be built: " + e.message + "]"; }
+}
+function allBriefs(p) {
+  return AGENTS.map(a => "## " + a.n + " — " + a.role + "\n\n" + briefOf(a, p)).join("\n\n---\n\n");
+}
+
+function renderAgents() {
+  $("#a-pick").innerHTML = optionsHtml(ranked(state.products), state.sel.agents, p => (p.commit ? "★ " : "") + p.name);
+  const p = productById(state.sel.agents);
+  if (!p) return;
+
+  $("#a-cards").innerHTML = AGENTS.map((a, i) => {
+    const body = briefOf(a, p);
+    const steps = flowOf(p).filter(s => s.agent === a.id);
+    return '<details class="row"' + (i === 0 ? " open" : "") + '>' +
+      '<summary><span class="t"><b>' + a.em + " " + esc(a.n) + '</b><span>' + esc(a.role) + '</span></span>' +
+        '<span class="pill">' + steps.length + ' step' + (steps.length === 1 ? "" : "s") + '</span>' +
+        '<span class="pill acc">' + num(steps.reduce((x, s) => x + s.mins, 0)) + ' min</span></summary>' +
+      '<div class="body">' +
+        '<p style="font-size:13.4px">' + esc(a.does) + '</p>' +
+        (steps.length
+          ? '<p class="muted" style="font-size:13px"><b>Owns:</b> ' + esc(steps.map(s => s.n).join(" · ")) + '</p>'
+          : '<p class="muted" style="font-size:13px">No step in this product\'s workflow — this agent is idle for a ' + esc(typeName(p.type).toLowerCase()) + '.</p>') +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="sm" data-copy="' + esc(a.id) + '">Copy this brief</button>' +
+          '<span class="pill">' + num(body.length) + ' characters</span></div>' +
+        '<div class="promptbox"><pre>' + esc(body) + '</pre></div>' +
+      '</div></details>';
+  }).join("");
+
+  $$("#a-cards button[data-copy]").forEach(b => b.addEventListener("click", () => {
+    const a = agentDef(b.dataset.copy);
+    if (a) copyText(briefOf(a, p), a.n + " brief copied");
+  }));
+
+  if ($("#a-facts").value !== state.facts) $("#a-facts").value = state.facts;
+  if ($("#a-voice").value !== state.voice) $("#a-voice").value = state.voice;
+}
+
+/* ===========================================================================
+   CHECKS
+   =========================================================================== */
+
+function initChecks() {
+  $("#k-filters").innerHTML =
+    '<button data-f="all" aria-pressed="true">All</button>' +
+    CATEGORIES.map(c => '<button data-f="' + c.id + '" aria-pressed="false">' + c.em + " " + esc(c.name) + '</button>').join("");
+  $$("#k-filters button").forEach(b => b.addEventListener("click", () => {
+    state.filters.checks = b.dataset.f;
+    touch();
+  }));
+}
+
+const SEV = {
+  critical: { n: "critical", cls: "red", why: "Being wrong here harms someone or ends the product" },
+  high:     { n: "high",     cls: "amber", why: "Being wrong here costs refunds and reputation" },
+  med:      { n: "medium",   cls: "", why: "Being wrong here is noticed and forgiven" }
+};
+
+function renderChecks() {
+  $$("#k-filters button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.f === state.filters.checks)));
+  const f = state.filters.checks;
+  const cats = f === "all" ? CATEGORIES : CATEGORIES.filter(c => c.id === f);
+
+  $("#k-list").innerHTML = cats.map(c => {
+    const items = RISKS.filter(r => r.cat === c.id);
+    const mins = items.reduce((a, r) => a + r.mins, 0);
+    const done = items.filter(r => state.risksOk[r.id]).length;
+    return '<div class="card">' +
+      '<div class="card-head"><h3>' + c.em + " " + esc(c.name) + '</h3>' +
+        '<div class="tools"><span class="pill">' + items.length + ' items</span>' +
+        '<span class="pill acc">' + hrs(mins / 60) + ' a product</span>' +
+        '<span class="pill ' + (done === items.length ? "green" : "") + '">' + done + '/' + items.length + ' settled</span></div></div>' +
+      '<p class="sub">' + esc(c.buyer) + '</p>' +
+      items.map(r => {
+        const sev = SEV[r.sev] || SEV.med;
+        return '<details class="row">' +
+          '<summary><span class="t"><b>' + esc(r.t) + '</b><span>' + esc(sev.why) + '</span></span>' +
+            '<span class="pill ' + sev.cls + '">' + esc(sev.n) + '</span>' +
+            '<span class="pill">' + num(r.mins) + ' min</span></summary>' +
+          '<div class="body">' +
+            '<p><b>What goes wrong.</b> ' + esc(r.what) + '</p>' +
+            '<p><b>How you find out.</b> ' + esc(r.surface) + '</p>' +
+            '<div class="note green"><b>Who can actually settle it.</b> ' + esc(r.who) + '</div>' +
+            '<label class="chk" style="margin-top:10px"><input type="checkbox" id="rk-' + esc(r.id) + '"' +
+              (state.risksOk[r.id] ? " checked" : "") + '><span>I have a way of doing this check, and the minutes are in my estimate</span></label>' +
+          '</div></details>';
+      }).join("") +
+    '</div>';
+  }).join("");
+
+  RISKS.forEach(r => {
+    const box = document.getElementById("rk-" + r.id);
+    if (box) box.addEventListener("change", e => {
+      if (e.target.checked) state.risksOk[r.id] = true; else delete state.risksOk[r.id];
+      touch();
+    });
+  });
+
+  /* the refund arithmetic */
+  const list = committed();
+  const BAD_REFUND = 15;   /* what a failed gate does to the refund rate */
+  const SUPPORT_MIN = 12;  /* minutes each refund costs you in support */
+  const rows = list.map(p => {
+    let units = 0;
+    for (let m = 0; m < 12; m++) units += unitsAtAge(m);
+    const extra = units * (BAD_REFUND - state.refund) / 100;
+    return {
+      p, units,
+      lost: extra * netOf(p),
+      mins: extra * SUPPORT_MIN,
+      gateH: gateMins(p) / 60
+    };
+  });
+  const tot = rows.reduce((a, r) => ({
+    lost: a.lost + r.lost, mins: a.mins + r.mins, gateH: a.gateH + r.gateH
+  }), { lost: 0, mins: 0, gateH: 0 });
+
+  $("#k-refund").innerHTML = !list.length
+    ? '<p class="muted">Commit a product on the Ideas tab and this fills in.</p>'
+    : '<div class="grid3" style="margin-bottom:12px">' +
+        statHtml("Gate hours", hrs(tot.gateH), "across " + list.length + " committed product" + (list.length === 1 ? "" : "s") + " — the bill you pay on purpose") +
+        statHtml("A skipped gate costs", money(tot.lost), "in refunded sales in year one, if it takes the refund rate from " + pct(state.refund) + " to " + pct(BAD_REFUND), "bad") +
+        statHtml("...plus", hrs(tot.mins / 60), "of support time at " + SUPPORT_MIN + " minutes a refund", "bad") +
+      '</div>' +
+      '<div class="tablewrap"><table><thead><tr><th>Product</th><th class="n">Year-one units</th><th class="n">Gate hours</th><th class="n">Refunds if skipped</th><th class="n">Support hours</th></tr></thead><tbody>' +
+      rows.map(r => '<tr><td>' + esc(r.p.name) + '</td><td class="n">' + num(r.units, 0) + '</td><td class="n">' +
+        num(r.gateH, 1) + '</td><td class="n">' + money(r.lost) + '</td><td class="n">' + num(r.mins / 60, 1) + '</td></tr>').join("") +
+      '</tbody></table></div>';
+}
+
+/* ===========================================================================
+   ECONOMICS
+   =========================================================================== */
+
+function initMoney() {
+  $("#m-channels").innerHTML = CHANNELS.map(c =>
+    '<tr><td><b>' + esc(c.n) + '</b></td>' +
+    '<td class="muted" style="font-size:12.8px">' + esc(c.for) + '</td>' +
+    '<td class="n"><input type="number" id="ch-pct-' + c.id + '" min="0" max="100" step="0.1" style="width:80px" aria-label="' + esc(c.n) + ' percentage fee"></td>' +
+    '<td class="n"><input type="number" id="ch-fix-' + c.id + '" min="0" max="1000" step="0.05" style="width:80px" aria-label="' + esc(c.n) + ' fixed fee"></td>' +
+    '<td class="n"><input type="number" id="ch-lag-' + c.id + '" min="0" max="365" step="1" style="width:70px" aria-label="' + esc(c.n) + ' payout days"></td>' +
+    '<td id="ch-st-' + c.id + '"></td></tr>').join("");
+
+  CHANNELS.forEach(c => {
+    [["pct", "pct"], ["fix", "fixed"], ["lag", "lag"]].forEach(([suf, key]) => {
+      $("#ch-" + suf + "-" + c.id).addEventListener("input", e => {
+        state.channels[c.id][key] = clamp(numOr(e.target.value, 0), 0, key === "pct" ? 100 : (key === "lag" ? 365 : 1e5));
+        save();
+        withFocus(() => { renderMoney(); renderFactory(); });
+      });
+    });
+  });
+
+  $("#m-confirm").addEventListener("click", () => {
+    CHANNELS.forEach(c => { state.channels[c.id].checked = true; });
+    touch();
+    toast("Marked as checked — re-check them when you next publish");
+  });
+
+  ["refund", "decay", "floor"].forEach(k => {
+    $("#m-" + k).addEventListener("input", e => {
+      state[k] = clamp(numOr(e.target.value, state[k]), 0, k === "refund" ? 100 : (k === "decay" ? 90 : 100));
+      save();
+      withFocus(() => { renderMoney(); renderFactory(); renderChecks(); });
+    });
+  });
+  $("#m-fx").addEventListener("input", e => {
+    state.fx = clamp(numOr(e.target.value, 0), 0, 1e6);
+    save();
+    withFocus(renderMoney);
+  });
+}
+
+function renderMoney() {
+  CHANNELS.forEach(c => {
+    const s = state.channels[c.id];
+    const pctI = $("#ch-pct-" + c.id), fixI = $("#ch-fix-" + c.id), lagI = $("#ch-lag-" + c.id);
+    if (pctI && document.activeElement !== pctI) pctI.value = s.pct;
+    if (fixI && document.activeElement !== fixI) fixI.value = s.fixed;
+    if (lagI && document.activeElement !== lagI) lagI.value = s.lag;
+    $("#ch-st-" + c.id).innerHTML = s.checked
+      ? '<span class="pill green">checked by you</span>'
+      : '<span class="pill amber">placeholder — unverified</span>';
+  });
+  ["refund", "decay", "floor"].forEach(k => {
+    const i = $("#m-" + k);
+    if (i && document.activeElement !== i) i.value = state[k];
+  });
+  const fx = $("#m-fx");
+  if (fx && document.activeElement !== fx) fx.value = state.fx || "";
+  $("#m-fx-cur").textContent = state.cur;
+
+  const list = committed().length ? committed() : ranked(state.products).slice(0, 5);
+  $("#m-table").innerHTML = list.map(p => {
+    const fee = feeOf(p.price, p.channel), net = netOf(p), be = breakEvenUnits(p), pb = paybackMonths(p);
+    return '<tr>' +
+      '<td><b>' + esc(p.name) + '</b>' + (p.commit ? "" : ' <span class="pill">not committed</span>') + '</td>' +
+      '<td>' + esc((CHANNELS.find(c => c.id === p.channel) || CHANNELS[0]).n) + '</td>' +
+      '<td class="n">' + money(p.price) + '</td>' +
+      '<td class="n">' + money(fee) + '</td>' +
+      '<td class="n"><b>' + money(net) + '</b></td>' +
+      '<td class="n">' + money(buildCost(p)) + '</td>' +
+      '<td class="n">' + (isFinite(be) ? num(Math.ceil(be)) : "never") + '</td>' +
+      '<td class="n">' + (pb === null ? '<span class="pill red">not inside 10 years</span>' : num(pb) + " mo") + '</td>' +
+      '</tr>';
+  }).join("");
+
+  /* the ladder */
+  const ladder = list.slice().sort((a, b) => a.price - b.price);
+  $("#m-ladder").innerHTML = ladder.length < 2
+    ? '<p class="muted">Commit at least two products and the ladder appears.</p>'
+    : ladder.map((p, i) => {
+        const prev = i ? ladder[i - 1] : null;
+        const jump = prev && prev.price > 0 ? p.price / prev.price : null;
+        return '<div class="fstage"><div class="fl"><b>' + esc(p.name) + '</b><span>' + esc(typeName(p.type)) + '</span></div>' +
+          '<div class="fb"><div class="bar2" style="width:' + clamp(p.price / ladder[ladder.length - 1].price * 100, 3, 100).toFixed(1) + '%"></div>' +
+          '<span class="fnum">' + money(p.price) + (jump ? ' <span class="muted">· ' + num(jump, 1) + '× the one below</span>' : "") + '</span></div></div>';
+      }).join("") +
+      '<div class="note">A ladder wants gaps a buyer can see the reason for. Two products within 20% of each other ' +
+      'are not a ladder, they are a choice — and a choice at the same price is where a buyer stops and does neither.</div>';
+
+  /* currency */
+  const box = $("#m-fx-out");
+  if (!state.fx) {
+    box.innerHTML = '<p class="muted">Type your rate and every price above appears in both currencies.</p>';
+  } else {
+    box.innerHTML = '<div class="tablewrap"><table><thead><tr><th>Product</th><th class="n">' + esc(state.cur) +
+      '</th><th class="n">Local</th><th class="n">Net local</th></tr></thead><tbody>' +
+      list.map(p => '<tr><td>' + esc(p.name) + '</td><td class="n">' + money(p.price) + '</td><td class="n">' +
+        num(p.price * state.fx, 0) + '</td><td class="n">' + num(netOf(p) * state.fx, 0) + '</td></tr>').join("") +
+      '</tbody></table></div>';
+  }
+}
+
+/* ===========================================================================
+   FUNNEL
+   =========================================================================== */
+
+function initFunnel() {
+  $("#n-inputs").innerHTML = '<div class="tablewrap"><table><thead><tr>' +
+    '<th>Step</th><th class="n">% of the step above</th><th class="n">Price</th><th>What it is for</th>' +
+    '</tr></thead><tbody>' +
+    FUNNEL.map(f => '<tr><td><b>' + esc(f.n) + '</b></td>' +
+      '<td class="n">' + (f.of === null ? '<span class="muted">—</span>' :
+        '<input type="number" id="fr-' + f.id + '" min="0" max="100" step="0.5" style="width:90px" aria-label="Rate for ' + esc(f.n) + '">') + '</td>' +
+      '<td class="n">' + (f.id === "visit" ? '<span class="muted">—</span>' :
+        '<input type="number" id="fp-' + f.id + '" min="0" max="1000000" step="1" style="width:100px" aria-label="Price for ' + esc(f.n) + '">') +
+        (f.id === "member" ? '<br><span class="muted" style="font-size:11.5px">× ' + MEMBER_MONTHS + ' months</span>' : "") + '</td>' +
+      '<td class="muted" style="font-size:12.8px">' + esc(f.note) + '</td></tr>').join("") +
+    '</tbody></table></div>';
+
+  FUNNEL.forEach(f => {
+    const r = $("#fr-" + f.id);
+    if (r) r.addEventListener("input", e => {
+      state.funnel["r_" + f.id] = clamp(numOr(e.target.value, 0), 0, 100);
+      save(); withFocus(renderFunnel);
+    });
+    const p = $("#fp-" + f.id);
+    if (p) p.addEventListener("input", e => {
+      state.funnel["p_" + f.id] = clamp(numOr(e.target.value, 0), 0, 1e6);
+      save(); withFocus(renderFunnel);
+    });
+  });
+
+  $("#n-reset").addEventListener("click", () => {
+    state.funnel = defaultFunnel();
+    touch();
+    toast("Funnel back to the app's defaults");
+  });
+}
+
+function renderFunnel() {
+  FUNNEL.forEach(f => {
+    const r = $("#fr-" + f.id);
+    if (r && document.activeElement !== r) r.value = funnelRate(f.id);
+    const p = $("#fp-" + f.id);
+    if (p && document.activeElement !== p) p.value = funnelPrice(f.id);
+  });
+
+  const run = funnelRun();
+  $("#n-rpv").textContent = money(run.perVisitor, 2) + " a visitor";
+
+  const maxc = Math.max.apply(null, run.stages.map(s => s.count)) || 1;
+  $("#n-stages").innerHTML = run.stages.map(s => {
+    const w = clamp(Math.pow(s.count / maxc, 0.32) * 100, 2, 100);
+    return '<div class="fstage"><div class="fl"><b>' + esc(s.n) + '</b><span>' +
+      (s.price ? money(s.price) + (s.mult > 1 ? " × " + s.mult : "") : "free") + '</span></div>' +
+      '<div class="fb"><div class="bar2" style="width:' + w.toFixed(1) + '%"></div>' +
+      '<span class="fnum"><b>' + (s.count >= 10 ? num(s.count, 0) : num(s.count, 1)) + '</b>' +
+      (s.revenue ? ' <span class="muted">· ' + money(s.revenue) + '</span>' : "") + '</span></div></div>';
+  }).join("") +
+  '<div class="note acc"><b>' + money(run.total) + ' per 1,000 visitors</b> — ' + money(run.perVisitor, 2) +
+  ' a visitor, ' + money(run.emails > 0 ? run.total / run.emails : 0, 2) + ' per email address collected. ' +
+  'The bar widths are compressed, or the last four steps would be invisible.</div>';
+
+  const mix = run.stages.filter(s => s.revenue > 0).sort((a, b) => b.revenue - a.revenue);
+  $("#n-mix").innerHTML = !mix.length
+    ? '<p class="muted">No prices set.</p>'
+    : '<div class="tablewrap"><table><thead><tr><th>Step</th><th class="n">Buyers</th><th class="n">Revenue</th><th class="n">Share</th></tr></thead><tbody>' +
+      mix.map(s => '<tr><td>' + esc(s.n) + '</td><td class="n">' + num(s.count, s.count >= 10 ? 0 : 2) + '</td>' +
+        '<td class="n">' + money(s.revenue) + '</td><td class="n">' + pct(s.revenue / run.total * 100) + '</td></tr>').join("") +
+      '</tbody></table></div>' +
+      '<div class="note"><b>' + esc(mix[0].n) + '</b> is ' + pct(mix[0].revenue / run.total * 100) +
+      ' of the money at your numbers' + (mix[0].count < 1
+        ? ' — from fewer than one buyer per thousand visitors, which means the figure is really a statement about how much traffic you need before that step exists at all.'
+        : '.') + '</div>';
+
+  const sens = funnelSensitivity();
+  const best = sens[0], worst = sens[sens.length - 1];
+  $("#n-advice").innerHTML =
+    '<p class="sub">Each rate raised by a tenth of itself, one at a time, and the effect on the total.</p>' +
+    '<div class="tablewrap"><table><thead><tr><th>Raise this by 10%</th><th class="n">Extra per 1,000</th><th class="n">Change</th></tr></thead><tbody>' +
+    sens.map(s => '<tr><td>' + esc(s.n) + '</td><td class="n">' + money(s.delta, 2) + '</td><td class="n">' +
+      pct(s.pctDelta, 1) + '</td></tr>').join("") +
+    '</tbody></table></div>' +
+    (best ? '<div class="note green"><b>Work on ' + esc(best.n).toLowerCase() + '.</b> Ten per cent there is worth ' +
+      money(best.delta, 2) + ' per thousand visitors' +
+      (worst && worst.delta > 0 ? ', against ' + money(worst.delta, 2) + ' for the same effort on ' + esc(worst.n).toLowerCase() + '' : "") +
+      '. Rates compound downwards, so a step near the top carries every step under it — which is why the free guide is ' +
+      'worth more attention than the price of anything below it.</div>' : "");
+}
+
+/* ===========================================================================
+   SCHEDULE
+   =========================================================================== */
+
+function initPlan() {
+  $("#s-start").addEventListener("input", e => {
+    state.start = e.target.value.trim();
+    save(); withFocus(renderPlan);
+  });
+  $("#s-today").addEventListener("click", () => {
+    state.start = todayISO();
+    $("#s-start").value = state.start;
+    touch();
+  });
+}
+
+function renderPlan() {
+  const i = $("#s-start");
+  if (i && document.activeElement !== i) i.value = state.start;
+
+  const list = committed();
+  const plan = planMonth();
+  const start = parseDate(state.start);
+
+  if (!list.length) {
+    $("#s-fit").innerHTML = '<p class="muted">Commit at least one product on the Ideas tab and the month fills in.</p>';
+    $("#s-weeks").innerHTML = "";
+    $("#s-steady").innerHTML = "";
+    return;
+  }
+
+  const totalMinsQueued = plan.weeks.reduce((a, w) => a + w.reduce((b, it) => b + it.mins, 0), 0) +
+    plan.overflow.reduce((a, it) => a + it.mins, 0);
+  const capacity = plan.cap * 4;
+  const fits = plan.overflow.length === 0;
+
+  $("#s-fit").innerHTML =
+    '<div class="grid4" style="margin-bottom:12px">' +
+      statHtml("Committed", num(list.length), list.map(p => typeDef(p.type).em).join(" ")) +
+      statHtml("Work outstanding", hrs(totalMinsQueued / 60), plan.queued + " steps, including category checks") +
+      statHtml("Month's capacity", hrs(capacity / 60), num(state.hours, 1) + " h × 4 weeks") +
+      statHtml(fits ? "Fits" : "Overflows", fits ? "yes" : hrs(plan.overflow.reduce((a, x) => a + x.mins, 0) / 60),
+        fits ? "with " + hrs(plan.left.reduce((a, x) => a + x, 0) / 60) + " spare" : "of work with nowhere to go",
+        fits ? "good" : "bad") +
+    '</div>' +
+    (fits
+      ? '<div class="note green"><b>The month holds.</b> Everything committed fits inside four weeks of ' +
+        num(state.hours, 1) + ' hours, with ' + hrs(plan.left.reduce((a, x) => a + x, 0) / 60) + ' left over — which is where ' +
+        'the overrun goes, because there is always an overrun.</div>'
+      : '<div class="note red"><b>The month does not hold.</b> ' + hrs(plan.overflow.reduce((a, x) => a + x.mins, 0) / 60) +
+        ' of committed work has nowhere to sit. Uncommit the lowest-ranked product, move a course to next month, or add ' +
+        num((totalMinsQueued / 60 - capacity / 60) / 4, 1) + ' hours to every week. The blueprint\'s "one e-book and one prompt pack ' +
+        'a month" is a claim about hours like any other, and this is the arithmetic that tests it.</div>');
+
+  const WEEK_THEME = [
+    "Week 1 — make the thing", "Week 2 — check it and dress it",
+    "Week 3 — publish and announce", "Week 4 — measure, fix, and start the next"
+  ];
+  $("#s-weeks").innerHTML = plan.weeks.map((items, w) => {
+    const used = plan.cap - plan.left[w];
+    const d0 = start ? addDays(start, w * 7) : null;
+    const d1 = start ? addDays(start, w * 7 + 6) : null;
+    return '<div class="card">' +
+      '<div class="card-head"><h3>' + esc(WEEK_THEME[w]) + '</h3>' +
+        '<div class="tools">' + (d0 ? '<span class="pill">' + esc(fmtDate(d0) + " – " + fmtDate(d1)) + '</span>' : "") +
+        '<span class="pill ' + (used > plan.cap * 0.9 ? "amber" : "acc") + '">' + hrs(used / 60) + ' of ' + hrs(plan.cap / 60) + '</span></div></div>' +
+      barHtml(used / plan.cap, used > plan.cap * 0.9 ? "amber" : "") +
+      (items.length
+        ? '<div style="margin-top:10px">' + items.map(it =>
+            '<div class="step' + (it.s.gate ? " gate" : "") + '" style="grid-template-columns:1fr auto">' +
+            '<div class="main"><b>' + esc(it.s.n) + '</b><div class="meta">' + esc(it.p.name) + ' · ' +
+            num(it.mins) + ' min' + (it.s.gate ? ' · <span class="pill amber">gate</span>' : "") + '</div></div>' +
+            '<div class="side"><span class="pill">' + esc((agentDef(it.s.agent) || { em: "•" }).em) + '</span></div></div>').join("") +
+          '</div>'
+        : '<p class="muted" style="margin-top:10px">Nothing scheduled — this week is spare capacity.</p>') +
+    '</div>';
+  }).join("") +
+  (plan.overflow.length
+    ? '<div class="card"><div class="card-head"><h3>Did not fit</h3><div class="tools"><span class="pill red">' +
+      plan.overflow.length + ' steps</span></div></div>' +
+      plan.overflow.map(it => '<div class="step"><span class="no">—</span><div class="main"><b>' + esc(it.s.n) +
+      '</b><div class="meta">' + esc(it.p.name) + ' · ' + num(it.mins) + ' min</div></div><div class="side"></div></div>').join("") +
+      '</div>'
+    : "");
+
+  /* the recurring month */
+  const steady = steadyCatalogue();
+  const upH = upkeepHoursFor(steady);
+  const buildH = Math.max(0, monthHours() - upH);
+  $("#s-steady").innerHTML =
+    '<div class="grid3" style="margin-bottom:12px">' +
+      statHtml("Live products", isFinite(steady) ? num(steady, 0) : "∞", "where launches and retirements balance") +
+      statHtml("Upkeep", hrs(upH), pct(upH / Math.max(1e-9, monthHours()) * 100) + " of the month, before anything new", upH > monthHours() * 0.5 ? "warn" : "") +
+      statHtml("Left to build with", hrs(buildH), num(buildH / Math.max(1e-9, avgProductHours()), 1) + " products a month") +
+    '</div>' +
+    '<div class="note"><b>This is the month that repeats, and it is not week four of the first one.</b> ' +
+    'The thirty-day plan above describes a studio with an empty catalogue. The one that matters is the month you ' +
+    'have in the second year, where ' + hrs(upH) + ' is spoken for before you open a blank page. Two things move it: ' +
+    'the upkeep minutes per product, and how ruthlessly you retire. Nothing else on this page does.</div>';
+}
+
+/* ===========================================================================
+   EXPORT — one Markdown document, plus two CSVs
+   =========================================================================== */
+
+function mdTable(head, rows) {
+  return "| " + head.join(" | ") + " |\n| " + head.map(() => "---").join(" | ") + " |\n" +
+    rows.map(r => "| " + r.join(" | ") + " |").join("\n") + "\n";
+}
+function csvCell(v) {
+  const s = String(v === null || v === undefined ? "" : v);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+function csvOf(head, rows) {
+  return [head.map(csvCell).join(",")].concat(rows.map(r => r.map(csvCell).join(","))).join("\n");
+}
+
+function sectionBrief() {
+  const steady = steadyCatalogue();
+  return "## Studio settings and capacity\n\n" +
+    mdTable(["Setting", "Value"], [
+      ["Studio", state.studio],
+      ["Hours a week", num(state.hours, 1)],
+      ["Hours a month", num(monthHours(), 0)],
+      ["Value of an hour", money(state.rate)],
+      ["Upkeep per live product per month", num(state.upkeep) + " min"],
+      ["Retired per month", pct(state.retire)],
+      ["Visitors a month per live product", num(state.visitors)],
+      ["Conversion", pct(state.conv, 1)],
+      ["Target products a month", num(state.target, 1)],
+      ["Average product", hrs(avgProductHours())],
+      ["Products a month from a standing start", num(coldCapacity(), 1)],
+      ["Catalogue settles at", isFinite(steady) ? num(steady, 0) + " products" : "no ceiling"],
+      ["Sustainable launch rate then", num(steady * state.retire / 100, 1) + " a month"],
+      ["Catalogue ceiling (upkeep eats everything)", isFinite(catalogueCeiling()) ? num(catalogueCeiling(), 0) + " products" : "none"]
+    ]) +
+    "\nEvery figure above is derived from the eight inputs, not from data. Replace the upkeep " +
+    "estimate with a measurement as soon as you have one — it is the input that decides all the rest.\n";
+}
+
+function sectionIdeas() {
+  return "## Ranked product list\n\n" +
+    "Weights: " + FACTORS.map(f => f.n + " " + num(state.weights[f.id])).join(", ") +
+    ". Rank is score divided by hours, because a studio with one pair of hands chooses between products.\n\n" +
+    mdTable(["#", "Product", "Category", "Format", "Price", "Hours", "Score", "Per hour", "Committed"],
+      ranked(state.products).map((p, i) => [
+        i + 1, p.name, catName(p.cat), typeName(p.type), money(p.price),
+        num(hoursOf(p), 1), num(scoreOf(p), 0), num(valuePerHour(p), 2), p.commit ? "yes" : ""
+      ]));
+}
+
+function sectionFlows() {
+  const types = {};
+  (committed().length ? committed() : state.products).forEach(p => { types[p.type] = true; });
+  return "## Workflows\n\n" + Object.keys(types).map(t => {
+    const flow = WORKFLOWS[t];
+    const mins = flow.reduce((a, s) => a + s.mins, 0);
+    return "### " + typeName(t) + " — " + flow.length + " steps, " + num(mins) + " minutes (" + num(mins / 60, 1) + " h)\n\n" +
+      mdTable(["#", "Step", "Agent", "Min", "Gate", "Output"],
+        flow.map((s, i) => [i + 1, s.n, (agentDef(s.agent) || {}).n || s.agent, s.mins, s.gate ? "**gate**" : "", s.out]));
+  }).join("\n") +
+  "\n### Category verification, on top of the workflow\n\n" +
+  mdTable(["Category", "Items", "Minutes a product"],
+    CATEGORIES.map(c => {
+      const items = RISKS.filter(r => r.cat === c.id);
+      return [c.name, items.length, items.reduce((a, r) => a + r.mins, 0)];
+    }));
+}
+
+function sectionAgents() {
+  const p = productById(state.sel.agents) || state.products[0];
+  return "## The seven agent briefs\n\nWritten for **" + p.name + "**.\n\n" +
+    AGENTS.map(a => "### " + a.n + " — " + a.role + "\n\n" + a.does + "\n\n```\n" + briefOf(a, p) + "\n```\n").join("\n");
+}
+
+function sectionRisks() {
+  return "## Accuracy register\n\n" +
+    "The checks a second model does not settle. Minutes here are added to every product in that category.\n\n" +
+    CATEGORIES.map(c => {
+      const items = RISKS.filter(r => r.cat === c.id);
+      return "### " + c.name + " — " + items.reduce((a, r) => a + r.mins, 0) + " minutes a product\n\n" +
+        items.map(r => "**" + r.t + "** (" + (SEV[r.sev] || SEV.med).n + ", " + r.mins + " min)\n\n" +
+          "- *What goes wrong:* " + r.what + "\n" +
+          "- *How you find out:* " + r.surface + "\n" +
+          "- *Who settles it:* " + r.who + "\n").join("\n");
+    }).join("\n");
+}
+
+function sectionMoney() {
+  const list = committed().length ? committed() : ranked(state.products).slice(0, 5);
+  return "## Unit economics\n\n" +
+    "Store fees are yours to verify — " +
+    (CHANNELS.every(c => state.channels[c.id].checked) ? "you have marked them checked." : "**some are still the app's placeholders.**") + "\n\n" +
+    mdTable(["Channel", "Fee %", "Fixed", "Payout days", "Status"],
+      CHANNELS.map(c => {
+        const s = state.channels[c.id];
+        return [c.n, num(s.pct, 1), money(s.fixed, 2), s.lag, s.checked ? "checked" : "placeholder"];
+      })) +
+    "\nRefund rate " + pct(state.refund, 1) + ", monthly decay " + pct(state.decay) + ", residual floor " + pct(state.floor) + ".\n\n" +
+    mdTable(["Product", "Channel", "Price", "Fee", "Net", "Build cost", "Break-even units", "Months to pay back"],
+      list.map(p => {
+        const pb = paybackMonths(p);
+        return [p.name, (CHANNELS.find(c => c.id === p.channel) || {}).n || p.channel,
+          money(p.price), money(feeOf(p.price, p.channel)), money(netOf(p)), money(buildCost(p)),
+          isFinite(breakEvenUnits(p)) ? num(Math.ceil(breakEvenUnits(p))) : "never",
+          pb === null ? "not inside 10 years" : num(pb)];
+      }));
+}
+
+function sectionFunnel() {
+  const run = funnelRun(), sens = funnelSensitivity();
+  return "## Funnel, per 1,000 visitors\n\n" +
+    mdTable(["Step", "Rate of step above", "Buyers", "Price", "Revenue", "Share"],
+      run.stages.map(s => {
+        const f = FUNNEL.find(x => x.id === s.id);
+        return [s.n, f.of === null ? "—" : pct(funnelRate(s.id), 1),
+          num(s.count, s.count >= 10 ? 0 : 2), s.price ? money(s.price) + (s.mult > 1 ? " × " + s.mult : "") : "free",
+          money(s.revenue), run.total > 0 ? pct(s.revenue / run.total * 100) : "—"];
+      })) +
+    "\n**" + money(run.total) + " per 1,000 visitors** — " + money(run.perVisitor, 2) + " a visitor, " +
+    money(run.emails > 0 ? run.total / run.emails : 0, 2) + " an email address.\n\n" +
+    "### Which rate is worth working on\n\n" +
+    mdTable(["Raise by 10%", "Extra per 1,000", "Change"],
+      sens.map(s => [s.n, money(s.delta, 2), pct(s.pctDelta, 1)]));
+}
+
+function sectionPlan() {
+  const plan = planMonth();
+  const start = parseDate(state.start);
+  const themes = ["Week 1 — make the thing", "Week 2 — check it and dress it",
+                  "Week 3 — publish and announce", "Week 4 — measure, fix, and start the next"];
+  return "## The thirty days\n\n" + plan.weeks.map((items, w) => {
+    const d0 = start ? addDays(start, w * 7) : null;
+    const used = plan.cap - plan.left[w];
+    return "### " + themes[w] + (d0 ? " (" + fmtDate(d0) + " – " + fmtDate(addDays(start, w * 7 + 6)) + ")" : "") +
+      " — " + num(used / 60, 1) + " of " + num(plan.cap / 60, 1) + " h\n\n" +
+      (items.length
+        ? items.map(it => "- [ ] **" + it.s.n + "** — " + it.p.name + " (" + it.mins + " min" + (it.s.gate ? ", gate" : "") + ")").join("\n") + "\n"
+        : "- Spare capacity.\n");
+  }).join("\n") +
+  (plan.overflow.length
+    ? "\n### Did not fit in the month\n\n" +
+      plan.overflow.map(it => "- **" + it.s.n + "** — " + it.p.name + " (" + it.mins + " min)").join("\n") + "\n"
+    : "");
+}
+
+function sectionSim() {
+  const sim = simulate();
+  return "## Catalogue simulation\n\n" +
+    mdTable(["Month", "Live", "Launched", "Retired", "Upkeep h", "Build h", "Revenue", "Cumulative"],
+      sim.rows.map(r => [r.m, r.live, r.launched || "", r.retired || "", num(r.upkeepH, 1),
+        num(r.buildH, 1), money(r.revenue), money(r.cum)])) +
+    (sim.ceilingMonth ? "\nUpkeep consumes the whole month from month " + sim.ceilingMonth + " onwards.\n" : "");
+}
+
+const SECTION_FNS = {
+  brief: sectionBrief, ideas: sectionIdeas, flows: sectionFlows, agents: sectionAgents,
+  risks: sectionRisks, money: sectionMoney, funnel: sectionFunnel, plan: sectionPlan, sim: sectionSim
+};
+
+function factoryMd() {
+  const parts = ["# " + (state.studio || "The studio") + " — product factory\n\n" +
+    "Generated in the browser from your own inputs. No figure here was fetched, and every judgement " +
+    "in it is one you typed or one the app printed as a judgement.\n"];
+  EXPORT_SECTIONS.forEach(s => {
+    if (!state.x[s.k]) return;
+    try { parts.push(SECTION_FNS[s.k]()); }
+    catch (e) { parts.push("## " + s.n + "\n\n*(This section could not be built: " + e.message + ")*\n"); }
+  });
+  return parts.join("\n") + "\n";
+}
+
+function productCsv() {
+  return csvOf(
+    ["rank", "product", "category", "format", "price", "channel", "workflow_hours", "check_hours",
+     "total_hours", "build_cost", "score", "score_per_hour", "net_per_sale", "break_even_units", "committed"],
+    ranked(state.products).map((p, i) => [
+      i + 1, p.name, catName(p.cat), typeName(p.type), p.price, p.channel,
+      (wfMins(p) / 60).toFixed(2), (verMins(p) / 60).toFixed(2), hoursOf(p).toFixed(2),
+      buildCost(p).toFixed(2), scoreOf(p).toFixed(1), valuePerHour(p).toFixed(3),
+      netOf(p).toFixed(2), isFinite(breakEvenUnits(p)) ? Math.ceil(breakEvenUnits(p)) : "",
+      p.commit ? "yes" : "no"
+    ]));
+}
+
+function simCsv() {
+  return csvOf(["month", "live", "launched", "retired", "upkeep_hours", "build_hours", "revenue", "cumulative"],
+    simulate().rows.map(r => [r.m, r.live, r.launched, r.retired, r.upkeepH.toFixed(2),
+      r.buildH.toFixed(2), r.revenue.toFixed(2), r.cum.toFixed(2)]));
+}
+
+function initExport() {
+  $("#x-sections").innerHTML = EXPORT_SECTIONS.map(s =>
+    '<label class="chk"><input type="checkbox" id="xs-' + s.k + '"><span>' + esc(s.n) + '</span></label>').join("");
+  EXPORT_SECTIONS.forEach(s => {
+    const box = document.getElementById("xs-" + s.k);
+    box.checked = state.x[s.k] !== false;
+    box.addEventListener("change", e => { state.x[s.k] = e.target.checked; save(); });
+  });
+  $("#x-all").addEventListener("click", () => {
+    EXPORT_SECTIONS.forEach(s => { state.x[s.k] = true; document.getElementById("xs-" + s.k).checked = true; });
+    save();
+  });
+  $("#x-none").addEventListener("click", () => {
+    EXPORT_SECTIONS.forEach(s => { state.x[s.k] = false; document.getElementById("xs-" + s.k).checked = false; });
+    save();
+  });
+
+  $("#x-build").addEventListener("click", () => {
+    const md = factoryMd();
+    $("#x-out").textContent = md;
+    $("#x-size").textContent = num(md.length) + " characters";
+    $("#x-card").hidden = false;
+    $("#x-placeholder").hidden = true;
+  });
+  $("#x-copy").addEventListener("click", () => copyText($("#x-out").textContent, "Document copied"));
+  $("#x-dl").addEventListener("click", () =>
+    download((slug(state.studio) || "studio") + "-product-factory.md", $("#x-out").textContent, "text/markdown"));
+  $("#x-csv").addEventListener("click", () =>
+    download((slug(state.studio) || "studio") + "-products.csv", productCsv(), "text/csv"));
+  $("#x-simcsv").addEventListener("click", () =>
+    download((slug(state.studio) || "studio") + "-simulation.csv", simCsv(), "text/csv"));
+}
+
+/* ===========================================================================
+   THE WORKED EXAMPLE — a first year with three products committed, so the app
+   is legible before you have typed anything. Every field stays editable.
+   =========================================================================== */
+
+const PRESET = {
+  studio: "MOSH Digital Studios",
+  hours: 15, rate: 25, upkeep: 45, retire: 4, months: 24, visitors: 400, conv: 2, target: 2,
+  commit: ["prompt-pack-gh", "wassce-physics", "freelancing-gh", "duck-farming"],
+  facts: "Nine years teaching SHS physics in Ghana; roughly 400 students through the class. " +
+    "I own the 2024 WAEC syllabus and printed past papers 2015–2025. Two former students have agreed " +
+    "to be named and quoted. I have run every prompt in the pack myself and kept the output. " +
+    "No sales figures yet — this is the studio's first year.",
+  voice: "Plain Ghanaian English. Short sentences. Worked examples with cedi amounts and local names " +
+    "(Ama, Kwabena, Makola, Tamale). No hype, no exclamation marks, no American spelling. " +
+    "Address the reader as 'you'. Assume a phone screen and expensive data."
+};
+
+function loadExample() {
+  Object.keys(PRESET).forEach(k => { if (k !== "commit") state[k] = PRESET[k]; });
+  state.products = defaultProducts();
+  state.products.forEach(p => { p.commit = PRESET.commit.indexOf(p.id) >= 0; });
+  state.steps = {};
+  state.sel = { ideas: "wassce-physics", build: "wassce-physics", agents: "wassce-physics" };
+  state.start = todayISO();
+  syncInputs();
+  syncSliders();
+  touch();
+  toast("Worked example loaded — every field is still yours to change");
+}
+
+/* ===========================================================================
+   CHROME — tabs, theme, backup, restore, clear
+   =========================================================================== */
+
+function showTab(id) {
+  if (PANELS.indexOf(id) < 0) id = PANELS[0];
+  state.tab = id;
+  PANELS.forEach(p => {
+    const btn = $("#tab-" + p), panel = $("#panel-" + p);
+    btn.setAttribute("aria-selected", String(p === id));
+    btn.tabIndex = p === id ? 0 : -1;
+    panel.hidden = p !== id;
+  });
+  save();
+}
+
+function initTabs() {
+  PANELS.forEach(p => {
+    $("#tab-" + p).addEventListener("click", () => { showTab(p); $("#panel-" + p).focus({ preventScroll: true }); });
+  });
+  $("#tablist").addEventListener("keydown", e => {
+    const i = PANELS.indexOf(state.tab);
+    let j = null;
+    if (e.key === "ArrowRight") j = (i + 1) % PANELS.length;
+    else if (e.key === "ArrowLeft") j = (i - 1 + PANELS.length) % PANELS.length;
+    else if (e.key === "Home") j = 0;
+    else if (e.key === "End") j = PANELS.length - 1;
+    if (j === null) return;
+    e.preventDefault();
+    showTab(PANELS[j]);
+    $("#tab-" + PANELS[j]).focus();
+  });
+}
+
+function applyTheme() {
+  if (state.theme) document.documentElement.setAttribute("data-theme", state.theme);
+  else document.documentElement.removeAttribute("data-theme");
+}
+
+function syncInputs() {
+  const set = (sel, v) => { const n = $(sel); if (n && document.activeElement !== n) n.value = v; };
+  set("#f-hours", state.hours);
+  set("#f-rate", state.rate);
+  set("#f-upkeep", state.upkeep);
+  set("#f-retire", state.retire);
+  set("#f-months", state.months);
+  set("#f-visitors", state.visitors);
+  set("#f-conv", state.conv);
+  set("#f-target", state.target);
+  set("#f-cur", state.cur);
+  set("#s-start", state.start);
+  set("#a-facts", state.facts);
+  set("#a-voice", state.voice);
+  set("#m-refund", state.refund);
+  set("#m-decay", state.decay);
+  set("#m-floor", state.floor);
+  set("#m-fx", state.fx || "");
+  CHANNELS.forEach(c => {
+    set("#ch-pct-" + c.id, state.channels[c.id].pct);
+    set("#ch-fix-" + c.id, state.channels[c.id].fixed);
+    set("#ch-lag-" + c.id, state.channels[c.id].lag);
+  });
+  FUNNEL.forEach(f => {
+    if (f.of !== null) set("#fr-" + f.id, funnelRate(f.id));
+    if (f.id !== "visit") set("#fp-" + f.id, funnelPrice(f.id));
+  });
+  EXPORT_SECTIONS.forEach(s => {
+    const b = document.getElementById("xs-" + s.k);
+    if (b) b.checked = state.x[s.k] !== false;
+  });
+}
+
+function initFactory() {
+  $("#f-cur").innerHTML = CURRENCIES.map(c =>
+    '<option value="' + c.code + '">' + c.code + " " + c.sym + '</option>').join("");
+  [["f-hours", "hours", 0, 120], ["f-rate", "rate", 0, 1e5], ["f-upkeep", "upkeep", 0, 600],
+   ["f-retire", "retire", 0, 50], ["f-months", "months", 6, 60], ["f-visitors", "visitors", 0, 1e7],
+   ["f-conv", "conv", 0, 100], ["f-target", "target", 0, 30]].forEach(([id, key, lo, hi]) => {
+    $("#" + id).addEventListener("input", e => {
+      state[key] = clamp(numOr(e.target.value, state[key]), lo, hi);
+      if (key === "months") state.months = Math.round(state.months);
+      save();
+      withFocus(() => { renderFactory(); renderPlan(); renderChecks(); renderMoney(); });
+    });
+  });
+  $("#f-cur").addEventListener("change", e => { state.cur = e.target.value; touch(); });
+}
+
+function initChrome() {
+  $("#btn-theme").addEventListener("click", () => {
+    const dark = document.documentElement.getAttribute("data-theme") === "dark" ||
+      (!state.theme && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    state.theme = dark ? "light" : "dark";
+    applyTheme();
+    save();
+  });
+
+  $("#btn-example").addEventListener("click", loadExample);
+
+  $("#btn-backup").addEventListener("click", () => {
+    download((slug(state.studio) || "studio") + "-factory-backup.json", JSON.stringify(state, null, 2), "application/json");
+  });
+
+  $("#btn-restore").addEventListener("click", () => $("#file-restore").click());
+  $("#file-restore").addEventListener("change", e => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      let parsed = null;
+      try { parsed = JSON.parse(String(r.result)); }
+      catch (err) { toast("That file isn't valid JSON.", true); return; }
+      state = defaultState();
+      if (!applySaved(parsed)) { toast("That file doesn't look like a factory backup.", true); return; }
+      applyTheme();
+      syncInputs(); syncSliders(); touch();
+      toast("Restored");
+    };
+    r.onerror = () => toast("Couldn't read that file.", true);
+    r.readAsText(f);
+    e.target.value = "";
+  });
+
+  $("#btn-clear").addEventListener("click", () => {
+    download((slug(state.studio) || "studio") + "-factory-backup.json", JSON.stringify(state, null, 2), "application/json");
+    setTimeout(() => {
+      Store.wipe();
+      const theme = state.theme;
+      state = defaultState();
+      state.theme = theme;
+      applyTheme();
+      syncInputs(); syncSliders(); touch();
+      toast("Cleared — a backup was downloaded first");
+    }, 400);
+  });
+
+  $("#foot-storage").textContent = Store.available
+    ? "Use ⬇ Back up to keep a copy outside the browser."
+    : "This browser is blocking local storage, so nothing will be remembered after you close the tab.";
+}
+
+/* ===========================================================================
+   SELF-TEST — runs at boot. Catalogue consistency and the arithmetic, checked
+   against values worked out by hand. Result is reported in the footer.
+   =========================================================================== */
+
+function selfTest() {
+  const fails = [];
+  let n = 0;
+  const ok = (cond, msg) => { n++; if (!cond) fails.push(msg); };
+  const near = (a, b, tol, msg) => { n++; if (!(Math.abs(a - b) <= (tol === undefined ? 1e-9 : tol))) fails.push(msg + " (" + a + " vs " + b + ")"); };
+
+  /* --- catalogue consistency --- */
+  ok(SEED.length === 12, "expected the studio's twelve products, found " + SEED.length);
+  ok(AGENTS.length === 7, "expected 7 agents, found " + AGENTS.length);
+  ok(CATEGORIES.length === 5, "expected 5 categories");
+  ok(FACTORS.length === 5, "expected 5 scoring factors");
+  ok(FUNNEL.length === 7, "expected 7 funnel steps");
+  ok(CHANNELS.length === 3, "expected 3 channels");
+  ok(Object.keys(WORKFLOWS).length === TYPES.length, "every product type needs a workflow");
+
+  const ids = {};
+  [].concat(SEED, AGENTS, CATEGORIES, FACTORS, RISKS, CHANNELS, TYPES, FUNNEL).forEach(x => {
+    ok(!ids[x.id], "duplicate id: " + x.id);
+    ids[x.id] = true;
+  });
+
+  TYPES.forEach(t => {
+    const flow = WORKFLOWS[t.id];
+    ok(Array.isArray(flow) && flow.length >= 5, t.id + " has no usable workflow");
+    const sids = {};
+    flow.forEach(s => {
+      ok(!sids[s.id], "duplicate step id " + s.id + " in " + t.id);
+      sids[s.id] = true;
+      ok(!!agentDef(s.agent), s.id + " has an unknown agent: " + s.agent);
+      ok(s.mins > 0, s.id + " has no minutes");
+      ok(s.ai >= 0 && s.ai <= 1, s.id + " has an odd AI share");
+      ok(!!s.out && !!s.why, s.id + " is missing prose");
+    });
+    ok(flow.some(s => s.gate), t.id + " has no gate at all, which cannot be right");
+    AGENTS.forEach(a => { /* every agent should own something somewhere */ });
+  });
+  AGENTS.forEach(a => {
+    ok(TYPES.some(t => WORKFLOWS[t.id].some(s => s.agent === a.id)), a.id + " owns no step in any workflow");
+    ok(typeof a.prompt === "function", a.id + " has no brief");
+  });
+  SEED.forEach(p => {
+    ok(!!CATEGORIES.find(c => c.id === p.cat), p.id + " has an unknown category");
+    ok(!!WORKFLOWS[p.type], p.id + " has an unknown type");
+    ok(!!p.who && !!p.note, p.id + " is missing prose");
+    FACTORS.forEach(f => ok(p.s[f.id] >= 0 && p.s[f.id] <= 10, p.id + " has an out-of-range " + f.id));
+  });
+  RISKS.forEach(r => {
+    ok(!!CATEGORIES.find(c => c.id === r.cat), r.id + " has an unknown category");
+    ok(!!SEV[r.sev], r.id + " has an odd severity");
+    ok(r.mins > 0 && !!r.what && !!r.surface && !!r.who, r.id + " is incomplete");
+  });
+  CATEGORIES.forEach(c => ok(RISKS.some(r => r.cat === c.id), c.id + " has no checks, which cannot be right"));
+
+  /* every brief renders, for every product, without leaking a marker */
+  const savedFacts = state.facts, savedVoice = state.voice;
+  state.facts = ""; state.voice = "";
+  state.products.forEach(p => {
+    AGENTS.forEach(a => {
+      const b = briefOf(a, p);
+      ok(b.length > 200, a.id + " rendered a near-empty brief for " + p.id);
+      ok(b.indexOf("undefined") < 0, a.id + " leaked an undefined value for " + p.id);
+      ok(b.indexOf("[object Object]") < 0, a.id + " leaked an object for " + p.id);
+    });
+  });
+  state.facts = savedFacts; state.voice = savedVoice;
+
+  /* --- the arithmetic, against values worked out by hand --- */
+  const snapshot = JSON.parse(JSON.stringify(state));
+
+  near(MONTH_WEEKS, 4.3333333333, 1e-6, "a month is 13/3 weeks");
+  state.hours = 15;
+  near(monthHours(), 65, 1e-9, "15 hours a week is 65 a month");
+
+  /* fees */
+  state.channels.gumroad = { pct: 10, fixed: 0.5, lag: 7, checked: false };
+  near(feeOf(100, "gumroad"), 10.5, 1e-9, "10% plus 50c on 100 is 10.50");
+  ok(feeOf(0.1, "gumroad") <= 0.1, "a fee can never exceed the price");
+
+  /* net, refunds, break-even */
+  const tp = { id: "t", name: "t", cat: "ai", type: "pack", price: 100, channel: "gumroad", s: {}, commit: true };
+  state.refund = 0;
+  near(netOf(tp), 89.5, 1e-9, "net of a 100 sale at 10% + 0.50 is 89.50");
+  state.refund = 10;
+  near(netAfterRefunds(tp), 80.55, 1e-9, "a 10% refund rate takes a tenth of the net");
+  state.rate = 10;
+  const tpHours = hoursOf(tp);
+  near(buildCost(tp), tpHours * 10, 1e-9, "build cost is hours times your rate");
+  near(breakEvenUnits(tp), tpHours * 10 / 80.55, 1e-9, "break-even is cost over net");
+
+  /* the decay shape */
+  state.decay = 0; state.floor = 0; state.visitors = 100; state.conv = 10;
+  near(unitsAtAge(0), 10 * LAUNCH_BUMP, 1e-9, "launch month gets the bump");
+  near(unitsAtAge(5), 10, 1e-9, "with no decay every month is the same");
+  state.decay = 50; state.floor = 0;
+  near(unitsAtAge(1), 5, 1e-9, "50% decay halves month one");
+  near(unitsAtAge(2), 2.5, 1e-9, "and halves it again");
+  state.floor = 100;
+  near(unitsAtAge(9), 10, 1e-9, "a 100% floor means no decay at all");
+  state.floor = 50; state.decay = 100;
+  near(unitsAtAge(3), 5, 1e-9, "total decay lands exactly on the floor");
+
+  /* capacity: solved, then checked against the simulation it describes */
+  state.products = defaultProducts();
+  state.products.forEach(p => { p.commit = p.id === "prompt-pack-gh"; });
+  state.hours = 15; state.upkeep = 45; state.retire = 4;
+  const h = avgProductHours(), u = 45 / 60, r = 0.04;
+  near(steadyCatalogue(), 65 / (h * r + u), 1e-9, "the steady catalogue is monthHours/(h·r+u)");
+  near(catalogueCeiling(), 65 / 0.75, 1e-9, "the ceiling is monthHours over upkeep hours");
+  state.upkeep = 0; state.retire = 0;
+  ok(!isFinite(catalogueCeiling()), "with no upkeep there is no ceiling");
+  ok(!isFinite(steadyCatalogue()), "with no upkeep and no retirement it never settles");
+
+  state.upkeep = 45; state.retire = 4; state.months = 60;
+  const sim = simulate();
+  ok(sim.rows.length === 60, "the simulation should run the months asked for");
+  ok(sim.rows[0].live >= 1, "something should launch in month one");
+  const end = sim.rows[sim.rows.length - 1].live;
+  ok(Math.abs(end - steadyCatalogue()) < steadyCatalogue() * 0.35 + 2,
+    "after five years the simulation should sit near the solved steady state (" + end + " vs " + steadyCatalogue().toFixed(1) + ")");
+  ok(sim.rows.every(x => x.upkeepH <= monthHours() + 1e-9 || x.live * state.upkeep / 60 === x.upkeepH),
+    "upkeep hours must follow the live count");
+
+  /* upkeep really is the thing that caps it */
+  const before = simulate().rows[59].live;
+  state.upkeep = 240;
+  const after = simulate().rows[59].live;
+  ok(after < before, "quadrupling upkeep must shrink the catalogue (" + after + " vs " + before + ")");
+  state.upkeep = 45;
+
+  /* funnel: hand-worked */
+  state.funnel = { r_optin: 10, r_trip: 10, r_core: 10, r_prem: 10, r_member: 10, r_coach: 10,
+                   p_trip: 10, p_core: 100, p_prem: 0, p_member: 0, p_coach: 0 };
+  const run = funnelRun();
+  near(run.stages[1].count, 100, 1e-9, "10% of 1000 is 100 emails");
+  near(run.stages[2].count, 10, 1e-9, "10% of 100 is 10 buyers");
+  near(run.stages[3].count, 1, 1e-9, "10% of 10 is 1");
+  near(run.total, 10 * 10 + 1 * 100, 1e-9, "revenue is the two priced steps");
+  near(run.perVisitor, 0.2, 1e-9, "200 over 1000 visitors is 0.20 each");
+  const mm = funnelRun();
+  near(mm.stages[5].count, 0.01, 1e-12, "five 10% steps below 1,000 leaves a hundredth of a member");
+  state.funnel.p_member = 10;
+  near(funnelRun().total - mm.total, 0.01 * MEMBER_MONTHS * 10, 1e-9, "membership counts over its lifetime");
+  state.funnel.p_member = 0;
+
+  /* sensitivity: a rate near the top carries everything under it */
+  const sens = funnelSensitivity();
+  ok(sens.length === 6, "six rates to test");
+  ok(sens[0].id === "optin", "with equal rates the top of the funnel must dominate, got " + sens[0].id);
+  ok(sens.every(s => s.delta >= -1e-9), "raising a rate can never lower the total");
+
+  /* the plan */
+  state.hours = 0;
+  const p0 = planMonth();
+  ok(p0.overflow.length > 0 && p0.weeks.every(w => w.length === 0), "with no hours nothing can be scheduled");
+  state.hours = 40;
+  const p1 = planMonth();
+  ok(p1.weeks[0].length > 0, "with a full week something should be scheduled");
+  ok(p1.weeks.every((w, i) => w.reduce((a, x) => a + x.mins, 0) <= p1.cap + 1e-9), "no week may be overbooked");
+
+  /* verification minutes are part of the cost, and differ by category */
+  const hist = { cat: "history", type: "ebook" }, biz = { cat: "business", type: "ebook" };
+  ok(verMins(hist) > verMins(biz), "a history book must cost more checking than a business one");
+  ok(totalMins(hist) === wfMins(hist) + verMins(hist), "total is workflow plus checks");
+  ok(hoursOf(hist) > hoursOf(biz), "and that must show up in the hours");
+
+  /* scoring */
+  state.weights = defaultWeights();
+  const perfect = { s: {}, type: "pack", cat: "ai" };
+  FACTORS.forEach(f => { perfect.s[f.id] = 10; });
+  near(scoreOf(perfect), 100, 1e-9, "all tens is a hundred");
+  FACTORS.forEach(f => { perfect.s[f.id] = 0; });
+  near(scoreOf(perfect), 0, 1e-9, "all zeroes is nothing");
+  FACTORS.forEach(f => { perfect.s[f.id] = 5; });
+  near(scoreOf(perfect), 50, 1e-9, "all fives is fifty, whatever the weights");
+  ok(valuePerHour(perfect) === scoreOf(perfect) / hoursOf(perfect), "value per hour is score over hours");
+
+  /* text builders */
+  state = JSON.parse(JSON.stringify(snapshot));
+  const md = factoryMd();
+  ok(md.indexOf("# ") === 0, "the document should start with its heading");
+  ok(md.length > 3000, "the document should not be trivially short");
+  ok(md.indexOf("undefined") < 0, "the document rendered an undefined value");
+  ok(md.indexOf("[object Object]") < 0, "the document rendered an object");
+  ok(productCsv().split("\n").length === state.products.length + 1, "the CSV needs one row per product plus a header");
+  ok(simCsv().split("\n").length === state.months + 1, "the simulation CSV needs one row per month plus a header");
+  ok(csvOf(["a"], [['x,"y"']]).indexOf('"x,""y"""') > 0, "CSV must quote commas and quotes");
+
+  /* user text is escaped everywhere it is shown as HTML */
+  ok(esc('<img src=x onerror="1">') === "&lt;img src=x onerror=&quot;1&quot;&gt;", "esc must neutralise markup");
+
+  /* a saved file with rubbish in it must not break anything */
+  const wrecked = { hours: "banana", products: [{ id: "x", cat: "nope", type: "nope", s: { demand: 99 } }, null],
+                    weights: { demand: "x", ghost: 5 }, funnel: { r_optin: 900 }, tab: "nope", cur: "XXX" };
+  state = defaultState();
+  applySaved(wrecked);
+  ok(isFinite(state.hours), "a non-numeric hours must be repaired");
+  ok(state.products.every(p => p && CATEGORIES.some(c => c.id === p.cat)), "an unknown category must be repaired");
+  ok(state.products.every(p => p.s.demand <= 10), "an out-of-range score must be clamped");
+  ok(!("ghost" in state.weights), "an unknown weight must be dropped");
+  ok(state.funnel.r_optin <= 100, "a rate above 100 must be clamped");
+  ok(PANELS.indexOf(state.tab) >= 0, "an unknown tab must be repaired");
+  ok(CURRENCIES.some(c => c.code === state.cur), "an unknown currency must be repaired");
+
+  state = JSON.parse(JSON.stringify(snapshot));
+  return { n, fails };
+}
+
+/* ===========================================================================
+   BOOT
+   =========================================================================== */
+
+function boot() {
+  applySaved(Store.read());
+  applyTheme();
+
+  initTabs();
+  initChrome();
+  initFactory();
+  initIdeas();
+  initBuild();
+  initAgents();
+  initChecks();
+  initMoney();
+  initFunnel();
+  initPlan();
+  initExport();
+
+  syncInputs();
+  syncSliders();
+  renderAll();
+  showTab(state.tab || "factory");
+
+  const t = selfTest();
+  syncInputs();
+  syncSliders();
+  renderAll();
+
+  const foot = $("#foot-tests");
+  if (t.fails.length) {
+    foot.textContent = t.fails.length + " of " + t.n + " self-checks failed";
+    foot.style.color = "var(--red)";
+    /* eslint-disable-next-line no-console */
+    console.error("Self-check failures:", t.fails);
+  } else {
+    foot.textContent = t.n + " self-checks passed";
+  }
+
+  if (!Store.available) {
+    toast("This browser is blocking local storage, so nothing will be remembered after you close the tab.", true);
+  }
+}
+
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+else boot();
+
+</script>
+</body>
+</html>
