@@ -168,6 +168,7 @@ neither — open the HTML file and they run, offline, with everything stored loc
 | App | What it is |
 |---|---|
 | [`ebook/`](ebook/) | **The book as an interactive reader** — all 17 chapters with highlighting, notes, inline quizzes, action-step tracking, search, three themes and Markdown export. Generated from `prisma/seed-data.ts`; rebuild with `npm run ebook:build`. |
+| [`billionaire-structures/`](billionaire-structures/) | **How large fortunes are actually held** — 33 structures with who owns them, who controls them, who pays the tax and what happens at death, each priced and given a verdict against your own numbers; 15 editable death-tax regimes; the freeze, liquidity, control and giving arithmetic; and a red-lines audit that can fail a plan. Tells most readers they need almost none of it. |
 | [`product-factory/`](product-factory/) | **The studio's production console** — twelve products ranked by score per hour, three workflows with their human gates, seven agent briefs, eighteen category-specific accuracy checks, unit economics, funnel sensitivity, and a catalogue simulation that finds the size at which upkeep eats the whole week. |
 | [`launch-kit/`](launch-kit/) | Part Four's decision tools as working tools: Fit Matrix, 7-Day Validation Sprint, 30-Day Launch Plan, CLEAR builder, pricing sheet. |
 | [`prompt-generator/`](prompt-generator/) | The Wealth Ideas Matrix wired into the CLEAR Formula, plus a prompt-pack builder and listing-copy generator. |
