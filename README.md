@@ -6,6 +6,7 @@ PostgreSQL database and one authentication layer:
 | Product | Where | What it is |
 |---|---|---|
 | **MOSH Chief of Staff (M-CoS)** | [`/cos`](#mosh-chief-of-staff-m-cos) | The AI executive operating system for MOSH Digital Studios |
+| **MOSH Self-Mastery & Wealth Alignment System** | [`/mosh`](#mosh-self-mastery--wealth-alignment-system) | The personal operating system for aligning the mental, spiritual and physical planes while building a coaching business |
 | **AI Income Academy** | [`/`, `/courses`, `/learn`](#ai-income-academy) | The interactive learning platform built from *The AI Income Blueprint* |
 
 Plus a set of standalone single-file apps that need no server — see
@@ -144,6 +145,89 @@ but not against the real model. Confirm it with the post-deploy checklist in
 6. **Redis-backed rate limiting** before scaling past one instance.
 
 ---
+
+---
+
+# MOSH Self-Mastery & Wealth Alignment System
+
+A personal operating system for **Hassan Mohammed — Life Coach and Mindset
+Architect**, built on one idea: **Structure Creates Freedom.**
+
+It holds ten things at once — personal development, business growth, mindset,
+spiritual alignment, physical well-being, coaching, wealth-building, offer
+creation, customer acquisition and long-term life planning — and makes them one
+picture. Open it at **`/mosh`**.
+
+**Two rules shape every part of it.** Numbers are earned, not asserted: every
+score is computed by a pure function in `src/lib/mosh/scoring.ts` from records
+the user actually entered, and the AI explains those numbers rather than
+inventing them. And a blank is not a zero: composite scores drop any component
+with no data and redistribute its weight, so a partly-filled day is scored on
+what was recorded.
+
+## The three planes
+
+| Plane | Tracked |
+|---|---|
+| **Mental** | Clarity · Confidence · Focus · Learning · Creativity · Storytelling · Productivity |
+| **Spiritual** | Gratitude · Meditation · Faith · Service · Purpose · Courage · Inner peace |
+| **Physical** | Exercise · Sleep · Nutrition · Energy · Recovery · Movement |
+
+## The modules
+
+| Route | Module |
+|---|---|
+| `/mosh` | **Dashboard** — Daily Alignment, Weekly Momentum, Monthly Growth and Wealth Flow bars; Mental, Spiritual, Physical and Annual meters; the 14-day trend, streak, today's Eclipse action and derived recommendations |
+| `/mosh/daily` | **Daily rhythm** — seven habits, energy and mood, gratitude / wins / reflection, and a 1–10 check-in on all twenty plane attributes |
+| `/mosh/weekly` | **Weekly momentum** — goals across mental, spiritual, physical, business and impact |
+| `/mosh/monthly` | **Monthly review** — five pillars plus the six review questions |
+| `/mosh/plan` | **365-day master plan** — Root and Routine, Visibility and Credibility, Structure and Scale, Legacy and Leverage, with monthly milestones |
+| `/mosh/business` | **Offer ecosystem** — attraction, core program and premium mentorship, and the Wealth Flow Index |
+| `/mosh/funnel` | **Customer funnel** — visitor → advocate, with conversion at every step |
+| `/mosh/eclipse` | **50-Day Eclipse Growth Strategy** — fifty dated actions in five phases |
+| `/mosh/coach` | **The Billionaire Self** — self-coaching across seven patterns |
+| `/mosh/legacy` | **A Message From My 77-Year-Old Self** |
+| `/mosh/analytics` | **Analytics** — streaks, habit reliability, plane radars, trends, and CSV / PDF exports |
+| `/mosh/settings` | **Settings** and PWA install |
+
+## The Wealth Flow Index
+
+```
+Wealth Flow Index = (Attraction revenue × 1)
+                  + (Core revenue      × 2)
+                  + (Premium revenue   × 3)
+```
+
+The multipliers are deliberate: a cedi earned through premium mentorship
+represents three times the depth — and durability — of a cedi earned at the top
+of the funnel.
+
+## Quick start
+
+```bash
+npm ci
+cp .env.example .env          # set DATABASE_URL and AUTH_SECRET
+npx prisma migrate deploy
+npm run dev                   # register at /register, then open /mosh
+```
+
+Optional demo data — thirty days of rhythm, four weeks of goals, a reviewed
+month, three offers with revenue, a funnel and twelve Eclipse days:
+
+```bash
+MOSH_SEED_DEMO=true npm run db:seed     # run after registering
+```
+
+It is a **Progressive Web App**: installable, with an offline shell and its own
+icons. Emerald and cream, responsive from 390 px up, light and dark.
+
+## Documentation
+
+**[`docs/MOSH_SELF_MASTERY.md`](docs/MOSH_SELF_MASTERY.md)** — architecture,
+scoring formulas, database schema, every API endpoint, component architecture,
+wireframes, the design system, deployment (Vercel, Docker, any Node host),
+Supabase, testing, and the verification status with its known limitations.
+
 
 # AI Income Academy
 

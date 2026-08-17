@@ -8,13 +8,26 @@ import { ALL_ATTRIBUTE_SLUGS, HABIT_KEYS } from "./constants";
  * the server validates here because that is the only validation that counts.
  */
 
+/**
+ * An optional block of prose.
+ *
+ * The three states are kept distinct on purpose:
+ *   absent (`undefined`) → leave whatever is stored alone
+ *   empty string (`null`) → the user cleared it, so clear it
+ *   text → save it
+ *
+ * Collapsing the first two would mean that toggling a checkbox on a form that
+ * does not resend the note would silently erase the note.
+ */
 const text = (max: number) =>
   z
     .string()
     .trim()
     .max(max)
-    .optional()
-    .transform((value) => (value === "" ? null : (value ?? null)));
+    .transform((value) => (value === "" ? null : value))
+    // `.optional()` last, so an absent key stays absent in the parsed output
+    // rather than arriving as an explicit `undefined` the caller must handle.
+    .optional();
 
 const requiredText = (max: number) => z.string().trim().min(1).max(max);
 
@@ -59,9 +72,15 @@ export const dailyEntrySchema = z.object({
   reflection: text(4000),
   energy: rating.nullable().optional(),
   mood: rating.nullable().optional(),
-  /** Plane self-ratings for the day, keyed by attribute slug. */
+  /**
+   * Plane self-ratings for the day, keyed by attribute slug.
+   *
+   * `partialRecord`, not `record`: a client may send one slider or all twenty,
+   * and a full `record` over an enum would demand every key be present. `null`
+   * clears a rating that was previously saved.
+   */
   checkins: z
-    .record(z.enum(ALL_ATTRIBUTE_SLUGS as [string, ...string[]]), rating.nullable())
+    .partialRecord(z.enum(ALL_ATTRIBUTE_SLUGS as [string, ...string[]]), rating.nullable())
     .optional(),
 });
 

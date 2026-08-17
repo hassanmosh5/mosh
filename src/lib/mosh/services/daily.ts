@@ -150,11 +150,16 @@ export async function saveDay(ctx: MoshContext, input: DailyEntryInput): Promise
   const completion = habitCompletion(habits);
   const alignment = scoreDay({ habits, energy, mood, checkins: checkinMap }).score;
 
+  // `undefined` means the field was not part of this save; `null` means the
+  // person cleared it and expects it to stay cleared.
+  const keep = <T>(incoming: T | undefined, current: T | null | undefined): T | null =>
+    incoming === undefined ? (current ?? null) : incoming;
+
   const data = {
     ...habits,
-    gratitude: input.gratitude ?? existing?.gratitude ?? null,
-    wins: input.wins ?? existing?.wins ?? null,
-    reflection: input.reflection ?? existing?.reflection ?? null,
+    gratitude: keep(input.gratitude, existing?.gratitude),
+    wins: keep(input.wins, existing?.wins),
+    reflection: keep(input.reflection, existing?.reflection),
     energy,
     mood,
     completion,

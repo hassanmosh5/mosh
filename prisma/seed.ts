@@ -3,6 +3,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { course, modules } from "./seed-data";
 import { seedChiefOfStaff } from "./cos-seed";
+import { seedSelfMastery } from "./mosh-seed";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -102,6 +103,15 @@ async function main() {
     cos.demo
       ? "Seeded MOSH Chief of Staff with the agent registry and demo business data."
       : "Seeded MOSH Chief of Staff workspace, business areas and agent registry (demo data skipped)."
+  );
+
+  // MOSH Self-Mastery is per-user and self-seeding on first use; this only
+  // attaches optional demo data when MOSH_SEED_DEMO=true.
+  const mosh = await seedSelfMastery(prisma);
+  console.log(
+    mosh.seeded
+      ? `Seeded MOSH Self-Mastery demo data. ${mosh.reason}`
+      : `Skipped MOSH Self-Mastery demo data: ${mosh.reason}`
   );
 }
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import {
   BarChart3,
@@ -106,15 +106,14 @@ export function Sidebar({ philosophy }: { philosophy: string }) {
 export function MobileNav({ philosophy }: { philosophy: string }) {
   const { navOpen, toggleNav, closeNav } = useMoshUi();
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
-
   // The drawer is portalled to <body> on purpose: the header it sits in uses
   // `backdrop-blur`, and a backdrop filter makes an element the containing
   // block for its fixed-position descendants — which would pin a full-screen
   // overlay to the height of the header instead of the viewport.
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  //
+  // No "mounted" guard is needed around the portal: `navOpen` starts false and
+  // can only become true from a click, so `document.body` is never reached
+  // during server rendering.
 
   // A route change always closes the drawer — otherwise the overlay would sit
   // on top of the page the user just asked for.
@@ -144,7 +143,7 @@ export function MobileNav({ philosophy }: { philosophy: string }) {
         <span>Menu</span>
       </button>
 
-      {mounted && navOpen
+      {navOpen
         ? createPortal(
             <div className="mosh-portal fixed inset-0 z-40 lg:hidden">
               <button
