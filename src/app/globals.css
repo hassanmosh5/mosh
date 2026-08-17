@@ -27,6 +27,26 @@
   --color-warn: var(--cos-warn);
   --color-bad: var(--cos-bad);
   --color-info: var(--cos-info);
+
+  /* MOSH Self-Mastery design tokens. Namespaced so the two dashboards can
+     live in one stylesheet without either one's palette bleeding across. */
+  --color-mosh-canvas: var(--mosh-canvas);
+  --color-mosh-surface: var(--mosh-surface);
+  --color-mosh-surface-2: var(--mosh-surface-2);
+  --color-mosh-line: var(--mosh-line);
+  --color-mosh-line-strong: var(--mosh-line-strong);
+  --color-mosh-ink: var(--mosh-ink);
+  --color-mosh-ink-muted: var(--mosh-ink-muted);
+  --color-mosh-ink-subtle: var(--mosh-ink-subtle);
+  --color-mosh-brand: var(--mosh-brand);
+  --color-mosh-brand-strong: var(--mosh-brand-strong);
+  --color-mosh-brand-ink: var(--mosh-brand-ink);
+  --color-mosh-brand-soft: var(--mosh-brand-soft);
+  --color-mosh-accent: var(--mosh-accent);
+  --color-mosh-accent-soft: var(--mosh-accent-soft);
+  --color-mosh-good: var(--mosh-good);
+  --color-mosh-warn: var(--mosh-warn);
+  --color-mosh-bad: var(--mosh-bad);
 }
 
 /*
@@ -111,6 +131,154 @@ body {
   .cos-root *,
   .cos-root *::before,
   .cos-root *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* =====================================================================
+ * MOSH Self-Mastery & Wealth Alignment System
+ * =====================================================================
+ * Emerald and cream. The palette is scoped to `.mosh-root` so it cannot
+ * leak into the academy or Chief-of-Staff surfaces that share this file.
+ * Components reference semantic tokens only — never a raw hex.
+ *
+ * The chart series colours were validated with the data-viz six checks
+ * (lightness band, chroma floor, CVD separation, normal-vision floor,
+ * contrast vs surface) in BOTH modes, all pairs:
+ *   light on #ffffff — worst CVD ΔE 8.6, worst normal ΔE 20.3
+ *   dark  on #0f1e1a — worst CVD ΔE 10.5, worst normal ΔE 19.4
+ * Re-run the validator before changing any of them.
+ */
+
+.mosh-root,
+.mosh-portal {
+  --mosh-canvas: #faf6ee; /* cream */
+  --mosh-surface: #ffffff;
+  --mosh-surface-2: #f4efe4;
+  --mosh-line: #e6ddcc;
+  --mosh-line-strong: #d6c9b1;
+  --mosh-ink: #14312a;
+  --mosh-ink-muted: #4d6159;
+  --mosh-ink-subtle: #86968e;
+  --mosh-brand: #0f766e;
+  --mosh-brand-strong: #0b5d56;
+  --mosh-brand-ink: #ffffff;
+  --mosh-brand-soft: #dff0ea;
+  --mosh-accent: #a06a12; /* aged gold, for emphasis on cream */
+  --mosh-accent-soft: #f6ecd8;
+  --mosh-good: #00734f;
+  --mosh-warn: #9a6508;
+  --mosh-bad: #a63333;
+  --mosh-shadow: 0 1px 2px rgba(20, 49, 42, 0.06);
+
+  --mosh-chart-1: #00845c;
+  --mosh-chart-2: #b05e12;
+  --mosh-chart-3: #5344b0;
+  --mosh-chart-grid: #e6ddcc;
+  --mosh-chart-axis: #4d6159;
+  --mosh-chart-surface: #ffffff;
+
+  color: var(--mosh-ink);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* Only the app shell paints the canvas. `.mosh-portal` carries the same tokens
+   for overlays rendered into <body> — a portalled drawer must not paint a
+   full-screen background over the page behind it. */
+.mosh-root {
+  background: var(--mosh-canvas);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .mosh-root,
+  :root:where(:not([data-theme="light"])) .mosh-portal {
+    --mosh-canvas: #08110f;
+    --mosh-surface: #0f1e1a;
+    --mosh-surface-2: #142823;
+    --mosh-line: #22403a;
+    --mosh-line-strong: #2f564d;
+    --mosh-ink: #eaf4f0;
+    --mosh-ink-muted: #9db5ac;
+    --mosh-ink-subtle: #6d857c;
+    --mosh-brand: #34d399;
+    --mosh-brand-strong: #6ee7b7;
+    --mosh-brand-ink: #04231c;
+    --mosh-brand-soft: #123a30;
+    --mosh-accent: #e0b463;
+    --mosh-accent-soft: #35291356;
+    --mosh-good: #4ade80;
+    --mosh-warn: #fbbf24;
+    --mosh-bad: #f87171;
+    --mosh-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+
+    --mosh-chart-1: #26a17a;
+    --mosh-chart-2: #c47d17;
+    --mosh-chart-3: #8b7fe0;
+    --mosh-chart-grid: #22403a;
+    --mosh-chart-axis: #9db5ac;
+    --mosh-chart-surface: #0f1e1a;
+  }
+}
+
+:root[data-theme="dark"] .mosh-root,
+:root[data-theme="dark"] .mosh-portal {
+  --mosh-canvas: #08110f;
+  --mosh-surface: #0f1e1a;
+  --mosh-surface-2: #142823;
+  --mosh-line: #22403a;
+  --mosh-line-strong: #2f564d;
+  --mosh-ink: #eaf4f0;
+  --mosh-ink-muted: #9db5ac;
+  --mosh-ink-subtle: #6d857c;
+  --mosh-brand: #34d399;
+  --mosh-brand-strong: #6ee7b7;
+  --mosh-brand-ink: #04231c;
+  --mosh-brand-soft: #123a30;
+  --mosh-accent: #e0b463;
+  --mosh-accent-soft: #35291356;
+  --mosh-good: #4ade80;
+  --mosh-warn: #fbbf24;
+  --mosh-bad: #f87171;
+  --mosh-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+
+  --mosh-chart-1: #26a17a;
+  --mosh-chart-2: #c47d17;
+  --mosh-chart-3: #8b7fe0;
+  --mosh-chart-grid: #22403a;
+  --mosh-chart-axis: #9db5ac;
+  --mosh-chart-surface: #0f1e1a;
+}
+
+.mosh-root ::selection,
+.mosh-portal ::selection {
+  background: var(--mosh-brand-soft);
+  color: var(--mosh-ink);
+}
+
+.mosh-root :is(a, button, input, select, textarea, [tabindex]):focus-visible,
+.mosh-portal :is(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--mosh-brand);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Recharts draws its own SVG; these keep its furniture on the token system. */
+.mosh-root .recharts-cartesian-axis-tick text {
+  fill: var(--mosh-chart-axis);
+}
+.mosh-root .recharts-polar-angle-axis-tick text,
+.mosh-root .recharts-polar-radius-axis-tick text {
+  fill: var(--mosh-chart-axis);
+}
+.mosh-root .recharts-surface:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mosh-root *,
+  .mosh-root *::before,
+  .mosh-root *::after {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
   }

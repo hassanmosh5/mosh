@@ -17,5 +17,7 @@ export const config = {
     "/learn/:path*",
     "/cos/:path*",
     "/api/cos/:path*",
+    "/mosh/:path*",
+    "/api/mosh/:path*",
   ],
 };
