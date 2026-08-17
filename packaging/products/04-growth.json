@@ -1,0 +1,489 @@
+[
+  {
+    "slug": "meta-ads",
+    "dir": "meta-ads",
+    "name": "Meta Ads & Pixel Blueprints",
+    "category": "growth",
+    "glyph": "📣",
+    "priceUsd": 49,
+    "tagline": "Whether your budget can work at all, first",
+    "oneLiner": "The tracking code, the event map, the campaign structure — and the arithmetic that decides whether any of it can work at the budget you actually have.",
+    "audience": [
+      "Anyone about to spend their first $500 on Meta ads",
+      "Agencies running client ads without a documented event map",
+      "Sellers whose Pixel fires on every page and measures nothing"
+    ],
+    "problem": "Paid traffic fails at small budgets in a way nobody warns about: the campaign never gathers enough conversion events to leave the learning phase, so the algorithm optimises on noise and the money goes out in a straight line. That is arithmetic, and it can be checked before the first cedi is spent — but almost every guide starts with campaign structure and never mentions it.",
+    "solves": [
+      "Spending a budget too small to exit the learning phase",
+      "A Pixel installed but no event map, so nothing is optimisable",
+      "Campaign structures copied from a video with different economics",
+      "No idea what a conversion may cost before it stops making sense"
+    ],
+    "inside": [
+      "The tracking setup: Pixel and Conversions API, with what each one is actually for",
+      "An event map derived from your funnel, not a generic list of standard events",
+      "Campaign structure per objective, with the budget each structure needs",
+      "The learning-phase arithmetic: events per week required, at your conversion rate",
+      "Maximum allowable cost per acquisition from your own margin",
+      "A verdict that is allowed to say your budget cannot work yet"
+    ],
+    "outcomes": [
+      "A yes or no on paid traffic at your current budget and margin",
+      "An event map you can hand to whoever installs the code",
+      "A campaign structure with a budget that matches it"
+    ],
+    "usage": [
+      "Open index.html and enter your margin and conversion rate first.",
+      "Read the learning-phase verdict before designing anything. If it says the budget is too small, that is the most valuable output here.",
+      "Build the event map from your real funnel steps.",
+      "Take the tracking spec to whoever installs it — it is written to be handed over.",
+      "Set up campaigns to the structure, and hold the budget it specifies."
+    ],
+    "notFor": [
+      "Anyone wanting creative or copy — this is measurement and structure",
+      "Advertisers with large budgets and an in-house analyst"
+    ],
+    "proof": "It has no access to your ad account and cannot see your results. Everything is computed from figures you enter, and the thresholds are stated on screen.",
+    "keywords": [
+      "meta ads",
+      "facebook pixel",
+      "conversions api",
+      "campaign structure",
+      "learning phase",
+      "cpa calculator",
+      "ad budget",
+      "event tracking",
+      "paid traffic",
+      "offline tool"
+    ],
+    "shots": [
+      {
+        "label": "Event map"
+      },
+      {
+        "label": "Campaigns"
+      },
+      {
+        "label": "Numbers"
+      }
+    ]
+  },
+  {
+    "slug": "seo-content",
+    "dir": "seo-content",
+    "name": "SEO & Content Marketing Systems",
+    "category": "growth",
+    "glyph": "🔎",
+    "priceUsd": 49,
+    "tagline": "Not how many search it — whether writing it pays",
+    "oneLiner": "Keyword selection, clustering, internal linking and structured data, plus the arithmetic that says whether a content programme ever repays what it costs.",
+    "audience": [
+      "Anyone whose blog has forty posts and no traffic",
+      "Agencies selling content retainers they cannot justify with numbers",
+      "Founders deciding between SEO and paid"
+    ],
+    "problem": "Keyword tools answer how many people search a phrase and leave the only question that matters to you: would writing it ever pay you back. So content marketing fails in a predictable way — the articles get written, they are perfectly good, they rank on page four, and eighteen months later nobody can say whether the programme made or lost money.",
+    "solves": [
+      "Keywords chosen by search volume, which is the wrong variable on its own",
+      "Articles written as isolated posts with no cluster or internal linking",
+      "No structured data, so the pages compete without the features that win clicks",
+      "A content budget with no payback model behind it"
+    ],
+    "inside": [
+      "Keyword selection scored on intent, difficulty and what a click is worth to you",
+      "Clustering — the pillar and its supporting articles, planned as one unit",
+      "An internal linking map that ships with the cluster",
+      "Structured data per article type, written out",
+      "Article briefs detailed enough to hand to a writer or a model",
+      "Payback arithmetic: cost per article against the traffic and value it must earn"
+    ],
+    "outcomes": [
+      "A ranked keyword list where the ranking accounts for what a visitor is worth",
+      "Clusters planned before writing, not discovered afterwards",
+      "The month the programme breaks even, computed from your own costs"
+    ],
+    "usage": [
+      "Open index.html and enter what a conversion is worth to you. Everything downstream needs it.",
+      "Score your candidate keywords; ignore the volume column on its own.",
+      "Build one cluster completely before writing a second pillar.",
+      "Generate the briefs and the linking map together.",
+      "Check the payback model before committing to a monthly output."
+    ],
+    "notFor": [
+      "Anyone wanting live keyword data — it makes no network requests, so the volumes are yours to supply",
+      "Sites needing technical SEO audits of existing code"
+    ],
+    "proof": "It cannot see the SERP. It structures and computes; the search data has to come from you, from whatever tool you already use.",
+    "keywords": [
+      "seo strategy",
+      "keyword research",
+      "content clusters",
+      "internal linking",
+      "structured data",
+      "content roi",
+      "article brief",
+      "organic traffic",
+      "blog planning",
+      "offline tool"
+    ],
+    "shots": [
+      {
+        "label": "Keywords"
+      },
+      {
+        "label": "Clusters"
+      },
+      {
+        "label": "Numbers"
+      }
+    ]
+  },
+  {
+    "slug": "email-marketing",
+    "dir": "email-marketing",
+    "name": "Email Marketing Automation",
+    "category": "growth",
+    "glyph": "✉️",
+    "priceUsd": 39,
+    "tagline": "What to send, and what a subscriber is worth",
+    "oneLiner": "A calendar, a launch sequence, subscriber value arithmetic, and the model of what mailing everyone does to the people who still read you.",
+    "audience": [
+      "Anyone told to 'build a list' and left there",
+      "Sellers with a list they are afraid to email",
+      "Creators whose open rate is falling and cannot see why"
+    ],
+    "problem": "'Build a list' is advice that stops exactly where the work starts. Nothing in it says what to put in the emails, how often to send, what a subscriber is actually worth, or what mailing everyone every week does to the people who still open — which is the mechanism by which lists quietly die while the subscriber count goes up.",
+    "solves": [
+      "A list that never gets emailed because there is no plan for what to say",
+      "Sending to everyone every time and burning the engaged segment",
+      "No idea what a subscriber is worth, so no idea what acquiring one may cost",
+      "Launch sequences improvised the week of the launch"
+    ],
+    "inside": [
+      "A send calendar with the cadence your list size and content supply can sustain",
+      "The launch sequence: seven emails over ten days, each with its job",
+      "A lead-magnet design that recruits buyers rather than freebie collectors",
+      "Subscriber value arithmetic — what one is worth, so acquisition has a ceiling",
+      "Segment fatigue modelling: what full-list sending does to your openers",
+      "Drafting prompts built from each email's own brief"
+    ],
+    "outcomes": [
+      "A publishing cadence you can hold for a quarter",
+      "A launch sequence written before launch week",
+      "A number for what a subscriber is worth, and therefore what one may cost"
+    ],
+    "usage": [
+      "Open index.html and set list size, open rate and what a customer is worth.",
+      "Read the subscriber value figure before you plan any acquisition spend.",
+      "Build the calendar around what you can genuinely produce.",
+      "Write the launch sequence in advance and store it.",
+      "Check the fatigue model before any full-list send."
+    ],
+    "notFor": [
+      "Sending the emails — no ESP is connected; you paste into yours",
+      "Cold outreach or purchased lists"
+    ],
+    "proof": "Every figure comes from your inputs. Deliverability depends on your sending platform and your history, neither of which this can see.",
+    "keywords": [
+      "email marketing",
+      "newsletter strategy",
+      "launch sequence",
+      "lead magnet",
+      "subscriber value",
+      "email calendar",
+      "list building",
+      "segmentation",
+      "open rate",
+      "offline tool"
+    ],
+    "shots": [
+      {
+        "label": "Sequences"
+      },
+      {
+        "label": "Projection"
+      },
+      {
+        "label": "Revenue cost"
+      }
+    ]
+  },
+  {
+    "slug": "social-automation",
+    "dir": "social-automation",
+    "name": "Social Media Content Automation",
+    "category": "growth",
+    "glyph": "🔁",
+    "priceUsd": 39,
+    "tagline": "The calendar your week can actually produce",
+    "oneLiner": "Reconciles what you promised to post, what your source material can yield, and how many hours you have — before week three empties the calendar.",
+    "audience": [
+      "Anyone whose content calendar is half empty by week three",
+      "Agencies promising posting volumes they then cannot staff",
+      "Creators repurposing one video into 'twenty pieces of content' in theory"
+    ],
+    "problem": "A content plan is allowed to contain three contradictory numbers: what you promised to post, what your source material can actually yield, and how many hours exist. Nothing in the usual planning process forces them to agree, so the calendar is arithmetically impossible on the day it is written — and everyone blames discipline in week three.",
+    "solves": [
+      "Posting schedules that were never producible",
+      "Repurposing claims that do not survive contact with the source material",
+      "Production hours nobody counted",
+      "A queue that empties silently and takes reach with it"
+    ],
+    "inside": [
+      "The three-number reconciliation: promise, yield, hours — with the shortfall named",
+      "Realistic repurposing ratios per source type",
+      "A production system with batching, so a week's posts are made in one session",
+      "A calendar that refuses to schedule more than your inputs support",
+      "Per-platform format specs so one asset is not remade five times",
+      "The rescue plan for a queue that has already run dry"
+    ],
+    "outcomes": [
+      "A calendar that can survive the month it was written for",
+      "The honest number of posts your source material yields",
+      "A batching session that replaces daily scrambling"
+    ],
+    "usage": [
+      "Open index.html and enter your posting promise, your source material and your real weekly hours.",
+      "Read the shortfall. Fix it by lowering the promise or raising the input — not by resolving to try harder.",
+      "Set the repurposing ratios to what you have actually achieved before.",
+      "Batch-produce against the calendar in one session per week.",
+      "Re-run the reconciliation whenever you take on a new channel."
+    ],
+    "notFor": [
+      "Scheduling or publishing — it plans, it does not post",
+      "Anyone wanting the content written for them"
+    ],
+    "proof": "The reconciliation only works with honest hours. Optimistic input produces an optimistic calendar and the same empty week three.",
+    "keywords": [
+      "content calendar",
+      "social media planning",
+      "repurposing",
+      "batch production",
+      "posting schedule",
+      "content system",
+      "creator workflow",
+      "capacity planning",
+      "instagram planning",
+      "offline"
+    ],
+    "shots": [
+      {
+        "label": "Atomise"
+      },
+      {
+        "label": "Queue"
+      },
+      {
+        "label": "Batch day"
+      }
+    ]
+  },
+  {
+    "slug": "youtube-toolkit",
+    "dir": "youtube-toolkit",
+    "name": "The Faceless YouTube Toolkits",
+    "category": "growth",
+    "glyph": "🎬",
+    "priceUsd": 39,
+    "tagline": "Six tools for an eighteen-month game",
+    "oneLiner": "Niche scoring out of 21, a ten-step production workflow with its prompts, a Shorts strategy, a five-layer monetisation stack and the month-by-month income curve.",
+    "audience": [
+      "Anyone starting a faceless channel",
+      "Creators three months in and wondering whether the curve is normal",
+      "People choosing a niche by what they like watching"
+    ],
+    "problem": "Content at scale is the hardest income stream to act on, because everything in it is a long game: a niche test, a production workflow, a Shorts strategy, a monetisation stack, an income curve that takes eighteen months to resolve. All of it arrives as prose you read once and then have to remember for a year and a half.",
+    "solves": [
+      "Choosing a niche by interest rather than by RPM and durability",
+      "A production process re-invented per video, so video four takes as long as video one",
+      "Monetisation left entirely to ad revenue",
+      "Quitting at month five because nobody said what month five looks like"
+    ],
+    "inside": [
+      "Niche Scorecard — seven criteria out of 21, with the RPM band attached",
+      "A ten-step production workflow that fills in its own prompts",
+      "A Shorts strategy that feeds the long-form channel rather than replacing it",
+      "The five-layer monetisation stack, calculated on your figures",
+      "A weekly schedule you can actually hold alongside a job",
+      "The month-by-month income curve, with a marker for which row you are on today"
+    ],
+    "outcomes": [
+      "A niche chosen on scores you can defend in month nine",
+      "A repeatable production run instead of a per-video adventure",
+      "A realistic view of when money appears, so month five is not a surprise"
+    ],
+    "usage": [
+      "Open index.html and score three candidate niches before choosing one.",
+      "Run the production workflow for your first video and time each step.",
+      "Set up the monetisation stack early; ad revenue alone is the slowest layer.",
+      "Keep the weekly schedule visible.",
+      "Check the income curve monthly to see whether you are on, above or below the expected row."
+    ],
+    "notFor": [
+      "Anyone wanting videos produced for them",
+      "Channels already monetised and looking for platform-specific optimisation"
+    ],
+    "proof": "The income curve is a documented model, not a promise. Your channel will differ; the value is in knowing what normal looks like before you panic.",
+    "keywords": [
+      "faceless youtube",
+      "youtube automation",
+      "niche research",
+      "video production workflow",
+      "youtube shorts",
+      "monetisation",
+      "rpm",
+      "content at scale",
+      "channel planning",
+      "offline"
+    ],
+    "shots": [
+      {
+        "label": "Niche Scorecard"
+      },
+      {
+        "label": "Video Studio"
+      },
+      {
+        "label": "Monetisation Stack"
+      }
+    ]
+  },
+  {
+    "slug": "website-prompts",
+    "dir": "website-prompts",
+    "name": "AI Website Prompt Kit",
+    "category": "growth",
+    "glyph": "🖥",
+    "priceUsd": 29,
+    "tagline": "Decide it, or the builder decides it for you",
+    "oneLiner": "Works out what an AI site builder must be told before the first message, writes the prompts from your answers, and prices what the missing answers cost in redos.",
+    "audience": [
+      "Anyone building a site with an AI builder or a chat model",
+      "Freelancers producing client sites and re-prompting for hours",
+      "People on their third purple-gradient hero"
+    ],
+    "problem": "An AI website builder never asks for what it was not given. Say 'build me a site for my roofing business' and it does not stop — it produces one, with an invented brand, invented services, invented testimonials, a stack it chose silently, and a purple gradient hero. None of those were rejected; they were never considered. And every later prompt inherits them, so messages two through ten are spent undoing defaults you never picked.",
+    "solves": [
+      "Vague prompts whose real cost is the redo, not a slightly worse site",
+      "Invented content — fake testimonials and services — appearing in a client demo",
+      "A tech stack chosen silently by the model",
+      "Ten follow-up prompts fighting decisions made in prompt one"
+    ],
+    "inside": [
+      "The decision list — everything a builder will otherwise decide for you, in order",
+      "Prompts written from your answers, per page and per section",
+      "A content inventory that separates what you have from what must be written",
+      "Redo arithmetic: what each unanswered question costs in credits and hours",
+      "Guardrails against invented facts, testimonials and statistics",
+      "A handover-ready brief for a client or a contractor"
+    ],
+    "outcomes": [
+      "A first prompt that produces a site worth iterating on",
+      "No invented testimonials in anything you show a client",
+      "A written brief you can reuse for the next site in ten minutes"
+    ],
+    "usage": [
+      "Open index.html and work down the decision list before opening any builder.",
+      "Fill in the content inventory honestly — what does not exist has to be written by someone.",
+      "Generate the prompts and paste the first one whole.",
+      "Keep the guardrail lines in every prompt; they are what stop invention.",
+      "Save the brief; the next site starts from it."
+    ],
+    "notFor": [
+      "Anyone wanting the site built here — it writes the prompts, not the HTML",
+      "Bespoke application development"
+    ],
+    "proof": "Nothing here talks to a model. It works out what the model should be told, and prices what leaving it unsaid costs.",
+    "keywords": [
+      "ai website builder",
+      "website prompts",
+      "web design brief",
+      "lovable prompts",
+      "v0 prompts",
+      "site copy",
+      "client website",
+      "prompt kit",
+      "web project brief",
+      "offline"
+    ],
+    "shots": [
+      {
+        "label": "Project rules"
+      },
+      {
+        "label": "Prompts"
+      },
+      {
+        "label": "Build order"
+      }
+    ]
+  },
+  {
+    "slug": "local-business-templates",
+    "dir": "local-business-templates",
+    "name": "Local Business Website Studio",
+    "category": "growth",
+    "glyph": "📍",
+    "priceUsd": 49,
+    "tagline": "A finished demo site in about ten minutes",
+    "oneLiner": "Builds a complete one-page site for twelve local trades and exports it as one self-contained HTML file you can hand over or host anywhere.",
+    "audience": [
+      "Anyone selling websites to plumbers, salons, garages and restaurants",
+      "Freelancers who pitch with a deck and lose to whoever showed a demo",
+      "Local businesses building their own first site"
+    ],
+    "problem": "Selling a website to a local business works far better if you show the finished thing instead of describing it — the owner cannot evaluate a proposal but can absolutely evaluate their own shop front. The bottleneck is build time: nobody speculatively builds ten sites, because ten sites is a fortnight.",
+    "solves": [
+      "Pitching a website with a proposal instead of the website",
+      "A fortnight of speculative build time you cannot afford",
+      "Generic demo copy that does not sound like the trade",
+      "Handover that requires hosting, a build step and an explanation"
+    ],
+    "inside": [
+      "Builder — every field of the site as a form, with live preview at three widths",
+      "Twelve trades with demo copy written for each: plumber, electrician, garage, cleaner, landscaper, salon, restaurant, bakery, dentist, gym, accountant, estate agent",
+      "Repeaters for services, jobs, testimonials, packages and FAQ, with per-section switches",
+      "Palettes and layouts chosen to suit each trade",
+      "Export as one self-contained HTML file — no build, no dependencies, no hosting requirement",
+      "Handover notes for a non-technical owner"
+    ],
+    "outcomes": [
+      "Ten demo sites in an afternoon rather than a fortnight",
+      "A file the client can host anywhere, or you can host for them",
+      "A pitch that opens with the thing rather than a description of it"
+    ],
+    "usage": [
+      "Open index.html and choose the trade — the demo copy arrives written for it.",
+      "Paste the client's real name, phone number, services and areas over the placeholders.",
+      "Check the preview at all three widths; local traffic is mostly phones.",
+      "Export the single HTML file and show it to the owner.",
+      "On acceptance, replace the remaining placeholder content with their real photos and copy."
+    ],
+    "notFor": [
+      "Multi-page sites, e-commerce or booking systems",
+      "Anyone needing a CMS the client can edit themselves"
+    ],
+    "proof": "Demo copy is written for the trade and is not about the specific business. Every claim in it must be replaced with something true before the client publishes.",
+    "keywords": [
+      "local business website",
+      "one page website",
+      "web design for tradespeople",
+      "html template",
+      "client demo",
+      "plumber website",
+      "salon website",
+      "freelance web design",
+      "landing page",
+      "offline builder"
+    ],
+    "shots": [
+      {
+        "label": "Builder"
+      },
+      {
+        "label": "Templates"
+      }
+    ]
+  }
+]

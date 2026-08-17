@@ -1,0 +1,486 @@
+[
+  {
+    "slug": "launch-kit",
+    "dir": "launch-kit",
+    "name": "AI Income Launch Kit",
+    "category": "decide",
+    "glyph": "🚀",
+    "priceUsd": 29,
+    "tagline": "Pick one income stream and survive the first 30 days",
+    "oneLiner": "Score yourself across seven AI income streams, validate the winner in seven days, then run a thirty-day launch plan that tracks itself.",
+    "audience": [
+      "Anyone who has read three books about starting an AI side income and started none of them",
+      "Freelancers deciding which service to lead with",
+      "People with more ideas than evenings"
+    ],
+    "problem": "The reason most AI side incomes never start is not laziness and not the market — it is that the first decision never gets made. Seven plausible streams, no way to compare them against your own hours, skills and cash, so you research a fourth one instead. Then the thirty days that were supposed to be a launch become thirty days of tab-opening.",
+    "solves": [
+      "Choosing between income streams with nothing to compare them on except enthusiasm",
+      "Committing thirty days to an idea nobody has told you they want",
+      "A launch plan that lives in your head and quietly loses two days a week",
+      "Writing prompts that produce generic output because they never carried your context"
+    ],
+    "inside": [
+      "Fit Matrix — score yourself on five dimensions and get all seven income streams ranked, with a primary, a secondary, and the profile you match",
+      "7-Day Validation Sprint — one action a day, each with the question it answers and the output it must produce, ending in Proceed / Refine / Pivot",
+      "Commitment Statement — the fill-in template, rendered as a signed document you can print and put where you will see it",
+      "30-Day Launch Plan — all thirty days with real tasks, time estimates and weekly milestone checks, adapted for service, product or content tracks",
+      "CLEAR prompt builder — Context, Length, Examples, Audience, Role, assembled into a prompt you can paste anywhere",
+      "Pricing cheat sheet — the bands for each stream, so your first quote is not a guess"
+    ],
+    "outcomes": [
+      "One income stream chosen, in writing, with the reason it beat the other six",
+      "A seven-day test that costs nothing and can honestly return 'pivot'",
+      "Thirty dated tasks you can open tomorrow morning instead of deciding again"
+    ],
+    "usage": [
+      "Open index.html. Nothing to install, no account, works with the wifi off.",
+      "Do the Fit Matrix first — five sliders, about six minutes. Read the ranking before you argue with it.",
+      "Run the 7-Day Sprint on your top stream. One action per day; write the output in the box, not in your head.",
+      "If the sprint says Proceed, write the Commitment Statement and print it.",
+      "Work the 30-Day Plan day by day. Everything is saved in the browser, so close the tab whenever you like."
+    ],
+    "notFor": [
+      "Anyone looking for a done-for-you business or a list of passive income tricks",
+      "People who want the tool to promise an income figure — it refuses to"
+    ],
+    "proof": "The scores come from your own answers against fixed rules you can read in the file. It cannot check whether your answers are true.",
+    "keywords": [
+      "ai side income",
+      "income stream picker",
+      "30 day launch plan",
+      "business validation",
+      "clear prompt formula",
+      "freelance start",
+      "digital product launch",
+      "side hustle planner",
+      "offline app",
+      "no subscription"
+    ],
+    "shots": [
+      {
+        "label": "Fit Matrix"
+      },
+      {
+        "label": "30-Day"
+      },
+      {
+        "label": "CLEAR"
+      }
+    ]
+  },
+  {
+    "slug": "digital-products",
+    "dir": "digital-products",
+    "name": "Digital Products Maker",
+    "category": "decide",
+    "glyph": "💾",
+    "priceUsd": 39,
+    "tagline": "The hour before you build, done properly",
+    "oneLiner": "Eight product formats compared on how much AI really carries, a validation gate with hard floors that can return a kill, and the fee arithmetic.",
+    "audience": [
+      "Anyone about to spend a weekend building something nobody asked for",
+      "Creators choosing between an ebook, a template pack, a course and a notion of a course",
+      "Sellers who cannot work out why a $19 product earns $6"
+    ],
+    "problem": "A digital product has no marginal cost, which is the whole appeal and also the trap: the entire cost is paid up front, before one person has said they want it. Eleven hours in a document is eleven hours whether it sells four hundred copies or none — and by the time you find out, the money is already spent. The only decision that changes the outcome is made before you build.",
+    "solves": [
+      "Picking a format because it sounds fun rather than because AI actually carries most of the work",
+      "Building for weeks with no evidence anyone will pay, then calling it a marketing problem",
+      "Pricing at $19 without knowing what the platform fee, the refund rate and the traffic leave you",
+      "Prompts that produce a generic first draft because they were written from nothing"
+    ],
+    "inside": [
+      "Formats — eight product types scored on how much of the work AI genuinely does, with build hours attached",
+      "The gate — three criteria with hard floors; miss one and the app says kill, not 'consider adjusting'",
+      "30-Minute Validation — the method on a clock, with what to search and what counts as evidence",
+      "Build — the eight-step workflow with the prompts written from your own answers, not templates",
+      "Numbers — fee, refund and traffic arithmetic that says how many visitors the price actually needs",
+      "Launch and Kit — the listing structure and a one-page export of the whole decision"
+    ],
+    "outcomes": [
+      "A yes or a no on this specific product, with the number that decided it",
+      "If yes: the eight prompts that build it, already carrying your context",
+      "The visitor count your price and conversion rate really require, before you promise yourself anything"
+    ],
+    "usage": [
+      "Open index.html and describe the product in the Product tab — one honest paragraph.",
+      "Compare Formats before you commit. The build-hours column is the one people skip and regret.",
+      "Run the gate. If it kills the idea, that is the product working; change an input or change the idea.",
+      "Do the 30-minute validation with real marketplace tabs open. The app has no network access — the evidence has to be yours.",
+      "Take the Build prompts into any chat model, then run the Numbers tab before you set a price."
+    ],
+    "notFor": [
+      "People who want the product written for them — nothing here talks to a model",
+      "Anyone unwilling to have an idea killed by their own numbers"
+    ],
+    "proof": "Both gates can return a kill. The arithmetic quotes figures, never percentages of success it cannot know.",
+    "keywords": [
+      "digital product validation",
+      "product idea checker",
+      "ebook vs course",
+      "template pack",
+      "pricing calculator",
+      "gumroad seller tools",
+      "product market fit",
+      "ai product workflow",
+      "offline tool",
+      "etsy digital"
+    ],
+    "shots": [
+      {
+        "label": "Formats"
+      },
+      {
+        "label": "gate"
+      },
+      {
+        "label": "Numbers"
+      }
+    ]
+  },
+  {
+    "slug": "venture-studio",
+    "dir": "venture-studio",
+    "name": "CLEAR AI Digital Product Venture Studio",
+    "category": "decide",
+    "glyph": "🏛",
+    "priceUsd": 79,
+    "tagline": "Ninety-nine scored ideas, and a gate you cannot argue past",
+    "oneLiner": "Crosses what you already know with 33 product types into a ranked catalogue — then locks nine of thirteen tabs until you have checked six real listings by hand.",
+    "audience": [
+      "Anyone with expertise and no idea which part of it is sellable",
+      "Studios planning a catalogue rather than a single product",
+      "People who have built the thing first, twice, and would like to stop"
+    ],
+    "problem": "Most people with something worth selling make the same three mistakes in the same order: they pick the product type first, they validate after building, and they think in single products instead of catalogues. The idea is the cheap part — three knowledge assets crossed with thirty-three product types is ninety-nine scored ideas in the time it takes to type three phrases. What is expensive is finding out, in month three, that nobody was looking for it.",
+    "solves": [
+      "Staring at a blank page trying to think of 'a good digital product idea'",
+      "Validation theatre — asking friends, reading a trend article, calling it research",
+      "Building one product at a time when the economics only work as a catalogue",
+      "Listings written to a character limit you discover after the copy is finished"
+    ],
+    "inside": [
+      "Assets and Opportunities — three things you know × 33 product types, scored on six criteria into a ranked list",
+      "Validate — six marketplace checks you must do by hand; nine tabs stay locked until you have",
+      "Blueprint and four tiers, plus an ecosystem of nine rungs from free to flagship",
+      "Catalogue plans at 30, 90 and 365 days, including the point where upkeep eats the whole week",
+      "Listings with every marketplace character limit enforced as you type",
+      "A funnel, six licences, six SOPs, and a board of eight directors that is allowed to block",
+      "One-click export of the whole thing as a ~10,000-word dossier"
+    ],
+    "outcomes": [
+      "A ranked catalogue of ideas with the bad ones scored, not just the good ones",
+      "Six pieces of real marketplace evidence, gathered by you, on the record",
+      "A 365-day catalogue plan that shows the month upkeep starts eating production"
+    ],
+    "usage": [
+      "Open index.html. A worked example is loaded so you can see a finished dossier before typing anything.",
+      "Clear it, then enter three things you genuinely know. Be specific — 'payroll for Ghanaian SMEs' beats 'business'.",
+      "Read the ranked opportunities, including the low scores. Why an idea scored 31 is the useful part.",
+      "Do the six validation checks with real marketplace tabs open. The app makes zero network requests, by design.",
+      "Past the gate, work through Blueprint → Catalogue → Listings, then export the dossier."
+    ],
+    "notFor": [
+      "Anyone who wants market data supplied for them — it has never seen a marketplace",
+      "People in a hurry to build. The gate exists precisely to slow that down"
+    ],
+    "proof": "It makes no income claims and cannot verify a single figure you enter. Nine of the thirteen tabs stay shut until you supply real evidence.",
+    "keywords": [
+      "digital product ideas",
+      "product catalogue planning",
+      "idea validation",
+      "venture studio",
+      "marketplace research",
+      "product scoring",
+      "solo founder",
+      "info product",
+      "listing copy",
+      "offline app"
+    ],
+    "shots": [
+      {
+        "label": "Opportunities"
+      },
+      {
+        "label": "Validate"
+      },
+      {
+        "label": "Catalogue"
+      }
+    ]
+  },
+  {
+    "slug": "product-factory",
+    "dir": "product-factory",
+    "name": "MOSH Product Factory",
+    "category": "decide",
+    "glyph": "🏭",
+    "priceUsd": 59,
+    "tagline": "How many products a month can you actually finish?",
+    "oneLiner": "A production console for a one-person studio: twelve products ranked by score per hour, three workflows with human gates, and the catalogue size where upkeep eats the week.",
+    "audience": [
+      "Solo studios running more than one product at a time",
+      "Anyone whose roadmap assumes hours they do not have",
+      "Small teams deciding what to build next and in what order"
+    ],
+    "problem": "Every product plan is a claim about time, and almost nobody checks it. Twelve products at 'a few days each' is a year, the upkeep on the first six eats the week you were going to build the seventh in, and the roadmap quietly becomes a list of things you feel guilty about. The question everything turns on is not what to build. It is how many you can finish.",
+    "solves": [
+      "A roadmap that assumes more building hours than the week contains",
+      "Choosing the next product by enthusiasm instead of score per hour",
+      "AI-assisted output shipped without the specific checks its category needs",
+      "Unit economics discovered after launch, when the price is already public"
+    ],
+    "inside": [
+      "Twelve products ranked by score per hour — the ordering that survives a real calendar",
+      "Three production workflows with their human gates marked, so nothing ships unread",
+      "Seven agent briefs, ready to hand to a model or a person",
+      "Eighteen category-specific accuracy checks — what actually goes wrong per product type",
+      "Unit economics and funnel sensitivity on your figures",
+      "A catalogue simulation that finds the size at which upkeep consumes the whole week"
+    ],
+    "outcomes": [
+      "A build order with a reason attached to each position",
+      "The number of products your week can actually sustain, computed rather than hoped",
+      "A gate list that stops AI output shipping unchecked"
+    ],
+    "usage": [
+      "Open index.html — a worked example loads by default.",
+      "Enter your real available hours. Optimism here invalidates everything downstream.",
+      "Read the Ideas tab ranked by score per hour, not by score.",
+      "Run the catalogue simulation and note the month upkeep overtakes production.",
+      "Export the schedule and work from it."
+    ],
+    "notFor": [
+      "Teams big enough that the constraint is coordination, not hours",
+      "Anyone wanting it to generate the products — it prices the hours, it does not do them"
+    ],
+    "proof": "It has no exchange rate and no market data. Every figure it reports is derived from inputs you supplied and rules you can read.",
+    "keywords": [
+      "product roadmap",
+      "solo founder capacity",
+      "digital product studio",
+      "unit economics",
+      "production workflow",
+      "ai quality checks",
+      "score per hour",
+      "catalogue planning",
+      "operations",
+      "offline tool"
+    ],
+    "shots": [
+      {
+        "label": "Ideas"
+      },
+      {
+        "label": "Economics"
+      },
+      {
+        "label": "Schedule"
+      }
+    ]
+  },
+  {
+    "slug": "board-of-directors",
+    "dir": "board-of-directors",
+    "name": "CLEAR AI Board of Directors",
+    "category": "decide",
+    "glyph": "⚖️",
+    "priceUsd": 49,
+    "tagline": "Fifteen directors, allowed to say no",
+    "oneLiner": "Fifteen seats score your decision against your own numbers, argue with each other, simulate three years of downside, and return a verdict that can be no.",
+    "audience": [
+      "Anyone about to commit real money or real months to something hard to undo",
+      "Founders who have to convince a partner, a lender or an internal approver",
+      "People who have noticed that 'act as my board of directors' produces applause"
+    ],
+    "problem": "The prompt 'act as a board of directors and advise me' is one of the most copied on the internet, and it fails in a specific way: fifteen enthusiastic paragraphs that agree with each other and with you. It looks like scrutiny; it functions as flattery. Three things are missing — arithmetic, disagreement, and honesty about the quality of your inputs.",
+    "solves": [
+      "AI advice that never computes LTV against CAC, capacity against breakeven, or runway against time-to-revenue",
+      "Advisors who agree with each other because they are one advisor wearing fifteen hats",
+      "Confidence scores that treat a guess and a measured figure as the same evidence",
+      "Plans that fail on the two things nobody calculates: capacity below breakeven, and runway shorter than time to first revenue"
+    ],
+    "inside": [
+      "Brief and Numbers — the CLEAR intake plus ~35 inputs with twelve derived metrics updating live",
+      "Board — fifteen director reports, each scoring against its own mandate only",
+      "Debate — the collisions between seats, with the chair's ruling on each",
+      "Risk — three 36-month cash simulations and a ranked pre-mortem",
+      "Resolution — verdict, weighted vote, blocking findings and the conditions attached",
+      "Roadmap — 30/90/365-day plans with nine KPIs targeted from your own figures",
+      "Minutes — the whole deliberation as roughly 28,000 characters of Markdown",
+      "Agent pack — the same fifteen seats as a custom GPT, Claude Project, Gemini Gem or API call"
+    ],
+    "outcomes": [
+      "A verdict with the blocking findings named, not a score with a smile",
+      "The exact list of which of your numbers must be wrong for you to be right",
+      "A written record you can hand to whoever has to approve the decision"
+    ],
+    "usage": [
+      "Open index.html and click Example to load a real worked decision first.",
+      "Clear it, then fill in the Brief and the Numbers. Rough figures are fine — tag them GUESSED and the board discounts its own confidence.",
+      "Read the Debate tab before the Resolution. The disagreements are the thinking.",
+      "If it blocks, note which finding did it and what would change that vote.",
+      "Export the Minutes. Re-run in 90 days with measured figures and compare."
+    ],
+    "notFor": [
+      "Anyone who wants it to say yes",
+      "Regulated financial, legal or tax advice — buy an hour with a professional instead"
+    ],
+    "proof": "Six findings are treated as blocking and no director who raises one may also report a comfortable score. It cannot verify any number you enter, and says so.",
+    "keywords": [
+      "business decision tool",
+      "board of directors",
+      "unit economics",
+      "risk analysis",
+      "founder tools",
+      "decision framework",
+      "pre-mortem",
+      "runway calculator",
+      "custom gpt",
+      "offline app"
+    ],
+    "shots": [
+      {
+        "label": "Board"
+      },
+      {
+        "label": "Debate"
+      },
+      {
+        "label": "Resolution"
+      }
+    ]
+  },
+  {
+    "slug": "ebook",
+    "dir": "ebook",
+    "name": "The AI Income Blueprint — Interactive Edition",
+    "category": "decide",
+    "glyph": "📖",
+    "priceUsd": 19,
+    "tagline": "The whole book, as something you work in",
+    "oneLiner": "All 17 chapters with highlighting, notes, inline quizzes, action-step tracking, full-text search and Markdown export. Offline, no account.",
+    "audience": [
+      "Readers who annotate and then lose the annotations",
+      "Anyone working through the book on a phone with metered data",
+      "People who want the book and the exercises in the same place"
+    ],
+    "problem": "A book you read once changes nothing. The action steps are the point, and they live at the end of chapters you have already closed — so the highlights end up in one app, the notes in another, and the seventeen action steps nowhere at all. This is the book rebuilt as the thing you actually work in.",
+    "solves": [
+      "Highlights and notes scattered across three apps and a notebook",
+      "Action steps read and never done",
+      "No way to check whether a chapter actually landed",
+      "Reading apps that need an account, a network and 40MB of fonts"
+    ],
+    "inside": [
+      "Every chapter in full, with its key takeaways, case study and action step",
+      "Highlight any passage and attach a note; every note in one panel with jump links",
+      "Action steps as checkboxes with a free-text answer each",
+      "The 28 knowledge-check questions inline, scored and retryable",
+      "Per-chapter and per-part progress, with a ring in the header",
+      "Full-text search with snippets, three themes, adjustable typography",
+      "Export everything you wrote as one Markdown file"
+    ],
+    "outcomes": [
+      "Seventeen action steps with your answers, in a file you keep",
+      "A quiz score per chapter, so 'I read it' becomes checkable",
+      "Your entire annotation set exportable in one click"
+    ],
+    "usage": [
+      "Open index.html. It works on a phone, on a plane, at 2% battery.",
+      "Read normally. Select any sentence to highlight it; click the highlight to add a note.",
+      "Answer each chapter's action step in the box rather than in your head.",
+      "Take the knowledge check before moving on. Retry it until it is boring.",
+      "Export to Markdown whenever you want your notes somewhere else."
+    ],
+    "notFor": [
+      "Anyone who only wants the PDF to skim — the paperback experience is not the point",
+      "Readers who need audio; there is no narration"
+    ],
+    "proof": "Everything is stored in your own browser. Nothing is uploaded, and there is no account to make.",
+    "keywords": [
+      "ai income blueprint",
+      "interactive ebook",
+      "book with quizzes",
+      "highlights and notes",
+      "offline reader",
+      "self study",
+      "action steps",
+      "markdown export",
+      "business book",
+      "no account"
+    ],
+    "extraFiles": [
+      {
+        "from": "books/THE_AI_INCOME_BLUEPRINT.pdf",
+        "to": "THE_AI_INCOME_BLUEPRINT.pdf",
+        "note": "The original PDF, included so buyers have a printable copy alongside the reader."
+      }
+    ],
+    "shots": [
+      {
+        "label": "Start reading"
+      }
+    ]
+  },
+  {
+    "slug": "gpt",
+    "dir": "gpt",
+    "name": "Digital Product Studio — custom GPT",
+    "category": "decide",
+    "glyph": "🤖",
+    "priceUsd": 24,
+    "entry": "README.md",
+    "tagline": "A GPT that argues with your product idea",
+    "oneLiner": "Paste-ready instructions, configuration and knowledge file for a ChatGPT custom GPT that takes you from 'I don't know what to sell' to a listed product.",
+    "audience": [
+      "ChatGPT Plus users who want one assistant that knows a method rather than generic advice",
+      "Anyone who keeps re-explaining their business at the start of every chat",
+      "People who want the validation gate available in conversation"
+    ],
+    "problem": "Ask a general chat model about digital products and you get the same eight bullet points everyone else gets, with a confident tone and no method underneath. It will never tell you the idea is bad, because nothing in its instructions permits that. A custom GPT with a real method, hard floors and a knowledge file behaves differently — but writing those three files is a day's work most people never do.",
+    "solves": [
+      "Generic AI business advice with no validation step in it",
+      "Re-pasting your context at the start of every conversation",
+      "An assistant that cannot say 'do not build this'",
+      "Pricing suggestions pulled from nowhere"
+    ],
+    "inside": [
+      "instructions.txt — the system instructions, written to sit just under the 8,000-character field limit",
+      "configuration.md — every other field: name, description, conversation starters, capabilities, publishing settings",
+      "knowledge/digital-product-playbook.md — the reference file: pricing tables, platform comparison, validation methods, income projections",
+      "A ten-minute setup guide with the exact clicks"
+    ],
+    "outcomes": [
+      "A working custom GPT in about ten minutes",
+      "An assistant that runs the 3 Criteria and the 30-Minute Validation Method rather than improvising",
+      "Advice that matches one documented method instead of the average of the internet"
+    ],
+    "usage": [
+      "Open README.md and follow the ten-minute setup.",
+      "Create a GPT at chatgpt.com/gpts/editor and switch straight to the Configure tab.",
+      "Paste instructions.txt into Instructions and the fields from configuration.md into their boxes.",
+      "Upload knowledge/digital-product-playbook.md as a knowledge file.",
+      "Test it with an idea you already know is bad and check that it says so."
+    ],
+    "notFor": [
+      "Anyone without ChatGPT Plus, Pro, Team or Enterprise — custom GPTs require a paid plan",
+      "People expecting the GPT to build the product for them"
+    ],
+    "proof": "These are configuration files, not software. What the model does with them depends on the model, and OpenAI changes it without asking either of us.",
+    "keywords": [
+      "custom gpt",
+      "chatgpt",
+      "digital product",
+      "gpt instructions",
+      "ai assistant setup",
+      "knowledge file",
+      "product validation",
+      "prompt engineering",
+      "gpt configuration",
+      "no code"
+    ],
+    "shots": []
+  }
+]

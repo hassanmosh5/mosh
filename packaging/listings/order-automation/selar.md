@@ -1,0 +1,146 @@
+# E-Commerce Order Automation — Selar listing
+
+> Generated from `packaging/products/05-agents.json` by `npm run pkg:listings`.
+> Edit the catalogue, not this file — it is overwritten on every run.
+
+Paste each block into the matching field. Character counts are shown so nothing
+arrives truncated.
+
+Images for this product: `dist/mockups/order-automation/` — cover, square, story and gallery shots.
+Package files: `dist/packages/order-automation/` — one ZIP per licence tier.
+Support address on all listings: hassanmosh5@gmail.com
+
+---
+
+## Why Selar for this catalogue
+
+It settles in cedis and naira, accepts mobile money and bank transfer as well as
+cards, and pays out locally. For West African buyers it converts better than a
+dollar checkout, and the buyer is not paying a card's FX spread on top of your price.
+
+## Product setup
+
+| Field | Value |
+|---|---|
+| Product type | Digital product / downloadable |
+| Link | `order-automation` → https://selar.com/REPLACE-ME/order-automation |
+| Category | AI agents & automation |
+
+**Product name** — 27/80 characters
+
+```
+E-Commerce Order Automation
+```
+
+**Short description** — 41/160 characters
+
+```
+159 hours a month nobody invoices you for
+```
+
+
+## Pricing
+
+| Licence | GHS | NGN | USD |
+|---|---|---|---|
+| Solo licence | GHS 620 | NGN 76,000 | $49 |
+| Studio licence (default) | GHS 1,540 | NGN 191,000 | $123 |
+| Agency licence | GHS 3,070 | NGN 380,000 | $245 |
+
+Rates were converted at 12.5 GHS and 1550 NGN
+to the dollar, noted 2026-08-17. **Re-check before launch** —
+a stale rate quietly changes your margin.
+
+## Description
+
+**Description** — 2917/8000 characters
+
+```
+Costs an order desk minute by minute, ranks every automation by how fast it repays, turns exception handling into arithmetic, and exports the runbook.
+
+THE PROBLEM
+
+A store's order desk is the part that scales worst. A listing is written once; an order is processed every single time, and the minutes are invisible — nobody invoices you for reading the order, checking the payment, picking, packing, buying postage, answering 'where is it?', or reconciling the payout. At ordinary figures a store doing 600 orders a month spends about 159 hours on it.
+
+It deals specifically with:
+
+• Fulfilment admin that never appears in any cost calculation
+• Automations chosen by what is easiest to build rather than what repays first
+• Exceptions handled by mood, so the same problem costs a different amount each time
+• No runbook, so the desk stops when the person who runs it is away
+
+WHO IT IS FOR
+
+• Store owners whose order desk quietly consumes the week
+• Anyone about to hire for fulfilment admin
+• Agencies automating operations for e-commerce clients
+
+WHAT YOU GET
+
+• A minute-by-minute cost model of the order desk at your volume
+• Every automation ranked by payback period
+• Exception handling as decision rules: refunds, damages, missing parcels, chargebacks
+• The threshold volumes at which each automation starts to make sense
+• A hiring-versus-automating comparison on the same figures
+• An exportable runbook you can hand to whoever covers the desk
+
+Delivered as a ZIP: the app itself, a START-HERE page, full usage instructions,
+your licence, and a checksum list of every file so you can verify what arrived.
+
+Free updates to the version you bought for 12 months. You keep the files forever either way.
+
+HOW YOU USE IT
+
+1. Open index.html and enter your monthly order volume and the steps you really perform.
+2. Read the total hours. It is usually the moment the case makes itself.
+3. Take the top-ranked automation only, build it, then re-measure.
+4. Turn the exception rules into policy and stop re-deciding them.
+5. Export the runbook and store it where a stand-in can find it.
+
+WHAT SHOULD BE TRUE WHEN YOU FINISH
+
+• The true monthly hour cost of your order desk
+• An automation order with payback attached to each item
+• A runbook that lets someone else run the desk on the day you cannot
+
+WHAT IT IS NOT
+
+• Anyone wanting the automations implemented
+• Warehouse-scale logistics with a WMS
+
+The default figures are a starting point; replace them with your own timings. The whole model is only as honest as the minutes you enter.
+
+These are decision and drafting tools, not professional advice. They compute from figures you supply and cannot verify any of them. Nothing here is financial, legal, tax, medical or investment advice.
+
+14-day refund, no questions asked. Reply to your receipt and say the word.
+
+Support: hassanmosh5@gmail.com — One reply within two working days, from the person who built it.
+```
+
+
+## Images
+
+- Main: `dist/mockups/order-automation/square.png`
+- Additional: `dist/mockups/order-automation/cover.png`, `gallery-*.png`
+
+## Delivery
+
+Selar delivers the file itself. Upload `order-automation-studio.zip` as the
+product file, and the other two tiers as separate products or variants depending
+on what your Selar plan supports.
+
+To mirror sales into your own records, set the webhook to:
+
+```
+https://REPLACE-ME.example.com/api/webhooks/selar
+```
+
+**Before you rely on that webhook:** confirm the signature header and algorithm
+with Selar's current documentation and set `SELAR_WEBHOOK_SECRET` (and
+`SELAR_SIGNATURE_HEADER` if it differs from the default). The route refuses
+unverified requests rather than guessing — see `docs/SELLING.md`.
+
+---
+14-day refund, no questions asked. Reply to your receipt and say the word.
+
+Support: hassanmosh5@gmail.com — One reply within two working days, from the person who built it.

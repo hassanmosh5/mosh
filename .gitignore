@@ -20,6 +20,11 @@
 # production
 /build
 
+# Packaging build output: ZIPs and store imagery, rebuilt with `npm run pkg:all`.
+# The catalogue and the generated listings under packaging/ are committed; these
+# are large binaries derived from them.
+/dist
+
 # misc
 .DS_Store
 *.pem

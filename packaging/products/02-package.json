@@ -1,0 +1,413 @@
+[
+  {
+    "slug": "packaging-agent",
+    "dir": "packaging-agent",
+    "name": "MOSH Packaging Agent",
+    "category": "package",
+    "glyph": "📦",
+    "priceUsd": 69,
+    "tagline": "Ten fields in, a sellable product out",
+    "oneLiner": "Turns one finished asset into the whole commercial package: four priced tiers, ~50 files, four marketplace listings, 120 keywords, 50 posts and a launch plan, as a ZIP.",
+    "audience": [
+      "Anyone with finished assets sitting in a folder, unlisted",
+      "Studios shipping more than one product a month",
+      "Sellers who have written the same licence and listing four times"
+    ],
+    "problem": "An AI output is not a product. The gap between the two is not creativity, it is a list of specific artefacts: a licence saying what a buyer may resell, a price that sits somewhere defensible, a file list published before payment, a paragraph naming what the thing cannot do. That list is finite, nearly identical for every digital product, and writing it by hand for the fourth time is the reason most finished assets never get listed.",
+    "solves": [
+      "Finished work that never ships because packaging it is a day of tedium",
+      "Listings rewritten from scratch for each marketplace and truncated on paste",
+      "Prices picked by feel, with no tier structure underneath them",
+      "No licence — the most common cause of a resale dispute"
+    ],
+    "inside": [
+      "A monetisation score on the asset before anything else is generated",
+      "Descriptions written to exact word counts, plus four priced tiers in dollars and cedis",
+      "~50 files across a ten-folder structure — five of them typeset as real PDFs in the browser",
+      "Listings for Gumroad, Selar, Paystack and Shopify with every character limit enforced",
+      "120 keywords, 50 social posts, a five-step funnel and a launch plan",
+      "Everything downloadable as one ZIP, plus a separate customer ZIP per tier"
+    ],
+    "outcomes": [
+      "A folder you could upload to a marketplace this afternoon",
+      "The same ten inputs always produce the same fifty files — a listing you approved on Monday is the listing that ships",
+      "One folder it deliberately leaves empty, because it has never seen your product"
+    ],
+    "usage": [
+      "Open index.html and fill in the ten fields about one finished asset.",
+      "Read the monetisation score before generating. A low score is information, not an obstacle.",
+      "Generate, then read the descriptions and edit the claims — it knows only what you typed.",
+      "Download the full ZIP for yourself and the per-tier customer ZIP for buyers.",
+      "Paste each marketplace listing into its platform; the character counts already fit."
+    ],
+    "notFor": [
+      "People without a finished asset — it packages, it does not create",
+      "Anyone expecting it to describe features it was never told about"
+    ],
+    "proof": "Nothing is sampled from a model, so output is deterministic. It has never seen your product and says so in the one folder it cannot fill.",
+    "keywords": [
+      "digital product packaging",
+      "product listing generator",
+      "gumroad listing",
+      "selar",
+      "licence template",
+      "product tiers",
+      "launch plan",
+      "marketplace seo",
+      "zip export",
+      "offline app"
+    ],
+    "shots": [
+      {
+        "label": "Pricing"
+      },
+      {
+        "label": "Listings"
+      },
+      {
+        "label": "Launch"
+      }
+    ]
+  },
+  {
+    "slug": "prompt-packs",
+    "dir": "prompt-packs",
+    "name": "AI Prompt Packs for Businesses & Creators",
+    "category": "package",
+    "glyph": "🧠",
+    "priceUsd": 39,
+    "tagline": "160 finished prompts, and the machinery to sell them",
+    "oneLiner": "Eight complete prompt packs — 160 role-first prompts — plus the builder that turns any one of them into a product file you can list this afternoon.",
+    "audience": [
+      "Sellers who want a product to list today rather than an idea to develop",
+      "Business owners who want prompts organised the way their working day is",
+      "Anyone whose prompt library is a note file with 200 lines in it"
+    ],
+    "problem": "Most prompt packs on sale are a list of one-line instructions with no role, no context and no output specification — which is why they earn refund requests. The difference between a pack that gets five stars and one that gets returned is five specific characteristics, and almost nobody applies them, because writing twenty good prompts for a niche you do not work in is real labour.",
+    "solves": [
+      "Prompt packs that are lists of vague instructions and disappoint on first use",
+      "Having nothing finished to sell while you decide what to make",
+      "Prompts scattered across notes with no order matching how you work",
+      "Turning a prompt collection into an actual product file with a licence and a listing"
+    ],
+    "inside": [
+      "Eight finished packs, 20 prompts each — 160 role-first prompts written to be used as they stand",
+      "Each prompt carries its role, context, output format and the variables you swap",
+      "Organised by the buyer's working day rather than by prompt category",
+      "A pack builder that emits a complete product file, not an outline",
+      "The five characteristics that separate a reviewed pack from a returned one, applied throughout",
+      "Pricing model and the four channels the packs actually sell through"
+    ],
+    "outcomes": [
+      "A sellable prompt pack exported today",
+      "Prompts that produce usable first drafts rather than another round of prompting",
+      "A pack structure you can refill for any niche you know"
+    ],
+    "usage": [
+      "Open index.html and browse the eight packs — they are finished, not samples.",
+      "Use them yourself first. A pack you have never run is a pack you cannot support.",
+      "Swap the variables for your own business or your client's.",
+      "Open the builder to assemble a pack for your niche, then export the product file.",
+      "List it with the licence included; price it against the bands in the pricing section."
+    ],
+    "notFor": [
+      "Anyone hoping to resell the 160 prompts verbatim — the licence covers use, not resale, unless you buy the Agency tier",
+      "People wanting prompts for a niche nobody has described to it"
+    ],
+    "proof": "The prompts are curated and fixed, not generated — you can read every one before you buy the idea that they work.",
+    "keywords": [
+      "prompt pack",
+      "chatgpt prompts",
+      "ai prompts for business",
+      "prompt library",
+      "sellable prompts",
+      "content prompts",
+      "marketing prompts",
+      "prompt engineering",
+      "digital product",
+      "offline"
+    ],
+    "shots": [
+      {
+        "label": "The Packs"
+      },
+      {
+        "label": "Catalogue Plan"
+      }
+    ]
+  },
+  {
+    "slug": "prompt-generator",
+    "dir": "prompt-generator",
+    "name": "The Wealth Ideas Prompt Generator",
+    "category": "package",
+    "glyph": "✨",
+    "priceUsd": 29,
+    "tagline": "99,000 prompts from one matrix, packaged for sale",
+    "oneLiner": "The Wealth Ideas Matrix wired into the CLEAR formula: pick role, context, audience, offer and niche, get a complete prompt — then a pack you can list.",
+    "audience": [
+      "Anyone whose prompts are one line long and produce one-line-quality output",
+      "Sellers building prompt packs for niches they do not personally work in",
+      "People who want variety without writing every prompt by hand"
+    ],
+    "problem": "A hundred rows of expert roles, business contexts, audiences, offers and niches is a reference table — useful to look at, impossible to use. The CLEAR structure is exactly what those columns were built for, and joining the two turns a table into a prompt generator. Most people never make that join, so the matrix stays a document and the prompts stay vague.",
+    "solves": [
+      "Prompts missing the role, audience and output specification that decide the quality",
+      "Rewriting the same prompt skeleton for every new client or niche",
+      "Prompt packs assembled by hand, one prompt at a time",
+      "Listing copy for a pack written from nothing at the end of a long build"
+    ],
+    "inside": [
+      "The generator — every CLEAR field pre-populated from the matrix, editable, combining into complete prompts",
+      "The Wealth Ideas Matrix itself: expert roles, business contexts, audiences, income-stream offers, niches",
+      "A pack builder that assembles selected prompts into a sellable file",
+      "Listing-copy generator for the finished pack",
+      "Saved sets, so a client's configuration is one click away next time"
+    ],
+    "outcomes": [
+      "Prompts that carry context, role and output format every time",
+      "A finished prompt pack for a niche, built in an afternoon",
+      "Listing copy generated from the pack rather than invented afterwards"
+    ],
+    "usage": [
+      "Open index.html and pick a row of the matrix that resembles your buyer.",
+      "Edit each CLEAR field — the defaults are a starting point, not the answer.",
+      "Copy the assembled prompt into any model and check the output before you sell it.",
+      "Collect the ones that worked into a pack in the builder.",
+      "Generate the listing copy and export."
+    ],
+    "notFor": [
+      "Anyone wanting curated, ready-to-use prompts rather than combinations — buy the Prompt Packs instead",
+      "People who will sell packs without testing a single prompt"
+    ],
+    "proof": "Combinatorial by design: it generates structure, and the judgement about which combinations are worth selling stays yours.",
+    "keywords": [
+      "prompt generator",
+      "clear formula",
+      "wealth ideas matrix",
+      "prompt pack builder",
+      "chatgpt prompts",
+      "ai prompt structure",
+      "listing copy",
+      "digital product",
+      "niche prompts",
+      "offline app"
+    ],
+    "shots": [
+      {
+        "label": "Generator"
+      },
+      {
+        "label": "Pack"
+      }
+    ]
+  },
+  {
+    "slug": "canva-templates",
+    "dir": "canva-templates",
+    "name": "The Canva Template Library Builder",
+    "category": "package",
+    "glyph": "🎨",
+    "priceUsd": 39,
+    "tagline": "The build sheet you need before opening Canva",
+    "oneLiner": "Niche × pack type × angle produces a complete spec — brand kit, per-template pixel dimensions, type pairing, layout — then prices, validates and schedules the catalogue.",
+    "audience": [
+      "Designers selling template packs on Etsy, Creative Market or their own store",
+      "Anyone who opens Canva, makes three templates and loses the thread",
+      "Sellers planning a catalogue rather than a one-off pack"
+    ],
+    "problem": "Canva templates are among the highest-volume digital products there are, and the advice about them stops at 'pick a niche and make a pack'. What is missing is the document you need before opening Canva: which templates, at which pixel dimensions, in which colours, with which type pairing, laid out how. Without it you design one template at a time and the pack takes a fortnight.",
+    "solves": [
+      "Starting a pack with no build sheet and finishing it in fragments",
+      "Inconsistent dimensions and type across templates in the same pack",
+      "Pricing a pack by looking at one competitor",
+      "A catalogue plan that exists only as an intention"
+    ],
+    "inside": [
+      "Pack Builder — 3,456 niche × pack-type × angle combinations, each producing a full spec",
+      "A brand kit per pack: palette, type pairing, spacing rules",
+      "Per-template build sheets with exact pixel dimensions and layout notes",
+      "Pricing bands and the six validation methods applied to your specific pack",
+      "Listing SEO structure for the marketplaces that sell these",
+      "A catalogue schedule, so pack two is planned before pack one ships"
+    ],
+    "outcomes": [
+      "A build sheet you can work straight through in Canva",
+      "A pack that looks like one product rather than twelve unrelated files",
+      "A price you can defend and a listing already structured"
+    ],
+    "usage": [
+      "Open index.html and choose niche, pack type and angle.",
+      "Read the generated brand kit and change what does not suit you — it is a starting point.",
+      "Take the per-template build sheet into Canva and work down it.",
+      "Run the validation before you build the second pack, not after.",
+      "Use the listing SEO structure when you upload."
+    ],
+    "notFor": [
+      "Anyone expecting the templates themselves — this builds the specification, not the artwork",
+      "Designers with an established system who only need a marketplace"
+    ],
+    "proof": "It generates specifications from fixed rules. Whether the niche has buyers is the validation step's job, and it needs you to look.",
+    "keywords": [
+      "canva templates",
+      "template pack",
+      "etsy digital products",
+      "design system",
+      "brand kit",
+      "template business",
+      "creative market",
+      "product spec",
+      "catalogue planning",
+      "offline tool"
+    ],
+    "shots": [
+      {
+        "label": "Pack Builder"
+      },
+      {
+        "label": "Validate"
+      },
+      {
+        "label": "Sell It"
+      }
+    ]
+  },
+  {
+    "slug": "course-creation",
+    "dir": "course-creation",
+    "name": "Course Creation Systems",
+    "category": "package",
+    "glyph": "🎓",
+    "priceUsd": 49,
+    "tagline": "The hundred hours, counted before you start",
+    "oneLiner": "Curriculum designed backwards from a measurable outcome, time-boxed lesson scripts, an honest production estimate, pricing arithmetic and a drop-off audit.",
+    "audience": [
+      "Anyone who has abandoned a course in module three",
+      "Coaches turning a programme into something self-paced",
+      "Experts who have been told 'you should make a course' and believed it"
+    ],
+    "problem": "A course is the most expensive digital product there is. A prompt pack is an afternoon; a course is a hundred hours, and almost nobody works that out before starting — which is why so many are abandoned halfway through module three, with the recording done and the workbook never written. The production estimate belongs at the beginning.",
+    "solves": [
+      "Curricula designed forwards from what you know rather than backwards from what they must be able to do",
+      "Production hours discovered at hour sixty",
+      "Lessons that sprawl because nothing time-boxed them",
+      "Pricing decided by looking at what someone else charges"
+    ],
+    "inside": [
+      "A validation gate that sits in front of the production estimate, not after it",
+      "Curriculum designed backwards from one measurable outcome",
+      "Time-boxed lesson scripts with the structure each lesson type needs",
+      "An honest production-hours estimate, including the parts people forget",
+      "Pricing and platform arithmetic on your numbers",
+      "A drop-off audit — where students leave, and what to change",
+      "A launch schedule that fits the production plan"
+    ],
+    "outcomes": [
+      "The real hour count before you commit a single weekend",
+      "A curriculum where every lesson exists to serve the stated outcome",
+      "A price and a platform chosen with the fees included"
+    ],
+    "usage": [
+      "Open index.html and state the outcome first — what a finished student can do that they could not before.",
+      "Pass the validation gate before touching curriculum. If it fails, that is the cheapest failure available.",
+      "Build the curriculum backwards from the outcome; delete anything that does not serve it.",
+      "Read the production estimate honestly and decide again with that number in view.",
+      "Set price and platform in the arithmetic tab, then follow the launch schedule."
+    ],
+    "notFor": [
+      "Anyone wanting the course content written for them",
+      "People who have already recorded everything and want a marketing plan"
+    ],
+    "proof": "The production estimate is derived from your own scope, and it is usually larger than expected. That is the tool working.",
+    "keywords": [
+      "online course creation",
+      "curriculum design",
+      "course pricing",
+      "backwards design",
+      "course production",
+      "elearning",
+      "drop off",
+      "teachable",
+      "course launch",
+      "offline tool"
+    ],
+    "shots": [
+      {
+        "label": "Curriculum"
+      },
+      {
+        "label": "Production"
+      },
+      {
+        "label": "Pricing"
+      }
+    ]
+  },
+  {
+    "slug": "ecommerce-setup",
+    "dir": "ecommerce-setup",
+    "name": "Store Setup Guides — Shopify & E-Commerce",
+    "category": "package",
+    "glyph": "🛒",
+    "priceUsd": 29,
+    "tagline": "When to leave the marketplace, and how",
+    "oneLiner": "Six weighted questions on whether you need your own store yet, a break-even calculator for platform fees, and the build in eleven ordered steps.",
+    "audience": [
+      "Sellers doing consistent numbers on Gumroad, Etsy or Selar and wondering about their own store",
+      "Anyone paying marketplace fees and unsure whether a subscription beats them",
+      "First-time store builders who want an order of operations"
+    ],
+    "problem": "Every step before this one is documented in detail — validation, listing SEO, pricing bands, launch plans — and then the last step, owning your store, is a single sentence: do it once you are earning consistently. That leaves the two questions that matter unanswered. Is it worth it at your volume, and in what order do you build it?",
+    "solves": [
+      "Opening a store too early and paying a monthly fee out of three sales",
+      "Staying on a marketplace long past the point the fees exceed a subscription",
+      "Building a store in the wrong order and redoing the checkout twice",
+      "No plan for the direct customer relationship the move was supposed to buy"
+    ],
+    "inside": [
+      "Choose — six weighted questions and a verdict on whether you need a store yet",
+      "A break-even calculator for the only fee question that matters: marketplace percentage against monthly subscription",
+      "Set Up — the build in eleven ordered steps, each with what 'done' looks like",
+      "Payments and digital delivery, including what a store does not do for you",
+      "The migration path off a marketplace without losing the reviews you earned",
+      "A launch checklist for the first week live"
+    ],
+    "outcomes": [
+      "A yes or no on the store, with the volume figure that decided it",
+      "The break-even number of sales per month, in your currency",
+      "Eleven steps in the right order, so nothing gets built twice"
+    ],
+    "usage": [
+      "Open index.html and answer the six questions honestly.",
+      "Put your real monthly sales and fee percentage into the break-even calculator.",
+      "If the verdict is 'not yet', close the tab and re-run it in a quarter. That is a result.",
+      "If it is yes, work the eleven steps in order.",
+      "Use the launch checklist before you announce anything."
+    ],
+    "notFor": [
+      "Sellers with no sales yet — the honest answer will be 'not yet' and you can have that for free",
+      "Physical-goods logistics; this is about digital delivery"
+    ],
+    "proof": "The break-even is computed from the fee percentages and volume you type. It has no live pricing for any platform — check the current plans before you commit.",
+    "keywords": [
+      "shopify setup",
+      "own store vs marketplace",
+      "platform fees",
+      "break even",
+      "digital delivery",
+      "ecommerce guide",
+      "gumroad fees",
+      "store launch",
+      "checkout setup",
+      "offline guide"
+    ],
+    "shots": [
+      {
+        "label": "Choose"
+      },
+      {
+        "label": "Set Up"
+      }
+    ]
+  }
+]

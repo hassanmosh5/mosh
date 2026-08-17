@@ -1,0 +1,350 @@
+[
+  {
+    "slug": "billionaire-structures",
+    "dir": "billionaire-structures",
+    "name": "Billionaire Structures Guide",
+    "category": "life",
+    "glyph": "🏦",
+    "priceUsd": 69,
+    "tagline": "It will tell you that you need almost none of it",
+    "oneLiner": "33 holding structures with who controls them, who pays the tax and what happens at death — each priced, and given a verdict against your own numbers.",
+    "audience": [
+      "Business owners who have been quoted for a trust and cannot tell whether it is warranted",
+      "Anyone in a country with no estate tax being sold structures designed around one",
+      "People with real assets and no plan for what happens when they die"
+    ],
+    "problem": "A list of the structures rich people use is free and useless. Every one of them has an annual bill, a failure mode, and a level of wealth below which it costs more than it will ever save — and almost nobody who sells them says so. Most of the field, moreover, is an answer to a transfer tax that half the world does not levy.",
+    "solves": [
+      "Being sold a structure designed for a tax your country does not have",
+      "No way to compare an annual cost against a benefit you cannot quantify",
+      "Four different questions — control, tax, protection, succession — treated as one",
+      "Plans with red lines in them that nobody has audited"
+    ],
+    "inside": [
+      "33 structures: who owns it, who controls it, who pays the tax, what happens at death",
+      "A price on each one — setup and annual — so the cost is visible next to the benefit",
+      "15 editable death-tax regimes, including the many that levy nothing",
+      "The freeze, liquidity, control and giving arithmetic",
+      "A verdict per structure against your own figures, most of which will be 'not you'",
+      "A red-lines audit that can fail a plan outright"
+    ],
+    "outcomes": [
+      "A shortlist that is usually much shorter than expected, with reasons",
+      "The wealth level at which each structure starts to pay for itself",
+      "A written brief you can take to an actual adviser, so the meeting starts at question four"
+    ],
+    "usage": [
+      "Open index.html and select your jurisdiction first — it rules structures out by name.",
+      "Enter your real figures. The verdicts are meaningless without them.",
+      "Read the structures it rules out and why. That is most of the value.",
+      "Run the red-lines audit on any plan you have been sold.",
+      "Take the output to a qualified adviser rather than acting on it."
+    ],
+    "notFor": [
+      "Anyone wanting legal or tax advice — this is educational and computes from your inputs",
+      "People looking for offshore secrecy; that is not what this is about"
+    ],
+    "proof": "Not legal, tax or financial advice. Regimes change and the app's 15 are editable precisely because they go stale. Anything you act on should be checked by someone qualified and accountable in your jurisdiction.",
+    "keywords": [
+      "holding company",
+      "family trust",
+      "estate planning",
+      "asset protection",
+      "succession planning",
+      "family office",
+      "wealth structures",
+      "inheritance tax",
+      "business structure",
+      "offline guide"
+    ],
+    "shots": [
+      {
+        "label": "Structures"
+      },
+      {
+        "label": "Fit"
+      },
+      {
+        "label": "Red lines"
+      }
+    ]
+  },
+  {
+    "slug": "real-estate-calculator",
+    "dir": "real-estate-calculator",
+    "name": "Real Estate Calculator",
+    "category": "life",
+    "glyph": "🏘",
+    "priceUsd": 49,
+    "tagline": "The price is not the cost",
+    "oneLiner": "What a deal really costs to buy, what a lender will really lend, what the tenant leaves after tax, and how wrong your assumptions can be before it stops working.",
+    "audience": [
+      "First-time buy-to-let buyers",
+      "Anyone underwriting on a gross yield and a mortgage payment",
+      "Investors stress-testing a deal before an offer"
+    ],
+    "problem": "Rent divided by price takes two seconds and answers nothing. It is missing the purchase tax, the void, the capital reserve, the lender's stress test, the finance-cost restriction and the day the fixed rate ends. Purchase costs alone routinely add 10–15% before the first tenant moves in, and every percentage return you quote is measured against the wrong denominator until you include them.",
+    "solves": [
+      "Yields calculated on the purchase price rather than the total capital in",
+      "Deals that pass on today's rate and fail the lender's stress test",
+      "No void or capital reserve, so the first boiler wipes out the year",
+      "Assumptions with no sensitivity analysis behind them"
+    ],
+    "inside": [
+      "Full acquisition cost: purchase tax, legal, surcharges, works and contingency",
+      "Lender arithmetic including the stress test that decides the actual loan",
+      "Post-tax cash flow with the finance-cost restriction handled properly",
+      "Void and capital reserves as line items, not optimism",
+      "Cash-on-cash, IRR and equity multiple measured against total capital in",
+      "Sensitivity: how far rent, rate and void can move before the deal breaks",
+      "The refinance cliff — what happens the day the fix ends"
+    ],
+    "outcomes": [
+      "A total capital-in figure, which is usually the surprise",
+      "The rent, rate and void levels at which the deal stops working",
+      "A number you can defend to a lender or a partner"
+    ],
+    "usage": [
+      "Open index.html and enter the purchase price plus every acquisition cost you can name.",
+      "Set the lender's stress rate, not the pay rate.",
+      "Add void and capital reserves before you look at any return figure.",
+      "Read the sensitivity table — the breaking points matter more than the headline return.",
+      "Model the refinance cliff at the fix end date before you commit."
+    ],
+    "notFor": [
+      "Anyone wanting live market or rate data — you supply the figures",
+      "Investment advice, or a substitute for your own tax position"
+    ],
+    "proof": "Tax treatment varies by country and by how you hold the property. The arithmetic is explicit and editable; the assumptions behind it are yours to check.",
+    "keywords": [
+      "buy to let calculator",
+      "property investment",
+      "rental yield",
+      "cash on cash",
+      "stress test",
+      "irr",
+      "landlord",
+      "underwriting",
+      "property deal analysis",
+      "offline"
+    ],
+    "shots": [
+      {
+        "label": "Deal"
+      },
+      {
+        "label": "Cash flow"
+      },
+      {
+        "label": "Stress"
+      }
+    ]
+  },
+  {
+    "slug": "farmers-companion",
+    "dir": "farmers-companion",
+    "name": "Farmer's Companion",
+    "category": "life",
+    "glyph": "🌱",
+    "priceUsd": 39,
+    "tagline": "It will not let you type in a yield",
+    "oneLiner": "Which crop on which plot, planted when, watered and fed with what — ranked against whatever actually runs out first: labour, water or cash.",
+    "audience": [
+      "Smallholders planning a season across several plots",
+      "Agricultural extension workers and cooperatives",
+      "Anyone whose farm plan is a spreadsheet with an optimistic yield in it"
+    ],
+    "problem": "Every farm-planning spreadsheet asks for a yield, and nobody can honestly supply one. Worse, most of them rank crops by margin per hectare — which is the right ranking only if land is what you run out of, and land almost never is. What runs out first is the week three crops all need weeding, the water in the driest month, or the cash between the fertiliser and the first sale.",
+    "solves": [
+      "Yield figures typed in as wishes and then treated as facts",
+      "Ranking by margin per hectare when land is not the binding constraint",
+      "Planting calendars that collide in the peak labour week",
+      "Cash-flow gaps between input costs and first sale"
+    ],
+    "inside": [
+      "Yield derived from six checkable things, with the whole multiplication shown",
+      "Constraint detection: peak-week labour, water in the dry month, or working capital",
+      "Ranking by margin per unit of the binding constraint, with a warning when it disagrees with per-hectare",
+      "Plot-by-plot planting calendar with the collisions flagged",
+      "Irrigation and fertiliser plans per planting",
+      "Season cash flow, including the gap before the first sale"
+    ],
+    "outcomes": [
+      "A crop plan ranked against what actually limits your farm",
+      "A yield estimate you can defend, with every factor visible",
+      "The week the labour plan breaks, before the season starts"
+    ],
+    "usage": [
+      "Open index.html and enter your plots, labour hours and water availability honestly.",
+      "Let it derive the yield. It starts at the crop ceiling and works down from what it can check.",
+      "Read which constraint it found binding — that is the whole ranking.",
+      "Fix the calendar collisions before planting, not during weeding.",
+      "Check the cash-flow gap and plan for it."
+    ],
+    "notFor": [
+      "Anyone wanting local variety data or live prices — you supply those",
+      "Large mechanised operations with farm-management software"
+    ],
+    "proof": "It derives rather than accepts yields, which makes it conservative. Local conditions, varieties and prices are yours to enter, and it cannot check any of them.",
+    "keywords": [
+      "farm planning",
+      "crop planning",
+      "smallholder",
+      "yield estimate",
+      "irrigation planning",
+      "farm cash flow",
+      "agriculture tool",
+      "crop rotation",
+      "labour planning",
+      "offline"
+    ],
+    "shots": [
+      {
+        "label": "Farm"
+      },
+      {
+        "label": "Margins"
+      },
+      {
+        "label": "Calendar"
+      }
+    ]
+  },
+  {
+    "slug": "workbook",
+    "dir": "workbook",
+    "name": "Star Explorers — Interactive Workbook for Kids",
+    "category": "life",
+    "glyph": "🐥",
+    "priceUsd": 14,
+    "tagline": "Seven activities, three levels, no ads",
+    "oneLiner": "Counting, maths, phonics, patterns, shapes, memory and a doodle pad for ages 4–8 — offline, with no ads, no accounts and no data leaving the device.",
+    "audience": [
+      "Parents of children roughly 4–8",
+      "Teachers who need something that works on a school laptop with no internet",
+      "Anyone tired of children's apps built around adverts"
+    ],
+    "problem": "Almost every learning app for small children is a funnel: adverts between activities, a subscription prompt at the third level, an account that collects data about a five-year-old. The learning content is usually fine. Everything around it is designed for someone other than the child.",
+    "solves": [
+      "Adverts and upsell prompts interrupting a four-year-old",
+      "Accounts and data collection for young children",
+      "Apps that need a connection, so the car journey is out",
+      "One difficulty level, which is either too easy or too hard within a week"
+    ],
+    "inside": [
+      "Counting Critters — counting to 5, 10 or 20",
+      "Math Lab — addition and subtraction with coloured counters as a visual aid",
+      "Word Builder — phonics and spelling with letter tiles",
+      "Pattern Party — AB, AAB/ABB and ABC sequences",
+      "Shape Safari — ten shapes drawn as crisp SVG",
+      "Memory Match — 4, 6 or 8 pairs",
+      "Doodle Pad — ten colours, three brush sizes, prompts, save as PNG",
+      "Three difficulty levels applied across every activity"
+    ],
+    "outcomes": [
+      "An activity set a child can use unsupervised without meeting an advert",
+      "Difficulty that grows with them rather than being outgrown in a week",
+      "Something that works on a plane, in a car, or in a classroom with no wifi"
+    ],
+    "usage": [
+      "Open index.html on any device — a tablet works best for small hands.",
+      "Set the difficulty on the home screen; it applies everywhere.",
+      "Let them choose the activity. The order does not matter.",
+      "Doodle Pad drawings save as PNG to the device.",
+      "Add it to the home screen so it opens like an app."
+    ],
+    "notFor": [
+      "Children older than about eight",
+      "Anyone needing progress reports or a curriculum mapping"
+    ],
+    "proof": "No adverts, no accounts, no network requests, and nothing stored anywhere but the device. You can verify all of that by reading the single file.",
+    "keywords": [
+      "kids learning app",
+      "ages 4-8",
+      "phonics",
+      "counting",
+      "shapes",
+      "offline kids app",
+      "no ads",
+      "early years",
+      "homeschool",
+      "educational game"
+    ],
+    "shots": [
+      {
+        "label": "Math Lab"
+      },
+      {
+        "label": "Shape Safari"
+      },
+      {
+        "label": "Memory Match"
+      }
+    ]
+  },
+  {
+    "slug": "examace-ghana",
+    "dir": "examace-ghana",
+    "name": "ExamAce Ghana — EdTech Site Template",
+    "category": "life",
+    "glyph": "🎓",
+    "priceUsd": 39,
+    "entry": "index.html",
+    "tagline": "Built for a phone on metered data",
+    "oneLiner": "A five-page marketing site and student-dashboard prototype for an exam-prep subscription — no images, no web fonts, no framework, nothing to block on.",
+    "audience": [
+      "Anyone launching a tutoring or exam-prep business in West Africa",
+      "Developers who need a low-bandwidth site pattern to copy",
+      "Founders pitching an edtech idea and needing something real to show"
+    ],
+    "problem": "Sites built for African mobile users are usually sites built for a laptop on fibre, shipped anyway. A typical web font pair is 60–120KB and blocks text from painting; a hero image is a megabyte; a framework is another 200KB before anything appears. On a metered 3G connection that is not slow, it is a bounce.",
+    "solves": [
+      "Marketing sites that take ten seconds to paint on a mid-range Android",
+      "Data costs that fall on the student, not the business",
+      "No credible prototype to show investors or partners",
+      "Design systems that need a build step and a package manager to change a colour"
+    ],
+    "inside": [
+      "A single-scroll homepage, three subject pages and a student dashboard prototype",
+      "Zero images — every icon is an inline SVG symbol, the hero is a CSS phone mock, the favicon is a data URI",
+      "No web fonts, no CDN, no framework, no analytics: nothing to resolve, nothing to block on",
+      "A complete design system in 42KB of CSS (8.8KB gzipped)",
+      "5.5KB of JavaScript for nav, pricing tabs, reveal animations and a demo sign-in",
+      "Pricing tabs and WhatsApp contact links wired in"
+    ],
+    "outcomes": [
+      "A site that paints immediately on a cheap phone and a slow connection",
+      "A working prototype to show before anything is built",
+      "A design system you can edit with a text editor"
+    ],
+    "usage": [
+      "Open index.html. There is no build step and no package to install.",
+      "Replace the brand, subjects and pricing with yours — everything is plain HTML.",
+      "Edit assets/examace.css for colours and type; it is one readable file.",
+      "Point the WhatsApp links at your own number.",
+      "Host it anywhere that serves static files."
+    ],
+    "notFor": [
+      "Anyone needing a working LMS — the dashboard is a prototype, not a backend",
+      "Teams wanting a React or Next.js codebase"
+    ],
+    "proof": "The dashboard is a front-end prototype with a demo sign-in. There is no server, no database and no real authentication behind it.",
+    "keywords": [
+      "edtech template",
+      "exam prep site",
+      "bece wassce",
+      "low bandwidth website",
+      "africa web design",
+      "static site",
+      "html css template",
+      "student dashboard",
+      "tutoring business",
+      "mobile first"
+    ],
+    "shots": [
+      {
+        "label": "Pricing"
+      }
+    ]
+  }
+]
