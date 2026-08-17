@@ -1758,3 +1758,83 @@ model MoshLegacyLetter {
 
   @@index([userId, createdAt])
 }
+
+// ---------- Storefront: sales and download fulfilment ----------
+//
+// Digital delivery for the standalone products sold on Gumroad, Selar,
+// Shopify, Paystack and WhatsApp Business. Gumroad and Selar deliver their own
+// files, so their webhooks exist to mirror the sale; Shopify, Paystack and
+// WhatsApp rely on the download grant below for delivery.
+
+enum SalesPlatform {
+  GUMROAD
+  SELAR
+  SHOPIFY
+  PAYSTACK
+  WHATSAPP
+  MANUAL
+}
+
+enum SaleStatus {
+  PAID
+  REFUNDED
+  CANCELLED
+}
+
+model Sale {
+  id          String        @id @default(cuid())
+  platform    SalesPlatform
+  /// The platform's own identifier: Gumroad sale_id, Shopify order id,
+  /// Paystack reference, or the mobile-money transaction id for WhatsApp.
+  reference   String
+  email       String
+  productSlug String
+  tier        String
+  /// Amount in the currency's minor unit (pesewas, kobo, cents).
+  amountMinor Int
+  currency    String
+  status      SaleStatus    @default(PAID)
+  /// The verified webhook body, kept for reconciliation and disputes.
+  payload     Json?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  grants DownloadGrant[]
+
+  // One sale per platform reference: replayed webhooks must not sell twice.
+  @@unique([platform, reference])
+  @@index([email])
+  @@index([productSlug, createdAt])
+}
+
+model DownloadGrant {
+  id            String    @id @default(cuid())
+  saleId        String
+  sale          Sale      @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  productSlug   String
+  tier          String
+  /// SHA-256 of the download token. The token itself is never stored, so a
+  /// database leak cannot be turned into working download links.
+  tokenHash     String    @unique
+  maxDownloads  Int
+  downloadCount Int       @default(0)
+  expiresAt     DateTime
+  revokedAt     DateTime?
+  createdAt     DateTime  @default(now())
+
+  downloads DownloadEvent[]
+
+  @@index([saleId])
+  @@index([expiresAt])
+}
+
+model DownloadEvent {
+  id        String        @id @default(cuid())
+  grantId   String
+  grant     DownloadGrant @relation(fields: [grantId], references: [id], onDelete: Cascade)
+  ip        String?
+  userAgent String?       @db.Text
+  createdAt DateTime      @default(now())
+
+  @@index([grantId, createdAt])
+}

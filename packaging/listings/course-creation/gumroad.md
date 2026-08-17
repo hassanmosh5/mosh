@@ -1,0 +1,167 @@
+# Course Creation Systems — Gumroad listing
+
+> Generated from `packaging/products/02-package.json` by `npm run pkg:listings`.
+> Edit the catalogue, not this file — it is overwritten on every run.
+
+Paste each block into the matching field. Character counts are shown so nothing
+arrives truncated.
+
+Images for this product: `dist/mockups/course-creation/` — cover, square, story and gallery shots.
+Package files: `dist/packages/course-creation/` — one ZIP per licence tier.
+Support address on all listings: hassanmosh5@gmail.com
+
+---
+
+## Product setup
+
+| Field | Value |
+|---|---|
+| Type | Digital product |
+| URL / permalink | `course-creation` → https://REPLACE-ME.gumroad.com/l/course-creation |
+| Category | Package & sell |
+| Call to action | I want this! |
+
+**Name** — 23/60 characters
+
+```
+Course Creation Systems
+```
+
+**Summary (shows under the title)** — 155/255 characters
+
+```
+Curriculum designed backwards from a measurable outcome, time-boxed lesson scripts, an honest production estimate, pricing arithmetic and a drop-off audit.
+```
+
+**Tags** — 10/12
+
+```
+online course creation, curriculum design, course pricing, backwards design, course production, elearning, drop off, teachable, course launch, offline tool
+```
+
+## Versions — one product, three prices
+
+Use Gumroad **Versions**, not three separate products. Three products split your
+reviews and your ranking three ways.
+
+| Version | Price | Attach this file |
+|---|---|---|
+| Solo licence | $49 | `course-creation-solo.zip` |
+| Studio licence ← set as default | $123 | `course-creation-studio.zip` |
+| Agency licence | $245 | `course-creation-agency.zip` |
+
+Gumroad attaches different files to different versions. Use that rather than
+maintaining three products by hand.
+
+**Purchasing power parity:** turn it on. This is built for buyers on metered
+data; pricing in US dollars without PPP prices most of them out of it.
+
+## Description — paste into the description field
+
+**Description** — 3063/12000 characters
+
+```
+Curriculum designed backwards from a measurable outcome, time-boxed lesson scripts, an honest production estimate, pricing arithmetic and a drop-off audit.
+
+THE PROBLEM
+
+A course is the most expensive digital product there is. A prompt pack is an afternoon; a course is a hundred hours, and almost nobody works that out before starting — which is why so many are abandoned halfway through module three, with the recording done and the workbook never written. The production estimate belongs at the beginning.
+
+It deals specifically with:
+
+• Curricula designed forwards from what you know rather than backwards from what they must be able to do
+• Production hours discovered at hour sixty
+• Lessons that sprawl because nothing time-boxed them
+• Pricing decided by looking at what someone else charges
+
+WHO IT IS FOR
+
+• Anyone who has abandoned a course in module three
+• Coaches turning a programme into something self-paced
+• Experts who have been told 'you should make a course' and believed it
+
+WHAT YOU GET
+
+• A validation gate that sits in front of the production estimate, not after it
+• Curriculum designed backwards from one measurable outcome
+• Time-boxed lesson scripts with the structure each lesson type needs
+• An honest production-hours estimate, including the parts people forget
+• Pricing and platform arithmetic on your numbers
+• A drop-off audit — where students leave, and what to change
+• A launch schedule that fits the production plan
+
+Delivered as a ZIP: the app itself, a START-HERE page, full usage instructions,
+your licence, and a checksum list of every file so you can verify what arrived.
+
+Free updates to the version you bought for 12 months. You keep the files forever either way.
+
+HOW YOU USE IT
+
+1. Open index.html and state the outcome first — what a finished student can do that they could not before.
+2. Pass the validation gate before touching curriculum. If it fails, that is the cheapest failure available.
+3. Build the curriculum backwards from the outcome; delete anything that does not serve it.
+4. Read the production estimate honestly and decide again with that number in view.
+5. Set price and platform in the arithmetic tab, then follow the launch schedule.
+
+WHAT SHOULD BE TRUE WHEN YOU FINISH
+
+• The real hour count before you commit a single weekend
+• A curriculum where every lesson exists to serve the stated outcome
+• A price and a platform chosen with the fees included
+
+WHAT IT IS NOT
+
+• Anyone wanting the course content written for them
+• People who have already recorded everything and want a marketing plan
+
+The production estimate is derived from your own scope, and it is usually larger than expected. That is the tool working.
+
+These are decision and drafting tools, not professional advice. They compute from figures you supply and cannot verify any of them. Nothing here is financial, legal, tax, medical or investment advice.
+
+14-day refund, no questions asked. Reply to your receipt and say the word.
+
+Support: hassanmosh5@gmail.com — One reply within two working days, from the person who built it.
+```
+
+
+## Cover and thumbnail
+
+Gumroad wants a 1280×720 cover and a 600×600 thumbnail.
+
+- Cover: `dist/mockups/course-creation/cover.png` (already 1280×720)
+- Thumbnail: `dist/mockups/course-creation/square.png` — crop to 600×600
+- Extra gallery images: `dist/mockups/course-creation/gallery-*.png`
+
+These are screenshots of the product running, not stock photography. That is
+deliberate — the cover shows what arrives.
+
+## Receipt / thank-you note
+
+Paste into **Content → Receipt note**:
+
+```
+1. Open index.html and state the outcome first — what a finished student can do that they could not before.
+2. Pass the validation gate before touching curriculum. If it fails, that is the cheapest failure available.
+3. Build the curriculum backwards from the outcome; delete anything that does not serve it.
+```
+
+The full receipt text is in `dist/packages/course-creation/receipt-<tier>.txt`.
+
+## Delivery
+
+Gumroad hosts the file and emails the link itself — nothing else to configure.
+
+If you also want the sale recorded in your own database, point
+**Settings → Advanced → Ping** at:
+
+```
+https://REPLACE-ME.example.com/api/webhooks/gumroad?secret=YOUR_GUMROAD_PING_SECRET
+```
+
+Gumroad does not sign its pings, so the URL secret and the seller-ID check in
+that route are what authenticate it. See `docs/SELLING.md`.
+
+---
+14-day refund, no questions asked. Reply to your receipt and say the word.
+
+Support: hassanmosh5@gmail.com — One reply within two working days, from the person who built it.

@@ -1,0 +1,458 @@
+{
+  "LAUNCHKIT-SOLO": {
+    "slug": "launch-kit",
+    "tier": "solo"
+  },
+  "LAUNCHKIT-STUDIO": {
+    "slug": "launch-kit",
+    "tier": "studio"
+  },
+  "LAUNCHKIT-AGENCY": {
+    "slug": "launch-kit",
+    "tier": "agency"
+  },
+  "DIGITALPRODUCTS-SOLO": {
+    "slug": "digital-products",
+    "tier": "solo"
+  },
+  "DIGITALPRODUCTS-STUDIO": {
+    "slug": "digital-products",
+    "tier": "studio"
+  },
+  "DIGITALPRODUCTS-AGENCY": {
+    "slug": "digital-products",
+    "tier": "agency"
+  },
+  "VENTURESTUDIO-SOLO": {
+    "slug": "venture-studio",
+    "tier": "solo"
+  },
+  "VENTURESTUDIO-STUDIO": {
+    "slug": "venture-studio",
+    "tier": "studio"
+  },
+  "VENTURESTUDIO-AGENCY": {
+    "slug": "venture-studio",
+    "tier": "agency"
+  },
+  "PRODUCTFACTORY-SOLO": {
+    "slug": "product-factory",
+    "tier": "solo"
+  },
+  "PRODUCTFACTORY-STUDIO": {
+    "slug": "product-factory",
+    "tier": "studio"
+  },
+  "PRODUCTFACTORY-AGENCY": {
+    "slug": "product-factory",
+    "tier": "agency"
+  },
+  "BOARDOFDIRECTORS-SOLO": {
+    "slug": "board-of-directors",
+    "tier": "solo"
+  },
+  "BOARDOFDIRECTORS-STUDIO": {
+    "slug": "board-of-directors",
+    "tier": "studio"
+  },
+  "BOARDOFDIRECTORS-AGENCY": {
+    "slug": "board-of-directors",
+    "tier": "agency"
+  },
+  "EBOOK-SOLO": {
+    "slug": "ebook",
+    "tier": "solo"
+  },
+  "EBOOK-STUDIO": {
+    "slug": "ebook",
+    "tier": "studio"
+  },
+  "EBOOK-AGENCY": {
+    "slug": "ebook",
+    "tier": "agency"
+  },
+  "GPT-SOLO": {
+    "slug": "gpt",
+    "tier": "solo"
+  },
+  "GPT-STUDIO": {
+    "slug": "gpt",
+    "tier": "studio"
+  },
+  "GPT-AGENCY": {
+    "slug": "gpt",
+    "tier": "agency"
+  },
+  "PACKAGINGAGENT-SOLO": {
+    "slug": "packaging-agent",
+    "tier": "solo"
+  },
+  "PACKAGINGAGENT-STUDIO": {
+    "slug": "packaging-agent",
+    "tier": "studio"
+  },
+  "PACKAGINGAGENT-AGENCY": {
+    "slug": "packaging-agent",
+    "tier": "agency"
+  },
+  "PROMPTPACKS-SOLO": {
+    "slug": "prompt-packs",
+    "tier": "solo"
+  },
+  "PROMPTPACKS-STUDIO": {
+    "slug": "prompt-packs",
+    "tier": "studio"
+  },
+  "PROMPTPACKS-AGENCY": {
+    "slug": "prompt-packs",
+    "tier": "agency"
+  },
+  "PROMPTGENERATOR-SOLO": {
+    "slug": "prompt-generator",
+    "tier": "solo"
+  },
+  "PROMPTGENERATOR-STUDIO": {
+    "slug": "prompt-generator",
+    "tier": "studio"
+  },
+  "PROMPTGENERATOR-AGENCY": {
+    "slug": "prompt-generator",
+    "tier": "agency"
+  },
+  "CANVATEMPLATES-SOLO": {
+    "slug": "canva-templates",
+    "tier": "solo"
+  },
+  "CANVATEMPLATES-STUDIO": {
+    "slug": "canva-templates",
+    "tier": "studio"
+  },
+  "CANVATEMPLATES-AGENCY": {
+    "slug": "canva-templates",
+    "tier": "agency"
+  },
+  "COURSECREATION-SOLO": {
+    "slug": "course-creation",
+    "tier": "solo"
+  },
+  "COURSECREATION-STUDIO": {
+    "slug": "course-creation",
+    "tier": "studio"
+  },
+  "COURSECREATION-AGENCY": {
+    "slug": "course-creation",
+    "tier": "agency"
+  },
+  "ECOMMERCESETUP-SOLO": {
+    "slug": "ecommerce-setup",
+    "tier": "solo"
+  },
+  "ECOMMERCESETUP-STUDIO": {
+    "slug": "ecommerce-setup",
+    "tier": "studio"
+  },
+  "ECOMMERCESETUP-AGENCY": {
+    "slug": "ecommerce-setup",
+    "tier": "agency"
+  },
+  "AGENCYSOPS-SOLO": {
+    "slug": "agency-sops",
+    "tier": "solo"
+  },
+  "AGENCYSOPS-STUDIO": {
+    "slug": "agency-sops",
+    "tier": "studio"
+  },
+  "AGENCYSOPS-AGENCY": {
+    "slug": "agency-sops",
+    "tier": "agency"
+  },
+  "CLIENTCONTRACTS-SOLO": {
+    "slug": "client-contracts",
+    "tier": "solo"
+  },
+  "CLIENTCONTRACTS-STUDIO": {
+    "slug": "client-contracts",
+    "tier": "studio"
+  },
+  "CLIENTCONTRACTS-AGENCY": {
+    "slug": "client-contracts",
+    "tier": "agency"
+  },
+  "INVOICEAUTOMATION-SOLO": {
+    "slug": "invoice-automation",
+    "tier": "solo"
+  },
+  "INVOICEAUTOMATION-STUDIO": {
+    "slug": "invoice-automation",
+    "tier": "studio"
+  },
+  "INVOICEAUTOMATION-AGENCY": {
+    "slug": "invoice-automation",
+    "tier": "agency"
+  },
+  "MARKETINGTOOLKIT-SOLO": {
+    "slug": "marketing-toolkit",
+    "tier": "solo"
+  },
+  "MARKETINGTOOLKIT-STUDIO": {
+    "slug": "marketing-toolkit",
+    "tier": "studio"
+  },
+  "MARKETINGTOOLKIT-AGENCY": {
+    "slug": "marketing-toolkit",
+    "tier": "agency"
+  },
+  "AUTOMATIONKITS-SOLO": {
+    "slug": "automation-kits",
+    "tier": "solo"
+  },
+  "AUTOMATIONKITS-STUDIO": {
+    "slug": "automation-kits",
+    "tier": "studio"
+  },
+  "AUTOMATIONKITS-AGENCY": {
+    "slug": "automation-kits",
+    "tier": "agency"
+  },
+  "BUSINESSDASHBOARDS-SOLO": {
+    "slug": "business-dashboards",
+    "tier": "solo"
+  },
+  "BUSINESSDASHBOARDS-STUDIO": {
+    "slug": "business-dashboards",
+    "tier": "studio"
+  },
+  "BUSINESSDASHBOARDS-AGENCY": {
+    "slug": "business-dashboards",
+    "tier": "agency"
+  },
+  "METAADS-SOLO": {
+    "slug": "meta-ads",
+    "tier": "solo"
+  },
+  "METAADS-STUDIO": {
+    "slug": "meta-ads",
+    "tier": "studio"
+  },
+  "METAADS-AGENCY": {
+    "slug": "meta-ads",
+    "tier": "agency"
+  },
+  "SEOCONTENT-SOLO": {
+    "slug": "seo-content",
+    "tier": "solo"
+  },
+  "SEOCONTENT-STUDIO": {
+    "slug": "seo-content",
+    "tier": "studio"
+  },
+  "SEOCONTENT-AGENCY": {
+    "slug": "seo-content",
+    "tier": "agency"
+  },
+  "EMAILMARKETING-SOLO": {
+    "slug": "email-marketing",
+    "tier": "solo"
+  },
+  "EMAILMARKETING-STUDIO": {
+    "slug": "email-marketing",
+    "tier": "studio"
+  },
+  "EMAILMARKETING-AGENCY": {
+    "slug": "email-marketing",
+    "tier": "agency"
+  },
+  "SOCIALAUTOMATION-SOLO": {
+    "slug": "social-automation",
+    "tier": "solo"
+  },
+  "SOCIALAUTOMATION-STUDIO": {
+    "slug": "social-automation",
+    "tier": "studio"
+  },
+  "SOCIALAUTOMATION-AGENCY": {
+    "slug": "social-automation",
+    "tier": "agency"
+  },
+  "YOUTUBETOOLKIT-SOLO": {
+    "slug": "youtube-toolkit",
+    "tier": "solo"
+  },
+  "YOUTUBETOOLKIT-STUDIO": {
+    "slug": "youtube-toolkit",
+    "tier": "studio"
+  },
+  "YOUTUBETOOLKIT-AGENCY": {
+    "slug": "youtube-toolkit",
+    "tier": "agency"
+  },
+  "WEBSITEPROMPTS-SOLO": {
+    "slug": "website-prompts",
+    "tier": "solo"
+  },
+  "WEBSITEPROMPTS-STUDIO": {
+    "slug": "website-prompts",
+    "tier": "studio"
+  },
+  "WEBSITEPROMPTS-AGENCY": {
+    "slug": "website-prompts",
+    "tier": "agency"
+  },
+  "LOCALBUSINESSTEMPLATES-SOLO": {
+    "slug": "local-business-templates",
+    "tier": "solo"
+  },
+  "LOCALBUSINESSTEMPLATES-STUDIO": {
+    "slug": "local-business-templates",
+    "tier": "studio"
+  },
+  "LOCALBUSINESSTEMPLATES-AGENCY": {
+    "slug": "local-business-templates",
+    "tier": "agency"
+  },
+  "SUPPORTAGENT-SOLO": {
+    "slug": "support-agent",
+    "tier": "solo"
+  },
+  "SUPPORTAGENT-STUDIO": {
+    "slug": "support-agent",
+    "tier": "studio"
+  },
+  "SUPPORTAGENT-AGENCY": {
+    "slug": "support-agent",
+    "tier": "agency"
+  },
+  "APPOINTMENTBOOKING-SOLO": {
+    "slug": "appointment-booking",
+    "tier": "solo"
+  },
+  "APPOINTMENTBOOKING-STUDIO": {
+    "slug": "appointment-booking",
+    "tier": "studio"
+  },
+  "APPOINTMENTBOOKING-AGENCY": {
+    "slug": "appointment-booking",
+    "tier": "agency"
+  },
+  "WHATSAPPSALES-SOLO": {
+    "slug": "whatsapp-sales",
+    "tier": "solo"
+  },
+  "WHATSAPPSALES-STUDIO": {
+    "slug": "whatsapp-sales",
+    "tier": "studio"
+  },
+  "WHATSAPPSALES-AGENCY": {
+    "slug": "whatsapp-sales",
+    "tier": "agency"
+  },
+  "REALESTATEAGENT-SOLO": {
+    "slug": "real-estate-agent",
+    "tier": "solo"
+  },
+  "REALESTATEAGENT-STUDIO": {
+    "slug": "real-estate-agent",
+    "tier": "studio"
+  },
+  "REALESTATEAGENT-AGENCY": {
+    "slug": "real-estate-agent",
+    "tier": "agency"
+  },
+  "WEBSITECRM-SOLO": {
+    "slug": "website-crm",
+    "tier": "solo"
+  },
+  "WEBSITECRM-STUDIO": {
+    "slug": "website-crm",
+    "tier": "studio"
+  },
+  "WEBSITECRM-AGENCY": {
+    "slug": "website-crm",
+    "tier": "agency"
+  },
+  "ORDERAUTOMATION-SOLO": {
+    "slug": "order-automation",
+    "tier": "solo"
+  },
+  "ORDERAUTOMATION-STUDIO": {
+    "slug": "order-automation",
+    "tier": "studio"
+  },
+  "ORDERAUTOMATION-AGENCY": {
+    "slug": "order-automation",
+    "tier": "agency"
+  },
+  "COMMERCIALKITS-SOLO": {
+    "slug": "commercial-kits",
+    "tier": "solo"
+  },
+  "COMMERCIALKITS-STUDIO": {
+    "slug": "commercial-kits",
+    "tier": "studio"
+  },
+  "COMMERCIALKITS-AGENCY": {
+    "slug": "commercial-kits",
+    "tier": "agency"
+  },
+  "BILLIONAIRESTRUCTURES-SOLO": {
+    "slug": "billionaire-structures",
+    "tier": "solo"
+  },
+  "BILLIONAIRESTRUCTURES-STUDIO": {
+    "slug": "billionaire-structures",
+    "tier": "studio"
+  },
+  "BILLIONAIRESTRUCTURES-AGENCY": {
+    "slug": "billionaire-structures",
+    "tier": "agency"
+  },
+  "REALESTATECALCULATOR-SOLO": {
+    "slug": "real-estate-calculator",
+    "tier": "solo"
+  },
+  "REALESTATECALCULATOR-STUDIO": {
+    "slug": "real-estate-calculator",
+    "tier": "studio"
+  },
+  "REALESTATECALCULATOR-AGENCY": {
+    "slug": "real-estate-calculator",
+    "tier": "agency"
+  },
+  "FARMERSCOMPANION-SOLO": {
+    "slug": "farmers-companion",
+    "tier": "solo"
+  },
+  "FARMERSCOMPANION-STUDIO": {
+    "slug": "farmers-companion",
+    "tier": "studio"
+  },
+  "FARMERSCOMPANION-AGENCY": {
+    "slug": "farmers-companion",
+    "tier": "agency"
+  },
+  "WORKBOOK-SOLO": {
+    "slug": "workbook",
+    "tier": "solo"
+  },
+  "WORKBOOK-STUDIO": {
+    "slug": "workbook",
+    "tier": "studio"
+  },
+  "WORKBOOK-AGENCY": {
+    "slug": "workbook",
+    "tier": "agency"
+  },
+  "EXAMACEGHANA-SOLO": {
+    "slug": "examace-ghana",
+    "tier": "solo"
+  },
+  "EXAMACEGHANA-STUDIO": {
+    "slug": "examace-ghana",
+    "tier": "studio"
+  },
+  "EXAMACEGHANA-AGENCY": {
+    "slug": "examace-ghana",
+    "tier": "agency"
+  }
+}

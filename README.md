@@ -129,6 +129,7 @@ but not against the real model. Confirm it with the post-deploy checklist in
 | [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md) | Every environment variable |
 | [docs/TESTING.md](docs/TESTING.md) | Suite layout, what is and is not covered |
 | [docs/USER_GUIDE.md](docs/USER_GUIDE.md) | The daily loop, every section, how to read the numbers |
+| [docs/SELLING.md](docs/SELLING.md) | Packaging and selling the standalone products on five platforms, and delivering the download after payment |
 
 ## Next recommended features
 
@@ -261,6 +262,46 @@ neither — open the HTML file and they run, offline, with everything stored loc
 | [`digital-products/`](digital-products/) | **Chapter 7 as a working tool** — eight formats compared on how much AI really carries, the 3 criteria scored with hard floors, the 30-Minute Validation Method on a clock, the 8-step build workflow with prompts written from your answers, and the fee/refund/traffic arithmetic. Both gates can return a kill. |
 | [`workbook/`](workbook/) | Star Explorers — an interactive workbook for children aged 4–8. |
 | [`gpt/`](gpt/) | Digital Product Studio — a ChatGPT custom GPT built on Chapter 7 (instructions, config and knowledge file). |
+
+## Selling them: the storefront layer
+
+All 38 standalone products are packaged for sale on **Gumroad, Selar, Shopify,
+Paystack Storefront and WhatsApp Business**, and deliver themselves once a
+payment is confirmed.
+
+```bash
+npm run pkg:all      # build packages → store imagery → listings → verify
+```
+
+| Command | What it produces |
+|---|---|
+| `npm run pkg:build` | `dist/packages/` — a customer-ready ZIP per product × licence, plus 5 bundles. Each contains the app, a START-HERE page, full usage instructions, the licence for that tier, and a SHA-256 of every file. Builds are reproducible. |
+| `npm run pkg:mockups` | `dist/mockups/` — covers, square thumbnails, story images and gallery shots, composed from **real screenshots** taken by driving headless Chromium over each product |
+| `npm run pkg:listings` | [`packaging/listings/`](packaging/listings/) — 190 paste-ready listings with every platform's character limit enforced, plus a Shopify import CSV, a Meta/WhatsApp catalogue feed and a price list |
+| `npm run pkg:verify` | Refuses to call the catalogue sellable while a placeholder, a missing package, a checksum mismatch or a stale listing remains |
+| `npm run pkg:grant` | Issues a download link for a payment confirmed by hand — the WhatsApp Business path |
+
+[`packaging/catalog.json`](packaging/catalog.json) and
+[`packaging/products/*.json`](packaging/products/) are the single source of
+truth: prices, three licence tiers, refund and download policy, and the
+commercial copy for every product. Change a price once and the Gumroad versions,
+the Selar cedi price, the Shopify variants, the Paystack storefront and the
+WhatsApp sales script all follow.
+
+**Delivery after payment.** Gumroad and Selar host their own files; their
+webhooks here only mirror the sale into your records. Shopify, Paystack and
+WhatsApp are delivered by this app: a verified webhook (or a confirmed
+mobile-money payment) issues a random 32-byte download token, stored only as a
+SHA-256, expiring after 30 days or 8 downloads and revocable on refund. Replayed
+webhooks cannot sell twice, and concurrent clicks cannot exceed the limit — both
+are covered by tests against a real database.
+
+Public pages: [`/products`](src/app/products) lists the catalogue,
+`/products/[slug]` is the product page each listing links back to, and
+`/d/[token]` is what a buyer lands on after paying.
+
+Full runbook, including every webhook's setup and its honest limits:
+**[docs/SELLING.md](docs/SELLING.md)**.
 
 ## Stack
 

@@ -1,0 +1,115 @@
+slug,product,category,tier,seats,client_work,usd,ghs,ngn
+launch-kit,AI Income Launch Kit,Start & decide,Solo licence,1,no,29,370,45000
+launch-kit,AI Income Launch Kit,Start & decide,Studio licence,3,yes,73,920,113500
+launch-kit,AI Income Launch Kit,Start & decide,Agency licence,10,yes,145,1820,225000
+digital-products,Digital Products Maker,Start & decide,Solo licence,1,no,39,490,60500
+digital-products,Digital Products Maker,Start & decide,Studio licence,3,yes,98,1230,152000
+digital-products,Digital Products Maker,Start & decide,Agency licence,10,yes,195,2440,302500
+venture-studio,CLEAR AI Digital Product Venture Studio,Start & decide,Solo licence,1,no,79,990,122500
+venture-studio,CLEAR AI Digital Product Venture Studio,Start & decide,Studio licence,3,yes,198,2480,307000
+venture-studio,CLEAR AI Digital Product Venture Studio,Start & decide,Agency licence,10,yes,395,4940,612500
+product-factory,MOSH Product Factory,Start & decide,Solo licence,1,no,59,740,91500
+product-factory,MOSH Product Factory,Start & decide,Studio licence,3,yes,148,1850,229500
+product-factory,MOSH Product Factory,Start & decide,Agency licence,10,yes,295,3690,457500
+board-of-directors,CLEAR AI Board of Directors,Start & decide,Solo licence,1,no,49,620,76000
+board-of-directors,CLEAR AI Board of Directors,Start & decide,Studio licence,3,yes,123,1540,191000
+board-of-directors,CLEAR AI Board of Directors,Start & decide,Agency licence,10,yes,245,3070,380000
+ebook,The AI Income Blueprint — Interactive Edition,Start & decide,Solo licence,1,no,19,240,29500
+ebook,The AI Income Blueprint — Interactive Edition,Start & decide,Studio licence,3,yes,48,600,74500
+ebook,The AI Income Blueprint — Interactive Edition,Start & decide,Agency licence,10,yes,95,1190,147500
+gpt,Digital Product Studio — custom GPT,Start & decide,Solo licence,1,no,24,300,37500
+gpt,Digital Product Studio — custom GPT,Start & decide,Studio licence,3,yes,60,750,93000
+gpt,Digital Product Studio — custom GPT,Start & decide,Agency licence,10,yes,120,1500,186000
+packaging-agent,MOSH Packaging Agent,Package & sell,Solo licence,1,no,69,870,107000
+packaging-agent,MOSH Packaging Agent,Package & sell,Studio licence,3,yes,173,2170,268500
+packaging-agent,MOSH Packaging Agent,Package & sell,Agency licence,10,yes,345,4320,535000
+prompt-packs,AI Prompt Packs for Businesses & Creators,Package & sell,Solo licence,1,no,39,490,60500
+prompt-packs,AI Prompt Packs for Businesses & Creators,Package & sell,Studio licence,3,yes,98,1230,152000
+prompt-packs,AI Prompt Packs for Businesses & Creators,Package & sell,Agency licence,10,yes,195,2440,302500
+prompt-generator,The Wealth Ideas Prompt Generator,Package & sell,Solo licence,1,no,29,370,45000
+prompt-generator,The Wealth Ideas Prompt Generator,Package & sell,Studio licence,3,yes,73,920,113500
+prompt-generator,The Wealth Ideas Prompt Generator,Package & sell,Agency licence,10,yes,145,1820,225000
+canva-templates,The Canva Template Library Builder,Package & sell,Solo licence,1,no,39,490,60500
+canva-templates,The Canva Template Library Builder,Package & sell,Studio licence,3,yes,98,1230,152000
+canva-templates,The Canva Template Library Builder,Package & sell,Agency licence,10,yes,195,2440,302500
+course-creation,Course Creation Systems,Package & sell,Solo licence,1,no,49,620,76000
+course-creation,Course Creation Systems,Package & sell,Studio licence,3,yes,123,1540,191000
+course-creation,Course Creation Systems,Package & sell,Agency licence,10,yes,245,3070,380000
+ecommerce-setup,Store Setup Guides — Shopify & E-Commerce,Package & sell,Solo licence,1,no,29,370,45000
+ecommerce-setup,Store Setup Guides — Shopify & E-Commerce,Package & sell,Studio licence,3,yes,73,920,113500
+ecommerce-setup,Store Setup Guides — Shopify & E-Commerce,Package & sell,Agency licence,10,yes,145,1820,225000
+agency-sops,The Agency Operations System,Agency & client work,Solo licence,1,no,39,490,60500
+agency-sops,The Agency Operations System,Agency & client work,Studio licence,3,yes,98,1230,152000
+agency-sops,The Agency Operations System,Agency & client work,Agency licence,10,yes,195,2440,302500
+client-contracts,The Proposal & Contract Kit,Agency & client work,Solo licence,1,no,49,620,76000
+client-contracts,The Proposal & Contract Kit,Agency & client work,Studio licence,3,yes,123,1540,191000
+client-contracts,The Proposal & Contract Kit,Agency & client work,Agency licence,10,yes,245,3070,380000
+invoice-automation,Invoice & Payment Automation,Agency & client work,Solo licence,1,no,39,490,60500
+invoice-automation,Invoice & Payment Automation,Agency & client work,Studio licence,3,yes,98,1230,152000
+invoice-automation,Invoice & Payment Automation,Agency & client work,Agency licence,10,yes,195,2440,302500
+marketing-toolkit,The Digital Marketing Toolkits,Agency & client work,Solo licence,1,no,49,620,76000
+marketing-toolkit,The Digital Marketing Toolkits,Agency & client work,Studio licence,3,yes,123,1540,191000
+marketing-toolkit,The Digital Marketing Toolkits,Agency & client work,Agency licence,10,yes,245,3070,380000
+automation-kits,AI Automation Kits,Agency & client work,Solo licence,1,no,59,740,91500
+automation-kits,AI Automation Kits,Agency & client work,Studio licence,3,yes,148,1850,229500
+automation-kits,AI Automation Kits,Agency & client work,Agency licence,10,yes,295,3690,457500
+business-dashboards,Business Dashboard Templates,Agency & client work,Solo licence,1,no,29,370,45000
+business-dashboards,Business Dashboard Templates,Agency & client work,Studio licence,3,yes,73,920,113500
+business-dashboards,Business Dashboard Templates,Agency & client work,Agency licence,10,yes,145,1820,225000
+meta-ads,Meta Ads & Pixel Blueprints,Marketing & growth,Solo licence,1,no,49,620,76000
+meta-ads,Meta Ads & Pixel Blueprints,Marketing & growth,Studio licence,3,yes,123,1540,191000
+meta-ads,Meta Ads & Pixel Blueprints,Marketing & growth,Agency licence,10,yes,245,3070,380000
+seo-content,SEO & Content Marketing Systems,Marketing & growth,Solo licence,1,no,49,620,76000
+seo-content,SEO & Content Marketing Systems,Marketing & growth,Studio licence,3,yes,123,1540,191000
+seo-content,SEO & Content Marketing Systems,Marketing & growth,Agency licence,10,yes,245,3070,380000
+email-marketing,Email Marketing Automation,Marketing & growth,Solo licence,1,no,39,490,60500
+email-marketing,Email Marketing Automation,Marketing & growth,Studio licence,3,yes,98,1230,152000
+email-marketing,Email Marketing Automation,Marketing & growth,Agency licence,10,yes,195,2440,302500
+social-automation,Social Media Content Automation,Marketing & growth,Solo licence,1,no,39,490,60500
+social-automation,Social Media Content Automation,Marketing & growth,Studio licence,3,yes,98,1230,152000
+social-automation,Social Media Content Automation,Marketing & growth,Agency licence,10,yes,195,2440,302500
+youtube-toolkit,The Faceless YouTube Toolkits,Marketing & growth,Solo licence,1,no,39,490,60500
+youtube-toolkit,The Faceless YouTube Toolkits,Marketing & growth,Studio licence,3,yes,98,1230,152000
+youtube-toolkit,The Faceless YouTube Toolkits,Marketing & growth,Agency licence,10,yes,195,2440,302500
+website-prompts,AI Website Prompt Kit,Marketing & growth,Solo licence,1,no,29,370,45000
+website-prompts,AI Website Prompt Kit,Marketing & growth,Studio licence,3,yes,73,920,113500
+website-prompts,AI Website Prompt Kit,Marketing & growth,Agency licence,10,yes,145,1820,225000
+local-business-templates,Local Business Website Studio,Marketing & growth,Solo licence,1,no,49,620,76000
+local-business-templates,Local Business Website Studio,Marketing & growth,Studio licence,3,yes,123,1540,191000
+local-business-templates,Local Business Website Studio,Marketing & growth,Agency licence,10,yes,245,3070,380000
+support-agent,AI Customer Support Agent,AI agents & automation,Solo licence,1,no,49,620,76000
+support-agent,AI Customer Support Agent,AI agents & automation,Studio licence,3,yes,123,1540,191000
+support-agent,AI Customer Support Agent,AI agents & automation,Agency licence,10,yes,245,3070,380000
+appointment-booking,AI Appointment Booking System,AI agents & automation,Solo licence,1,no,49,620,76000
+appointment-booking,AI Appointment Booking System,AI agents & automation,Studio licence,3,yes,123,1540,191000
+appointment-booking,AI Appointment Booking System,AI agents & automation,Agency licence,10,yes,245,3070,380000
+whatsapp-sales,WhatsApp AI Sales Assistant,AI agents & automation,Solo licence,1,no,49,620,76000
+whatsapp-sales,WhatsApp AI Sales Assistant,AI agents & automation,Studio licence,3,yes,123,1540,191000
+whatsapp-sales,WhatsApp AI Sales Assistant,AI agents & automation,Agency licence,10,yes,245,3070,380000
+real-estate-agent,AI Real Estate Agent,AI agents & automation,Solo licence,1,no,59,740,91500
+real-estate-agent,AI Real Estate Agent,AI agents & automation,Studio licence,3,yes,148,1850,229500
+real-estate-agent,AI Real Estate Agent,AI agents & automation,Agency licence,10,yes,295,3690,457500
+website-crm,AI Website + CRM Automation,AI agents & automation,Solo licence,1,no,59,740,91500
+website-crm,AI Website + CRM Automation,AI agents & automation,Studio licence,3,yes,148,1850,229500
+website-crm,AI Website + CRM Automation,AI agents & automation,Agency licence,10,yes,295,3690,457500
+order-automation,E-Commerce Order Automation,AI agents & automation,Solo licence,1,no,49,620,76000
+order-automation,E-Commerce Order Automation,AI agents & automation,Studio licence,3,yes,123,1540,191000
+order-automation,E-Commerce Order Automation,AI agents & automation,Agency licence,10,yes,245,3070,380000
+commercial-kits,AI Commercial Production Kits,AI agents & automation,Solo licence,1,no,49,620,76000
+commercial-kits,AI Commercial Production Kits,AI agents & automation,Studio licence,3,yes,123,1540,191000
+commercial-kits,AI Commercial Production Kits,AI agents & automation,Agency licence,10,yes,245,3070,380000
+billionaire-structures,Billionaire Structures Guide,"Money, property & life",Solo licence,1,no,69,870,107000
+billionaire-structures,Billionaire Structures Guide,"Money, property & life",Studio licence,3,yes,173,2170,268500
+billionaire-structures,Billionaire Structures Guide,"Money, property & life",Agency licence,10,yes,345,4320,535000
+real-estate-calculator,Real Estate Calculator,"Money, property & life",Solo licence,1,no,49,620,76000
+real-estate-calculator,Real Estate Calculator,"Money, property & life",Studio licence,3,yes,123,1540,191000
+real-estate-calculator,Real Estate Calculator,"Money, property & life",Agency licence,10,yes,245,3070,380000
+farmers-companion,Farmer's Companion,"Money, property & life",Solo licence,1,no,39,490,60500
+farmers-companion,Farmer's Companion,"Money, property & life",Studio licence,3,yes,98,1230,152000
+farmers-companion,Farmer's Companion,"Money, property & life",Agency licence,10,yes,195,2440,302500
+workbook,Star Explorers — Interactive Workbook for Kids,"Money, property & life",Solo licence,1,no,14,180,22000
+workbook,Star Explorers — Interactive Workbook for Kids,"Money, property & life",Studio licence,3,yes,35,440,54500
+workbook,Star Explorers — Interactive Workbook for Kids,"Money, property & life",Agency licence,10,yes,70,880,108500
+examace-ghana,ExamAce Ghana — EdTech Site Template,"Money, property & life",Solo licence,1,no,39,490,60500
+examace-ghana,ExamAce Ghana — EdTech Site Template,"Money, property & life",Studio licence,3,yes,98,1230,152000
+examace-ghana,ExamAce Ghana — EdTech Site Template,"Money, property & life",Agency licence,10,yes,195,2440,302500

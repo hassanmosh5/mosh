@@ -1,0 +1,186 @@
+{
+  "$comment": "Commercial catalogue for every sellable product in this repository. Product entries live in packaging/products/*.json and are merged into this file by scripts/packaging/catalog.mjs. Edit the data here; never edit generated output in dist/ or packaging/listings/.",
+  "meta": {
+    "brand": "MOSH Digital Studios",
+    "seller": "Hassan Mohammed",
+    "book": "The AI Income Blueprint",
+    "supportEmail": "hassanmosh5@gmail.com",
+    "siteUrl": "https://REPLACE-ME.example.com",
+    "whatsappNumber": "+233 REPLACE-ME",
+    "whatsappCatalogueUrl": "https://wa.me/c/REPLACE-ME",
+    "gumroadHandle": "REPLACE-ME",
+    "selarHandle": "REPLACE-ME",
+    "shopifyDomain": "REPLACE-ME.myshopify.com",
+    "paystackStoreUrl": "https://paystack.shop/REPLACE-ME",
+    "placeholderMarker": "REPLACE-ME",
+    "$placeholders": "Every value containing REPLACE-ME must be filled in before launch. `npm run pkg:verify` fails while any remain, so the packages cannot be shipped half-configured."
+  },
+  "currency": {
+    "base": "USD",
+    "ghsPerUsd": 12.5,
+    "ngnPerUsd": 1550,
+    "rateNotedOn": "2026-08-17",
+    "$note": "These rates are a starting point entered by hand, not a live feed. Paystack and Selar settle in GHS/NGN, so re-check both before a launch and re-run `npm run pkg:listings`; a stale rate silently changes your margin.",
+    "roundTo": { "GHS": 10, "NGN": 500 }
+  },
+  "tiers": [
+    {
+      "id": "solo",
+      "name": "Solo licence",
+      "multiplier": 1,
+      "seats": 1,
+      "clientWork": false,
+      "summary": "One person, your own business. Use it for your own projects for as long as you like.",
+      "includes": ["app", "readme", "start-here", "usage-guide", "licence"]
+    },
+    {
+      "id": "studio",
+      "name": "Studio licence",
+      "multiplier": 2.5,
+      "seats": 3,
+      "clientWork": true,
+      "default": true,
+      "summary": "Up to 3 people, and you may use the output in paid client work.",
+      "includes": ["app", "readme", "start-here", "usage-guide", "licence", "client-brief", "delivery-checklist"]
+    },
+    {
+      "id": "agency",
+      "name": "Agency licence",
+      "multiplier": 5,
+      "seats": 10,
+      "clientWork": true,
+      "summary": "Up to 10 people, unlimited client projects, and you may hand the generated deliverables to clients as your own work.",
+      "includes": ["app", "readme", "start-here", "usage-guide", "licence", "client-brief", "delivery-checklist", "white-label-notes"]
+    }
+  ],
+  "policies": {
+    "refundDays": 14,
+    "refundText": "14-day refund, no questions asked. Reply to your receipt and say the word.",
+    "downloadWindowDays": 30,
+    "maxDownloads": 8,
+    "updatePolicy": "Free updates to the version you bought for 12 months. You keep the files forever either way.",
+    "supportPromise": "One reply within two working days, from the person who built it.",
+    "disclaimer": "These are decision and drafting tools, not professional advice. They compute from figures you supply and cannot verify any of them. Nothing here is financial, legal, tax, medical or investment advice."
+  },
+  "platforms": [
+    {
+      "id": "gumroad",
+      "name": "Gumroad",
+      "settles": "USD",
+      "delivery": "native",
+      "limits": {
+        "name": { "max": 60, "confidence": "conservative" },
+        "summary": { "max": 255, "confidence": "conservative" },
+        "description": { "max": 12000, "confidence": "conservative" },
+        "tags": { "maxCount": 12, "maxLength": 30, "confidence": "documented" }
+      },
+      "notes": "Gumroad hosts the file and mails the download link itself. Use its Versions feature for the three licences — one product, one page, one review count."
+    },
+    {
+      "id": "selar",
+      "name": "Selar",
+      "settles": "NGN/GHS/USD",
+      "delivery": "native",
+      "limits": {
+        "name": { "max": 80, "confidence": "conservative" },
+        "summary": { "max": 160, "confidence": "conservative" },
+        "description": { "max": 8000, "confidence": "conservative" },
+        "tags": { "maxCount": 10, "maxLength": 30, "confidence": "conservative" }
+      },
+      "notes": "Built for African sellers: mobile money, bank transfer and card, paid out locally. Selar delivers the file on its own; the webhook in this repo is for mirroring the sale into your own records."
+    },
+    {
+      "id": "shopify",
+      "name": "Shopify",
+      "settles": "store currency",
+      "delivery": "app-or-webhook",
+      "limits": {
+        "title": { "max": 70, "confidence": "documented", "$note": "Shopify allows 255, but titles over ~70 are truncated in search results." },
+        "seoTitle": { "max": 70, "confidence": "documented" },
+        "metaDescription": { "max": 155, "confidence": "documented", "$note": "Hard limit 320; 155 is what Google actually shows." },
+        "description": { "max": 60000, "confidence": "conservative" },
+        "tags": { "maxCount": 60, "maxLength": 255, "confidence": "documented" }
+      },
+      "notes": "Shopify does not deliver digital files without help. Either install a digital-downloads app, or point the orders/paid webhook at this repo's /api/webhooks/shopify and let it issue the download link."
+    },
+    {
+      "id": "paystack",
+      "name": "Paystack Storefront",
+      "settles": "GHS/NGN/ZAR/KES",
+      "delivery": "webhook",
+      "limits": {
+        "name": { "max": 100, "confidence": "conservative" },
+        "description": { "max": 500, "confidence": "conservative" },
+        "tags": { "maxCount": 8, "maxLength": 30, "confidence": "conservative" }
+      },
+      "notes": "Paystack takes the money but does not host files. Delivery is this repo's /api/webhooks/paystack: charge.success is verified by signature, then the buyer is emailed a download link."
+    },
+    {
+      "id": "whatsapp",
+      "name": "WhatsApp Business",
+      "settles": "manual",
+      "delivery": "manual",
+      "limits": {
+        "name": { "max": 60, "confidence": "conservative" },
+        "description": { "max": 800, "confidence": "conservative", "$note": "Meta commerce catalogues accept far more, but WhatsApp shows roughly the first 200 characters before a 'more' link. Front-load the value." },
+        "tags": { "maxCount": 6, "maxLength": 24, "confidence": "conservative" }
+      },
+      "notes": "No payment API and no automatic delivery. Money arrives by mobile money or transfer, you confirm it, then `npm run pkg:grant` issues the same signed download link the automated platforms use."
+    }
+  ],
+  "bundles": [
+    {
+      "slug": "complete-studio",
+      "name": "The Complete MOSH Studio",
+      "tagline": "Every tool in the catalogue, one download",
+      "includes": "all",
+      "priceUsd": 449,
+      "compareMode": "sum",
+      "pitch": "Thirty-eight tools that would cost well over a thousand dollars bought one at a time. If you run a studio, an agency or a one-person business that does more than one kind of work, this is the only entry that makes arithmetic sense."
+    },
+    {
+      "slug": "agency-starter",
+      "name": "The Agency Starter Bundle",
+      "tagline": "Win the client, sign the client, get paid",
+      "includes": ["marketing-toolkit", "client-contracts", "invoice-automation", "agency-sops", "automation-kits", "business-dashboards"],
+      "priceUsd": 129,
+      "compareMode": "sum",
+      "pitch": "The six tools that cover the whole client cycle: find them, price them, contract them, deliver them on a repeatable procedure, invoice them, and see whether the month worked."
+    },
+    {
+      "slug": "product-launch",
+      "name": "The Digital Product Launch Bundle",
+      "tagline": "Idea → validated → built → listed → sold",
+      "includes": ["venture-studio", "digital-products", "product-factory", "packaging-agent", "launch-kit", "ecommerce-setup"],
+      "priceUsd": 149,
+      "compareMode": "sum",
+      "pitch": "The full production line for a one-person product studio, from the ranked idea catalogue through the validation gate to the finished listing and the store it sits in."
+    },
+    {
+      "slug": "ai-agents",
+      "name": "The AI Agent Blueprints Bundle",
+      "tagline": "Five agents specified before a line of code",
+      "includes": ["support-agent", "appointment-booking", "whatsapp-sales", "real-estate-agent", "website-crm"],
+      "priceUsd": 119,
+      "compareMode": "sum",
+      "pitch": "Every one of these decides what the model is told, what it must refuse, and whether the numbers work at your volume — the part that sinks agent projects, done before you build."
+    },
+    {
+      "slug": "growth-engine",
+      "name": "The Growth Engine Bundle",
+      "tagline": "Traffic, list, content, ads — with the payback arithmetic",
+      "includes": ["meta-ads", "seo-content", "email-marketing", "social-automation", "youtube-toolkit"],
+      "priceUsd": 119,
+      "compareMode": "sum",
+      "pitch": "Four channels and one production system, each of which tells you what it costs to run and how long it takes to repay — including when the honest answer is don't."
+    }
+  ],
+  "categories": [
+    { "id": "decide", "name": "Start & decide", "glyph": "🧭", "blurb": "What to build, whether to build it, and whether the numbers survive contact with a sceptic." },
+    { "id": "package", "name": "Package & sell", "glyph": "📦", "blurb": "Turning a finished asset into a listed, priced, licensed product." },
+    { "id": "agency", "name": "Agency & client work", "glyph": "🏗", "blurb": "Winning, contracting, delivering and getting paid, on a repeatable procedure." },
+    { "id": "growth", "name": "Marketing & growth", "glyph": "📈", "blurb": "Channels, with the arithmetic that says whether each one repays what it costs." },
+    { "id": "agents", "name": "AI agents & automation", "glyph": "🤖", "blurb": "What the model is told, what it must refuse, and what it saves — decided before you build." },
+    { "id": "life", "name": "Money, property & life", "glyph": "🏦", "blurb": "Structures, deals, land and learning, each with its own honest arithmetic." }
+  ]
+}

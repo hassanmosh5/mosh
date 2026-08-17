@@ -1,0 +1,493 @@
+[
+  {
+    "slug": "support-agent",
+    "dir": "support-agent",
+    "name": "AI Customer Support Agent",
+    "category": "agents",
+    "glyph": "🛟",
+    "priceUsd": 49,
+    "tagline": "Containment counts the wrong tickets",
+    "oneLiner": "Decides which messages an agent should answer, what it must be told, what it must never say — and how often it has to be right before it saves any money.",
+    "audience": [
+      "Anyone about to put an AI agent on their support inbox",
+      "Agencies selling support automation to clients",
+      "Support leads asked to justify a bot to a finance team"
+    ],
+    "problem": "Support agents are sold on containment: the share of conversations the bot closes. Containment counts the tickets it answers and ignores the ones it answers wrongly, which do not cost zero — the customer comes back crosser, a person untangles it, and some of them leave. Once you count that, the whole case changes, and it changes per intent rather than for 'support' as a whole.",
+    "solves": [
+      "Automating 'support' as one undifferentiated thing",
+      "Business cases built on containment with no cost attached to wrong answers",
+      "Agents with no explicit refusal list, improvising on refunds and legal questions",
+      "Going live with no test bench, so the first regression is found by a customer"
+    ],
+    "inside": [
+      "Intent-by-intent analysis — which of your messages are safe to automate and which are not",
+      "The accuracy threshold: how often it must be right before it saves money at your volumes",
+      "A system prompt generated from your policies, not a template",
+      "Fixed replies for the intents that must never be improvised",
+      "A 50-case test bench, including the ones designed to make it fail",
+      "A rollout plan with gates that refuse to open until the tests pass"
+    ],
+    "outcomes": [
+      "A list of intents to automate and a list to leave alone, each with a reason",
+      "The accuracy figure the project must hit to be worth doing",
+      "A system prompt and a refusal list you can hand to whoever builds it"
+    ],
+    "usage": [
+      "Open index.html and enter your ticket volume, mix and the cost of a human reply.",
+      "Work through the intents. The ones it advises against automating are the point.",
+      "Read the accuracy threshold before committing to a build.",
+      "Generate the system prompt and the fixed replies; edit the policies to match yours exactly.",
+      "Run the 50-case bench against the built agent before any rollout gate opens."
+    ],
+    "notFor": [
+      "Anyone wanting a working chatbot — nothing here talks to a model",
+      "Teams that have already built and only need hosting"
+    ],
+    "proof": "It is a planning tool. The economics are computed from your volumes and costs; the accuracy has to be measured against the bench once something exists.",
+    "keywords": [
+      "ai customer support",
+      "support automation",
+      "chatbot planning",
+      "system prompt",
+      "containment rate",
+      "test bench",
+      "helpdesk ai",
+      "intent analysis",
+      "rollout plan",
+      "offline tool"
+    ],
+    "shots": [
+      {
+        "label": "Intents"
+      },
+      {
+        "label": "Agent brief"
+      },
+      {
+        "label": "Test bench"
+      }
+    ]
+  },
+  {
+    "slug": "appointment-booking",
+    "dir": "appointment-booking",
+    "name": "AI Appointment Booking System",
+    "category": "agents",
+    "glyph": "📅",
+    "priceUsd": 49,
+    "tagline": "A booking agent that invents a Tuesday looks fine",
+    "oneLiner": "A timezone-correct availability engine, the agent's prompt and tools generated from your own services and policies, and a simulator that books against the real engine.",
+    "audience": [
+      "Clinics, salons, garages and studios automating their diary",
+      "Coaches with clients in other time zones",
+      "Agencies selling booking automation to local businesses"
+    ],
+    "problem": "'An AI books your appointments' is the easiest local automation to sell and the easiest to get badly wrong, because it fails quietly. A booking agent that invents a Tuesday looks exactly like one that checked. Nobody finds out until somebody drives to an appointment that was never in the diary — and by then the client has lost trust in the whole idea.",
+    "solves": [
+      "Agents that hallucinate availability because nothing constrains them",
+      "Timezone arithmetic done in the prompt, which is where it goes wrong",
+      "Prompts, tool definitions and customer messages drifting out of agreement",
+      "Message templates that exceed an SMS segment and cost triple"
+    ],
+    "inside": [
+      "A timezone-correct availability engine: opening hours, breaks, buffers, lead times, holidays",
+      "The system prompt and tool definitions generated from the same configuration, so they cannot disagree",
+      "A conversation simulator that books against the real engine, not a mock",
+      "Message templates counted in SMS segments",
+      "Policies — cancellation, no-show, deposits — expressed once and reflected everywhere",
+      "The wiring guide for connecting it to a real calendar"
+    ],
+    "outcomes": [
+      "An availability engine you can test before anything is built",
+      "A prompt and tool schema that match the engine exactly",
+      "Messages that fit one SMS segment and say what the policy actually is"
+    ],
+    "usage": [
+      "Open index.html and configure services, hours, buffers and time zone.",
+      "Use the simulator to book across a timezone boundary and a holiday — that is where these break.",
+      "Generate the prompt and tool definitions together; never edit one alone.",
+      "Check every message template's segment count before you approve it.",
+      "Follow the wiring guide to connect a real calendar."
+    ],
+    "notFor": [
+      "Anyone wanting a running booking bot — this is the specification for one",
+      "Complex resource scheduling across many rooms and staff constraints"
+    ],
+    "proof": "The engine is real and testable in the simulator. Whether the model you eventually connect obeys the tools is a property of that model, not of this file.",
+    "keywords": [
+      "ai booking agent",
+      "appointment scheduling",
+      "availability engine",
+      "timezone",
+      "sms templates",
+      "salon booking",
+      "clinic automation",
+      "tool definitions",
+      "system prompt",
+      "offline"
+    ],
+    "shots": [
+      {
+        "label": "Availability"
+      },
+      {
+        "label": "Simulator"
+      },
+      {
+        "label": "Messages"
+      }
+    ]
+  },
+  {
+    "slug": "whatsapp-sales",
+    "dir": "whatsapp-sales",
+    "name": "WhatsApp AI Sales Assistant",
+    "category": "agents",
+    "glyph": "💬",
+    "priceUsd": 49,
+    "tagline": "The 24-hour window decides what you may send",
+    "oneLiner": "Turns 'we should put AI on our WhatsApp' into a build spec: qualification playbook, prompt, templates checked against platform rules, and the cost model.",
+    "audience": [
+      "Businesses selling in a chat window rather than on a website",
+      "Agencies building WhatsApp automations for clients",
+      "Anyone whose template messages keep getting rejected"
+    ],
+    "problem": "On WhatsApp the selling is the easy half. The half that sinks these builds is a set of platform rules: what a template may say, when a session is open, what a follow-up is allowed to be once the 24-hour window closes, and what each conversation category costs. Get those wrong and your templates are rejected, your follow-ups never arrive, and the per-conversation bill arrives anyway.",
+    "solves": [
+      "Template messages rejected for reasons nobody explains",
+      "Follow-ups sent outside the 24-hour window that silently do nothing",
+      "Conversation costs discovered on the first invoice",
+      "Assistants that qualify nobody and hand every chat to a human anyway"
+    ],
+    "inside": [
+      "A qualification playbook — what to ask, in what order, and when to hand over",
+      "A system prompt and a knowledge file generated from your own offer and policies",
+      "Message templates checked against the platform's content rules before you submit them",
+      "The 24-hour window arithmetic that decides what each follow-up may legally be",
+      "A cost model per conversation category, at your volume",
+      "The conversion lift the whole build must earn to be worth doing"
+    ],
+    "outcomes": [
+      "Templates that pass review the first time",
+      "A follow-up schedule that respects the window instead of hoping",
+      "A number for the conversion lift required before you commit"
+    ],
+    "usage": [
+      "Open index.html and describe your offer and qualification criteria.",
+      "Draft templates in the checker; fix what it flags before submitting to Meta.",
+      "Model your conversation volume and read the monthly cost.",
+      "Compare that against the required conversion lift. If the lift is implausible, stop here.",
+      "Hand the prompt, knowledge file and templates to whoever builds it."
+    ],
+    "notFor": [
+      "Anyone wanting the bot itself — this is the specification",
+      "Bulk messaging or anything resembling unsolicited broadcast"
+    ],
+    "proof": "Platform rules and pricing change without notice. The checker encodes them as of writing; re-read Meta's current policy before you submit templates.",
+    "keywords": [
+      "whatsapp business api",
+      "whatsapp ai",
+      "chat sales",
+      "message templates",
+      "24 hour window",
+      "conversation pricing",
+      "lead qualification",
+      "chat commerce",
+      "sales assistant",
+      "offline"
+    ],
+    "shots": [
+      {
+        "label": "Playbook"
+      },
+      {
+        "label": "Templates"
+      },
+      {
+        "label": "Economics"
+      }
+    ]
+  },
+  {
+    "slug": "real-estate-agent",
+    "dir": "real-estate-agent",
+    "name": "AI Real Estate Agent",
+    "category": "agents",
+    "glyph": "🏠",
+    "priceUsd": 59,
+    "tagline": "Leads are not lost to competitors, but to Tuesday",
+    "oneLiner": "Which enquiries the assistant answers first, what it asks, what it must never say, and whether the arithmetic works at your lead volume — with a fair-housing checker.",
+    "audience": [
+      "Estate agents buying portal leads and losing them to response time",
+      "Property businesses automating first response",
+      "Agencies building assistants for property clients"
+    ],
+    "problem": "Agents buy leads and then lose them to the clock — not to a competitor with a better CRM, but to a Tuesday evening, a valuation that overran, and a portal enquiry that sat unanswered until Thursday. And the unit of decision is the source, not 'leads': a portal enquiry and a past-client referral share a name and nothing else.",
+    "solves": [
+      "Portal enquiries answered two days late, when the lead has already booked elsewhere",
+      "Treating every lead source identically when their values differ by an order of magnitude",
+      "Automated copy that strays into fair-housing violations",
+      "Rollouts with no test bench and no gate, going live on hope"
+    ],
+    "inside": [
+      "Source-by-source analysis, because a portal lead and a referral are different products",
+      "What a lost lead actually costs, computed at your volume and conversion",
+      "A system prompt and qualification scripts generated from your own stock and policies",
+      "A hard refusal list — valuations, legal advice, anything it must not say",
+      "A 46-case test bench covering the awkward cases",
+      "A fair-housing copy checker",
+      "A rollout plan with gates that refuse to open"
+    ],
+    "outcomes": [
+      "A response-time target with money attached to it",
+      "A prompt and script set specific to each lead source",
+      "Copy checked against fair-housing language before it reaches a member of the public"
+    ],
+    "usage": [
+      "Open index.html and enter lead volumes and conversion by source.",
+      "Read the cost of a lost lead per source. It reorders priorities immediately.",
+      "Generate prompts and scripts for the highest-value source first.",
+      "Run every piece of customer-facing copy through the fair-housing checker.",
+      "Do not open a rollout gate until the 46-case bench passes."
+    ],
+    "notFor": [
+      "Anyone wanting a working assistant — nothing here talks to a model",
+      "Legal compliance sign-off; the checker is an aid, not an approval"
+    ],
+    "proof": "The fair-housing checker flags language patterns. It is not legal advice and does not certify compliance — have a qualified person review anything public.",
+    "keywords": [
+      "real estate ai",
+      "property leads",
+      "lead response time",
+      "estate agent automation",
+      "fair housing",
+      "qualification script",
+      "system prompt",
+      "test bench",
+      "property crm",
+      "offline"
+    ],
+    "shots": [
+      {
+        "label": "Lead sources"
+      },
+      {
+        "label": "Scripts"
+      },
+      {
+        "label": "Test bench"
+      }
+    ]
+  },
+  {
+    "slug": "website-crm",
+    "dir": "website-crm",
+    "name": "AI Website + CRM Automation",
+    "category": "agents",
+    "glyph": "🔗",
+    "priceUsd": 59,
+    "tagline": "At thirty enquiries a month, most of the build list is a hobby",
+    "oneLiner": "The site page by page, the CRM pipeline stage by stage, the tool stack with its running cost — and, per automation, whether your volume pays for building it.",
+    "audience": [
+      "Agencies selling website-and-CRM builds to local businesses",
+      "Business owners quoted for a forty-automation build",
+      "Anyone whose CRM has twelve custom fields and no one filling them"
+    ],
+    "problem": "Website and CRM automation is the most saleable service there is, and it is where the largest amount of confident nonsense lives: build lists of forty automations, tool stacks priced like an enterprise, and payback claims nobody has ever checked. At thirty enquiries a month most of that build list is a hobby — which is knowable in advance, from arithmetic.",
+    "solves": [
+      "Forty-automation build lists sold to businesses with thirty enquiries a month",
+      "Tool stacks whose monthly cost nobody totalled",
+      "Pipeline stages copied from a template and never matched to how deals actually move",
+      "Automations built in the order they were thought of"
+    ],
+    "inside": [
+      "The site planned page by page for your business model",
+      "A CRM pipeline stage by stage, with the fields each stage genuinely needs",
+      "Automation recipes per business model, each with a payback calculation at your volume",
+      "A tool stack with its real monthly running cost totalled",
+      "Message templates for each automated touchpoint",
+      "A verdict per automation: build now, build later, or do not build"
+    ],
+    "outcomes": [
+      "A build list ordered by payback rather than by enthusiasm",
+      "A monthly tool cost you knew before signing up to anything",
+      "A pipeline that matches how your deals actually move"
+    ],
+    "usage": [
+      "Open index.html and pick your business model, then enter monthly enquiry volume and your hourly rate.",
+      "Read the 'do not build yet' list carefully — it is usually most of the list.",
+      "Total the tool stack cost before subscribing to anything.",
+      "Build the top three automations only, then re-run the arithmetic.",
+      "Use the templates as the starting text for each touchpoint."
+    ],
+    "notFor": [
+      "Anyone wanting the automations built — this decides which ones deserve building",
+      "Enterprise CRM migrations"
+    ],
+    "proof": "Payback is computed from your volume and your hourly rate. Change either and the build list changes — which is the point.",
+    "keywords": [
+      "crm automation",
+      "website and crm",
+      "local business automation",
+      "lead pipeline",
+      "automation payback",
+      "tool stack cost",
+      "agency services",
+      "n8n zapier planning",
+      "funnel",
+      "offline"
+    ],
+    "shots": [
+      {
+        "label": "Pipeline"
+      },
+      {
+        "label": "Automations"
+      },
+      {
+        "label": "Stack"
+      }
+    ]
+  },
+  {
+    "slug": "order-automation",
+    "dir": "order-automation",
+    "name": "E-Commerce Order Automation",
+    "category": "agents",
+    "glyph": "📮",
+    "priceUsd": 49,
+    "tagline": "159 hours a month nobody invoices you for",
+    "oneLiner": "Costs an order desk minute by minute, ranks every automation by how fast it repays, turns exception handling into arithmetic, and exports the runbook.",
+    "audience": [
+      "Store owners whose order desk quietly consumes the week",
+      "Anyone about to hire for fulfilment admin",
+      "Agencies automating operations for e-commerce clients"
+    ],
+    "problem": "A store's order desk is the part that scales worst. A listing is written once; an order is processed every single time, and the minutes are invisible — nobody invoices you for reading the order, checking the payment, picking, packing, buying postage, answering 'where is it?', or reconciling the payout. At ordinary figures a store doing 600 orders a month spends about 159 hours on it.",
+    "solves": [
+      "Fulfilment admin that never appears in any cost calculation",
+      "Automations chosen by what is easiest to build rather than what repays first",
+      "Exceptions handled by mood, so the same problem costs a different amount each time",
+      "No runbook, so the desk stops when the person who runs it is away"
+    ],
+    "inside": [
+      "A minute-by-minute cost model of the order desk at your volume",
+      "Every automation ranked by payback period",
+      "Exception handling as decision rules: refunds, damages, missing parcels, chargebacks",
+      "The threshold volumes at which each automation starts to make sense",
+      "A hiring-versus-automating comparison on the same figures",
+      "An exportable runbook you can hand to whoever covers the desk"
+    ],
+    "outcomes": [
+      "The true monthly hour cost of your order desk",
+      "An automation order with payback attached to each item",
+      "A runbook that lets someone else run the desk on the day you cannot"
+    ],
+    "usage": [
+      "Open index.html and enter your monthly order volume and the steps you really perform.",
+      "Read the total hours. It is usually the moment the case makes itself.",
+      "Take the top-ranked automation only, build it, then re-measure.",
+      "Turn the exception rules into policy and stop re-deciding them.",
+      "Export the runbook and store it where a stand-in can find it."
+    ],
+    "notFor": [
+      "Anyone wanting the automations implemented",
+      "Warehouse-scale logistics with a WMS"
+    ],
+    "proof": "The default figures are a starting point; replace them with your own timings. The whole model is only as honest as the minutes you enter.",
+    "keywords": [
+      "ecommerce operations",
+      "order fulfilment",
+      "automation payback",
+      "runbook",
+      "shopify operations",
+      "exception handling",
+      "order desk",
+      "small business automation",
+      "hiring vs automating",
+      "offline"
+    ],
+    "shots": [
+      {
+        "label": "Order desk"
+      },
+      {
+        "label": "Automations"
+      },
+      {
+        "label": "Runbook"
+      }
+    ]
+  },
+  {
+    "slug": "commercial-kits",
+    "dir": "commercial-kits",
+    "name": "AI Commercial Production Kits",
+    "category": "agents",
+    "glyph": "🎥",
+    "priceUsd": 49,
+    "tagline": "Whether generating it is worth what it costs",
+    "oneLiner": "One brief becomes a production kit — script with beat timings, shot list with risk flags, generation prompts, deliverable specs and a clearance checklist.",
+    "audience": [
+      "Anyone quoted for an AI-generated video commercial",
+      "Small agencies adding video without a crew",
+      "Founders deciding between AI generation, stock, and a shoot"
+    ],
+    "problem": "AI video is sold on capability and bought on cost, and the two are rarely compared in the same document. Generation credits, re-rolls for the shots that never come out right, licensing, voice, and the editing that stitches it together add up to a number nobody computes until afterwards — by which point the alternative, which was often stock or a phone camera, is no longer on the table.",
+    "solves": [
+      "Committing to AI video without costing the re-rolls",
+      "Shot lists with no risk flags, so the impossible shots are discovered mid-production",
+      "Generation prompts written ad hoc, producing inconsistent looks across a single spot",
+      "No clearance checklist — music, likeness, trademarks discovered at delivery"
+    ],
+    "inside": [
+      "A script with beat timings that fit the actual slot length",
+      "A shot list with risk flags on the shots AI generation reliably fails",
+      "Generation prompts per shot, written to hold a consistent look",
+      "Deliverable specs per placement — aspect ratios, durations, safe areas",
+      "A clearance checklist covering music, likeness and trademarks",
+      "Cost arithmetic comparing generation, stock and a small shoot"
+    ],
+    "outcomes": [
+      "A verdict on whether generating this particular spot is worth it",
+      "A shot list where the hard shots are flagged before anyone starts",
+      "Deliverables that fit each placement without a re-export"
+    ],
+    "usage": [
+      "Open index.html and write the brief: product, audience, slot length, placements.",
+      "Read the cost comparison before generating anything.",
+      "Work the shot list and pay attention to the risk flags — those are the re-roll budget.",
+      "Use the per-shot prompts to keep the look consistent.",
+      "Run the clearance checklist before delivery, not after."
+    ],
+    "notFor": [
+      "Anyone expecting video to be generated here — this is the production kit",
+      "Broadcast compliance in regulated categories"
+    ],
+    "proof": "Generation pricing moves constantly. Update the per-second costs before you rely on the comparison.",
+    "keywords": [
+      "ai video",
+      "commercial production",
+      "shot list",
+      "video brief",
+      "generation prompts",
+      "advert planning",
+      "video cost",
+      "clearance checklist",
+      "creative production",
+      "offline"
+    ],
+    "shots": [
+      {
+        "label": "Script"
+      },
+      {
+        "label": "Shot list"
+      },
+      {
+        "label": "Cost"
+      }
+    ]
+  }
+]
