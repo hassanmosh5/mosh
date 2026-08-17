@@ -37,18 +37,31 @@ model User {
   attempts  QuizAttempt[]
 
   // ----- MOSH Chief of Staff -----
-  memberships       Membership[]
-  assignedTasks     Task[]            @relation("TaskAssignee")
-  createdTasks      Task[]            @relation("TaskCreator")
-  ownedGoals        Goal[]
+  memberships        Membership[]
+  assignedTasks      Task[]            @relation("TaskAssignee")
+  createdTasks       Task[]            @relation("TaskCreator")
+  ownedGoals         Goal[]
   projectMemberships ProjectMember[]
-  conversations     Conversation[]
-  agentExecutions   AgentExecution[]
-  notifications     Notification[]
-  reports           Report[]
-  aiUsage           AiUsage[]
+  conversations      Conversation[]
+  agentExecutions    AgentExecution[]
+  notifications      Notification[]
+  reports            Report[]
+  aiUsage            AiUsage[]
   approvalsRequested ApprovalRequest[] @relation("ApprovalRequester")
   approvalsDecided   ApprovalRequest[] @relation("ApprovalDecider")
+
+  // ----- MOSH Self-Mastery & Wealth Alignment System -----
+  moshProfile       MoshProfile?
+  moshDays          MoshDailyEntry[]
+  moshCheckins      MoshPlaneCheckin[]
+  moshWeeks         MoshWeeklyEntry[]
+  moshMonths        MoshMonthlyReview[]
+  moshYearPlans     MoshYearPlan[]
+  moshOffers        MoshOffer[]
+  moshFunnel        MoshFunnelSnapshot[]
+  moshEclipseDays   MoshEclipseDay[]
+  moshCoachSessions MoshCoachSession[]
+  moshLetters       MoshLegacyLetter[]
 }
 
 model Account {
@@ -120,16 +133,16 @@ model Module {
 }
 
 model Lesson {
-  id            String  @id @default(cuid())
-  slug          String  @unique
-  title         String
-  summary       String? @db.Text
-  content       String  @db.Text // markdown
-  order         Int
-  estMinutes    Int     @default(10)
-  keyTakeaways  String[] @default([])
-  actionStep    String?  @db.Text
-  caseStudy     String?  @db.Text
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  summary      String?  @db.Text
+  content      String   @db.Text // markdown
+  order        Int
+  estMinutes   Int      @default(10)
+  keyTakeaways String[] @default([])
+  actionStep   String?  @db.Text
+  caseStudy    String?  @db.Text
 
   moduleId String
   module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
@@ -254,33 +267,33 @@ model Business {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  memberships   Membership[]
-  areas         BusinessArea[]
-  clients       Client[]
-  contacts      Contact[]
-  leads         Lead[]
-  opportunities Opportunity[]
-  projects      Project[]
-  tasks         Task[]
-  goals         Goal[]
-  products      Product[]
-  contentItems  ContentItem[]
-  campaigns     Campaign[]
-  documents     KnowledgeDocument[]
-  memories      Memory[]
-  agents        AIAgent[]
-  executions    AgentExecution[]
-  automations   Automation[]
-  notifications Notification[]
-  reports       Report[]
-  conversations Conversation[]
-  auditLogs     AuditLog[]
-  aiUsage       AiUsage[]
-  integrations  Integration[]
-  approvals     ApprovalRequest[]
+  memberships    Membership[]
+  areas          BusinessArea[]
+  clients        Client[]
+  contacts       Contact[]
+  leads          Lead[]
+  opportunities  Opportunity[]
+  projects       Project[]
+  tasks          Task[]
+  goals          Goal[]
+  products       Product[]
+  contentItems   ContentItem[]
+  campaigns      Campaign[]
+  documents      KnowledgeDocument[]
+  memories       Memory[]
+  agents         AIAgent[]
+  executions     AgentExecution[]
+  automations    Automation[]
+  notifications  Notification[]
+  reports        Report[]
+  conversations  Conversation[]
+  auditLogs      AuditLog[]
+  aiUsage        AiUsage[]
+  integrations   Integration[]
+  approvals      ApprovalRequest[]
   financeEntries FinanceEntry[]
-  invoices      Invoice[]
-  decisions     Decision[]
+  invoices       Invoice[]
+  decisions      Decision[]
 }
 
 model Membership {
@@ -355,12 +368,12 @@ model Client {
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
 
-  contacts      Contact[]
-  projects      Project[]
-  tasks         Task[]
-  opportunities Opportunity[]
-  invoices      Invoice[]
-  memories      Memory[]
+  contacts       Contact[]
+  projects       Project[]
+  tasks          Task[]
+  opportunities  Opportunity[]
+  invoices       Invoice[]
+  memories       Memory[]
   financeEntries FinanceEntry[]
 
   @@index([businessId, status])
@@ -423,25 +436,25 @@ enum OpportunityStatus {
 }
 
 model Opportunity {
-  id         String            @id @default(cuid())
-  businessId String
-  business   Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  leadId     String?
-  lead       Lead?             @relation(fields: [leadId], references: [id], onDelete: SetNull)
-  clientId   String?
-  client     Client?           @relation(fields: [clientId], references: [id], onDelete: SetNull)
-  title      String
-  value      Decimal           @default(0) @db.Decimal(14, 2)
-  stage      PipelineStage     @default(QUALIFIED)
-  status     OpportunityStatus @default(OPEN)
-  probability Int              @default(30)
+  id              String            @id @default(cuid())
+  businessId      String
+  business        Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  leadId          String?
+  lead            Lead?             @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  clientId        String?
+  client          Client?           @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  title           String
+  value           Decimal           @default(0) @db.Decimal(14, 2)
+  stage           PipelineStage     @default(QUALIFIED)
+  status          OpportunityStatus @default(OPEN)
+  probability     Int               @default(30)
   expectedCloseAt DateTime?
-  closedAt   DateTime?
-  lostReason String?           @db.Text
-  notes      String?           @db.Text
-  isDemo     Boolean           @default(false)
-  createdAt  DateTime          @default(now())
-  updatedAt  DateTime          @updatedAt
+  closedAt        DateTime?
+  lostReason      String?           @db.Text
+  notes           String?           @db.Text
+  isDemo          Boolean           @default(false)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 
   proposals Proposal[]
 
@@ -517,12 +530,12 @@ model Project {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
-  tasks      Task[]
-  milestones Milestone[]
-  risks      ProjectRisk[]
-  members    ProjectMember[]
-  memories   Memory[]
-  documents  KnowledgeDocument[]
+  tasks          Task[]
+  milestones     Milestone[]
+  risks          ProjectRisk[]
+  members        ProjectMember[]
+  memories       Memory[]
+  documents      KnowledgeDocument[]
   financeEntries FinanceEntry[]
 
   @@unique([businessId, slug])
@@ -616,38 +629,38 @@ enum RecurrenceRule {
 }
 
 model Task {
-  id             String         @id @default(cuid())
-  businessId     String
-  business       Business       @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  projectId      String?
-  project        Project?       @relation(fields: [projectId], references: [id], onDelete: SetNull)
-  clientId       String?
-  client         Client?        @relation(fields: [clientId], references: [id], onDelete: SetNull)
-  goalId         String?
-  goal           Goal?          @relation(fields: [goalId], references: [id], onDelete: SetNull)
-  assigneeId     String?
-  assignee       User?          @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
-  agentId        String?
-  agent          AIAgent?       @relation(fields: [agentId], references: [id], onDelete: SetNull)
-  createdById    String?
-  createdBy      User?          @relation("TaskCreator", fields: [createdById], references: [id], onDelete: SetNull)
-  title          String
-  description    String?        @db.Text
-  status         TaskStatus     @default(BACKLOG)
-  priority       TaskPriority   @default(MEDIUM)
-  dueDate        DateTime?
-  startedAt      DateTime?
-  completedAt    DateTime?
-  estimateMins   Int?
-  actualMins     Int?
-  tags           String[]       @default([])
-  origin         TaskOrigin     @default(HUMAN)
-  recurrence     RecurrenceRule @default(NONE)
+  id              String         @id @default(cuid())
+  businessId      String
+  business        Business       @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  projectId       String?
+  project         Project?       @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  clientId        String?
+  client          Client?        @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  goalId          String?
+  goal            Goal?          @relation(fields: [goalId], references: [id], onDelete: SetNull)
+  assigneeId      String?
+  assignee        User?          @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  agentId         String?
+  agent           AIAgent?       @relation(fields: [agentId], references: [id], onDelete: SetNull)
+  createdById     String?
+  createdBy       User?          @relation("TaskCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  title           String
+  description     String?        @db.Text
+  status          TaskStatus     @default(BACKLOG)
+  priority        TaskPriority   @default(MEDIUM)
+  dueDate         DateTime?
+  startedAt       DateTime?
+  completedAt     DateTime?
+  estimateMins    Int?
+  actualMins      Int?
+  tags            String[]       @default([])
+  origin          TaskOrigin     @default(HUMAN)
+  recurrence      RecurrenceRule @default(NONE)
   recurrenceUntil DateTime?
-  notes          String?        @db.Text
-  isDemo         Boolean        @default(false)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  notes           String?        @db.Text
+  isDemo          Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 
   dependsOn  TaskDependency[] @relation("Dependent")
   dependents TaskDependency[] @relation("Blocker")
@@ -785,20 +798,20 @@ enum ContentStatus {
 }
 
 model Campaign {
-  id          String    @id @default(cuid())
-  businessId  String
-  business    Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  productId   String?
-  product     Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
-  name        String
-  objective   String?   @db.Text
-  startDate   DateTime?
-  endDate     DateTime?
-  budget      Decimal?  @db.Decimal(14, 2)
-  active      Boolean   @default(true)
-  isDemo      Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id         String    @id @default(cuid())
+  businessId String
+  business   Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  productId  String?
+  product    Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  name       String
+  objective  String?   @db.Text
+  startDate  DateTime?
+  endDate    DateTime?
+  budget     Decimal?  @db.Decimal(14, 2)
+  active     Boolean   @default(true)
+  isDemo     Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   contentItems ContentItem[]
 
@@ -856,26 +869,26 @@ enum KnowledgeCategory {
 }
 
 model KnowledgeDocument {
-  id          String            @id @default(cuid())
-  businessId  String
-  business    Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  projectId   String?
-  project     Project?          @relation(fields: [projectId], references: [id], onDelete: SetNull)
-  title       String
-  slug        String
-  category    KnowledgeCategory @default(OTHER)
-  summary     String?           @db.Text
-  body        String            @db.Text
-  tags        String[]          @default([])
-  source      String?
+  id         String            @id @default(cuid())
+  businessId String
+  business   Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  projectId  String?
+  project    Project?          @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  title      String
+  slug       String
+  category   KnowledgeCategory @default(OTHER)
+  summary    String?           @db.Text
+  body       String            @db.Text
+  tags       String[]          @default([])
+  source     String?
   // Placeholder for a future vector column. Kept as Float[] so the schema is
   // portable; swap for pgvector when semantic search is enabled.
-  embedding   Float[]           @default([])
-  embeddedAt  DateTime?
-  reviewAt    DateTime?
-  isDemo      Boolean           @default(false)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  embedding  Float[]           @default([])
+  embeddedAt DateTime?
+  reviewAt   DateTime?
+  isDemo     Boolean           @default(false)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
 
   @@unique([businessId, slug])
   @@index([businessId, category])
@@ -898,26 +911,26 @@ enum MemorySource {
 }
 
 model Memory {
-  id         String       @id @default(cuid())
-  businessId String
-  business   Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  clientId   String?
-  client     Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
-  projectId  String?
-  project    Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  id             String        @id @default(cuid())
+  businessId     String
+  business       Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  clientId       String?
+  client         Client?       @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  projectId      String?
+  project        Project?      @relation(fields: [projectId], references: [id], onDelete: SetNull)
   conversationId String?
   conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
-  scope      MemoryScope
-  key        String
-  value      String       @db.Text
-  source     MemorySource @default(HUMAN)
-  confidence Int          @default(70) // 0-100
-  reviewAt   DateTime?
-  expiresAt  DateTime?
-  pinned     Boolean      @default(false)
-  isDemo     Boolean      @default(false)
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
+  scope          MemoryScope
+  key            String
+  value          String        @db.Text
+  source         MemorySource  @default(HUMAN)
+  confidence     Int           @default(70) // 0-100
+  reviewAt       DateTime?
+  expiresAt      DateTime?
+  pinned         Boolean       @default(false)
+  isDemo         Boolean       @default(false)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   @@unique([businessId, scope, key])
   @@index([businessId, scope])
@@ -1043,25 +1056,25 @@ enum AutomationStatus {
 }
 
 model Automation {
-  id                 String           @id @default(cuid())
-  businessId         String
-  business           Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  name               String
-  process            String           @db.Text
-  trigger            String?          @db.Text
-  steps              String[]         @default([])
-  frequencyPerMonth  Int              @default(1)
-  minutesPerRun      Int              @default(30)
-  minutesAfter       Int              @default(5)
-  complexity         Int              @default(3) // 1 (trivial) - 5 (hard)
-  businessValue      Int              @default(3) // 1 (low) - 5 (high)
-  score              Int              @default(0) // computed 0-100
-  status             AutomationStatus @default(IDENTIFIED)
-  tooling            String?
-  notes              String?          @db.Text
-  isDemo             Boolean          @default(false)
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
+  id                String           @id @default(cuid())
+  businessId        String
+  business          Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  name              String
+  process           String           @db.Text
+  trigger           String?          @db.Text
+  steps             String[]         @default([])
+  frequencyPerMonth Int              @default(1)
+  minutesPerRun     Int              @default(30)
+  minutesAfter      Int              @default(5)
+  complexity        Int              @default(3) // 1 (trivial) - 5 (hard)
+  businessValue     Int              @default(3) // 1 (low) - 5 (high)
+  score             Int              @default(0) // computed 0-100
+  status            AutomationStatus @default(IDENTIFIED)
+  tooling           String?
+  notes             String?          @db.Text
+  isDemo            Boolean          @default(false)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
 
   @@index([businessId, status])
   @@index([businessId, score])
@@ -1154,28 +1167,28 @@ model Payment {
 // ---------- Decisions ----------
 
 model Decision {
-  id            String   @id @default(cuid())
-  businessId    String
-  business      Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  title         String
-  context       String?  @db.Text
-  revenueImpact Int      @default(3)
-  strategicFit  Int      @default(3)
-  customerValue Int      @default(3)
-  cost          Int      @default(3)
-  timeToValue   Int      @default(3)
-  complexity    Int      @default(3)
-  risk          Int      @default(3)
-  automation    Int      @default(3)
-  scalability   Int      @default(3)
-  score         Int      @default(0)
-  rationale     String?  @db.Text
-  risks         String?  @db.Text
-  recommendation String? @db.Text
-  nextStep      String?  @db.Text
-  isDemo        Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id             String   @id @default(cuid())
+  businessId     String
+  business       Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  title          String
+  context        String?  @db.Text
+  revenueImpact  Int      @default(3)
+  strategicFit   Int      @default(3)
+  customerValue  Int      @default(3)
+  cost           Int      @default(3)
+  timeToValue    Int      @default(3)
+  complexity     Int      @default(3)
+  risk           Int      @default(3)
+  automation     Int      @default(3)
+  scalability    Int      @default(3)
+  score          Int      @default(0)
+  rationale      String?  @db.Text
+  risks          String?  @db.Text
+  recommendation String?  @db.Text
+  nextStep       String?  @db.Text
+  isDemo         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@index([businessId, score])
 }
@@ -1229,19 +1242,19 @@ enum ReportKind {
 }
 
 model Report {
-  id           String     @id @default(cuid())
-  businessId   String
-  business     Business   @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  createdById  String?
-  createdBy    User?      @relation(fields: [createdById], references: [id], onDelete: SetNull)
-  kind         ReportKind
-  title        String
-  periodStart  DateTime
-  periodEnd    DateTime
-  metrics      Json       @default("{}")
-  body         String     @db.Text
-  aiGenerated  Boolean    @default(false)
-  createdAt    DateTime   @default(now())
+  id          String     @id @default(cuid())
+  businessId  String
+  business    Business   @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  createdById String?
+  createdBy   User?      @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  kind        ReportKind
+  title       String
+  periodStart DateTime
+  periodEnd   DateTime
+  metrics     Json       @default("{}")
+  body        String     @db.Text
+  aiGenerated Boolean    @default(false)
+  createdAt   DateTime   @default(now())
 
   @@index([businessId, kind, periodStart])
 }
@@ -1278,25 +1291,25 @@ model AuditLog {
 }
 
 model AiUsage {
-  id             String          @id @default(cuid())
-  businessId     String
-  business       Business        @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  userId         String?
-  user           User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
-  conversationId String?
-  conversation   Conversation?   @relation(fields: [conversationId], references: [id], onDelete: SetNull)
-  executionId    String?
-  execution      AgentExecution? @relation(fields: [executionId], references: [id], onDelete: SetNull)
-  agentKey       String?
-  model          String
-  purpose        String
-  inputTokens    Int             @default(0)
-  outputTokens   Int             @default(0)
-  cacheReadTokens Int            @default(0)
-  cacheWriteTokens Int           @default(0)
-  estimatedCost  Decimal         @default(0) @db.Decimal(12, 6)
-  currency       String          @default("USD")
-  createdAt      DateTime        @default(now())
+  id               String          @id @default(cuid())
+  businessId       String
+  business         Business        @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  userId           String?
+  user             User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  conversationId   String?
+  conversation     Conversation?   @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  executionId      String?
+  execution        AgentExecution? @relation(fields: [executionId], references: [id], onDelete: SetNull)
+  agentKey         String?
+  model            String
+  purpose          String
+  inputTokens      Int             @default(0)
+  outputTokens     Int             @default(0)
+  cacheReadTokens  Int             @default(0)
+  cacheWriteTokens Int             @default(0)
+  estimatedCost    Decimal         @default(0) @db.Decimal(12, 6)
+  currency         String          @default("USD")
+  createdAt        DateTime        @default(now())
 
   @@index([businessId, createdAt])
   @@index([businessId, agentKey])
@@ -1312,20 +1325,20 @@ enum IntegrationStatus {
 }
 
 model Integration {
-  id           String            @id @default(cuid())
-  businessId   String
-  business     Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  provider     String // e.g. "google_calendar"
-  displayName  String
-  category     String
-  status       IntegrationStatus @default(NOT_CONNECTED)
+  id            String            @id @default(cuid())
+  businessId    String
+  business      Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  provider      String // e.g. "google_calendar"
+  displayName   String
+  category      String
+  status        IntegrationStatus @default(NOT_CONNECTED)
   // Only non-secret configuration is stored here. Credentials live in
   // environment variables / a secret manager and are never persisted.
-  config       Json              @default("{}")
+  config        Json              @default("{}")
   lastCheckedAt DateTime?
-  lastError    String?           @db.Text
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
+  lastError     String?           @db.Text
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
 
   @@unique([businessId, provider])
   @@index([businessId, status])
@@ -1341,24 +1354,407 @@ enum ApprovalStatus {
 }
 
 model ApprovalRequest {
-  id           String         @id @default(cuid())
-  businessId   String
-  business     Business       @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  id            String         @id @default(cuid())
+  businessId    String
+  business      Business       @relation(fields: [businessId], references: [id], onDelete: Cascade)
   requestedById String?
-  requestedBy  User?          @relation("ApprovalRequester", fields: [requestedById], references: [id], onDelete: SetNull)
-  decidedById  String?
-  decidedBy    User?          @relation("ApprovalDecider", fields: [decidedById], references: [id], onDelete: SetNull)
-  action       String // the sensitive tool/action name
-  summary      String         @db.Text
-  payload      Json
-  agentKey     String?
-  status       ApprovalStatus @default(PENDING)
-  decidedAt    DateTime?
-  executedAt   DateTime?
-  result       String?        @db.Text
-  expiresAt    DateTime?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  requestedBy   User?          @relation("ApprovalRequester", fields: [requestedById], references: [id], onDelete: SetNull)
+  decidedById   String?
+  decidedBy     User?          @relation("ApprovalDecider", fields: [decidedById], references: [id], onDelete: SetNull)
+  action        String // the sensitive tool/action name
+  summary       String         @db.Text
+  payload       Json
+  agentKey      String?
+  status        ApprovalStatus @default(PENDING)
+  decidedAt     DateTime?
+  executedAt    DateTime?
+  result        String?        @db.Text
+  expiresAt     DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   @@index([businessId, status])
+}
+
+// =====================================================================
+// MOSH Self-Mastery & Wealth Alignment System
+// =====================================================================
+// Design notes:
+//  * This is a *personal* operating system, so every record is scoped by
+//    `userId` rather than by Business. The API layer filters on the session
+//    user for every read and write; nothing here is shared between accounts.
+//  * Period anchors are stored as `@db.Date` (the day, the Monday of the ISO
+//    week, the first of the month) with a unique constraint per user, so
+//    "today's entry" is always an upsert and can never fork into duplicates.
+//  * Scores are derived, never trusted from the client. `src/lib/mosh/scoring.ts`
+//    recomputes every number from the underlying records; the stored copies
+//    exist only so trends can be charted without replaying history.
+
+enum MoshPlane {
+  MENTAL
+  SPIRITUAL
+  PHYSICAL
+}
+
+/// The five review categories used by the weekly tracker and monthly review.
+/// The three planes plus the two outward-facing ones.
+enum MoshLifeArea {
+  MENTAL
+  SPIRITUAL
+  PHYSICAL
+  BUSINESS
+  IMPACT
+}
+
+enum MoshOfferTier {
+  ATTRACTION // Tier 1 — the attraction offer
+  CORE // Tier 2 — the core coaching program
+  PREMIUM // Tier 3 — premium mentorship
+}
+
+enum MoshEclipsePhase {
+  FOUNDATION_IN_FLOW // days 1-10
+  CORE_OFFER_BIRTH // days 11-20
+  VISIBILITY_EXPANSION // days 21-30
+  MONEY_MODEL_ARCHITECTURE // days 31-40
+  MAGNETIC_AUTHORITY // days 41-50
+}
+
+/// The patterns The Billionaire Self is trained to work with.
+enum MoshPattern {
+  LIMITING_BELIEF
+  TRUST_ISSUE
+  FEAR_OF_LOSS
+  PERFECTIONISM
+  INFERIORITY
+  PROCRASTINATION
+  LOW_DRIVE
+}
+
+enum MoshLetterKind {
+  FUTURE_WISDOM
+  LEGACY_LESSON
+  ADVICE_TO_YOUNGER_SELF
+}
+
+/// Whether a coaching response came from the model or from the built-in
+/// deterministic engine. Surfaced in the UI so guidance is never mislabelled.
+enum MoshCoachSource {
+  AI
+  RULES
+}
+
+model MoshProfile {
+  id           String    @id @default(cuid())
+  userId       String    @unique
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  displayName  String?
+  title        String    @default("Life Coach and Mindset Architect")
+  philosophy   String    @default("Structure Creates Freedom.")
+  mission      String?   @db.Text
+  currency     String    @default("GHS")
+  timezone     String    @default("Africa/Accra")
+  planYear     Int?
+  eclipseStart DateTime? @db.Date
+  onboardedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+// ---------- Daily ----------
+
+model MoshDailyEntry {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date            DateTime @db.Date
+  morningRhythm   Boolean  @default(false)
+  exercise        Boolean  @default(false)
+  creativeWork    Boolean  @default(false)
+  journaling      Boolean  @default(false)
+  meditation      Boolean  @default(false)
+  contentCreation Boolean  @default(false)
+  trustDelegation Boolean  @default(false)
+  gratitude       String?  @db.Text
+  wins            String?  @db.Text
+  reflection      String?  @db.Text
+  energy          Int? // 1-10
+  mood            Int? // 1-10
+  completion      Int      @default(0) // 0-100, derived from the habit checkboxes
+  alignment       Int      @default(0) // 0-100, derived daily alignment score
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([userId, date])
+  @@index([userId, date])
+}
+
+/// A self-rating (1-10) of one plane attribute on one day, e.g. clarity,
+/// gratitude, recovery. Drives the three alignment meters on the dashboard.
+model MoshPlaneCheckin {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime  @db.Date
+  plane     MoshPlane
+  attribute String // slug from MOSH_PLANES, e.g. "clarity"
+  score     Int // 1-10
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([userId, date, attribute])
+  @@index([userId, plane, date])
+}
+
+// ---------- Weekly ----------
+
+model MoshWeeklyEntry {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weekStart DateTime @db.Date // Monday of the ISO week
+  intention String?  @db.Text
+  review    String?  @db.Text
+  momentum  Int      @default(0) // 0-100, derived
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  goals MoshWeeklyGoal[]
+
+  @@unique([userId, weekStart])
+  @@index([userId, weekStart])
+}
+
+model MoshWeeklyGoal {
+  id         String          @id @default(cuid())
+  weeklyId   String
+  weekly     MoshWeeklyEntry @relation(fields: [weeklyId], references: [id], onDelete: Cascade)
+  area       MoshLifeArea
+  goal       String          @db.Text
+  progress   String?         @db.Text
+  completion Int             @default(0) // 0-100
+  position   Int             @default(0)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@index([weeklyId, area])
+}
+
+// ---------- Monthly ----------
+
+model MoshMonthlyReview {
+  id                    String   @id @default(cuid())
+  userId                String
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  month                 DateTime @db.Date // first day of the month
+  energyGivers          String?  @db.Text
+  energyDrainers        String?  @db.Text
+  proudOf               String?  @db.Text
+  fearsOvercome         String?  @db.Text
+  service               String?  @db.Text
+  structuralImprovement String?  @db.Text
+  growth                Int      @default(0) // 0-100, derived
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  pillars MoshMonthlyPillar[]
+
+  @@unique([userId, month])
+  @@index([userId, month])
+}
+
+model MoshMonthlyPillar {
+  id           String            @id @default(cuid())
+  reviewId     String
+  review       MoshMonthlyReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  area         MoshLifeArea
+  goals        String?           @db.Text
+  achievements String?           @db.Text
+  lessons      String?           @db.Text
+  score        Int               @default(0) // 0-100 self-assessed
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@unique([reviewId, area])
+}
+
+// ---------- 365-day master plan ----------
+
+model MoshYearPlan {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  year      Int
+  theme     String?
+  vision    String?  @db.Text
+  northStar String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  quarters MoshQuarter[]
+
+  @@unique([userId, year])
+}
+
+model MoshQuarter {
+  id            String       @id @default(cuid())
+  yearPlanId    String
+  yearPlan      MoshYearPlan @relation(fields: [yearPlanId], references: [id], onDelete: Cascade)
+  quarter       Int // 1-4
+  title         String
+  focus         String[]     @default([])
+  goal          String       @db.Text
+  progress      Int          @default(0) // 0-100
+  revenueTarget Decimal?     @db.Decimal(14, 2)
+  clientTarget  Int?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  milestones MoshMilestone[]
+
+  @@unique([yearPlanId, quarter])
+}
+
+model MoshMilestone {
+  id          String      @id @default(cuid())
+  quarterId   String
+  quarter     MoshQuarter @relation(fields: [quarterId], references: [id], onDelete: Cascade)
+  monthOffset Int // 1-3 within the quarter
+  title       String
+  detail      String?     @db.Text
+  done        Boolean     @default(false)
+  dueDate     DateTime?   @db.Date
+  completedAt DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([quarterId, monthOffset])
+}
+
+// ---------- Business: the three-tier offer ecosystem ----------
+
+model MoshOffer {
+  id        String        @id @default(cuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tier      MoshOfferTier
+  name      String
+  promise   String?       @db.Text
+  price     Decimal       @default(0) @db.Decimal(14, 2)
+  currency  String        @default("GHS")
+  active    Boolean       @default(true)
+  position  Int           @default(0)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  metrics MoshOfferMetric[]
+
+  @@unique([userId, tier, name])
+  @@index([userId, tier])
+}
+
+/// One month of reported performance for one offer. The tier decides which
+/// columns matter; the UI only asks for the ones that belong to that tier.
+model MoshOfferMetric {
+  id             String    @id @default(cuid())
+  offerId        String
+  offer          MoshOffer @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  month          DateTime  @db.Date // first day of the month
+  revenue        Decimal   @default(0) @db.Decimal(14, 2)
+  // Tier 1 — attraction
+  leads          Int       @default(0)
+  conversions    Int       @default(0)
+  subscribers    Int       @default(0)
+  downloads      Int       @default(0)
+  // Tier 2 — core program
+  students       Int       @default(0)
+  satisfaction   Int? // 0-100
+  completionRate Int? // 0-100
+  // Tier 3 — premium mentorship
+  clients        Int       @default(0)
+  retention      Int? // 0-100
+  transformation Int? // 0-100
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([offerId, month])
+  @@index([offerId, month])
+}
+
+// ---------- Customer funnel ----------
+
+model MoshFunnelSnapshot {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date        DateTime @db.Date
+  visitors    Int      @default(0)
+  leads       Int      @default(0)
+  subscribers Int      @default(0)
+  customers   Int      @default(0)
+  students    Int      @default(0)
+  mentorship  Int      @default(0)
+  advocates   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, date])
+  @@index([userId, date])
+}
+
+// ---------- 50-Day Eclipse Growth Strategy ----------
+
+model MoshEclipseDay {
+  id          String           @id @default(cuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  day         Int // 1-50
+  phase       MoshEclipsePhase
+  focus       String
+  action      String           @db.Text
+  done        Boolean          @default(false)
+  note        String?          @db.Text
+  completedAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@unique([userId, day])
+  @@index([userId, phase])
+}
+
+// ---------- The Billionaire Self (self-coaching) ----------
+
+model MoshCoachSession {
+  id              String          @id @default(cuid())
+  userId          String
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pattern         MoshPattern
+  situation       String          @db.Text
+  analysis        String          @db.Text
+  encouragement   String          @db.Text
+  actions         Json            @default("[]") // string[]
+  prompts         Json            @default("[]") // string[]
+  recommendations Json            @default("[]") // string[]
+  source          MoshCoachSource @default(RULES)
+  model           String?
+  createdAt       DateTime        @default(now())
+
+  @@index([userId, createdAt])
+  @@index([userId, pattern])
+}
+
+// ---------- A Message From My 77-Year-Old Self ----------
+
+model MoshLegacyLetter {
+  id        String         @id @default(cuid())
+  userId    String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind      MoshLetterKind @default(FUTURE_WISDOM)
+  title     String
+  body      String         @db.Text
+  pinned    Boolean        @default(false)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@index([userId, createdAt])
 }
