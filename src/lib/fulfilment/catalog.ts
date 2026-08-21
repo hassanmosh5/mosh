@@ -87,7 +87,7 @@ export type PackageEntry = {
   priceNgn: number;
 };
 
-const REPO_ROOT = resolve(process.cwd());
+const REPO_ROOT = resolve(/* turbopackIgnore: true */ process.cwd());
 
 /** Where the built ZIPs live. Override when they are served from a volume. */
 export function packageRoot(): string {

@@ -5,13 +5,13 @@
     "seller": "Hassan Mohammed",
     "book": "The AI Income Blueprint",
     "supportEmail": "hassanmosh5@gmail.com",
-    "siteUrl": "https://REPLACE-ME.example.com",
-    "whatsappNumber": "+233 REPLACE-ME",
-    "whatsappCatalogueUrl": "https://wa.me/c/REPLACE-ME",
-    "gumroadHandle": "REPLACE-ME",
-    "selarHandle": "REPLACE-ME",
-    "shopifyDomain": "REPLACE-ME.myshopify.com",
-    "paystackStoreUrl": "https://paystack.shop/REPLACE-ME",
+    "siteUrl": "https://paystack.shop/mosh-digital-studios",
+    "whatsappNumber": "+233504875992",
+    "whatsappCatalogueUrl": "https://wa.me/c/233504875992",
+    "gumroadHandle": "moshdigitalstudios",
+    "selarHandle": "moshdigitalstudios",
+    "shopifyDomain": "mosh-digital-studios.myshopify.com",
+    "paystackStoreUrl": "https://paystack.shop/mosh-digital-studios",
     "placeholderMarker": "REPLACE-ME",
     "$placeholders": "Every value containing REPLACE-ME must be filled in before launch. `npm run pkg:verify` fails while any remain, so the packages cannot be shipped half-configured."
   },
@@ -74,7 +74,7 @@
         "description": { "max": 12000, "confidence": "conservative" },
         "tags": { "maxCount": 12, "maxLength": 30, "confidence": "documented" }
       },
-      "notes": "Gumroad hosts the file and mails the download link itself. Use its Versions feature for the three licences — one product, one page, one review count."
+      "notes": "Gumroad hosts the file and mails the download link itself. Use its Versions feature for the three licences â€” one product, one page, one review count."
     },
     {
       "id": "selar",
@@ -150,7 +150,7 @@
     {
       "slug": "product-launch",
       "name": "The Digital Product Launch Bundle",
-      "tagline": "Idea → validated → built → listed → sold",
+      "tagline": "Idea â†’ validated â†’ built â†’ listed â†’ sold",
       "includes": ["venture-studio", "digital-products", "product-factory", "packaging-agent", "launch-kit", "ecommerce-setup"],
       "priceUsd": 149,
       "compareMode": "sum",
@@ -163,24 +163,25 @@
       "includes": ["support-agent", "appointment-booking", "whatsapp-sales", "real-estate-agent", "website-crm"],
       "priceUsd": 119,
       "compareMode": "sum",
-      "pitch": "Every one of these decides what the model is told, what it must refuse, and whether the numbers work at your volume — the part that sinks agent projects, done before you build."
+      "pitch": "Every one of these decides what the model is told, what it must refuse, and whether the numbers work at your volume â€” the part that sinks agent projects, done before you build."
     },
     {
       "slug": "growth-engine",
       "name": "The Growth Engine Bundle",
-      "tagline": "Traffic, list, content, ads — with the payback arithmetic",
+      "tagline": "Traffic, list, content, ads â€” with the payback arithmetic",
       "includes": ["meta-ads", "seo-content", "email-marketing", "social-automation", "youtube-toolkit"],
       "priceUsd": 119,
       "compareMode": "sum",
-      "pitch": "Four channels and one production system, each of which tells you what it costs to run and how long it takes to repay — including when the honest answer is don't."
+      "pitch": "Four channels and one production system, each of which tells you what it costs to run and how long it takes to repay â€” including when the honest answer is don't."
     }
   ],
   "categories": [
-    { "id": "decide", "name": "Start & decide", "glyph": "🧭", "blurb": "What to build, whether to build it, and whether the numbers survive contact with a sceptic." },
-    { "id": "package", "name": "Package & sell", "glyph": "📦", "blurb": "Turning a finished asset into a listed, priced, licensed product." },
-    { "id": "agency", "name": "Agency & client work", "glyph": "🏗", "blurb": "Winning, contracting, delivering and getting paid, on a repeatable procedure." },
-    { "id": "growth", "name": "Marketing & growth", "glyph": "📈", "blurb": "Channels, with the arithmetic that says whether each one repays what it costs." },
-    { "id": "agents", "name": "AI agents & automation", "glyph": "🤖", "blurb": "What the model is told, what it must refuse, and what it saves — decided before you build." },
-    { "id": "life", "name": "Money, property & life", "glyph": "🏦", "blurb": "Structures, deals, land and learning, each with its own honest arithmetic." }
+    { "id": "decide", "name": "Start & decide", "glyph": "ðŸ§­", "blurb": "What to build, whether to build it, and whether the numbers survive contact with a sceptic." },
+    { "id": "package", "name": "Package & sell", "glyph": "ðŸ“¦", "blurb": "Turning a finished asset into a listed, priced, licensed product." },
+    { "id": "agency", "name": "Agency & client work", "glyph": "ðŸ—", "blurb": "Winning, contracting, delivering and getting paid, on a repeatable procedure." },
+    { "id": "growth", "name": "Marketing & growth", "glyph": "ðŸ“ˆ", "blurb": "Channels, with the arithmetic that says whether each one repays what it costs." },
+    { "id": "agents", "name": "AI agents & automation", "glyph": "ðŸ¤–", "blurb": "What the model is told, what it must refuse, and what it saves â€” decided before you build." },
+    { "id": "life", "name": "Money, property & life", "glyph": "ðŸ¦", "blurb": "Structures, deals, land and learning, each with its own honest arithmetic." }
   ]
 }
+

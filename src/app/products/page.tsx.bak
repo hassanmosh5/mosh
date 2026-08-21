@@ -1,4 +1,4 @@
-﻿/**
+/**
  * The public catalogue.
  *
  * Every listing on every platform links back here, and the WhatsApp catalogue
@@ -8,14 +8,6 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  Bot,
-  Building2,
-  Compass,
-  Landmark,
-  Package,
-  TrendingUp,
-} from "lucide-react";
 
 import { loadCatalog } from "@/lib/fulfilment/catalog";
 
@@ -24,27 +16,6 @@ export const metadata: Metadata = {
   description:
     "Single-file tools that run offline in any browser. One payment, no account, no subscription.",
 };
-
-function CategoryIcon({ id }: { id: string }) {
-  const iconProps = { size: 20, strokeWidth: 1.8, "aria-hidden": true as const };
-
-  switch (id) {
-    case "decide":
-      return <Compass {...iconProps} />;
-    case "package":
-      return <Package {...iconProps} />;
-    case "agency":
-      return <Building2 {...iconProps} />;
-    case "growth":
-      return <TrendingUp {...iconProps} />;
-    case "agents":
-      return <Bot {...iconProps} />;
-    case "life":
-      return <Landmark {...iconProps} />;
-    default:
-      return null;
-  }
-}
 
 export default function ProductsPage() {
   const catalog = loadCatalog();
@@ -70,9 +41,8 @@ export default function ProductsPage() {
 
         return (
           <section key={category.id} className="mt-16">
-            <h2 className="flex items-center gap-2 text-xl font-semibold tracking-tight">
-              <CategoryIcon id={category.id} />
-              <span>{category.name}</span>
+            <h2 className="text-xl font-semibold tracking-tight">
+              {category.glyph} {category.name}
             </h2>
             <p className="mt-1 text-sm text-black/50 dark:text-white/50">{category.blurb}</p>
 
@@ -118,4 +88,3 @@ export default function ProductsPage() {
     </main>
   );
 }
-

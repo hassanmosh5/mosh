@@ -37,7 +37,7 @@ Catalogue value if bought one at a time: **$1682**.
 
 ## Products
 
-### 🧭 Start & decide
+### ðŸ§­ Start & decide
 
 *What to build, whether to build it, and whether the numbers survive contact with a sceptic.*
 
@@ -51,7 +51,7 @@ Catalogue value if bought one at a time: **$1682**.
 | [The AI Income Blueprint — Interactive Edition](ebook/) | The whole book, as something you work in | $19 | GHS 240 |
 | [Digital Product Studio — custom GPT](gpt/) | A GPT that argues with your product idea | $24 | GHS 300 |
 
-### 📦 Package & sell
+### ðŸ“¦ Package & sell
 
 *Turning a finished asset into a listed, priced, licensed product.*
 
@@ -64,7 +64,7 @@ Catalogue value if bought one at a time: **$1682**.
 | [Course Creation Systems](course-creation/) | The hundred hours, counted before you start | $49 | GHS 620 |
 | [Store Setup Guides — Shopify & E-Commerce](ecommerce-setup/) | When to leave the marketplace, and how | $29 | GHS 370 |
 
-### 🏗 Agency & client work
+### ðŸ— Agency & client work
 
 *Winning, contracting, delivering and getting paid, on a repeatable procedure.*
 
@@ -77,7 +77,7 @@ Catalogue value if bought one at a time: **$1682**.
 | [AI Automation Kits](automation-kits/) | The audit produces the kit, the kit produces the price | $59 | GHS 740 |
 | [Business Dashboard Templates](business-dashboards/) | Ten minutes of figures, one working dashboard | $29 | GHS 370 |
 
-### 📈 Marketing & growth
+### ðŸ“ˆ Marketing & growth
 
 *Channels, with the arithmetic that says whether each one repays what it costs.*
 
@@ -91,9 +91,9 @@ Catalogue value if bought one at a time: **$1682**.
 | [AI Website Prompt Kit](website-prompts/) | Decide it, or the builder decides it for you | $29 | GHS 370 |
 | [Local Business Website Studio](local-business-templates/) | A finished demo site in about ten minutes | $49 | GHS 620 |
 
-### 🤖 AI agents & automation
+### ðŸ¤– AI agents & automation
 
-*What the model is told, what it must refuse, and what it saves — decided before you build.*
+*What the model is told, what it must refuse, and what it saves â€” decided before you build.*
 
 | Product | What it is | From (USD) | From (GHS) |
 |---|---|---|---|
@@ -105,7 +105,7 @@ Catalogue value if bought one at a time: **$1682**.
 | [E-Commerce Order Automation](order-automation/) | 159 hours a month nobody invoices you for | $49 | GHS 620 |
 | [AI Commercial Production Kits](commercial-kits/) | Whether generating it is worth what it costs | $49 | GHS 620 |
 
-### 🏦 Money, property & life
+### ðŸ¦ Money, property & life
 
 *Structures, deals, land and learning, each with its own honest arithmetic.*
 

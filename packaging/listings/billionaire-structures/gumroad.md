@@ -17,7 +17,7 @@ Support address on all listings: hassanmosh5@gmail.com
 | Field | Value |
 |---|---|
 | Type | Digital product |
-| URL / permalink | `billionaire-structures` → https://REPLACE-ME.gumroad.com/l/billionaire-structures |
+| URL / permalink | `billionaire-structures` → https://moshdigitalstudios.gumroad.com/l/billionaire-structures |
 | Category | Money, property & life |
 | Call to action | I want this! |
 
@@ -154,7 +154,7 @@ If you also want the sale recorded in your own database, point
 **Settings → Advanced → Ping** at:
 
 ```
-https://REPLACE-ME.example.com/api/webhooks/gumroad?secret=YOUR_GUMROAD_PING_SECRET
+https://paystack.shop/mosh-digital-studios/api/webhooks/gumroad?secret=YOUR_GUMROAD_PING_SECRET
 ```
 
 Gumroad does not sign its pings, so the URL secret and the seller-ID check in

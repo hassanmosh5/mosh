@@ -55,7 +55,7 @@ Works offline. No account. 14-day refund, no questions asked. Reply to your rece
 |---|---|
 | Price | GHS 740 (Solo) |
 | Image | `dist/mockups/product-factory/square.png` |
-| Link | https://REPLACE-ME.example.com/products/product-factory |
+| Link | https://paystack.shop/mosh-digital-studios/products/product-factory |
 
 WhatsApp shows roughly the first 200 characters before a "more" link, so the
 first sentence is doing nearly all of the work.
@@ -88,7 +88,7 @@ Want it? Send "YES" and I'll send payment details.
 ```
 Send GHS 740 to:
 
-MoMo: +233 REPLACE-ME (Hassan Mohammed)
+MoMo: +233504875992 (Hassan Mohammed)
 Reference: PRODUCT-FACT
 
 Send me the transaction ID when it's done and your email address.

@@ -139,11 +139,31 @@ function zipFolder(stageDir, zipPath, innerName) {
   rmSync(zipPath, { force: true });
   mkdirSync(dirname(zipPath), { recursive: true });
 
-  // Fixed mtimes keep the archive byte-identical between builds.
-  execFileSync("find", [stageDir, "-exec", "touch", "-t", EPOCH, "{}", "+"]);
-  execFileSync("zip", ["-r", "-q", "-X", "-9", zipPath, innerName], {
-    cwd: dirname(stageDir),
-  });
+  if (process.platform === "win32") {
+    // Windows does not provide the Unix find/touch/zip utilities used above.
+    // Compress-Archive is available in standard Windows PowerShell.
+    execFileSync(
+      "powershell.exe",
+      [
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        `
+          $ErrorActionPreference = 'Stop';
+          $source = Join-Path ${JSON.stringify(dirname(stageDir))} ${JSON.stringify(innerName)};
+          $destination = ${JSON.stringify(zipPath)};
+          Compress-Archive -Path (Join-Path $source '*') -DestinationPath $destination -CompressionLevel Optimal -Force;
+        `,
+      ],
+      { stdio: "inherit" }
+    );
+  } else {
+    // Unix/macOS: preserve the existing deterministic ZIP behaviour.
+    execFileSync("find", [stageDir, "-exec", "touch", "-t", EPOCH, "{}", "+"]);
+    execFileSync("zip", ["-r", "-q", "-X", "-9", zipPath, innerName], {
+      cwd: dirname(stageDir),
+    });
+  }
 }
 
 function buildProduct(product, catalog, results) {

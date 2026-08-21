@@ -23,7 +23,7 @@ dollar checkout, and the buyer is not paying a card's FX spread on top of your p
 | Field | Value |
 |---|---|
 | Product type | Digital product / downloadable |
-| Link | `commercial-kits` → https://selar.com/REPLACE-ME/commercial-kits |
+| Link | `commercial-kits` → https://selar.com/moshdigitalstudios/commercial-kits |
 | Category | AI agents & automation |
 
 **Product name** — 29/80 characters
@@ -132,7 +132,7 @@ on what your Selar plan supports.
 To mirror sales into your own records, set the webhook to:
 
 ```
-https://REPLACE-ME.example.com/api/webhooks/selar
+https://paystack.shop/mosh-digital-studios/api/webhooks/selar
 ```
 
 **Before you rely on that webhook:** confirm the signature header and algorithm
