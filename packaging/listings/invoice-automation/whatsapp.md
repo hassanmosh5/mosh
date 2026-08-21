@@ -55,7 +55,7 @@ Works offline. No account. 14-day refund, no questions asked. Reply to your rece
 |---|---|
 | Price | GHS 490 (Solo) |
 | Image | `dist/mockups/invoice-automation/square.png` |
-| Link | https://REPLACE-ME.example.com/products/invoice-automation |
+| Link | https://paystack.shop/mosh-digital-studios/products/invoice-automation |
 
 WhatsApp shows roughly the first 200 characters before a "more" link, so the
 first sentence is doing nearly all of the work.
@@ -88,7 +88,7 @@ Want it? Send "YES" and I'll send payment details.
 ```
 Send GHS 490 to:
 
-MoMo: +233 REPLACE-ME (Hassan Mohammed)
+MoMo: +233504875992 (Hassan Mohammed)
 Reference: INVOICE-AUTO
 
 Send me the transaction ID when it's done and your email address.

@@ -84,7 +84,7 @@ customer is worse than a webhook that fails and tells you.
 Dashboard → Settings → API Keys & Webhooks → Webhook URL:
 
 ```
-https://REPLACE-ME.example.com/api/webhooks/paystack
+https://paystack.shop/mosh-digital-studios/api/webhooks/paystack
 ```
 
 The route verifies the `x-paystack-signature` HMAC-SHA512 against your secret

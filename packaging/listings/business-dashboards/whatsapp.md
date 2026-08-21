@@ -55,7 +55,7 @@ Works offline. No account. 14-day refund, no questions asked. Reply to your rece
 |---|---|
 | Price | GHS 370 (Solo) |
 | Image | `dist/mockups/business-dashboards/square.png` |
-| Link | https://REPLACE-ME.example.com/products/business-dashboards |
+| Link | https://paystack.shop/mosh-digital-studios/products/business-dashboards |
 
 WhatsApp shows roughly the first 200 characters before a "more" link, so the
 first sentence is doing nearly all of the work.
@@ -88,7 +88,7 @@ Want it? Send "YES" and I'll send payment details.
 ```
 Send GHS 370 to:
 
-MoMo: +233 REPLACE-ME (Hassan Mohammed)
+MoMo: +233504875992 (Hassan Mohammed)
 Reference: BUSINESS-DAS
 
 Send me the transaction ID when it's done and your email address.

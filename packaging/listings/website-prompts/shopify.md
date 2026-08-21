@@ -19,7 +19,7 @@ Support address on all listings: hassanmosh5@gmail.com
 | Handle | `website-prompts` |
 | Product type | Digital download |
 | Vendor | MOSH Digital Studios |
-| Collection | 📈 Marketing & growth |
+| Collection | ðŸ“ˆ Marketing & growth |
 | Charge tax | Your call — digital goods are taxed differently by market |
 | **This is a physical product** | **Untick.** Nothing here ships. |
 | Inventory tracking | Off |
@@ -106,7 +106,7 @@ Settings → Notifications → Webhooks:
 |---|---|
 | Event | `orders/paid` |
 | Format | JSON |
-| URL | `https://REPLACE-ME.example.com/api/webhooks/shopify` |
+| URL | `https://paystack.shop/mosh-digital-studios/api/webhooks/shopify` |
 
 Copy the signing secret Shopify shows you into `SHOPIFY_WEBHOOK_SECRET`. The
 route verifies the HMAC on the raw body, matches each line item's SKU to a
