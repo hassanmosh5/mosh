@@ -107,6 +107,7 @@ export async function POST(request: Request) {
     expiresAt: result.expiresAt,
     maxDownloads: result.maxDownloads,
     platform: "paystack",
+    siteUrl: process.env.SITE_URL ?? new URL(request.url).origin,
   });
   logFulfilment(outcome, {
     platform: "paystack",
