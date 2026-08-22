@@ -62,8 +62,17 @@ export type CatalogPolicies = {
   disclaimer: string;
 };
 
+export type CatalogCurrency = {
+  base: string;
+  ghsPerUsd: number;
+  ngnPerUsd: number;
+  rateNotedOn: string;
+  roundTo: { GHS: number; NGN: number };
+};
+
 export type Catalog = {
   meta: CatalogMeta;
+  currency: CatalogCurrency;
   policies: CatalogPolicies;
   tiers: CatalogTier[];
   categories: { id: string; name: string; glyph: string; blurb: string }[];
