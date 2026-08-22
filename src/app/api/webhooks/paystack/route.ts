@@ -3,8 +3,8 @@
  *
  * Paystack takes the money and does not host files, so this route is the
  * delivery mechanism for every Paystack sale. It verifies the signature on the
- * raw body, re-verifies the transaction against Paystack's own API when a
- * secret key is available, and only then issues a grant.
+ * raw body, re-verifies the transaction against Paystack's own API, checks the
+ * paid amount against the catalogue price, and only then issues a grant.
  *
  * It always answers 200 once the signature checks out. Paystack retries on any
  * other status, and retrying will not fix a payload that names a product we do
@@ -13,7 +13,7 @@
 
 import { NextResponse } from "next/server";
 
-import { findProduct } from "@/lib/fulfilment/catalog";
+import { findProduct, findTier, loadCatalog } from "@/lib/fulfilment/catalog";
 import { deliverDownload, logFulfilment } from "@/lib/fulfilment/delivery";
 import { issueGrant } from "@/lib/fulfilment/grants";
 import { parsePaystack } from "@/lib/fulfilment/payloads";
@@ -22,10 +22,25 @@ import { verifyPaystack } from "@/lib/fulfilment/signatures";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-/** Confirms the charge with Paystack rather than trusting the body alone. */
+function expectedAmountMinor(productSlug: string, tierId: string): number | null {
+  const catalog = loadCatalog();
+  const product = findProduct(productSlug);
+  const tier = findTier(tierId);
+  if (!product || !tier) return null;
+
+  const amountGhs = Math.ceil(
+    (product.priceUsd * tier.multiplier * catalog.currency.ghsPerUsd) /
+      catalog.currency.roundTo.GHS
+  ) * catalog.currency.roundTo.GHS;
+  return amountGhs * 100;
+}
+
+/** Confirms the charge, amount and currency with Paystack rather than trusting the body alone. */
 async function confirmWithPaystack(
   reference: string,
-  secretKey: string
+  secretKey: string,
+  expectedAmount: number,
+  expectedCurrency: string
 ): Promise<{ ok: boolean; reason?: string }> {
   try {
     const response = await fetch(
@@ -34,10 +49,26 @@ async function confirmWithPaystack(
     );
     if (!response.ok) return { ok: false, reason: `verify returned ${response.status}` };
 
-    const body = (await response.json()) as { data?: { status?: string } };
-    return body.data?.status === "success"
-      ? { ok: true }
-      : { ok: false, reason: `transaction status "${body.data?.status}"` };
+    const body = (await response.json()) as {
+      data?: { status?: string; amount?: number; currency?: string };
+    };
+    const data = body.data;
+    if (data?.status !== "success") {
+      return { ok: false, reason: `transaction status "${data?.status}"` };
+    }
+    if (data.amount !== expectedAmount) {
+      return {
+        ok: false,
+        reason: `amount mismatch: expected ${expectedAmount}, Paystack reports ${data.amount}`,
+      };
+    }
+    if (data.currency?.toUpperCase() !== expectedCurrency.toUpperCase()) {
+      return {
+        ok: false,
+        reason: `currency mismatch: expected ${expectedCurrency}, Paystack reports ${data.currency}`,
+      };
+    }
+    return { ok: true };
   } catch (error) {
     return { ok: false, reason: `verify call failed: ${(error as Error).message}` };
   }
@@ -67,9 +98,14 @@ export async function POST(request: Request) {
   }
 
   const sale = parsed.sale;
+  const expectedAmount = expectedAmountMinor(sale.productSlug, sale.tier);
+  if (expectedAmount === null) {
+    console.error(`[paystack] could not calculate expected price for ${sale.productSlug}/${sale.tier}`);
+    return NextResponse.json({ ok: true, ignored: "could not calculate expected price" });
+  }
 
   // Signature proves the message came from Paystack; this proves the money did.
-  const confirmed = await confirmWithPaystack(sale.reference, secretKey!);
+  const confirmed = await confirmWithPaystack(sale.reference, secretKey!, expectedAmount, "GHS");
   if (!confirmed.ok) {
     console.warn(`[paystack] ${sale.reference} not confirmed: ${confirmed.reason}`);
     return NextResponse.json({ ok: true, ignored: confirmed.reason });
