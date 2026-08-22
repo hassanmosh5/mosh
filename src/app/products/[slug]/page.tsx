@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import BuyButton from "./buy-button";
 import { findProduct, loadCatalog } from "@/lib/fulfilment/catalog";
 
 export function generateStaticParams() {
@@ -29,6 +30,10 @@ export async function generateMetadata({
       images: [`/mockups/${product.slug}/cover.png`],
     },
   };
+}
+
+function priceGhs(priceUsd: number, multiplier: number, rate: number, roundTo: number): number {
+  return Math.ceil((priceUsd * multiplier * rate) / roundTo) * roundTo;
 }
 
 export default async function ProductPage({ params }: PageProps<"/products/[slug]">) {
@@ -115,19 +120,36 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
       <p className="mt-3 text-black/70 dark:text-white/70">{product.proof}</p>
 
       <div className="mt-12 rounded-2xl border border-black/10 p-6 dark:border-white/15">
-        <h2 className="text-xl font-semibold tracking-tight">Licences</h2>
-        <ul className="mt-4 space-y-4">
-          {catalog.tiers.map((tier) => (
-            <li key={tier.id}>
-              <p className="font-medium">
-                {tier.name} — ${Math.round(product.priceUsd * tier.multiplier)}
-                {tier.default && " · most people want this one"}
-              </p>
-              <p className="text-sm text-black/60 dark:text-white/60">{tier.summary}</p>
-            </li>
-          ))}
+        <h2 className="text-xl font-semibold tracking-tight">Buy & choose your licence</h2>
+        <p className="mt-2 text-sm text-black/60 dark:text-white/60">
+          Prices are shown in Ghana cedis for checkout. The exchange rate is the catalogue rate dated {catalog.currency.rateNotedOn}; re-check it before a public launch.
+        </p>
+        <ul className="mt-6 space-y-8">
+          {catalog.tiers.map((tier) => {
+            const amountGhs = priceGhs(
+              product.priceUsd,
+              tier.multiplier,
+              catalog.currency.ghsPerUsd,
+              catalog.currency.roundTo.GHS
+            );
+            return (
+              <li key={tier.id}>
+                <p className="font-medium">
+                  {tier.name} — ${Math.round(product.priceUsd * tier.multiplier)} / GHS {amountGhs.toLocaleString()}
+                  {tier.default && " · recommended"}
+                </p>
+                <p className="mt-1 text-sm text-black/60 dark:text-white/60">{tier.summary}</p>
+                <BuyButton
+                  productSlug={product.slug}
+                  tier={tier.id}
+                  tierName={tier.name}
+                  amountGhs={amountGhs}
+                />
+              </li>
+            );
+          })}
         </ul>
-        <p className="mt-6 text-sm text-black/60 dark:text-white/60">
+        <p className="mt-8 text-sm text-black/60 dark:text-white/60">
           {catalog.policies.refundText} {catalog.policies.updatePolicy}
         </p>
         <p className="mt-2 text-sm text-black/60 dark:text-white/60">
