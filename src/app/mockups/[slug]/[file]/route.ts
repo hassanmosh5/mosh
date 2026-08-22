@@ -10,7 +10,7 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import { join, normalize } from "node:path";
 import { NextResponse } from "next/server";
 
-import { findProduct, packageRoot } from "@/lib/fulfilment/catalog";
+import { findProduct } from "@/lib/fulfilment/catalog";
 
 export const runtime = "nodejs";
 
@@ -26,8 +26,10 @@ export async function GET(_request: Request, ctx: RouteContext<"/mockups/[slug]/
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const path = normalize(join(packageRoot(), "mockups", slug, file));
-  if (!path.startsWith(join(packageRoot(), "mockups")) || !existsSync(path)) {
+  const mockupsRoot = join(process.cwd(), "public", "mockups");
+  const path = normalize(join(mockupsRoot, slug, file));
+
+  if (!path.startsWith(mockupsRoot) || !existsSync(path)) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 

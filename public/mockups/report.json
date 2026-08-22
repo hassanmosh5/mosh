@@ -1,0 +1,197 @@
+{
+  "generatedAt": "2026-08-18T18:03:28.824Z",
+  "products": [
+    {
+      "slug": "launch-kit",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "digital-products",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "venture-studio",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "product-factory",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "board-of-directors",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "ebook",
+      "images": 4,
+      "warnings": []
+    },
+    {
+      "slug": "gpt",
+      "images": 1,
+      "warnings": [
+        "no screenshots — document product"
+      ]
+    },
+    {
+      "slug": "packaging-agent",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "prompt-packs",
+      "images": 5,
+      "warnings": []
+    },
+    {
+      "slug": "prompt-generator",
+      "images": 5,
+      "warnings": []
+    },
+    {
+      "slug": "canva-templates",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "course-creation",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "ecommerce-setup",
+      "images": 5,
+      "warnings": []
+    },
+    {
+      "slug": "agency-sops",
+      "images": 5,
+      "warnings": []
+    },
+    {
+      "slug": "client-contracts",
+      "images": 5,
+      "warnings": []
+    },
+    {
+      "slug": "invoice-automation",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "marketing-toolkit",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "automation-kits",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "business-dashboards",
+      "images": 5,
+      "warnings": []
+    },
+    {
+      "slug": "meta-ads",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "seo-content",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "email-marketing",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "social-automation",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "youtube-toolkit",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "website-prompts",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "local-business-templates",
+      "images": 5,
+      "warnings": []
+    },
+    {
+      "slug": "support-agent",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "appointment-booking",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "whatsapp-sales",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "real-estate-agent",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "website-crm",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "order-automation",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "commercial-kits",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "billionaire-structures",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "real-estate-calculator",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "farmers-companion",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "workbook",
+      "images": 6,
+      "warnings": []
+    },
+    {
+      "slug": "examace-ghana",
+      "images": 4,
+      "warnings": []
+    }
+  ]
+}
