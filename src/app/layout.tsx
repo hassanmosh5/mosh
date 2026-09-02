@@ -12,8 +12,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const configuredSiteUrl = process.env.SITE_URL?.trim();
+const siteUrl =
+  configuredSiteUrl && !configuredSiteUrl.includes("localhost")
+    ? configuredSiteUrl
+    : "https://mosh.vercel.app";
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.SITE_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "AI Income Academy",
     template: "%s · MOSH Digital Studios",
