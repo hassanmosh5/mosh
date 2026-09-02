@@ -1,0 +1,30 @@
+name: Store build
+
+on:
+  push:
+    branches:
+      - feature/commercialization
+  pull_request:
+    branches:
+      - master
+      - feature/commercialization
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Production build
+        run: npm run build

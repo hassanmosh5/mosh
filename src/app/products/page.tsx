@@ -87,7 +87,12 @@ export default function ProductsPage() {
                     {product.name}
                   </h3>
                   <p className="mt-2 text-sm text-black/60 dark:text-white/60">{product.tagline}</p>
-                  <p className="mt-4 text-sm font-medium">from ${product.priceUsd}</p>
+                  <div className="mt-4 flex items-center justify-between gap-4">
+                    <span className="text-sm font-medium">from ${product.priceUsd}</span>
+                    <span className="rounded-lg bg-black px-3 py-2 text-xs font-semibold text-white dark:bg-white dark:text-black">
+                      View & buy
+                    </span>
+                  </div>
                 </Link>
               ))}
             </div>
@@ -118,4 +123,3 @@ export default function ProductsPage() {
     </main>
   );
 }
-

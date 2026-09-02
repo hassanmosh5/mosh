@@ -25,6 +25,8 @@ export type DeliveryInput = {
   expiresAt: Date;
   maxDownloads: number;
   platform: string;
+  /** Optional public origin used to build the buyer's download URL. */
+  siteUrl?: string;
 };
 
 export function deliveryEmailSubject(product: CatalogProduct): string {
@@ -100,7 +102,7 @@ export function deliveryEmailHtml(input: DeliveryInput, link: string): string {
 
 export async function deliverDownload(input: DeliveryInput): Promise<DeliveryOutcome> {
   const { meta } = loadCatalog();
-  const siteUrl = process.env.SITE_URL ?? meta.siteUrl;
+  const siteUrl = input.siteUrl ?? process.env.SITE_URL ?? meta.siteUrl;
   const link = downloadUrl(siteUrl, input.token);
 
   const apiKey = process.env.RESEND_API_KEY;
