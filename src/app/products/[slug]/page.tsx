@@ -51,7 +51,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
       </Link>
 
       <span className="mt-6 inline-block rounded-full bg-black/5 px-3 py-1 text-xs font-medium tracking-wide uppercase dark:bg-white/10">
-        {category ? `${category.glyph} ${category.name}` : "Tool"}
+        {category ? category.name : "Tool"}
       </span>
 
       <h1 className="mt-4 text-4xl font-semibold tracking-tight">{product.name}</h1>
