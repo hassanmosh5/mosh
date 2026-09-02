@@ -16,6 +16,12 @@ function priceGhs(productPriceUsd: number, multiplier: number, rate: number, rou
   return Math.ceil((productPriceUsd * multiplier * rate) / roundTo) * roundTo;
 }
 
+function publicSiteUrl(request: Request): string {
+  const configured = process.env.SITE_URL?.trim().replace(/\/$/, "");
+  if (configured && !configured.includes("localhost")) return configured;
+  return new URL(request.url).origin;
+}
+
 export async function POST(request: Request) {
   const secretKey = process.env.PAYSTACK_SECRET_KEY;
   if (!secretKey) {
@@ -47,7 +53,7 @@ export async function POST(request: Request) {
   );
   const amountMinor = amountGhs * 100;
   const reference = `MOSH-${product.slug}-${tierRecord.id}-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
-  const origin = process.env.SITE_URL?.replace(/\/$/, "") ?? new URL(request.url).origin;
+  const origin = publicSiteUrl(request);
 
   const response = await fetch("https://api.paystack.co/transaction/initialize", {
     method: "POST",
